@@ -15,6 +15,7 @@
   - [ ] Simulator 1: เครื่องจำลองการบีบอัดไฟล์ (7-Zip File Compressor & Ratio Calculator)
   - [ ] Simulator 2: แผงจำลองการเคลียร์ขยะระบบ (Disk Cleanup Dashboard)
   - [ ] Simulator 3: บอร์ดจำลองคำสั่งกู้คืนระบบ (Virtual SFC / CHKDSK Console)
+- [ ] ทำการสแกนตรวจสอบ UI Anti-patterns ด้วยคำสั่ง `npx impeccable detect`
 - [ ] ทำการทดสอบบิลด์ด้วย `npm run build` เพื่อยืนยันความถูกต้อง 100%
 
 ---

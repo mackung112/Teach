@@ -1,16 +1,16 @@
 import React, { useMemo } from 'react';
 
 const GRADIENTS = [
-  'from-teal-400 via-emerald-500 to-blue-600',
-  'from-indigo-500 via-purple-500 to-pink-500',
-  'from-orange-400 via-red-500 to-pink-600',
-  'from-fuchsia-500 via-pink-500 to-yellow-400',
-  'from-cyan-500 via-blue-600 to-indigo-700',
-  'from-amber-400 via-orange-500 to-rose-500',
-  'from-violet-600 via-fuchsia-500 to-indigo-500',
-  'from-green-400 via-teal-500 to-cyan-600',
-  'from-rose-500 via-pink-600 to-violet-600',
-  'from-sky-400 via-indigo-500 to-purple-600'
+  'from-teal-600 via-emerald-500 to-blue-700',
+  'from-slate-700 via-emerald-600 to-teal-500',
+  'from-orange-600 via-amber-500 to-rose-600',
+  'from-emerald-600 via-teal-600 to-cyan-700',
+  'from-cyan-600 via-blue-700 to-slate-800',
+  'from-amber-600 via-orange-500 to-rose-700',
+  'from-teal-600 via-cyan-500 to-blue-700',
+  'from-emerald-600 via-teal-500 to-sky-700',
+  'from-rose-600 via-orange-500 to-amber-600',
+  'from-sky-600 via-teal-500 to-emerald-600'
 ];
 
 export default function StandardHeader({ 

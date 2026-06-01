@@ -122,7 +122,7 @@ export default function LessonViewer({ lesson, chapter, onComplete, onNext, onPr
         {hasPrev ? (
           <button
             onClick={onPrev}
-            className="px-6 py-4 bg-white text-gray-700 border-2 border-gray-200 rounded-2xl font-bold hover:border-indigo-300 hover:text-indigo-600 hover:-translate-y-0.5 transition-all flex items-center gap-2 group shadow-sm"
+            className="px-6 py-4 bg-white text-gray-700 border-2 border-gray-200 rounded-2xl font-bold hover:border-teal-300 hover:text-teal-600 hover:-translate-y-0.5 transition-all flex items-center gap-2 group shadow-sm cursor-pointer"
           >
             <ChevronLeft className="w-5 h-5 transform transition-transform group-hover:-translate-x-1" />
             เนื้อหาก่อนหน้า
@@ -132,7 +132,7 @@ export default function LessonViewer({ lesson, chapter, onComplete, onNext, onPr
         )}
         <button
           onClick={() => { if(onComplete) onComplete(); if(onNext) onNext(); }}
-          className="px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-200 hover:shadow-xl hover:-translate-y-1 transition-all flex items-center gap-2 group"
+          className="px-6 py-4 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-2xl font-bold shadow-lg shadow-teal-200/50 hover:shadow-xl hover:-translate-y-1 transition-all flex items-center gap-2 group cursor-pointer"
         >
           {hasNext ? 'เนื้อหาถัดไป' : 'กลับหน้ารวมวิชา'}
           <ChevronRight className="w-5 h-5 transform transition-transform group-hover:translate-x-1" />

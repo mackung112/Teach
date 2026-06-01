@@ -69,15 +69,15 @@ export default function TeacherBio() {
   return (
     <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-3xl p-6 md:p-8 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 relative overflow-hidden group">
       {/* Background soft blob inside card */}
-      <div className="absolute bottom-[-50px] right-[-50px] w-80 h-80 rounded-full bg-violet-200/25 blur-3xl group-hover:scale-110 transition-transform duration-700 pointer-events-none" />
-      <div className="absolute top-[-30px] left-[-30px] w-60 h-60 rounded-full bg-cyan-200/20 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-[-50px] right-[-50px] w-80 h-80 rounded-full bg-teal-200/15 blur-3xl group-hover:scale-110 transition-transform duration-700 pointer-events-none" />
+      <div className="absolute top-[-30px] left-[-30px] w-60 h-60 rounded-full bg-cyan-200/15 blur-3xl pointer-events-none" />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
         {/* Left Column: Portrait Showcase with shine frame */}
         <div className="lg:col-span-5 flex justify-center">
           <div className="relative group/avatar cursor-pointer">
             {/* Ambient Background Aura */}
-            <div className="absolute -inset-1.5 bg-gradient-to-tr from-indigo-500 via-purple-500 to-cyan-400 rounded-3xl blur-md opacity-25 group-hover/avatar:opacity-40 group-hover/avatar:scale-102 transition-all duration-500" />
+            <div className="absolute -inset-1.5 bg-gradient-to-tr from-teal-500 via-emerald-500 to-cyan-400 rounded-3xl blur-md opacity-25 group-hover/avatar:opacity-40 group-hover/avatar:scale-102 transition-all duration-500" />
             
             {/* Bezel frame */}
             <div className="relative bg-white/70 backdrop-blur-md border border-white rounded-[26px] p-2.5 shadow-2xl transition-transform duration-500 group-hover/avatar:-translate-y-1.5">
@@ -105,12 +105,12 @@ export default function TeacherBio() {
         {/* Right Column: Bio & Social Info */}
         <div className="lg:col-span-7 space-y-6">
           <div className="space-y-2">
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 text-indigo-700 rounded-full text-xs font-bold uppercase tracking-wider">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-100 text-teal-700 rounded-full text-xs font-bold uppercase tracking-wider">
               <GraduationCap className="w-3.5 h-3.5" />
               ครูผู้สอนประจำวิชา
             </span>
             <h4 className="text-3xl md:text-[34px] font-black text-zinc-900 tracking-tight leading-none mt-1">
-              อ.ธิติวุฒิ จันทร์โสม <span className="text-indigo-600">(ครูแม็ค)</span>
+              อ.ธิติวุฒิ จันทร์โสม <span className="text-teal-600">(ครูแม็ค)</span>
             </h4>
             <p className="text-sm font-semibold text-slate-500 leading-normal tracking-wide">
               อาจารย์ผู้เชี่ยวชาญด้านเทคโนโลยีสารสนเทศ การสื่อสาร และสื่อดิจิทัลเพื่อการเรียนรู้
@@ -125,7 +125,7 @@ export default function TeacherBio() {
             {/* Quick stats mini list */}
             <div className="grid grid-cols-2 gap-3 text-xs md:text-sm text-slate-500">
               <div className="flex items-center gap-2">
-                <BookOpen className="w-4 h-4 text-indigo-500" />
+                <BookOpen className="w-4 h-4 text-teal-600" />
                 <span>หลักสูตร Interactive IT & Python</span>
               </div>
               <div className="flex items-center gap-2">

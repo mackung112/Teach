@@ -12,7 +12,7 @@
  *                    options: [{ key, text, isCorrect }], tip
  *                  }
  *   accentColor  — Tailwind gradient class สำหรับ ambient glow
- *                  เช่น "from-indigo-500/20 to-cyan-500/20"
+ *                  เช่น "from-teal-600/20 to-emerald-500/10"
  *   icon         — React element ไอคอน header
  */
 import React, { useState } from 'react';
@@ -22,7 +22,7 @@ export default function QuizEngine({
   title = 'มินิเกมทดสอบความรู้',
   description = 'เลือกคำตอบที่ถูกต้องเพื่อผ่านแต่ละด่าน',
   levels = [],
-  accentColor = 'from-indigo-500/20 to-cyan-500/20',
+  accentColor = 'from-emerald-600/20 to-teal-500/10',
   icon,
 }) {
   const [level, setLevel] = useState(0);
@@ -56,12 +56,12 @@ export default function QuizEngine({
       <div className="bg-slate-900 rounded-[2.5rem] p-8 md:p-12 border border-slate-800 shadow-2xl relative overflow-hidden text-center">
         <div className={`absolute inset-0 bg-gradient-to-br ${accentColor} blur-3xl opacity-30 pointer-events-none`} />
         <div className="relative z-10">
-          <CheckCircle2 className="w-16 h-16 text-emerald-400 mx-auto mb-4 animate-bounce" />
+          <CheckCircle2 className="w-16 h-16 text-emerald-400 mx-auto mb-4 animate-pulse" />
           <h3 className="text-3xl font-bold text-white mb-3">🎉 ยอดเยี่ยมมาก!</h3>
           <p className="text-slate-300 text-[16px] mb-8">คุณผ่านทุกด่านแล้ว แสดงว่าเข้าใจบทเรียนนี้เป็นอย่างดี</p>
           <button
             onClick={handleReset}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 rounded-2xl transition-all active:scale-95 flex items-center gap-2 mx-auto"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3 rounded-2xl transition-all active:scale-95 flex items-center gap-2 mx-auto cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" /> เล่นใหม่อีกรอบ
           </button>
@@ -77,11 +77,11 @@ export default function QuizEngine({
 
       {/* Header */}
       <div className="relative z-10 text-center mb-10">
-        <span className="bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-widest inline-flex items-center gap-1.5 mb-3">
+        <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-widest inline-flex items-center gap-1.5 mb-3">
           <Sparkles className="w-3.5 h-3.5" /> Gamification Zone
         </span>
         <h3 className="text-3xl font-bold text-white mb-3 flex items-center justify-center gap-3">
-          {icon && <span className="animate-bounce">{icon}</span>}
+          {icon && <span className="animate-pulse">{icon}</span>}
           {title}
         </h3>
         <p className="text-slate-400 max-w-xl mx-auto leading-relaxed text-[15px]">{description}</p>
@@ -93,7 +93,7 @@ export default function QuizEngine({
           <div>
             {/* Level indicator */}
             <div className="flex justify-between items-center mb-4">
-              <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest">
+              <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">
                 ด่านที่ {level + 1} / {totalLevels}
               </span>
               <div className="flex gap-1">
@@ -101,7 +101,7 @@ export default function QuizEngine({
                   <div
                     key={i}
                     className={`w-8 h-2 rounded-full transition-all ${
-                      i === level ? 'bg-indigo-500' : i < level ? 'bg-emerald-500' : 'bg-slate-700'
+                      i === level ? 'bg-emerald-400' : i < level ? 'bg-emerald-600' : 'bg-slate-700'
                     }`}
                   />
                 ))}
@@ -114,7 +114,7 @@ export default function QuizEngine({
             {/* Code block */}
             {currentLevel.code && (
               <div className="mb-6 bg-slate-900 rounded-xl p-4 border border-slate-950 font-mono text-[13.5px]">
-                <div className="text-[10px] text-indigo-400 uppercase mb-2 font-bold tracking-wider">// โค้ดขาดส่วนพารามิเตอร์</div>
+                <div className="text-[10px] text-teal-400 uppercase mb-2 font-bold tracking-wider">// โค้ดขาดส่วนพารามิเตอร์</div>
                 <pre className="text-slate-300 whitespace-pre">{currentLevel.code}</pre>
               </div>
             )}
@@ -123,7 +123,7 @@ export default function QuizEngine({
             {currentLevel.target && (
               <div className="mb-4">
                 <span className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">เป้าหมายผลลัพธ์:</span>
-                <div className="bg-slate-950 border border-indigo-500/20 px-5 py-3 rounded-xl font-mono text-emerald-400 text-base shadow-inner inline-block min-w-[200px]">
+                <div className="bg-slate-950 border border-teal-500/20 px-5 py-3 rounded-xl font-mono text-emerald-400 text-base shadow-inner inline-block min-w-[200px]">
                   {currentLevel.target}
                 </div>
               </div>
@@ -132,7 +132,7 @@ export default function QuizEngine({
 
           {/* Status banners */}
           {status === 'playing' && currentLevel.tip && (
-            <div className="mt-4 bg-indigo-950/40 border border-indigo-800/50 p-3.5 rounded-xl text-indigo-300 text-[12px] leading-relaxed flex gap-2">
+            <div className="mt-4 bg-slate-950/50 border border-slate-800 p-3.5 rounded-xl text-slate-300 text-[12px] leading-relaxed flex gap-2">
               <Info className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
               <span><strong>คำใบ้:</strong> {currentLevel.tip}</span>
             </div>
@@ -196,7 +196,7 @@ export default function QuizEngine({
             {status === 'success' && level === totalLevels - 1 && (
               <button
                 onClick={handleNext}
-                className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2"
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Sparkles className="w-5 h-5" /> จบเกม!
               </button>

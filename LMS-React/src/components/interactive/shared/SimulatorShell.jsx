@@ -18,16 +18,17 @@ import React from 'react';
 export default function SimulatorShell({
   icon,
   title,
-  accentBg = 'bg-indigo-50',
-  iconColor = 'text-indigo-500',
+  accentBg = 'bg-teal-50',
+  iconColor = 'text-teal-600',
   children,
   dark = false,
+  glowColors = 'from-teal-500/10 to-emerald-500/5',
 }) {
   if (dark) {
     return (
       <div className="bg-slate-900 rounded-[2rem] p-8 border border-slate-800 shadow-2xl relative overflow-hidden transition-all hover:shadow-slate-900/60 hover:-translate-y-0.5 group">
         {/* Ambient corner glow */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-indigo-500/15 to-cyan-500/10 rounded-bl-full blur-3xl -z-0 transition-all duration-700 group-hover:scale-125 pointer-events-none" />
+        <div className={`absolute top-0 right-0 w-64 h-64 bg-gradient-to-br ${glowColors} rounded-bl-full blur-3xl -z-0 transition-all duration-700 group-hover:scale-125 pointer-events-none`} />
 
         <div className="relative z-10">
           {/* Title row */}
