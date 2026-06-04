@@ -328,7 +328,7 @@ export default function SQL2_2() {
                   {/* PK */}
                   <div className="flex items-center justify-between bg-slate-950/40 p-3 rounded-xl border border-white/5">
                     <div className="flex gap-2.5 items-center">
-                      <div className={`p-1.5 rounded-lg ${pkEnabled ? 'bg-indigo-500/20 text-indigo-400' : 'bg-slate-800 text-slate-500'}`}>
+                      <div className={`p-1.5 rounded-lg ${pkEnabled ? 'bg-indigo-500/20 text-indigo-400' : 'bg-slate-800/80 text-slate-400'}`}>
                         <Key className="w-4.5 h-4.5" />
                       </div>
                       <div>
@@ -338,14 +338,14 @@ export default function SQL2_2() {
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input type="checkbox" checked={pkEnabled} onChange={() => setPkEnabled(!pkEnabled)} className="sr-only peer" />
-                      <div className="w-9 h-5 bg-slate-850 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-500"></div>
+                      <div className="w-9 h-5 bg-slate-850 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-500 font-bold"></div>
                     </label>
                   </div>
 
                   {/* AI */}
                   <div className="flex items-center justify-between bg-slate-950/40 p-3 rounded-xl border border-white/5">
                     <div className="flex gap-2.5 items-center">
-                      <div className={`p-1.5 rounded-lg ${aiEnabled ? 'bg-cyan-500/20 text-cyan-400' : 'bg-slate-800 text-slate-500'}`}>
+                      <div className={`p-1.5 rounded-lg ${aiEnabled ? 'bg-cyan-500/20 text-cyan-400' : 'bg-slate-800/80 text-slate-400'}`}>
                         <Zap className="w-4.5 h-4.5" />
                       </div>
                       <div>
@@ -355,14 +355,14 @@ export default function SQL2_2() {
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input type="checkbox" checked={aiEnabled} onChange={() => setAiEnabled(!aiEnabled)} className="sr-only peer" />
-                      <div className="w-9 h-5 bg-slate-850 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                      <div className="w-9 h-5 bg-slate-850 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500 font-bold"></div>
                     </label>
                   </div>
 
                   {/* NN */}
                   <div className="flex items-center justify-between bg-slate-950/40 p-3 rounded-xl border border-white/5">
                     <div className="flex gap-2.5 items-center">
-                      <div className={`p-1.5 rounded-lg ${nnEnabled ? 'bg-rose-500/20 text-rose-400' : 'bg-slate-800 text-slate-500'}`}>
+                      <div className={`p-1.5 rounded-lg ${nnEnabled ? 'bg-rose-500/20 text-rose-400' : 'bg-slate-800/80 text-slate-400'}`}>
                         <ShieldAlert className="w-4.5 h-4.5" />
                       </div>
                       <div>
@@ -372,14 +372,14 @@ export default function SQL2_2() {
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input type="checkbox" checked={nnEnabled} onChange={() => setNnEnabled(!nnEnabled)} className="sr-only peer" />
-                      <div className="w-9 h-5 bg-slate-850 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-rose-500"></div>
+                      <div className="w-9 h-5 bg-slate-850 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-rose-500 font-bold"></div>
                     </label>
                   </div>
 
                   {/* UQ */}
                   <div className="flex items-center justify-between bg-slate-950/40 p-3 rounded-xl border border-white/5">
                     <div className="flex gap-2.5 items-center">
-                      <div className={`p-1.5 rounded-lg ${uqEnabled ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-800 text-slate-500'}`}>
+                      <div className={`p-1.5 rounded-lg ${uqEnabled ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-800/80 text-slate-400'}`}>
                         <Sparkles className="w-4.5 h-4.5" />
                       </div>
                       <div>
