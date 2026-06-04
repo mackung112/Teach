@@ -18,19 +18,17 @@
 ## 📝 3. โน้ตส่งมอบงานและบันทึกประวัติ (Handoff Logs)
 *(เมื่อแต่ละงาน in Active Checklist ด้านบนทำสำเร็จลุล่วงแล้ว ให้ย้ายเนื้อหามาเขียนสรุปผลไว้ตรงนี้ และนำงานนั้นออกจาก Active Checklist ทันที และลบ Handoff Logs เดิมทิ้งไป เก็บไว้ 2 งานล่าสุด) (เก็บข้อความนี้ไว้ในทุกๆ ครั้งที่มีการส่งมอบงาน)*
 
-- **การจัดสร้างหน้าบทเรียน 2.1 โครงสร้างตาราง (sql2_1.jsx)** [เสร็จสิ้น - 04/06/2026]
-    - **การจัดทำเนื้อหาทฤษฎีตามแนวดิ่ง (Vertical Stacking)**: นิยามตาราง, ฟิลด์, ระเบียน, คีย์หลัก โดยใช้รูปแบบเปิดโปร่ง Fluid Open-Air ปราศจากหัวข้อย่อยแบบตัวเลขจุดทศนิยม
-    - **เครื่องมือจำลอง Table Schema & Record Builder**:
-        - *Column DDL Management*: เพิ่ม/ลบคอลัมน์ เลือกชนิดข้อมูล กำหนด Key หลัก
-        - *Record Insertion DML*: ป้อนระเบียนข้อมูล Dynamic ตรวจสอบความถูกต้องและป้องกันข้อกำหนด PK Constraints (Unique & NOT NULL) พร้อมส่งแจ้งเตือน Duplicate PK Error ไปยังบอร์ดบันทึก
-        - *Visual Database Grid*: แสดงตารางฐานข้อมูลเชิงกายภาพพร้อมสัญลักษณ์คีย์หลัก 🔑 และลบเรคคอร์ด
-    - **กิจกรรมและข้อคำถาม**: ติดตั้งใบงาน TeacherTask แบบสะสมคำถามความก้าวหน้าและการจำลองผลคำสั่ง
-    - **การประเมินคุณภาพ**: ผ่านการสแกนตรวจสอบ npx impeccable detect (0 warnings) และทดสอบคอมไพล์ build สำเร็จ 100%
+- **ปรับปรุงหน้าบทเรียน 2.1 ชนิดข้อมูลใน MySQL (sql2_1.jsx)** [เสร็จสิ้น - 04/06/2026]
+    - **การจัดทำเนื้อหาทฤษฎีตามแนวดิ่ง (Vertical Stacking)**: นำเสนอ 8 ชนิดข้อมูลที่สำคัญของ MySQL แบบ Fluid Open-Air โดยไม่มีตัวเลขย่อยนำหน้าหัวข้อเพื่อสุนทรียภาพการอ่านที่ดีเยี่ยม
+    - **แก้ไข Reference Bug**: ตรวจพบและแก้ไขปัญหาการเรียกใช้ไอคอน `BookOpen` ที่ไม่ได้ถูกนำเข้า (Import) ในระบบให้สามารถทำงานได้เสถียร 100%
+    - **การประเมินคุณภาพ**: คอมไพล์โปรดักชันบิลด์ (`npm run build`) สำเร็จ 100% ไม่มีข้อผิดพลาดใด ๆ ค้างคา
 
-- **การจัดสร้างหน้าบทเรียน 1.4 แนะนำ MySQL และ MySQL Workbench (sql1_4.jsx)** [เสร็จสิ้น - 04/06/2026]
-    - **การจัดทำเนื้อหาทฤษฎีตามแนวดิ่ง (Vertical Stacking)**: อธิบายสถาปัตยกรรม 3 ประสาน (Server RDBMS, SQL Language, GUI Client) และแนวทางการจัดหาซอฟต์แวร์แบบเปิดโปร่ง Fluid Open-Air และ Badges ไร้ตัวเลขข้อย่อยตาม SOT
-    - **เครื่องมือจำลอง 2 ชุด (2 Simulators)**:
-        - *MySQL Installer Setup*: จำลองโปรแกรม Installer เลือก Developer Default, การติดตั้ง แสดง progress, ตรวจสอบพอร์ตเครือข่าย, และตั้งรหัสผ่าน Root (ซิงก์ข้ามไปยัง Workbench)
-        - *MySQL Workbench GUI*: จำลองโปรแกรม Workbench, การเข้าใช้งานตรวจสอบรหัสผ่าน Root, การพิมพ์และ Execute คำสั่ง (SHOW DATABASES, CREATE DATABASE, SELECT), แสดง Result Grid ตารางข้อมูล และแสดง Output log
-    - **กิจกรรมและข้อคำถาม**: ติดตั้งใบงาน TeacherTask เพื่อการประเมินการออกแบบความลับของระบบและสัญญะเครือข่ายฐานข้อมูล
+- **การจัดสร้างหน้าบทเรียน 2.3 การจัดการตาราง (sql2_3.jsx)** [เสร็จสิ้น - 04/06/2026]
+    - **การจัดทำเนื้อหาทฤษฎีตามแนวดิ่ง (Vertical Stacking)**: อธิบายโครงสร้างและสคริปต์การจัดการตาราง (CREATE, ALTER, DROP TABLE) แบบ Fluid Open-Air พร้อมการวิเคราะห์ 6 คุณสมบัติข้อจำกัดคอลัมน์ (PK, NN, UQ, BIN, UN, ZF) ตามแบบประเมินและภาพสไลด์โดยไม่มีตัวเลขลำดับย่อยนำหน้าหัวเรื่อง
+    - **เครื่องมือจำลอง MySQL Workbench GUI Table Editor Simulator**:
+        - *Navigator schemas list and data_std_bd activation*: จำลอง Navigator Panel ที่ใช้ `data_std_bd` สลับโหมดแอคทีฟ (Active) และการขยายดู Elements (Tables, Views, SP, Functions)
+        - *Column Details & Checkboxes panel*: จำลองรายละเอียดคอลัมน์ด้านล่าง (Data Type, Default Value, และ Checkboxes คุณสมบัติ PK/NN/UQ/BIN/UN/ZF/AI/G) ที่ซิงก์ข้อมูลอัปเดตลงตาราง Grid ด้านบนแบบเรียลไทม์ตามสไลด์เรียนรู้ 100%
+        - *DQL Select Rows Simulation*: เพิ่มความสามารถจำลองรันคำสั่ง SELECT ROWS เพื่อดึงผลลัพธ์ตารางและแสดงข้อมูลนักเรียนจำลองใน Query tab
+        - *DDL SQL script execution & Drop warnings*: รีวิว SQL script (CREATE/ALTER DDL) เสมือนจริงก่อนสั่งประมวลผลทางเซิร์ฟเวอร์ พร้อมโมดูลเตือนลบตาราง (Drop Table warnings) ที่พิมพ์ผลสำเร็จและสะท้อนสถานะลง Navigator Action Output Logs
+    - **กิจกรรมและข้อคำถาม**: ติดตั้งใบงาน TeacherTask สำหรับการจำลองการออกแบบและจัดการตารางโครงสร้างฐานข้อมูล (Table Schema Design and Administration Task)
     - **การประเมินคุณภาพ**: ผ่านการตรวจสอบความประณีต npx impeccable detect (0 warnings) และคอมไพล์โปรดักชันบิลด์ (npm run build) สำเร็จ 100%

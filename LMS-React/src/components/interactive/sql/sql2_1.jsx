@@ -11,892 +11,565 @@ import {
   Table,
   Plus,
   Trash2,
-  Key,
-  Check,
-  CheckCircle2,
-  AlertCircle,
   Play,
+  AlertCircle,
+  CheckCircle2,
   ArrowRight,
-  Lock,
   Settings,
+  ChevronRight,
+  X,
+  Sparkles,
+  Info,
+  RefreshCw,
   Terminal,
-  Grid,
-  Layers,
+  MousePointer,
   HelpCircle,
+  FolderOpen,
+  Check,
   FileCode,
-  ArrowLeft,
-  ChevronRight
+  ShieldAlert,
+  BookOpen
 } from 'lucide-react';
 
 export default function SQL2_1() {
-  // ─── Interactive Stepper State ───
-  const [activeStep, setActiveStep] = useState(0);
+  // Simulator State
+  const [colName, setColName] = useState('age');
+  const [selectedType, setSelectedType] = useState('INT');
+  const [sampleValue, setSampleValue] = useState('18');
+  const [validationResult, setValidationResult] = useState({ valid: true, reason: 'ค่า INT ถูกต้อง ถูกเก็บในเมมโมรีขนาด 4 Bytes' });
+  
+  // Guided Quest Step
+  const [questStep, setQuestStep] = useState(1);
+  // 1: age -> INT, value "18"
+  // 2: email -> VARCHAR, value "student@school.com"
+  // 3: birth_date -> DATE, value "2008-12-25"
+  // 4: is_registered -> BOOLEAN, value "TRUE" or "1"
+  // 5: tuition_fee -> DECIMAL, value "3500.50"
+  // 6: Complete
 
-  // ─── Table Schema State ───
-  const [columns, setColumns] = useState([
-    { name: 'student_id', type: 'VARCHAR(10)', isPK: true },
-    { name: 'name', type: 'VARCHAR(50)', isPK: false },
-    { name: 'age', type: 'INT', isPK: false }
+  // Output console logs
+  const [logMessages, setLogMessages] = useState([
+    { time: '13:20:00', status: 'info', message: 'SQL Data Type Engine loaded.' },
+    { time: '13:20:01', status: 'info', message: 'Parser online. Ready to validate MySQL field attributes.' }
   ]);
 
-  // ─── Table Records State ───
-  const [records, setRecords] = useState([
-    { student_id: 'STD01', name: 'แอน (Anna)', age: 18 },
-    { student_id: 'STD02', name: 'บ็อบ (Bob)', age: 19 }
-  ]);
-
-  // ─── Form Inputs State ───
-  // 1. Column Add Form
-  const [newColName, setNewColName] = useState('');
-  const [newColType, setNewColType] = useState('VARCHAR(50)');
-  const [newColIsPK, setNewColIsPK] = useState(false);
-
-  // 2. Record Insert Form (keyed by column name)
-  const [newRecordData, setNewRecordData] = useState({
-    student_id: '',
-    name: '',
-    age: ''
-  });
-
-  // ─── Output Console Log State ───
-  const [outputLogs, setOutputLogs] = useState([
-    { status: 'success', time: '08:30:00', action: 'INIT', message: 'สร้างตาราง students สำเร็จ (3 คอลัมน์, 2 แถวข้อมูลเริ่มต้น)' }
-  ]);
-  const [validationError, setValidationError] = useState('');
-
-  // Sync insert record form fields when columns change
-  useEffect(() => {
-    setNewRecordData((prev) => {
-      const updated = { ...prev };
-      columns.forEach((col) => {
-        if (updated[col.name] === undefined) {
-          updated[col.name] = '';
-        }
-      });
-      // Clean up deleted columns
-      Object.keys(updated).forEach((key) => {
-        if (!columns.some((col) => col.name === key)) {
-          delete updated[key];
-        }
-      });
-      return updated;
-    });
-  }, [columns]);
-
-  // ─── Stepper Content Definition ───
-  const steps = [
-    {
-      title: 'วิเคราะห์โครงสร้าง (Table Schema Design)',
-      badge: 'ขั้นตอนที่ 1',
-      icon: Grid,
-      color: 'text-blue-500 bg-blue-50 border-blue-200',
-      accentColor: 'blue',
-      desc: 'กระบวนการระบุและแปลงเอนทิตี (Entity) ในชีวิตจริงให้เป็นโครงร่างตารางเชิงสัมพันธ์ โดยแบ่งแยกข้อมูลออกเป็นคอลัมน์แนวตั้ง (Columns/Fields) และเลือกชนิดข้อมูล (Data Types) ที่เหมาะสมที่สุดกับคอลัมน์นั้นๆ',
-      bulletPoints: [
-        'กำหนดชื่อของเอนทิตีที่จะบันทึก เช่น ตารางนักเรียน (students)',
-        'แยกคุณลักษณะออกเป็นคอลัมน์เพื่อจัดหมวดหมู่ข้อมูล',
-        'ระบุชนิดข้อมูลให้ครอบคลุมและมีประสิทธิภาพต่อการจัดเก็บจริงในหน่วยความจำ'
-      ],
-      highlights: [
-        { term: 'Table Name', definition: 'ชื่อของตารางเพื่อระบุวัตถุข้อมูลเชิงระบบ เช่น students' },
-        { term: 'Field / Attribute', definition: 'คุณลักษณะแนวตั้งเฉพาะตัวในตาราง เช่น name, age' },
-        { term: 'Data Type', definition: 'ข้อกำหนดประเภทข้อมูลสำหรับควบคุมตรรกะ เช่น VARCHAR, INT' }
-      ],
-      sqlCode: `-- กำหนดแผนผังตารางเบื้องต้นในกระดาษร่าง
--- ตาราง: students
--- รายการคอลัมน์และข้อกำหนดที่วิเคราะห์ได้:
---   - student_id : ข้อความรหัสขนาดสั้น (VARCHAR(10))
---   - name       : ข้อความชื่อ-นามสกุล (VARCHAR(50))
---   - age        : ตัวเลขจำนวนเต็มอายุ (INT)`
-    },
-    {
-      title: 'กำหนดข้อกำหนดคีย์หลัก (Primary Key Constraints)',
-      badge: 'ขั้นตอนที่ 2',
-      icon: Key,
-      color: 'text-amber-500 bg-amber-50 border-amber-200',
-      accentColor: 'amber',
-      desc: 'การคัดเลือกหนึ่งคอลัมน์ขึ้นมาเพื่อทำหน้าที่เป็น "คีย์หลัก (Primary Key)" ซึ่งเป็นกลไกสำคัญในการชี้ระบุตัวตนประจำแถวข้อมูล โดยมีเงื่อนไขบังคับเชิงสถาปัตยกรรม 2 ข้อ เพื่อป้องกันไม่ให้ข้อมูลสับสนซ้ำซาก',
-      bulletPoints: [
-        'UNIQUE Constraint: ค่าของคีย์หลักในแต่ละแถวข้อมูลต้องห้ามซ้ำกันเด็ดขาด',
-        'NOT NULL Constraint: คีย์หลักห้ามเป็นค่าว่างเปล่า (Null) ต้องระบุเสมอ',
-        'Entity Integrity: ช่วยควบคุมความถูกต้องสมบูรณ์ของวัตถุแต่ละตัวในตาราง'
-      ],
-      highlights: [
-        { term: 'Primary Key (PK)', definition: 'คีย์ระบุข้อมูลแถวห้ามซ้ำและห้ามว่างเปล่าประจำตาราง' },
-        { term: 'NOT NULL', definition: 'กฎความปลอดภัยทางสคีมาที่บังคับผู้ใช้ป้อนข้อมูลห้ามละเว้น' },
-        { term: 'Unique Value', definition: 'ความเฉพาะตัวของข้อมูลเพื่อแยกแยะแต่ละแถวไม่ให้ซ้ำซ้อนกัน' }
-      ],
-      sqlCode: `-- กำหนดให้ student_id เป็นตัวระบุตัวตน (Primary Key)
--- โครงสร้างความปลอดภัยของ PK:
---   - ป้องกันไม่ให้มีรหัสนักเรียนซ้ำกันในตาราง
---   - บังคับว่าผู้เรียนทุกคนต้องกรอกรหัสประจำตัว`
-    },
-    {
-      title: 'ประกาศตารางจริงด้วย DDL (CREATE TABLE)',
-      badge: 'ขั้นตอนที่ 3',
-      icon: Database,
-      color: 'text-purple-500 bg-purple-50 border-purple-200',
-      accentColor: 'purple',
-      desc: 'หลังจากเสร็จสิ้นขั้นตอนการร่างแบบและกำหนดกฎความปลอดภัยแล้ว จะใช้ประโยคคำสั่งในกลุ่มภาษาคำนิยามข้อมูล (Data Definition Language หรือ DDL) ส่งสคริปต์สั่งให้ DBMS จัดตั้งตารางเปล่าในระบบ',
-      bulletPoints: [
-        'ใช้คำสั่ง CREATE TABLE เพื่อประกาศชื่อตารางใหม่',
-        'นิยามแต่ละฟิลด์ ชนิดข้อมูล และข้อจำกัดความปลอดภัยคีย์ในวงเล็บ',
-        'DBMS จะจองพื้นที่เก็บข้อมูลและสร้างโครงร่างตารางเปล่า (Empty Table Schema)'
-      ],
-      highlights: [
-        { term: 'DDL', definition: 'กลุ่มคำสั่ง SQL สำหรับการกำหนดโครงสร้างและออบเจกต์ในระบบ' },
-        { term: 'CREATE TABLE', definition: 'คำสั่งพื้นฐานในการสร้างตารางระเบียนข้อมูลใหม่ในฐานข้อมูล' },
-        { term: 'Relation Schema', definition: 'หัวโครงร่างความสัมพันธ์ตารางที่เสร็จสิ้น พร้อมรับข้อมูลป้อนเข้า' }
-      ],
-      sqlCode: `CREATE TABLE students (
-  student_id VARCHAR(10) PRIMARY KEY,
-  name VARCHAR(50) NOT NULL,
-  age INT
-);
--- ผลลัพธ์: ได้ตาราง students ที่มีโครงสร้างเปล่ารอการบันทึก`
-    },
-    {
-      title: 'แทรกข้อมูลและกรองกฎด้วย DML (INSERT INTO)',
-      badge: 'ขั้นตอนที่ 4',
-      icon: Play,
-      color: 'text-emerald-500 bg-emerald-50 border-emerald-200',
-      accentColor: 'emerald',
-      desc: 'ขั้นตอนการนำเข้าข้อมูลจริงเข้าสู่ระบบผ่านการใช้ภาษาจัดการข้อมูล (Data Manipulation Language หรือ DML) โดยส่งคำสั่งแทรกระเบียนแถวข้อมูล (Rows) และปล่อยให้ SQL Engine ประเมินกฎความปลอดภัยโดยอัตโนมัติ',
-      bulletPoints: [
-        'ใช้ประโยคคำสั่ง INSERT INTO ร่วมกับ VALUES เพื่อป้อนแถวข้อมูลใหม่',
-        'กลไก SQL Engine สแกนข้อจำกัดคีย์หลักของข้อมูลที่นำเข้าแบบเรียลไทม์',
-        'หากคีย์หลักซ้ำหรือเป็นค่าว่าง ระบบจะระงับการทำงานและโยน Error กลับมา'
-      ],
-      highlights: [
-        { term: 'DML', definition: 'กลุ่มคำสั่ง SQL ในการแก้ไขดึงข้อมูลระดับแถว เช่น INSERT, UPDATE' },
-        { term: 'INSERT INTO', definition: 'คำสั่ง SQL สำหรับระบุค่าข้อมูลนำเข้าประจำแถวใหม่' },
-        { term: 'PK Validation', definition: 'การสแกนเปรียบเทียบค่าคีย์หลักใหม่กับชุดค่าคีย์เดิมในฐานข้อมูล' }
-      ],
-      sqlCode: `INSERT INTO students (student_id, name, age)
-VALUES ('STD01', 'แอน (Anna)', 18);
-
--- หากป้อนค่าคีย์หลัก (student_id) ซ้ำ:
--- INSERT INTO students (student_id, name, age) VALUES ('STD01', 'บ็อบ', 19);
--- จะเกิดข้อผิดพลาด: Error: Duplicate entry 'STD01' for key 'PRIMARY'`
-    },
-    {
-      title: 'ได้ตารางและสืบค้นผลลัพธ์ (Relation Instance)',
-      badge: 'ขั้นตอนที่ 5',
-      icon: Table,
-      color: 'text-indigo-500 bg-indigo-50 border-indigo-200',
-      accentColor: 'indigo',
-      desc: 'ผลลัพธ์สูงสุดเมื่อข้อมูลผ่านการคัดกรองความสมบูรณ์และถูกต้องเรียบร้อยแล้ว ข้อมูลจริงจะถูกผูกติดกับแผนผังโครงร่างตารางอย่างถาวรในระบบ RDBMS พร้อมแสดงผลและสืบค้นเรียกใช้งาน',
-      bulletPoints: [
-        'ข้อมูลจัดกลุ่มเป็นระเบียบแถวแนวนอน (Rows/Records/Tuples) อย่างสวยงาม',
-        'สืบค้นข้อมูลออกมาแสดงผลเชิงวิเคราะห์ได้ด้วยคำสั่ง SQL SELECT',
-        'พร้อมสำหรับนำไปขยายผล หรือทำข้อผูกมัดความสัมพันธ์กับตารางอื่นๆ'
-      ],
-      highlights: [
-        { term: 'Relation Instance', definition: 'ภาพข้อมูลจริงที่จัดเก็บอยู่ในตาราง ณ เวลาใดเวลาหนึ่ง' },
-        { term: 'SELECT Query', definition: 'คำสั่งเรียกดึงข้อมูลระเบียนเพื่อมาเรนเดอร์แสดงผลงาน' },
-        { term: 'Physical Table', definition: 'การจัดเก็บกายภาพที่เป็นระบบแถวและคอลัมน์ที่สมบูรณ์' }
-      ],
-      sqlCode: `SELECT * FROM students;
-
--- ได้ตารางสมบูรณ์พร้อมแสดงผลใน Workbench:
--- +------------+------------+-----+
--- | student_id | name       | age |
--- +------------+------------+-----+
--- | STD01      | Anna       |  18 |
--- | STD02      | Bob        |  19 |
--- +------------+------------+-----+`
-    }
-  ];
-
-  // ─── Operations: Add Column ───
-  const addColumn = () => {
-    const nameClean = newColName.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
-    if (!nameClean) {
-      setValidationError('กรุณาระบุชื่อคอลัมน์ที่เป็นอักษรภาษาอังกฤษหรือตัวเลข');
-      return;
-    }
-
-    if (columns.some((col) => col.name === nameClean)) {
-      setValidationError(`คอลัมน์ชื่อ '${nameClean}' มีอยู่แล้วในตาราง`);
-      return;
-    }
-
-    // If new column is marked as Primary Key, unmark others (standard database simplifies to 1 PK here)
-    const updatedCols = columns.map((col) => ({
-      ...col,
-      isPK: newColIsPK ? false : col.isPK
-    }));
-
-    const newColumnObj = {
-      name: nameClean,
-      type: newColType,
-      isPK: newColIsPK
-    };
-
-    setColumns([...updatedCols, newColumnObj]);
-
-    // Update existing records to have this column as empty value
-    setRecords((prev) =>
-      prev.map((rec) => ({
-        ...rec,
-        [nameClean]: newColType.includes('INT') || newColType.includes('DECIMAL') ? 0 : ''
-      }))
-    );
-
-    const timestamp = new Date().toLocaleTimeString();
-    setOutputLogs((prev) => [
-      {
-        status: 'success',
-        time: timestamp,
-        action: 'ALTER TABLE',
-        message: `ALTER TABLE students ADD COLUMN ${nameClean} ${newColType}${newColIsPK ? ' PRIMARY KEY' : ''};`
-      },
-      ...prev
-    ]);
-
-    // Reset inputs
-    setNewColName('');
-    setNewColIsPK(false);
-    setValidationError('');
-  };
-
-  // ─── Operations: Delete Column ───
-  const deleteColumn = (colName) => {
-    if (columns.length <= 1) {
-      setValidationError('ตารางต้องมีคอลัมน์เหลืออยู่อย่างน้อย 1 คอลัมน์');
-      return;
-    }
-
-    const colToDelete = columns.find((c) => c.name === colName);
-    const updatedCols = columns.filter((c) => c.name !== colName);
-
-    // If we deleted the primary key, assign PK to the first column automatically for demo safety
-    if (colToDelete?.isPK && updatedCols.length > 0) {
-      updatedCols[0].isPK = true;
-    }
-
-    setColumns(updatedCols);
-
-    // Remove column value from all records
-    setRecords((prev) =>
-      prev.map((rec) => {
-        const nextRec = { ...rec };
-        delete nextRec[colName];
-        return nextRec;
-      })
-    );
-
-    const timestamp = new Date().toLocaleTimeString();
-    setOutputLogs((prev) => [
-      {
-        status: 'success',
-        time: timestamp,
-        action: 'ALTER TABLE',
-        message: `ALTER TABLE students DROP COLUMN ${colName};`
-      },
+  const addLog = (message, status = 'success') => {
+    const timestamp = new Date().toTimeString().split(' ')[0];
+    setLogMessages(prev => [
+      { time: timestamp, status, message },
       ...prev
     ]);
   };
 
-  // ─── Operations: Insert Record ───
-  const insertRecord = () => {
-    setValidationError('');
+  // Helper validation logic
+  const validateValue = (type, val) => {
+    if (val.trim() === '') {
+      return { valid: false, reason: 'กรุณากรอกข้อมูลทดสอบในช่อง Sample Value' };
+    }
     
-    // Find Primary Key column
-    const pkColumn = columns.find((c) => c.isPK);
-    if (!pkColumn) {
-      setValidationError('โครงสร้างตารางจำเป็นต้องมีคีย์หลัก (Primary Key) ก่อนทำการเพิ่มระเบียนข้อมูล');
-      return;
-    }
-
-    const pkValue = newRecordData[pkColumn.name]?.trim();
-
-    // 1. PK NOT NULL Check
-    if (!pkValue) {
-      setValidationError(`ข้อจำกัดความปลอดภัย: คอลัมน์คีย์หลัก '${pkColumn.name}' ห้ามมีค่าว่าง (NOT NULL)`);
-      return;
-    }
-
-    // 2. PK Duplicate Check
-    const isDuplicate = records.some((rec) => String(rec[pkColumn.name]).toLowerCase() === pkValue.toLowerCase());
-    if (isDuplicate) {
-      const timestamp = new Date().toLocaleTimeString();
-      setOutputLogs((prev) => [
-        {
-          status: 'error',
-          time: timestamp,
-          action: 'INSERT ERROR',
-          message: `Error: Duplicate entry '${pkValue}' for key 'PRIMARY'. (คีย์หลักซ้ำ ห้ามเพิ่มแถวข้อมูล!)`
-        },
-        ...prev
-      ]);
-      setValidationError(`ข้อผิดพลาดความปลอดภัย: พบค่าคีย์หลักซ้ำ '${pkValue}' ในระบบ!`);
-      return;
-    }
-
-    // Formulate new record object
-    const newRecordObj = {};
-    columns.forEach((col) => {
-      const val = newRecordData[col.name];
-      if (col.type.includes('INT')) {
-        newRecordObj[col.name] = val ? parseInt(val, 10) : 0;
-      } else if (col.type.includes('DECIMAL')) {
-        newRecordObj[col.name] = val ? parseFloat(val) : 0.0;
-      } else {
-        newRecordObj[col.name] = val || '';
+    switch(type) {
+      case 'INT': {
+        const num = Number(val);
+        if (isNaN(num)) return { valid: false, reason: 'ข้อมูลไม่ใช่ตัวเลขจำนวนเต็ม' };
+        if (!Number.isInteger(num)) return { valid: false, reason: 'INT ต้องเป็นตัวเลขจำนวนเต็ม ห้ามมีจุดทศนิยม' };
+        return { valid: true, reason: 'ค่า INT ถูกต้อง ถูกเก็บในเมมโมรีขนาด 4 Bytes' };
       }
-    });
-
-    setRecords([...records, newRecordObj]);
-
-    // Construct SQL INSERT log
-    const colNamesStr = columns.map((c) => c.name).join(', ');
-    const colValsStr = columns.map((c) => {
-      const val = newRecordObj[c.name];
-      return typeof val === 'string' ? `'${val}'` : val;
-    }).join(', ');
-
-    const timestamp = new Date().toLocaleTimeString();
-    setOutputLogs((prev) => [
-      {
-        status: 'success',
-        time: timestamp,
-        action: 'INSERT INTO',
-        message: `INSERT INTO students (${colNamesStr}) VALUES (${colValsStr});`
-      },
-      ...prev
-    ]);
-
-    // Reset record inputs, keeping schemas intact
-    const resetData = {};
-    columns.forEach((col) => {
-      resetData[col.name] = '';
-    });
-    setNewRecordData(resetData);
+      case 'VARCHAR': {
+        if (val.length > 255) return { valid: false, reason: 'ความยาวเกินขีดจำกัดความยาวสูงสุด VARCHAR(255)' };
+        return { valid: true, reason: `ค่า VARCHAR ถูกต้อง เก็บเป็นสายอักขระความยาวแปรผัน (${val.length} อักขระ)` };
+      }
+      case 'DATE': {
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(val)) return { valid: false, reason: 'DATE ต้องใช้รูปแบบ YYYY-MM-DD เท่านั้น (เช่น 2026-06-04)' };
+        const parsed = Date.parse(val);
+        if (isNaN(parsed)) return { valid: false, reason: 'ค่าวันที่ไม่ถูกต้องตามหลักปฏิทินสากล' };
+        return { valid: true, reason: 'ค่า DATE ถูกต้อง รูปแบบ YYYY-MM-DD (เก็บเป็นไบต์ 3 Bytes)' };
+      }
+      case 'DATETIME': {
+        const datetimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+        if (!datetimeRegex.test(val)) return { valid: false, reason: 'DATETIME ต้องระบุวันและเวลารูปแบบ YYYY-MM-DD HH:MM:SS (เช่น 2026-06-04 13:30:00)' };
+        const datePart = val.split(' ')[0];
+        const parsed = Date.parse(datePart);
+        if (isNaN(parsed)) return { valid: false, reason: 'ค่าวันที่ไม่ถูกต้องตามหลักปฏิทินสากล' };
+        return { valid: true, reason: 'ค่า DATETIME ถูกต้อง รวมข้อมูลเวลาครบถ้วน (เก็บ 8 Bytes)' };
+      }
+      case 'BOOLEAN': {
+        const upperVal = val.toUpperCase().trim();
+        if (upperVal === 'TRUE' || upperVal === 'FALSE' || upperVal === '1' || upperVal === '0') {
+          return { valid: true, reason: 'BOOLEAN ถูกต้อง ใน MySQL จะจำลองเก็บเป็น TINYINT(1) (1 = TRUE, 0 = FALSE)' };
+        }
+        return { valid: false, reason: 'BOOLEAN รองรับเพียงค่า TRUE, FALSE, 1 หรือ 0 เท่านั้น' };
+      }
+      case 'FLOAT': {
+        const num = Number(val);
+        if (isNaN(num)) return { valid: false, reason: 'ข้อมูลไม่ใช่ตัวเลขทศนิยม' };
+        return { valid: true, reason: 'ค่า FLOAT ถูกต้อง เก็บในระบบทศนิยมตำแหน่งลอย Single-Precision' };
+      }
+      case 'DECIMAL': {
+        const num = Number(val);
+        if (isNaN(num)) return { valid: false, reason: 'ข้อมูลไม่ใช่ตัวเลขจำนวนจริง' };
+        return { valid: true, reason: 'ค่า DECIMAL ถูกต้อง เก็บตัวเลขทศนิยมแบบคงที่แม่นยำสูง (Fixed-Point) เหมาะกับงานการเงิน' };
+      }
+      case 'TEXT': {
+        return { valid: true, reason: 'ค่า TEXT ถูกต้อง เก็บข้อมูลสตริงขนาดใหญ่สูงสุด 65,535 อักขระ' };
+      }
+      default:
+        return { valid: false, reason: 'ชนิดข้อมูลขัดข้อง' };
+    }
   };
 
-  // ─── Operations: Delete Record ───
-  const deleteRecord = (index) => {
-    const targetRec = records[index];
-    const pkColumn = columns.find((c) => c.isPK);
-    const pkVal = pkColumn ? targetRec[pkColumn.name] : '';
+  // Run validation on inputs change
+  useEffect(() => {
+    const result = validateValue(selectedType, sampleValue);
+    setValidationResult(result);
+    
+    if (result.valid) {
+      addLog(`Validation passed: Column '${colName}' of type ${selectedType} is valid for input '${sampleValue}'`, 'success');
+      
+      // Auto-step the quest if values match targets
+      if (questStep === 1 && colName === 'age' && selectedType === 'INT' && sampleValue === '18') {
+        setQuestStep(2);
+        setColName('email');
+        setSelectedType('VARCHAR');
+        setSampleValue('student@school.com');
+        addLog('Quest Step 1 Complete: Validated INT age!', 'info');
+      } else if (questStep === 2 && colName === 'email' && selectedType === 'VARCHAR' && sampleValue === 'student@school.com') {
+        setQuestStep(3);
+        setColName('birth_date');
+        setSelectedType('DATE');
+        setSampleValue('2008-12-25');
+        addLog('Quest Step 2 Complete: Validated VARCHAR email!', 'info');
+      } else if (questStep === 3 && colName === 'birth_date' && selectedType === 'DATE' && sampleValue === '2008-12-25') {
+        setQuestStep(4);
+        setColName('is_registered');
+        setSelectedType('BOOLEAN');
+        setSampleValue('TRUE');
+        addLog('Quest Step 3 Complete: Validated DATE birth_date!', 'info');
+      } else if (questStep === 4 && colName === 'is_registered' && selectedType === 'BOOLEAN' && (sampleValue === 'TRUE' || sampleValue === '1')) {
+        setQuestStep(5);
+        setColName('tuition_fee');
+        setSelectedType('DECIMAL');
+        setSampleValue('3500.50');
+        addLog('Quest Step 4 Complete: Validated BOOLEAN status!', 'info');
+      } else if (questStep === 5 && colName === 'tuition_fee' && selectedType === 'DECIMAL' && sampleValue === '3500.50') {
+        setQuestStep(6);
+        addLog('Quest Complete: All MySQL basic data types successfully validated!', 'info');
+      }
+    } else {
+      addLog(`Validation failed: '${sampleValue}' is invalid for type ${selectedType}`, 'error');
+    }
+  }, [colName, selectedType, sampleValue]);
 
-    setRecords(records.filter((_, idx) => idx !== index));
-
-    const timestamp = new Date().toLocaleTimeString();
-    setOutputLogs((prev) => [
-      {
-        status: 'success',
-        time: timestamp,
-        action: 'DELETE FROM',
-        message: `DELETE FROM students WHERE ${pkColumn?.name || 'row'} = '${pkVal}';`
-      },
-      ...prev
-    ]);
+  // Dynamic DDL output preview
+  const generateColDDL = () => {
+    let sizeStr = '';
+    if (selectedType === 'VARCHAR') sizeStr = '(255)';
+    if (selectedType === 'DECIMAL') sizeStr = '(10, 2)';
+    
+    return `\`${colName || 'column'}\` ${selectedType}${sizeStr} NULL`;
   };
 
-  // Reset simulator
-  const resetSimulator = () => {
-    setColumns([
-      { name: 'student_id', type: 'VARCHAR(10)', isPK: true },
-      { name: 'name', type: 'VARCHAR(50)', isPK: false },
-      { name: 'age', type: 'INT', isPK: false }
-    ]);
-    setRecords([
-      { student_id: 'STD01', name: 'แอน (Anna)', age: 18 },
-      { student_id: 'STD02', name: 'บ็อบ (Bob)', age: 19 }
-    ]);
-    setNewColName('');
-    setNewColIsPK(false);
-    setNewRecordData({ student_id: '', name: '', age: '' });
-    setValidationError('');
-    setOutputLogs([
-      { status: 'success', time: new Date().toLocaleTimeString(), action: 'RESET', message: 'รีเซ็ตโครงสร้างและข้อมูลตารางกลับเป็นค่าเริ่มต้น' }
-    ]);
+  const resetQuest = () => {
+    setQuestStep(1);
+    setColName('age');
+    setSelectedType('INT');
+    setSampleValue('18');
+    addLog('Quest steps restarted by user.', 'info');
   };
-
-  const currentStepData = steps[activeStep];
-  const StepIcon = currentStepData.icon;
 
   return (
-    <div className="font-sans text-slate-800 pb-24 relative">
-      {/* ─── Layer 1: Ambient Backdrop ─── */}
+    <div className="w-full relative" id="sql2_1-root">
+      {/* ─── Layer 1: Ambient Background Gradients ─── */}
       <AmbientBackdrop blobs={SQL1_BLOBS} />
 
-      {/* ─── Layer 3: Main Page Content ─── */}
       <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-6 space-y-12 md:space-y-16 relative z-10">
         
-        {/* Intro - Fluid Open-Air Layout */}
-        <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
-          ในระบบจัดการฐานข้อมูลเชิงสัมพันธ์ (RDBMS) ตารางเปรียบเสมือนบ้านในการจัดเก็บข้อมูลเชิงกายภาพที่ถาวร 
-          การสร้างตารางและนำข้อมูลเข้าใช้งานมีลำดับขั้นตอนที่เป็นวิทยาการคอมพิวเตอร์อย่างเป็นระบบ 
-          ตั้งแต่การวิเคราะห์โครงร่างสคีมา จนถึงการสืบค้นข้อมูลที่ผ่านการประเมินกฎควบคุมความปลอดภัย
-        </p>
-
-        {/* ─── Section 1: Stepper (กระบวนการสร้างตารางแบบเป็นขั้นตอน) ─── */}
+        {/* ─── Section 1: Theory Content (Fluid Open-Air Layout) ─── */}
         <section className="space-y-6">
           <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-blue-600 tracking-wider uppercase">
-              วิศวกรรมสถาปัตยกรรมข้อมูล / ลำดับขั้นตอนการพัฒนา
+            <span className="text-sm font-bold text-cyan-600 tracking-wider uppercase flex items-center gap-1.5">
+              <BookOpen className="w-4 h-4 text-cyan-600" />
+              ชนิดข้อมูลระบบฐานข้อมูล / MySQL Data Types
             </span>
             <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              กระบวนการ 5 ขั้นตอนจากศูนย์การออกแบบสู่ตารางข้อมูลสมบูรณ์
+              ชนิดข้อมูล (Data Types) ที่สำคัญในระบบจัดการฐานข้อมูล MySQL
             </h3>
           </div>
 
-          {/* Timeline Step Indicators */}
-          <div className="relative">
-            {/* Background Line Connecting Steps */}
-            <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-zinc-200 -translate-y-1/2 z-0 hidden md:block" />
-            
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 relative z-10">
-              {steps.map((st, idx) => {
-                const IsActive = activeStep === idx;
-                const IsPassed = activeStep > idx;
-                const StIcon = st.icon;
+          <div className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal space-y-8">
+            <p>
+              การเลือกชนิดข้อมูล (<span className="font-semibold text-zinc-800">Data Type</span>) ให้ตรงกับลักษณะข้อมูลที่จะนำมาจัดเก็บจริง ถือเป็นหัวใจหลักในการวิเคราะห์และออกแบบตาราง ชนิดข้อมูลจะควบคุมสิทธิ์ ขนาดพื้นที่ที่ใช้ในการจัดเก็บตัวแปร และความถูกต้องในการประมวลผลทางคณิตศาสตร์หรือตรรกะในระบบ RDBMS
+            </p>
 
-                return (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveStep(idx)}
-                    className={`p-3 rounded-2xl border text-left transition-all duration-300 cursor-pointer flex flex-col items-start gap-2 bg-white/60 backdrop-blur-md shadow-sm ${
-                      IsActive 
-                        ? 'border-blue-500 shadow-md ring-2 ring-blue-500/10 -translate-y-1' 
-                        : IsPassed 
-                          ? 'border-emerald-300 bg-emerald-50/20' 
-                          : 'border-zinc-200 hover:border-zinc-300'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between w-full">
-                      <span className={`text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded tracking-wide font-mono ${
-                        IsActive 
-                          ? 'bg-blue-100 text-blue-600' 
-                          : IsPassed 
-                            ? 'bg-emerald-100 text-emerald-700' 
-                            : 'bg-zinc-150 text-zinc-500'
-                      }`}>
-                        {st.badge}
-                      </span>
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center border shrink-0 ${
-                        IsActive 
-                          ? 'bg-blue-500 border-blue-400 text-white' 
-                          : IsPassed 
-                            ? 'bg-emerald-500 border-emerald-400 text-white' 
-                            : 'bg-white border-zinc-200 text-zinc-400'
-                      }`}>
-                        {IsPassed ? <Check className="w-3.5 h-3.5" /> : <StIcon className="w-3.5 h-3.5" />}
-                      </div>
-                    </div>
-                    <span className={`text-[12.5px] font-bold line-clamp-1 leading-snug ${
-                      IsActive ? 'text-blue-600' : IsPassed ? 'text-emerald-700' : 'text-slate-700'
-                    }`}>
-                      {st.title.split(' (')[0]}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Stepper Content Area (Glassmorphic Container) */}
-          <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-3xl p-6 md:p-8 flex flex-col lg:flex-row gap-8 items-stretch transition-all duration-300">
-            {/* Step Explanation (Left Panel) */}
-            <div className="flex-1 space-y-5 flex flex-col justify-between">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className={`p-3 rounded-2xl shadow-inner shrink-0 ${currentStepData.color}`}>
-                    <StepIcon className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-widest block">
-                      {currentStepData.badge}
-                    </span>
-                    <h4 className="text-[19px] font-bold text-slate-800 leading-tight">
-                      {currentStepData.title}
-                    </h4>
-                  </div>
-                </div>
-
-                <p className="text-[14.5px] text-slate-600 leading-relaxed font-normal">
-                  {currentStepData.desc}
-                </p>
-
-                {/* Bullet Points */}
-                <ul className="space-y-2 text-[13.5px] text-slate-500 pl-1">
-                  {currentStepData.bulletPoints.map((pt, pidx) => (
-                    <li key={pidx} className="flex items-start gap-2">
-                      <ArrowRight className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
-                      <span>{pt}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Technical Terms & Badges */}
-              <div className="pt-4 border-t border-zinc-200/50">
-                <span className="text-[10px] font-mono text-zinc-400 block uppercase font-bold tracking-wider mb-2">
-                  คีย์เวิร์ดวิชาการหลักประจำขั้น:
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {currentStepData.highlights.map((hl, hidx) => (
-                    <div 
-                      key={hidx} 
-                      className="group/badge relative px-2.5 py-1 bg-zinc-100/75 border border-zinc-200/60 rounded-lg text-[12px] font-semibold text-slate-700 cursor-help hover:bg-zinc-200 hover:text-zinc-900 hover:border-zinc-350 transition-colors"
-                    >
-                      <span>{hl.term}</span>
-                      {/* Tooltip on hover */}
-                      <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-52 bg-slate-900 text-white text-[11.5px] rounded-lg p-2 shadow-xl opacity-0 invisible group-hover/badge:opacity-100 group-hover/badge:visible transition-all pointer-events-none z-30 font-normal leading-normal">
-                        <strong className="block border-b border-white/10 pb-0.5 mb-1 font-mono text-blue-300">{hl.term}</strong>
-                        {hl.definition}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Step Code Output / SVG Mock (Right Panel) */}
-            <div className="w-full lg:w-96 flex flex-col justify-between bg-slate-900 border border-slate-800 rounded-2xl p-5 text-white/90 text-sm font-mono shadow-inner min-h-[260px]">
-              <div className="flex items-center justify-between border-b border-white/5 pb-2.5 mb-3 text-[10px] text-slate-500 font-bold uppercase tracking-wider">
-                <div className="flex items-center gap-1.5">
-                  <FileCode className="w-3.5 h-3.5 text-blue-400" />
-                  <span>SQL Command Snippet</span>
-                </div>
-                <span>students_db</span>
-              </div>
+            {/* Grid of 8 data types cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch mt-6">
               
-              <pre className="flex-1 text-[13px] leading-relaxed overflow-x-auto text-blue-100 font-mono whitespace-pre-wrap">
-                {currentStepData.sqlCode}
-              </pre>
-
-              <div className="flex justify-between items-center mt-4 pt-3 border-t border-white/5 text-[10px] text-slate-500">
-                <span>RDBMS System Output</span>
-                <span className="text-emerald-400 font-bold">● ONLINE</span>
+              {/* Type 1: INT */}
+              <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 border-l-[3px] border-l-cyan-500 hover:-translate-y-0.5 hover:shadow-2xl transition-all duration-300">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="inline-flex bg-cyan-50/50 border border-cyan-200/50 text-cyan-700 px-1 py-0.5 rounded text-[11px] font-bold font-mono">INT</span>
+                  <h4 className="text-[15px] font-bold text-slate-800">INT (Integer)</h4>
+                </div>
+                <p className="text-[13px] text-slate-500 leading-relaxed">
+                  ใช้เก็บตัวเลขจำนวนเต็มแบบไม่มีจุดทศนิยม รองรับทั้งบวกและลบ (เช่น อายุ, จำนวนนับ, รหัส ID) ใช้เนื้อที่เก็บคงที่ 4 Bytes
+                </p>
               </div>
+
+              {/* Type 2: VARCHAR */}
+              <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 border-l-[3px] border-l-blue-500 hover:-translate-y-0.5 hover:shadow-2xl transition-all duration-300">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="inline-flex bg-blue-50/50 border border-blue-200/50 text-blue-700 px-1 py-0.5 rounded text-[11px] font-bold font-mono">VARCHAR</span>
+                  <h4 className="text-[15px] font-bold text-slate-800">VARCHAR</h4>
+                </div>
+                <p className="text-[13px] text-slate-500 leading-relaxed">
+                  ใช้เก็บสายอักขระข้อความที่มีความยาวแปรผันตามจริง ป้อนข้อความยาวเท่าใดก็จะกินพื้นที่ระบบตามความยาวจริงพร้อมไบต์ควบคุม
+                </p>
+              </div>
+
+              {/* Type 3: DATE */}
+              <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 border-l-[3px] border-l-emerald-500 hover:-translate-y-0.5 hover:shadow-2xl transition-all duration-300">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="inline-flex bg-emerald-50/50 border border-emerald-200/50 text-emerald-700 px-1 py-0.5 rounded text-[11px] font-bold font-mono">DATE</span>
+                  <h4 className="text-[15px] font-bold text-slate-800">DATE (วันเดือนปี)</h4>
+                </div>
+                <p className="text-[13px] text-slate-500 leading-relaxed">
+                  ใช้จัดเก็บบันทึกข้อมูลวันที่โดยเฉพาะ เจาะจงรูปแบบมาตรฐานระบบสากลคือ <span className="font-mono bg-slate-100 text-slate-800 px-1 py-0.2 rounded text-[11px]">YYYY-MM-DD</span> (เช่น วันเกิด, วันลงทะเบียน)
+                </p>
+              </div>
+
+              {/* Type 4: DATETIME */}
+              <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 border-l-[3px] border-l-teal-500 hover:-translate-y-0.5 hover:shadow-2xl transition-all duration-300">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="inline-flex bg-teal-50/50 border border-teal-200/50 text-teal-700 px-1 py-0.5 rounded text-[11px] font-bold font-mono">DATETIME</span>
+                  <h4 className="text-[15px] font-bold text-slate-800">DATETIME</h4>
+                </div>
+                <p className="text-[13px] text-slate-500 leading-relaxed">
+                  เก็บบันทึกข้อมูลวันและเวลาควบคู่กัน รูปแบบแสดงคือ <span className="font-mono bg-slate-100 text-slate-800 px-1 py-0.2 rounded text-[11px]">YYYY-MM-DD HH:MM:SS</span> ใช้เนื้อที่จัดเก็บระบบคงที่ 8 Bytes
+                </p>
+              </div>
+
+              {/* Type 5: BOOLEAN */}
+              <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 border-l-[3px] border-l-violet-500 hover:-translate-y-0.5 hover:shadow-2xl transition-all duration-300">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="inline-flex bg-violet-50/50 border border-violet-200/50 text-violet-750 px-1 py-0.5 rounded text-[11px] font-bold font-mono">BOOLEAN</span>
+                  <h4 className="text-[15px] font-bold text-slate-800">BOOLEAN</h4>
+                </div>
+                <p className="text-[13px] text-slate-500 leading-relaxed">
+                  เก็บตรรกะความจริง รองรับค่า True หรือ False ในทางปฏิบัติของเซิร์ฟเวอร์ MySQL จะแปลงค่า BOOLEAN ไปเป็นข้อมูล <span className="font-mono bg-slate-100 text-slate-800 px-1 py-0.2 rounded text-[11px]">TINYINT(1)</span>
+                </p>
+              </div>
+
+              {/* Type 6: FLOAT */}
+              <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 border-l-[3px] border-l-amber-500 hover:-translate-y-0.5 hover:shadow-2xl transition-all duration-300">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="inline-flex bg-amber-50/50 border border-amber-200/50 text-amber-700 px-1 py-0.5 rounded text-[11px] font-bold font-mono">FLOAT</span>
+                  <h4 className="text-[15px] font-bold text-slate-800">FLOAT</h4>
+                </div>
+                <p className="text-[13px] text-slate-500 leading-relaxed">
+                  เก็บข้อมูลตัวเลขทศนิยมในรูปแบบพอยต์ตำแหน่งลอย (Floating-Point) แบบความละเอียดปกติ มักใช้กับค่าผลลัพธ์ทางคณิตศาสตร์/ฟิสิกส์ทั่วไป
+                </p>
+              </div>
+
+              {/* Type 7: DECIMAL */}
+              <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 border-l-[3px] border-l-orange-500 hover:-translate-y-0.5 hover:shadow-2xl transition-all duration-300">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="inline-flex bg-orange-50/50 border border-orange-200/50 text-orange-700 px-1 py-0.5 rounded text-[11px] font-bold font-mono">DECIMAL</span>
+                  <h4 className="text-[15px] font-bold text-slate-800">DECIMAL</h4>
+                </div>
+                <p className="text-[13px] text-slate-500 leading-relaxed">
+                  ชนิดข้อมูลทศนิยมแบบคงที่แม่นยำสูง (Fixed-Point) ไม่มีการสูญเสียความละเอียดจากการคำนวณ จึงถูกระบุเป็นเกณฑ์เก็บเงินตราหรือภาษี
+                </p>
+              </div>
+
+              {/* Type 8: TEXT */}
+              <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 border-l-[3px] border-l-rose-500 hover:-translate-y-0.5 hover:shadow-2xl transition-all duration-300">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="inline-flex bg-rose-50/50 border border-rose-200/50 text-rose-700 px-1 py-0.5 rounded text-[11px] font-bold font-mono">TEXT</span>
+                  <h4 className="text-[15px] font-bold text-slate-800">TEXT (ข้อความยาว)</h4>
+                </div>
+                <p className="text-[13px] text-slate-500 leading-relaxed">
+                  ใช้เก็บสายอักขระข้อความที่มีขนาดยาวมากเป็นพิเศษสูงสุด 65,535 อักขระ เหมาะสำหรับคำอธิบายรายละเอียดสินค้า ประวัติ หรือบทความ
+                </p>
+              </div>
+
             </div>
-          </div>
 
-          {/* Stepper Navigation Buttons */}
-          <div className="flex items-center justify-between pt-2">
-            <button
-              onClick={() => setActiveStep(prev => Math.max(0, prev - 1))}
-              disabled={activeStep === 0}
-              className={`px-4 py-2 border rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                activeStep === 0 
-                  ? 'border-zinc-200 text-zinc-350 cursor-not-allowed opacity-50' 
-                  : 'border-zinc-300 text-slate-600 hover:bg-zinc-100 hover:scale-[1.02] active:scale-98'
-              }`}
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              ขั้นตอนก่อนหน้า
-            </button>
-
-            <span className="text-xs font-mono font-bold text-zinc-400">
-              หน้า {activeStep + 1} / {steps.length}
-            </span>
-
-            <button
-              onClick={() => setActiveStep(prev => Math.min(steps.length - 1, prev + 1))}
-              disabled={activeStep === steps.length - 1}
-              className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                activeStep === steps.length - 1 
-                  ? 'bg-zinc-100 border border-zinc-200 text-zinc-350 cursor-not-allowed opacity-50' 
-                  : 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-[1.02] active:scale-98 shadow-md'
-              }`}
-            >
-              ขั้นตอนถัดไป
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            {/* Frosted Callout */}
+            <div className="bg-cyan-50/60 backdrop-blur-md border border-cyan-200/60 rounded-2xl p-5 border-l-[3.5px] border-l-cyan-500 leading-relaxed text-[14.5px] text-cyan-900">
+              <span className="font-bold text-cyan-800 flex items-center gap-1.5 mb-1.5">
+                <Info className="w-4.5 h-4.5 text-cyan-600" /> ทำไมรูปแบบ DATE จึงเคร่งครัดเรื่องการบันทึก?:
+              </span>
+              เซิร์ฟเวอร์ MySQL คาดหวังการจัดส่งข้อความวันที่ในรูปแบบ <span className="font-mono bg-cyan-100 text-cyan-800 px-1 rounded text-[12px] font-bold">YYYY-MM-DD</span> เสมอ หากป้อนรูปแบบท้องถิ่น เช่น `DD/MM/YYYY` หรือ `DD-MM-YYYY` ตัวจัดการคอลัมน์ของ MySQL จะทำการตีค่าข้อมูลเป็นข้อผิดพลาด หรือแปลงค่าขยะกลายเป็นวันที่ว่างเปล่า `0000-00-00`
+            </div>
           </div>
         </section>
 
-        {/* ─── Section 2: Simulator (Table & Record Builder) ─── */}
+        {/* ─── Section 2: Interactive Datatype Validator Simulator ─── */}
         <section className="space-y-6">
           <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-blue-600 tracking-wider uppercase">
-              ตัวจำลองตรรกะ / ปฏิบัติการ Schema
+            <span className="text-sm font-bold text-cyan-600 tracking-wider uppercase">
+              เครื่องมือตรวจสอบข้อมูล / Data Type Inspector
             </span>
             <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              ตารางจำลองออกแบบโครงสร้างและสแกนคีย์ความปลอดภัย
+              ระบบจำลองการประเมินความเข้ากันได้ของข้อมูลคอลัมน์ MySQL
             </h3>
           </div>
 
-          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
-            ปฏิบัติการจำลองการเพิ่มคอลัมน์ (DDL) และทดสอบป้อนแทรกแถวระเบียนจริง (DML) 
-            เพื่อสังเกตกลไกการดักจับข้อผิดพลาดกรณีคีย์หลัก (Primary Key Constraint) ซ้ำซ้อนทางโครงสร้างด้วยตนเอง:
+          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+            ทำภารกิจตรวจสอบชนิดข้อมูลตามบอร์ดนำทางด้านซ้ายให้สำเร็จ โดยป้อนฟิลด์ เลือกชนิดข้อมูล และลองทดสอบความถูกต้องที่บอร์ดวิเคราะห์ด้านขวา:
           </p>
 
-          {/* ─── Simulator Shell ─── */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch" id="table-simulator">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch relative">
             
-            {/* Schema Controller (Left Panel) */}
-            <div className="lg:col-span-5 bg-slate-900/90 backdrop-blur-xl rounded-2xl p-5 border border-white/10 shadow-2xl relative flex flex-col justify-between min-h-[500px]">
+            {/* Left Column: Quest Control Board */}
+            <div className="lg:col-span-4 bg-slate-900/90 backdrop-blur-xl rounded-[2rem] p-5 border border-white/10 shadow-2xl flex flex-col justify-between relative min-h-[480px]">
               <span className="text-[9px] font-mono text-slate-500 absolute top-3 right-4 font-bold tracking-widest">
-                SCHEMA CONTROLLER
+                QUEST TRACKER
               </span>
 
               <div className="space-y-6 mt-4">
-                <div className="space-y-1">
-                  <h4 className="text-[16px] font-bold text-white flex items-center gap-2">
-                    <Settings className="w-5 h-5 text-blue-400" />
-                    บริหารจัดการตาราง
+                <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                  <h4 className="text-white font-bold text-sm uppercase tracking-wide">
+                    ภารกิจจำลองเรียนรู้:
                   </h4>
-                  <p className="text-[12.5px] text-slate-400">
-                    ปรับเปลี่ยนโครงสร้างฟิลด์ หรือป้อนข้อมูลแถวใหม่เพื่อทดสอบข้อจำกัดคีย์หลัก
-                  </p>
-                </div>
-
-                {/* Form 1: Add Column */}
-                <div className="bg-slate-950/70 border border-slate-800/85 rounded-xl p-4 space-y-3">
-                  <span className="text-[11px] font-bold text-blue-400 uppercase tracking-wide block">
-                    1. เพิ่มคอลัมน์ใหม่ (ALTER TABLE ADD)
-                  </span>
-                  
-                  <div className="space-y-2.5">
-                    <div>
-                      <label className="block text-[10px] text-slate-500 font-mono mb-1">COLUMN NAME (ภาษาอังกฤษพิมพ์เล็ก)</label>
-                      <input 
-                        type="text"
-                        value={newColName}
-                        onChange={(e) => setNewColName(e.target.value)}
-                        placeholder="เช่น score, gpa, major"
-                        className="w-full bg-slate-900 border border-white/10 rounded-lg py-1.5 px-3 text-xs text-white focus:border-blue-500 focus:outline-none font-mono"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <label className="block text-[10px] text-slate-500 font-mono mb-1">DATA TYPE</label>
-                        <select 
-                          value={newColType}
-                          onChange={(e) => setNewColType(e.target.value)}
-                          className="w-full bg-slate-900 border border-white/10 rounded-lg py-1.5 px-2 text-xs text-white focus:outline-none"
-                        >
-                          <option value="VARCHAR(50)">VARCHAR(50) [ข้อความ]</option>
-                          <option value="INT">INT [จำนวนเต็ม]</option>
-                          <option value="DECIMAL(3,2)">DECIMAL(3,2) [ทศนิยม]</option>
-                        </select>
-                      </div>
-                      <div className="flex items-center justify-center pt-4">
-                        <label className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer select-none">
-                          <input 
-                            type="checkbox"
-                            checked={newColIsPK}
-                            onChange={(e) => setNewColIsPK(e.target.checked)}
-                            className="w-3.5 h-3.5 accent-amber-500 cursor-pointer"
-                          />
-                          ตั้งเป็นคีย์หลัก (PK)
-                        </label>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={addColumn}
-                      className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md"
+                  {questStep === 6 && (
+                    <button 
+                      onClick={resetQuest}
+                      className="text-[9.5px] bg-cyan-600/30 text-cyan-400 border border-cyan-500/20 px-2 py-0.5 rounded hover:bg-cyan-600/50 cursor-pointer"
                     >
-                      <Plus className="w-3.5 h-3.5" />
-                      เพิ่มฟิลด์ลงตาราง
+                      Restart Quest
                     </button>
-                  </div>
+                  )}
                 </div>
 
-                {/* Form 2: Insert Record */}
-                <div className="bg-slate-950/70 border border-slate-800/85 rounded-xl p-4 space-y-3">
-                  <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wide block">
-                    2. เพิ่มระเบียนแถวข้อมูล (INSERT INTO)
-                  </span>
-
-                  <div className="space-y-2.5 max-h-[160px] overflow-y-auto pr-1">
-                    {columns.map((col) => (
-                      <div key={col.name} className="flex items-center justify-between gap-3">
-                        <label className="text-xs font-mono text-slate-300 flex items-center gap-1 text-left truncate w-28 shrink-0">
-                          {col.isPK && <Key className="w-3 h-3 text-amber-400 shrink-0" />}
-                          {col.name}:
-                          <span className="text-[10px] text-slate-500 font-normal">({col.type})</span>
-                        </label>
-                        <input 
-                          type="text"
-                          value={newRecordData[col.name] || ''}
-                          onChange={(e) => setNewRecordData({
-                            ...newRecordData,
-                            [col.name]: e.target.value
-                          })}
-                          placeholder={col.isPK ? 'รหัสห้ามซ้ำ...' : `ระบุค่าฟิลด์ ${col.name}...`}
-                          className="bg-slate-900 border border-white/10 rounded-lg py-1 px-2.5 text-xs text-white focus:border-emerald-500 focus:outline-none font-mono grow w-full"
-                        />
+                {/* Quest lists */}
+                <div className="space-y-3.5">
+                  {[
+                    { step: 1, name: 'age', type: 'INT', value: '18', desc: 'ตั้งฟิลด์ age ชนิด INT ป้อนค่าอายุเป็น "18"' },
+                    { step: 2, name: 'email', type: 'VARCHAR', value: 'student@school.com', desc: 'ตั้งฟิลด์ email ชนิด VARCHAR ป้อนเมล "student@school.com"' },
+                    { step: 3, name: 'birth_date', type: 'DATE', value: '2008-12-25', desc: 'ตั้งฟิลด์ birth_date ชนิด DATE ป้อนวันเกิด "2008-12-25"' },
+                    { step: 4, name: 'is_registered', type: 'BOOLEAN', value: 'TRUE', desc: 'ตั้งฟิลด์ is_registered ชนิด BOOLEAN ป้อนตรรกะ "TRUE"' },
+                    { step: 5, name: 'tuition_fee', type: 'DECIMAL', value: '3500.50', desc: 'ตั้งฟิลด์ tuition_fee ชนิด DECIMAL ป้อนค่าเทอม "3500.50"' }
+                  ].map((q) => (
+                    <div 
+                      key={q.step} 
+                      className={`flex items-start gap-3 text-xs leading-relaxed transition-all ${
+                        questStep === q.step 
+                          ? 'text-cyan-400 font-bold scale-[1.01]' 
+                          : questStep > q.step 
+                            ? 'text-slate-500 line-through' 
+                            : 'text-slate-650'
+                      }`}
+                    >
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center font-mono border shrink-0 text-[10px] mt-0.5 ${
+                        questStep === q.step 
+                          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-400 animate-pulse' 
+                          : questStep > q.step 
+                            ? 'bg-slate-850 border-slate-700 text-slate-500' 
+                            : 'bg-transparent border-slate-800 text-slate-650'
+                      }`}>
+                        {questStep > q.step ? '✓' : q.step}
                       </div>
-                    ))}
-                  </div>
+                      <div className="flex-1">
+                        <span className="block">{q.desc}</span>
+                        {questStep === q.step && (
+                          <span className="text-[10px] text-slate-400 block font-mono mt-0.5">
+                            Target: <span className="text-white">name={q.name}</span>, <span className="text-white">type={q.type}</span>, <span className="text-white">val={q.value}</span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
 
-                  <button
-                    onClick={insertRecord}
-                    className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md mt-2"
-                  >
-                    <Play className="w-3.5 h-3.5 fill-current" />
-                    แทรกแถวข้อมูล (Insert Row)
-                  </button>
-                </div>
-              </div>
-
-              {/* Error messages / Reset button */}
-              <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  {validationError && (
-                    <div className="text-rose-400 text-xs font-semibold flex items-center gap-1 animate-pulse">
-                      <AlertCircle className="w-4 h-4 shrink-0" />
-                      <span className="truncate">{validationError}</span>
+                  {questStep === 6 && (
+                    <div className="bg-emerald-950/20 border border-emerald-800/40 rounded-xl p-3.5 text-center text-emerald-400 animate-fade-in space-y-1">
+                      <div className="font-bold flex items-center justify-center gap-1">
+                        <Check className="w-4 h-4" /> ภารกิจวิเคราะห์ดาต้าเสร็จสมบูรณ์!
+                      </div>
+                      <p className="text-[11px] text-slate-400 leading-normal">
+                        คุณได้เรียนรู้วิธีการกำหนด Column Name, Datatype และการวิเคราะห์ค่าข้อมูลของ MySQL data types ครบถ้วนแล้ว
+                      </p>
                     </div>
                   )}
                 </div>
-                <button
-                  onClick={resetSimulator}
-                  className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 border border-white/5 text-slate-300 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer"
-                >
-                  รีเซ็ตตาราง
-                </button>
+              </div>
+
+              {/* Guide Alert box */}
+              <div className="bg-slate-950/80 border border-slate-850 rounded-xl p-3.5 mt-6 text-xs text-slate-400 leading-normal space-y-1">
+                <div className="font-bold text-amber-500 flex items-center gap-1">
+                  <Info className="w-3.5 h-3.5 text-amber-500" /> หมายเหตุทางเทคนิค:
+                </div>
+                <p>
+                  ชนิดข้อมูลตัวเลขจำพวก DECIMAL มีความปลอดภัยสูงที่สุดสำหรับการป้อนข้อมูลทศนิยมเพราะเก็บเป็น String ทศนิยมแม่นยำสูง แตกต่างจาก FLOAT ที่เป็นฐานสองทำให้อาจมีเศษปัดทศนิยมเพี้ยนในการบวกเงินสด
+                </p>
               </div>
 
             </div>
 
-            {/* Visual Storage Table & Console Logs (Right Panel) */}
-            <div className="lg:col-span-7 bg-slate-950/95 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-2xl flex flex-col justify-between min-h-[500px]">
-              <span className="text-[9px] font-mono text-slate-500 absolute top-3 left-3">
-                PHYSICAL STORAGE
-              </span>
+            {/* Right Column: Database Field Inspector Panel */}
+            <div className="lg:col-span-8 bg-slate-950/95 backdrop-blur-xl rounded-[2rem] border border-white/5 shadow-2xl flex flex-col justify-between relative min-h-[480px] overflow-hidden z-10 select-none">
+              
+              {/* Top Window Header */}
+              <div className="bg-[#1e1e1e] border-b border-slate-900 px-4 py-2.5 flex items-center justify-between text-xs text-slate-400 font-mono">
+                <span className="flex items-center gap-2">
+                  <Settings className="w-3.5 h-3.5 text-cyan-400 animate-spin" style={{ animationDuration: '6s' }} />
+                  MySQL Workbench - Field Datatype Inspector DDL View
+                </span>
+                <div className="flex gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-slate-800" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-slate-800" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-slate-800" />
+                </div>
+              </div>
 
-              {/* Window body */}
-              <div className="flex-1 mt-6 flex flex-col justify-between">
+              {/* Workspace inputs area */}
+              <div className="flex-1 p-5 flex flex-col justify-between space-y-4">
                 
-                {/* Physical Table Display */}
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[11px] font-mono text-slate-500 block uppercase font-bold">
-                      Table: students
-                    </span>
-                    <span className="text-[10px] text-slate-500 font-mono">
-                      จำนวนคอลัมน์: {columns.length} | จำนวนระเบียน: {records.length}
-                    </span>
+                {/* 1. Control Panel Fields */}
+                <div className="bg-[#151518] border border-slate-850 rounded-xl p-4 space-y-4">
+                  <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider border-b border-slate-850 pb-2 flex items-center justify-between">
+                    <span>MySQL Column Parameter Inputs:</span>
+                    <span className="text-cyan-400">DDL Engine V1.0</span>
                   </div>
 
-                  <div className="overflow-x-auto rounded-xl border border-white/5 bg-slate-900/40">
-                    <table className="w-full text-left text-xs font-mono border-collapse">
-                      <thead>
-                        <tr className="bg-slate-950 border-b border-white/10 text-slate-400 text-[10px] uppercase font-bold tracking-wider">
-                          {columns.map((col) => (
-                            <th key={col.name} className="p-3 border-r border-white/5 font-mono text-slate-300">
-                              <div className="flex items-center gap-1">
-                                {col.isPK && <Key className="w-3.5 h-3.5 text-amber-400 shrink-0" title="Primary Key" />}
-                                <span>{col.name}</span>
-                              </div>
-                              <span className="text-[9px] text-slate-500 font-normal normal-case block mt-0.5">({col.type})</span>
-                            </th>
-                          ))}
-                          <th className="p-3 text-slate-400 text-[10px] text-center w-12">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {records.length === 0 ? (
-                          <tr>
-                            <td colSpan={columns.length + 1} className="p-6 text-center text-slate-500 italic">
-                              ไม่มีระเบียนข้อมูล (Empty Set)
-                            </td>
-                          </tr>
-                        ) : (
-                          records.map((rec, recIdx) => (
-                            <tr key={recIdx} className="border-b border-white/5 hover:bg-white/5 text-slate-300 text-xs">
-                              {columns.map((col) => (
-                                <td key={col.name} className="p-3 border-r border-white/5 font-mono">
-                                  {rec[col.name] !== undefined ? String(rec[col.name]) : <span className="text-slate-655 font-normal">NULL</span>}
-                                </td>
-                              ))}
-                              <td className="p-2 text-center">
-                                <button
-                                  onClick={() => deleteRecord(recIdx)}
-                                  className="p-1.5 hover:bg-red-950/40 text-red-400/75 hover:text-red-400 rounded transition-all cursor-pointer"
-                                  title="ลบแถวข้อมูล"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                </button>
-                              </td>
-                            </tr>
-                          ))
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Column Name Input */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs text-slate-400 font-mono font-bold block">Column Name:</label>
+                      <input 
+                        type="text"
+                        value={colName}
+                        onChange={(e) => setColName(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))}
+                        className="bg-slate-950 border border-slate-800 text-white rounded-lg px-3 py-1.5 text-xs font-mono w-full focus:border-cyan-500 focus:outline-none"
+                        placeholder="ระบุชื่อฟิลด์"
+                      />
+                    </div>
 
-                  {/* Schema Columns list with DROP action */}
-                  <div className="pt-2">
-                    <span className="text-[10px] font-mono text-slate-500 block uppercase font-bold mb-1.5">
-                      คอลัมน์ภายในระบบ (โครงสร้าง DDL):
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {columns.map((col) => (
-                        <span 
-                          key={col.name} 
-                          className={`text-[10.5px] font-mono border px-2 py-1 rounded-lg flex items-center gap-1.5 ${
-                            col.isPK 
-                              ? 'bg-amber-500/10 border-amber-500/20 text-amber-400 font-bold' 
-                              : 'bg-slate-900 border-white/5 text-slate-300'
-                          }`}
-                        >
-                          {col.isPK && <Key className="w-3 h-3 text-amber-400" />}
-                          <span>{col.name} ({col.type})</span>
-                          
-                          {/* Disable deleting key primary columns or safe default for GUI simulator */}
-                          {col.name !== 'student_id' && (
-                            <button
-                              onClick={() => deleteColumn(col.name)}
-                              className="text-slate-500 hover:text-red-400 hover:scale-110 font-bold cursor-pointer ml-1"
-                              title={`ลบคอลัมน์ ${col.name} ออกจากตาราง`}
-                            >
-                              ×
-                            </button>
-                          )}
-                        </span>
-                      ))}
+                    {/* Datatype Select */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs text-slate-400 font-mono font-bold block">MySQL Data Type:</label>
+                      <select 
+                        value={selectedType}
+                        onChange={(e) => setSelectedType(e.target.value)}
+                        className="bg-slate-950 border border-slate-800 text-white rounded-lg px-3 py-1.5 text-xs font-mono w-full focus:border-cyan-500 focus:outline-none"
+                      >
+                        <option value="INT">INT</option>
+                        <option value="VARCHAR">VARCHAR(255)</option>
+                        <option value="DATE">DATE</option>
+                        <option value="DATETIME">DATETIME</option>
+                        <option value="BOOLEAN">BOOLEAN</option>
+                        <option value="FLOAT">FLOAT</option>
+                        <option value="DECIMAL">DECIMAL(10,2)</option>
+                        <option value="TEXT">TEXT</option>
+                      </select>
+                    </div>
+
+                    {/* Sample Value text input */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs text-slate-400 font-mono font-bold block">Sample Value (Data):</label>
+                      <input 
+                        type="text"
+                        value={sampleValue}
+                        onChange={(e) => setSampleValue(e.target.value)}
+                        className="bg-slate-950 border border-slate-800 text-white rounded-lg px-3 py-1.5 text-xs font-mono w-full focus:border-cyan-500 focus:outline-none"
+                        placeholder="ป้อนค่าทดสอบความถูกต้อง"
+                      />
                     </div>
                   </div>
                 </div>
 
-                {/* Console Log Screen (Bottom Panel) */}
-                <div className="h-32 bg-slate-950 border border-white/10 rounded-xl overflow-hidden flex flex-col mt-6">
-                  <div className="bg-slate-900 border-b border-white/5 px-3 py-1.5 text-[10px] font-mono text-slate-500 font-bold tracking-widest uppercase flex items-center gap-1">
-                    <Terminal className="w-3.5 h-3.5 text-blue-400" />
-                    SQL Engine Query Console Output
-                  </div>
-                  <div className="flex-1 overflow-y-auto p-2.5 font-mono text-[11.5px] space-y-1.5">
-                    {outputLogs.map((log, idx) => (
-                      <div key={idx} className={`flex items-start gap-2 ${
-                        log.status === 'success' 
-                          ? 'text-emerald-400' 
-                          : log.status === 'error' 
-                            ? 'text-rose-400 animate-pulse' 
-                            : 'text-slate-400'
-                      }`}>
-                        <span className="text-slate-600 shrink-0">[{log.time}]</span>
-                        <span className="font-bold shrink-0">{log.action}:</span>
-                        <span className="flex-1 break-all">{log.message}</span>
+                {/* 2. Validation Inspector Results */}
+                <div className="flex-1 flex flex-col justify-center">
+                  {validationResult.valid ? (
+                    <div className="bg-emerald-950/20 border border-emerald-800/30 rounded-xl p-4 flex items-start gap-3 animate-fade-in">
+                      <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+                        <Check className="w-5 h-5" />
                       </div>
-                    ))}
+                      <div className="space-y-1">
+                        <h5 className="text-emerald-400 text-xs font-bold font-mono">✓ VALIDATION SUCCESS</h5>
+                        <p className="text-[11px] text-slate-300 leading-normal font-mono">
+                          {validationResult.reason}
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="bg-rose-950/20 border border-rose-800/30 rounded-xl p-4 flex items-start gap-3 animate-fade-in">
+                      <div className="w-8 h-8 rounded-full bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400 shrink-0">
+                        <ShieldAlert className="w-5 h-5 animate-pulse" />
+                      </div>
+                      <div className="space-y-1">
+                        <h5 className="text-rose-450 text-xs font-bold font-mono">✗ TYPE MISMATCH / FORMAT ERROR</h5>
+                        <p className="text-[11px] text-slate-350 leading-normal font-mono">
+                          {validationResult.reason}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* 3. DDL Code Preview */}
+                <div className="space-y-1">
+                  <div className="text-[9px] text-slate-500 font-mono font-bold uppercase tracking-wider">
+                    Generated DDL Snippet:
                   </div>
+                  <pre className="bg-slate-950 p-3.5 rounded-xl border border-slate-900 text-xs font-mono text-cyan-400 leading-relaxed overflow-x-auto whitespace-pre">
+                    {generateColDDL()}
+                  </pre>
                 </div>
 
               </div>
+
+              {/* Bottom Output Log */}
+              <div className="bg-[#151518] border-t border-slate-900 p-4 shrink-0 font-mono text-[11px] max-h-32 overflow-y-auto no-scrollbar z-10">
+                <div className="text-slate-500 text-[9px] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <Terminal className="w-3.5 h-3.5 text-slate-500" /> Action Output Console Log:
+                </div>
+                <div className="space-y-1 text-slate-350">
+                  {logMessages.map((msg, i) => (
+                    <div key={i} className="flex gap-3 leading-relaxed">
+                      <span className="text-slate-550 select-none shrink-0">{msg.time}</span>
+                      <span className={
+                        msg.status === 'success' 
+                          ? 'text-emerald-450 font-bold' 
+                          : msg.status === 'error' 
+                            ? 'text-rose-500 font-bold' 
+                            : msg.status === 'warning' 
+                              ? 'text-amber-450' 
+                              : 'text-cyan-405'
+                      }>
+                        {msg.status === 'success' ? '✓' : msg.status === 'error' ? '✗' : 'i'} {msg.message}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
             </div>
 
           </div>
         </section>
 
         {/* ─── Layer 4: Standardized TeacherTask Footer ─── */}
-        <TeacherTask
-          title="การวิเคราะห์เปรียบเทียบและการประเมินสิทธิ์ความปลอดภัยในระดับโครงสร้างตาราง"
-          taskText={`คำชี้แจง: ให้นักเรียนตอบคำถามประเมินผลการเรียนรู้ต่อไปนี้ เพื่อแสดงความรู้ความสามารถตามมาตรฐานบทเรียน 2.1:
+        <TeacherTask 
+          title="ภารกิจวิเคราะห์และสเปกชนิดข้อมูลคอลัมน์ (MySQL Datatypes Specification Task)" 
+          taskText={`[ใบงานคำสั่งกิจกรรมปฏิบัติท้ายบทเรียน]
+ให้นักเรียนวิเคราะห์ความรู้จากคำอธิบายทฤษฎีประเภทข้อมูลและการทดสอบใช้งานโปรแกรมจำลองชนิดข้อมูล MySQL Datatype Inspector แล้วตอบคำถามลงในสมุดบันทึก:
 
-1. จงอธิบายความหมายเชิงลึกและจุดประสงค์การแบ่งแยกระหว่าง "คอลัมน์ (Columns)" ซึ่งอ้างอิงด้านชนิดข้อมูล (Data Type) และ "แถวข้อมูล (Rows)" ซึ่งอ้างอิงชุดสารสนเทศเฉพาะตัวว่ามีกลไกประสานกันอย่างไร
-2. เพราะเหตุใดข้อกำหนดคีย์หลัก (Primary Key - PK) จึงไม่อนุญาตให้ผู้ใช้งานพิมพ์หรือป้อนค่าว่าง (NULL) และห้ามป้อนค่าซ้ำซ้อนกันอย่างเด็ดขาด จงอธิบายผลเสียต่อความสมบูรณ์ถูกต้องของข้อมูล (Data Integrity) หากละเมิดกฎดังกล่าว
-3. ในตัวจำลอง หากนักเรียนทำคำสั่งลบคอลัมน์ (DROP COLUMN) ที่มีข้อมูลถูกป้อนสะสมเอาไว้อยู่แล้ว ข้อมูลในฟิลด์นั้นของทุกๆ แถวจะได้รับผลกระทบอย่างไร และสถาปัตยกรรมระบบฐานข้อมูลความปลอดภัยมีแนวทางป้องกันอุบัติเหตุคำสั่งนี้อย่างไร`}
+1. การวิเคราะห์ขอบเขตพื้นที่และชนิดข้อมูล (Datatype Analysis):
+   - ทำไมตำรา RDBMS จึงต้องกำหนดความต่างระหว่าง INT และ FLOAT ในการใช้งานคอลัมน์? ทั้งสองใช้เนื้อที่ในการจัดเก็บข้อมูลของคอมพิวเตอร์ต่างกันอย่างไร?
+   - ข้อดีของการใช้ VARCHAR(size) แทนการระบุ TEXT ในคอลัมน์ชื่อพนักงานพนักงานและรายละเอียดประวัติทั่วไปคืออะไร?
+
+2. การประยุกต์เปรียบเทียบในระบบ (Fidelity Comparison):
+   - การเก็บข้อมูลประเภท "สถานะการทำงาน" (ทำงานอยู่ = TRUE, ออกแล้ว = FALSE) ใน MySQL จะถูกแปลงจัดเก็บในชนิดข้อมูลระดับฟิสิกส์ประเภทใด และใช้ค่าตัวเลขใดแทน?
+   - ชนิดข้อมูล DECIMAL(8,2) ใช้เก็บทศนิยมแบบใด? และรองรับตัวเลขค่าสูงสุดเท่าใด? (จงเขียนรูปแบบตัวอย่างตัวเลข)
+
+3. เขียน DDL สเปกฟิลด์ (Field Specifying DDL Code):
+   - จงเขียนโครงสร้างสคริปต์ประกาศประเภทข้อมูลคอลัมน์ในคำสั่ง CREATE TABLE สำหรับฟิลด์ต่อไปนี้:
+     1. รหัสบัตรประชาชน (citizen_id): เก็บเป็นข้อความความยาวคงที่ 13 อักขระ
+     2. ค่าแรงเฉลี่ยพนักงาน (salary): เก็บเป็นตัวเลขทศนิยมคงที่แม่นยำสูงจำนวน 8 หลัก โดยมีทศนิยม 2 ตำแหน่ง
+     3. วันและเวลาบันทึกรายการ (created_at): เก็บบันทึกข้อมูลปีคริสตศักราช วันเดือนปี และเวลาปัจจุบัน`}
         />
+
       </main>
     </div>
   );
