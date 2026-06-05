@@ -1,1143 +1,567 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Cpu,
-  Layers,
-  Database,
-  User,
-  ArrowRight,
-  Play,
-  RotateCcw,
-  Sliders,
-  CheckCircle,
-  FileText,
-  Scan,
-  Monitor,
-  Printer,
-  ChevronRight,
-  ShoppingCart,
-  Video,
-  Settings,
-  Sparkles,
-  Server,
-  Terminal,
-  Activity,
-  FileArchive,
-  Globe,
-  HardDrive,
-  Wrench,
-  Code,
-  Briefcase,
-  HelpCircle,
-  Shield,
-  Network,
+import React, { useState } from 'react';
+import { 
+  Network, 
+  Share2, 
+  ShieldAlert, 
+  Coins, 
+  Send, 
+  Mail, 
+  Wifi, 
+  HardDriveDownload, 
+  FileCheck2,
+  ArrowRightLeft,
   Radio,
-  AlertTriangle,
-  ArrowRightLeft
+  Smartphone,
+  Server,
+  Printer,
+  FileBox,
+  MessageSquare,
+  ShieldCheck,
+  CheckCircle2,
+  XCircle,
+  Activity,
+  Sparkles
 } from 'lucide-react';
-import {
-  AmbientBackdrop,
-  OptionSelector,
-  ConsoleScreen,
-  ConceptCard,
-  SectionBlock
-} from '../shared';
 import TeacherTask from '../../ui/TeacherTask';
 
-export default function IT1_2() {
-  // ────────────────────────────────────────────────────────────────────────
-  // STATE DEFINITIONS
-  // ────────────────────────────────────────────────────────────────────────
-
-  // --- 1.2.2: องค์ประกอบพื้นฐาน 5 ส่วน ---
-  const [selectedElement, setSelectedElement] = useState('sender');
-
-  // --- 1.2.3: ประโยชน์การแชร์ทรัพยากร ---
-  const [selectedSharing, setSelectedSharing] = useState('hardware');
-
-  // --- 1.2.5: เครื่องจำลองทิศทางการส่งสัญญาณ (Data Transmission Simulator) ---
-  const [selectedMode, setSelectedMode] = useState('simplex');
-  const [flowActive, setFlowActive] = useState(false);
-  const [flowStep, setFlowStep] = useState(0); // 0 = ready, 1 = in progress, 2 = success, 3 = collision
-  const [flowSpeed, setFlowSpeed] = useState(1500); // ms per step
-  const [sendDirection, setSendDirection] = useState('L2R'); // L2R or R2L or BOTH
-  const [scenarioLogs, setScenarioLogs] = useState([
-    '[ระบบ] เครือข่ายพร้อมสื่อสาร เลือกทิศทาง/โหมดส่งสัญญาณ และกด PLAY เพื่อเริ่มต้นจำลองกระบวนการ'
-  ]);
-
-  // --- PROTOCOL BENCHMARK RACE LAB (NEW FEATURE) ---
-  const [benchRunning, setBenchRunning] = useState(false);
-  const [benchProgress, setBenchProgress] = useState({ http: 0, tcp: 0, udp: 0, quic: 0 });
-  const [benchFinished, setBenchFinished] = useState(false);
-  const [benchWinner, setBenchWinner] = useState('');
-  const [selectedMedium, setSelectedMedium] = useState('fiber');
-  const [packetSize, setPacketSize] = useState(1024); // KB
-
-  // ────────────────────────────────────────────────────────────────────────
-  // DATA CONFIGURATIONS
-  // ────────────────────────────────────────────────────────────────────────
-
-  // องค์ประกอบการสื่อสาร 5 ส่วน (1.2.2)
-  const elements = [
-    {
-      id: 'sender',
-      title: 'ผู้ส่ง (Sender)',
-      en: 'Source Device',
-      desc: 'อุปกรณ์ต้นทางที่เป็นผู้สร้างสรรค์และเริ่มจ่ายข้อมูลข่าวสารเข้าระบบ เช่น เครื่องคอมพิวเตอร์, เซิร์ฟเวอร์แม่ข่าย, กล้องวงจรปิด UHD หรือเครื่องสแกนบาร์โค้ด',
-      color: 'emerald',
-      icon: User,
-      tech: 'แปลงข้อมูลดิจิทัลเป็นบิตสัญญาณไฟฟ้าหรือคลื่นความถี่พร้อมระบุ IP แอดเดรส'
-    },
-    {
-      id: 'receiver',
-      title: 'ผู้รับ (Receiver)',
-      en: 'Destination Device',
-      desc: 'อุปกรณ์ปลายทางที่เป็นจุดหมายปลายทางที่ข้อมูลจะส่งไปถึง เช่น หน้าจอคอมพิวเตอร์แสดงภาพสี, เครื่องพิมพ์ใบเสร็จ, หรือเทอร์มินัลบอร์ดควบคุมแขนกล',
-      color: 'indigo',
-      icon: Monitor,
-      tech: 'รับกระแสคลื่นสัญญาณมาถอดรหัส (Decoding) แปลกลับเป็นชุดดิจิทัล 0 และ 1'
-    },
-    {
-      id: 'message',
-      title: 'ข้อมูลข่าวสาร (Message)',
-      en: 'Payload Data',
-      desc: 'วัตถุดิบและข่าวสารเนื้อความที่จะถูกนำพาไป เช่น ข้อความสนทนา, แฟ้มข้อมูล, สัญญาณภาพสดกล้อง หรือรหัสตัวเลขอุณหภูมิองศาดิบจาก IoT เซนเซอร์',
-      color: 'amber',
-      icon: FileText,
-      tech: 'จัดโครงสร้างบิตข้อมูลในแพ็กเก็ต (Packet Payload) พร้อมคำสั่งตรวจสอบบั๊ก'
-    },
-    {
-      id: 'medium',
-      title: 'สื่อกลางการรับส่ง (Medium)',
-      en: 'Transmission Channel',
-      desc: 'ช่องทางสะพานเชื่อมต่อที่เป็นทางเดินกายภาพให้สัญญาณเดินทางข้าม เช่น สายทองแดงตีเกลียว UTP, สายโคแอกเชียล, เคเบิลใยแก้วนำแสง หรือคลื่นอากาศไร้สาย',
-      color: 'cyan',
-      icon: Radio,
-      tech: 'รองรับแบนด์วิดท์ความเร็ว ป้องกันสัญญาณเสื่อมถอย (Attenuation) ตามระยะสาย'
-    },
-    {
-      id: 'protocol',
-      title: 'โปรโตคอล (Protocol)',
-      en: 'Communication Rules',
-      desc: 'กฎระเบียบ ข้อกำหนด หรือภาษากลางระดับโครงสร้างทางซอฟต์แวร์ เพื่อให้อุปกรณ์คอมพิวเตอร์แต่ละฝั่งเข้าใจความหมายและประสานสื่อสารกันรู้เรื่องโดยตรง',
-      color: 'purple',
-      icon: Shield,
-      tech: 'กำหนดกรอบของ HTTP/HTTPS, TCP/IP, DNS, และวิธีการสับคิวป้องกันชนกัน'
+const CustomStyles = () => (
+  <style dangerouslySetInnerHTML={{__html: `
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+      100% { transform: translateY(0px); }
     }
-  ];
-
-  // ประโยชน์การแชร์ทรัพยากร (1.2.3)
-  const sharingBenefits = {
-    hardware: {
-      title: 'การแบ่งปันฮาร์ดแวร์ร่วมกัน (Hardware Sharing)',
-      desc: 'ช่วยลดต้นทุนขององค์กรอย่างมหาศาลโดยพึ่งพาระบบศูนย์รวมอุปกรณ์ ไม่ต้องจัดซื้อเครื่องใช้ไฟฟ้าส่วนบุคคลให้กับพนักงานทุกคนแยกรายบุคคล',
-      examples: [
-        'การติดตั้ง Print Server สำหรับแบ่งปันเครื่องพิมพ์เอกสารกลางของแผนกบัญชี',
-        'การเชื่อมต่อระบบ Storage Area Network (SAN) สำหรับดึงพื้นที่เก็บข้อมูลส่วนกลาง',
-        'การใช้เครื่องสแกนเอกสารเครือข่าย หรือไดรฟ์บันทึกข้อมูลหลักร่วมกันผ่านวงแลน'
-      ]
-    },
-    software: {
-      title: 'การแบ่งปันซอฟต์แวร์ร่วมกัน (Software Sharing)',
-      desc: 'ควบคุมระบบโปรแกรมหลักจากเครื่องแม่ข่ายเครื่องเดียว ทำให้ติดตั้งระบบ ดูแล และแก้ไขบั๊กได้รวดเร็วแบบเรียลไทม์จากระบบศูนย์กลาง',
-      examples: [
-        'ระบบบริหารจัดการทรัพยากรองค์กร (ERP) และซอฟต์แวร์ CRM จัดการสถิติสมาชิก',
-        'การแชร์โปรแกรมฐานข้อมูลระบบสต็อกเพื่อการเรียกอ่านแบบ Concurrent พร้อมๆ กัน',
-        'การใช้งานเวิร์กสเปซระบบคลาวด์ เช่น Google Workspace หรือ Office 365'
-      ]
-    },
-    data: {
-      title: 'การแบ่งปันข้อมูลร่วมกัน (Data Sharing)',
-      desc: 'อำนวยความสะดวกให้พนักงานสามารถเข้าถึง ดึงไฟล์ คัดลอก และแก้ไขเอกสารชิ้นเดียวกันได้ทันที ช่วยลดความซ้ำซ้อนของการเก็บแฟ้มซ้ำๆ',
-      examples: [
-        'โฟลเดอร์แชร์กลางของแผนก (Network Shared Folder) บนเซิร์ฟเวอร์องค์กร',
-        'ฐานข้อมูลตารางรายการสินค้า ยอดขายรายวัน และประวัติลูกค้ากลางที่อัปเดตสด',
-        'การส่งต่อบล็อกสถิติ รายงานประจำสัปดาห์ และแฟ้มสลิปชำระเงินข้ามแผนก'
-      ]
+    @keyframes packet-simplex {
+      0% { left: 10%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { left: 90%; opacity: 0; }
     }
-  };
-
-  // 1.2.5: รายละเอียดล็อกสถานการณ์การประมวลผลข้อมูล
-  const transmissionLogs = {
-    simplex: {
-      L2R: [
-        '[INPUT] [ผู้ส่ง] ส่งสัญญาณภาพกล้องวงจรปิด UHD แปลงเฟรมพิกเซลรูปภาพเป็นกระแสไฟฟ้าส่งตรงลงสู่สาย Medium แบบต่อเนื่อง.',
-        '[MEDIUM] สัญญาณเดินทางเป็นเส้นตรงทิศทางเดียว (Left to Right) ข้ามช่องสายส่งทองแดงด้วยสปีดแบนด์วิดท์ 1Gbps มั่นคง.',
-        '[RECEIVER] [ผู้รับ] เครื่องจอแสดงผลรับกระแสบิตไฟฟ้า ทำการประมวลผลถอดรหัสสีออกมาเป็นภาพเคลื่อนไหวสดบนหน้าจอปกติตลอด 24 ชม.',
-        '[ระบบ] การส่งสัญญาณแบบ Simplex เสร็จสมบูรณ์ ข้อมูลวิ่งจากผู้ส่งไปผู้รับได้อย่างเดียว ไร้การส่งกลับตรรกะ.'
-      ]
-    },
-    half: {
-      L2R: [
-        '[INPUT] [ผู้ส่ง] วิทยุส่งพัลส์กระแสเสียงข้อความ "เริ่มเคลื่อนย้ายพัสดุช่อง A" พร้อมกดสวิตช์ส่งสายสัญญาณยึด Medium ชั่วคราว.',
-        '[MEDIUM] สัญญาณเสียงเดินทางข้ามสาย UTP ไปยังผู้รับ (Left to Right) โดยที่อีกฝั่งกำลังตั้งช่องรอรับสัญญาณ.',
-        '[RECEIVER] [ผู้รับ] ลำโพงปลายทางได้รับกระแสคลื่นเสียง ขับหน้าดอกลำโพงปล่อยข้อความเสียง "เริ่มเคลื่อนย้ายพัสดุช่อง A" สำเร็จ.',
-        '[ระบบ] จบการคุยข้อความที่หนึ่ง ปลายทางพูดตอบรับวิทยุสวนกลับได้เป็นลำดับถัดไป (สลับเวลาคุย).'
-      ],
-      R2L: [
-        '[INPUT] [ผู้รับ] กดสวิตช์วิทยุส่งสารกลับคืน "พัสดุช่อง A จัดวางเรียบร้อยแล้ว เปลี่ยน" ส่งกระแสคลื่นสัญญาณไฟฟ้าลง Medium.',
-        '[MEDIUM] บิตกระแสเดินทางย้อนทิศทาง (Right to Left) เพื่อส่งสัญญาณคืนสภาพมายังเครื่องต้นทาง.',
-        '[SENDER] [ผู้ส่ง] เครื่องสัญญานผู้ส่งรับกระแส ลำโพงเปล่งเสียงรายงานความคืบหน้าการจัดระบบสต็อกสินค้าได้อย่างปลอดภัย.',
-        '[ระบบ] การส่งกลับเสร็จสิ้น สลับหน้าช่องคุยได้อย่างมั่นคงทีละชิ้นงาน.'
-      ],
-      BOTH: [
-        '[COLLISION DETECTED] [วิกฤตสัญญาณชนกัน] เครื่องส่งฝั่งซ้าย และเครื่องส่งฝั่งขวา พยายามปล่อยบิตกระแสไฟฟ้าสวนทางกันลงในท่อ Medium เดียวกันในเสี้ยววินาทีเดียวกัน!',
-        '[PROCESS] สัญญาณไฟฟ้าปะทะกันกึ่งกลางแกนเรขาคณิต (x = 400) เกิดการกวนและหักล้างของระดับแรงดัน บิตข้อมูลบิดเบี้ยวชำรุด 100%.',
-        '[STORAGE] ระบบคลังแลนสืบพบความร้อนและโวลต์เพี้ยนบนช่องส่ง ยื่นสัญญาณแจ้งเตือนขอระงับการส่งทันที.',
-        '[ERROR] ข้อมูลสูญหายทั้งหมด! นักเรียนต้องกด RESET เพื่อเคลียร์สาย Medium และสับเวลาคิวส่งใหม่ให้มีคิวต่างเวลา (Half-Duplex Rule).'
-      ]
-    },
-    full: {
-      BOTH: [
-        '[INPUT] ผู้ใช้งานโทรศัพท์ต้นทาง และผู้รับปลายทาง ปล่อยกระแสเสียงบิตพูดคุยตอบรับกันทันทีข้ามพอร์ตร่วมกัน.',
-        '[MEDIUM] สายสัญญาณใยแก้วมีช่องนำทางขนานกัน 2 ทิศทาง ทำให้กระแสสัญญาณฝั่งซ้าย (L2R) และฝั่งขวา (R2L) วิ่งสวนกันได้อย่างอิสระ 100%.',
-        '[RECEIVER] ทั้งผู้รับและผู้ส่งปลายทาง สามารถฟังและพูดไปพร้อมกันได้โดยที่ข้อมูลไม่เกิดการชนกันและการกวนสัญญาณใดๆ.',
-        '[ระบบ] วงจร Full-Duplex ทำการแลกเปลี่ยนกระแสข้อมูลสองทิศทางพร้อมกันเสร็จสิ้นอย่างสมบูรณ์แบบ.'
-      ]
+    @keyframes packet-half-duplex-forward {
+      0% { left: 10%; opacity: 0; }
+      5% { opacity: 1; }
+      45% { left: 90%; opacity: 1; }
+      50% { left: 90%; opacity: 0; }
+      100% { left: 90%; opacity: 0; }
     }
-  };
-
-  // ────────────────────────────────────────────────────────────────────────
-  // SIMULATOR LOGIC
-  // ────────────────────────────────────────────────────────────────────────
-  
-  const startFlow = () => {
-    if (selectedMode === 'simplex') {
-      setFlowActive(true);
-      setFlowStep(1);
-      setScenarioLogs([
-        `[เริ่มต้น] จำลองทิศทาง Simplex: ${sendDirection === 'L2R' ? 'ส่งสัญญาณแบบทางเดียว' : 'ผู้รับส่งกลับไม่ได้'}`,
-        transmissionLogs.simplex.L2R[0]
-      ]);
-    } else if (selectedMode === 'half') {
-      setFlowActive(true);
-      setFlowStep(1);
-      if (sendDirection === 'BOTH') {
-        setFlowStep(3); // Collision directly!
-        setScenarioLogs([
-          `[ล้มเหลว] ตรวจพบข้อมูลชนกันในช่องส่ง Half-Duplex`,
-          transmissionLogs.half.BOTH[0]
-        ]);
-      } else {
-        setScenarioLogs([
-          `[เริ่มต้น] จำลองทิศทาง Half-Duplex: ${sendDirection === 'L2R' ? 'ส่งจากซ้ายไปขวา' : 'ส่งจากขวาไปซ้าย'}`,
-          transmissionLogs.half[sendDirection][0]
-        ]);
+    @keyframes packet-half-duplex-backward {
+      0% { right: 10%; opacity: 0; }
+      50% { right: 10%; opacity: 0; }
+      55% { opacity: 1; }
+      95% { right: 90%; opacity: 1; }
+      100% { right: 90%; opacity: 0; }
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.8); opacity: 0.5; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+    @keyframes blob-drift {
+      0% { transform: translate(0px, 0px) scale(1); }
+      50% { transform: translate(20px, -20px) scale(1.05); }
+      100% { transform: translate(0px, 0px) scale(1); }
+    }
+    @keyframes flow-svg-line {
+      to {
+        stroke-dashoffset: -20;
       }
-    } else if (selectedMode === 'full') {
-      setFlowActive(true);
-      setFlowStep(1);
-      setScenarioLogs([
-        `[เริ่มต้น] จำลองทิศทาง Full-Duplex: ส่งสวนทางพร้อมกันอย่างราบรื่น`,
-        transmissionLogs.full.BOTH[0]
-      ]);
     }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+    .animate-simplex { animation: packet-simplex 2s linear infinite; }
+    .animate-hd-fwd { animation: packet-half-duplex-forward 4s linear infinite; }
+    .animate-hd-bwd { animation: packet-half-duplex-backward 4s linear infinite; }
+    .animate-fd-1 { animation: packet-simplex 1.5s linear infinite; }
+    .animate-fd-2 { animation: packet-simplex 1.5s linear infinite reverse; }
+    .animate-pulse-ring { animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
+    .animate-drift { animation: blob-drift 12s ease-in-out infinite; }
+    .animate-flow-svg-line { animation: flow-svg-line 1.5s linear infinite; }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    }
+  `}} />
+);
+
+export default function IT1_2() {
+  const [activeElement, setActiveElement] = useState('sender');
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const handleElementClick = (elem) => {
+    if (elem === activeElement) return;
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setActiveElement(elem);
+      setIsTransitioning(false);
+    }, 200);
   };
 
-  const resetFlow = () => {
-    setFlowActive(false);
-    setFlowStep(0);
-    setScenarioLogs([
-      '[ระบบ] เครือข่ายพร้อมสื่อสาร เลือกทิศทาง/โหมดส่งสัญญาณ และกด PLAY เพื่อเริ่มต้นจำลองกระบวนการ'
-    ]);
+  const commElements = {
+    sender: {
+      title: 'ผู้ส่ง (Sender)',
+      icon: <Send className="w-10 h-10 text-blue-500" />,
+      color: 'blue',
+      borderColor: 'border-l-blue-500',
+      bgColor: 'bg-blue-50',
+      textColor: 'text-blue-600',
+      desc: 'อุปกรณ์เริ่มต้นที่ทำหน้าที่สร้างและจัดส่งข้อมูลเข้าสู่ระบบเครือข่าย เช่น คอมพิวเตอร์ สมาร์ทโฟน หรือกล้องวงจรปิด',
+    },
+    message: {
+      title: 'ข้อมูล/ข่าวสาร (Message)',
+      icon: <Mail className="w-10 h-10 text-indigo-500" />,
+      color: 'indigo',
+      borderColor: 'border-l-indigo-500',
+      bgColor: 'bg-indigo-50',
+      textColor: 'text-indigo-600',
+      desc: 'เนื้อหา สาร หรือข้อมูลที่ต้องการส่ง ซึ่งอาจอยู่ในรูปแบบข้อความ เสียง ภาพ หรือวิดีโอ ที่ถูกแปลงเป็นสัญญาณดิจิทัล',
+    },
+    medium: {
+      title: 'สื่อกลาง (Medium)',
+      icon: <Wifi className="w-10 h-10 text-emerald-500" />,
+      color: 'emerald',
+      borderColor: 'border-l-emerald-500',
+      bgColor: 'bg-emerald-50',
+      textColor: 'text-emerald-600',
+      desc: 'เส้นทางหรือช่องทางที่ข้อมูลเดินทางผ่านจากผู้ส่งไปยังผู้รับ เช่น สายสัญญาณ (LAN, Fiber Optic) หรือคลื่นวิทยุ (Wi-Fi)',
+    },
+    receiver: {
+      title: 'ผู้รับ (Receiver)',
+      icon: <HardDriveDownload className="w-10 h-10 text-orange-500" />,
+      color: 'orange',
+      borderColor: 'border-l-orange-500',
+      bgColor: 'bg-orange-50',
+      textColor: 'text-orange-600',
+      desc: 'อุปกรณ์ปลายทางที่ทำหน้าที่รับข้อมูลที่ส่งผ่านสื่อกลางมา และนำไปประมวลผลหรือแสดงผลต่อไป',
+    },
+    protocol: {
+      title: 'โปรโตคอล (Protocol)',
+      icon: <FileCheck2 className="w-10 h-10 text-rose-500" />,
+      color: 'rose',
+      borderColor: 'border-l-rose-500',
+      bgColor: 'bg-rose-50',
+      textColor: 'text-rose-600',
+      desc: 'กฎ ระเบียบ หรือภาษาข้อตกลงส่วนกลาง ที่ทำให้ผู้ส่งและผู้รับ (ซึ่งอาจเป็นคนละยี่ห้อหรือคนละระบบ) สามารถสื่อสารกันรู้เรื่อง',
+    }
   };
-
-  useEffect(() => {
-    if (!flowActive) return;
-
-    // Simplex control flow
-    if (selectedMode === 'simplex' && flowStep >= 1 && flowStep < 4) {
-      const timer = setTimeout(() => {
-        const nextStep = flowStep + 1;
-        setFlowStep(nextStep);
-        setScenarioLogs(prev => [
-          ...prev,
-          transmissionLogs.simplex.L2R[nextStep - 1]
-        ]);
-      }, flowSpeed);
-      return () => clearTimeout(timer);
-    }
-
-    // Half Duplex control flow (single direction)
-    if (selectedMode === 'half' && sendDirection !== 'BOTH' && flowStep >= 1 && flowStep < 4) {
-      const timer = setTimeout(() => {
-        const nextStep = flowStep + 1;
-        setFlowStep(nextStep);
-        setScenarioLogs(prev => [
-          ...prev,
-          transmissionLogs.half[sendDirection][nextStep - 1]
-        ]);
-      }, flowSpeed);
-      return () => clearTimeout(timer);
-    }
-
-    // Half Duplex collision flow
-    if (selectedMode === 'half' && sendDirection === 'BOTH' && flowStep >= 3 && flowStep < 5) {
-      const timer = setTimeout(() => {
-        const nextStep = flowStep === 3 ? 4 : 5;
-        setFlowStep(nextStep);
-        if (nextStep === 4) {
-          setScenarioLogs(prev => [...prev, transmissionLogs.half.BOTH[1], transmissionLogs.half.BOTH[2]]);
-        } else {
-          setFlowActive(false);
-          setScenarioLogs(prev => [...prev, transmissionLogs.half.BOTH[3]]);
-        }
-      }, flowSpeed);
-      return () => clearTimeout(timer);
-    }
-
-    // Full Duplex control flow
-    if (selectedMode === 'full' && flowStep >= 1 && flowStep < 4) {
-      const timer = setTimeout(() => {
-        const nextStep = flowStep + 1;
-        setFlowStep(nextStep);
-        setScenarioLogs(prev => [
-          ...prev,
-          transmissionLogs.full.BOTH[nextStep - 1]
-        ]);
-      }, flowSpeed);
-      return () => clearTimeout(timer);
-    }
-
-    // Success terminations
-    if (flowStep === 4 && flowActive) {
-      const timer = setTimeout(() => {
-        setFlowStep(5);
-        setFlowActive(false);
-        setScenarioLogs(prev => [...prev, '[เสร็จสิ้น] การส่งถ่ายบิตและควบคุมประสานความเร็วสิ้นสุดอย่างงดงาม.']);
-      }, flowSpeed);
-      return () => clearTimeout(timer);
-    }
-
-  }, [flowStep, flowActive, selectedMode, sendDirection, flowSpeed]);
-
-  const activeElementData = elements.find(el => el.id === selectedElement);
 
   return (
-    <>
-      {/* 1️⃣ Layer 1: Ambient Backdrop Blobs */}
-      <AmbientBackdrop />
+    <div className="font-sans text-slate-800 pb-24 relative overflow-hidden">
+      <CustomStyles />
+      
+      {/* ─── Layer 1: Ambient Backdrop & 4 Blobs ─── */}
+      <div className="absolute top-10 left-10 w-72 h-72 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-drift pointer-events-none"></div>
+      <div className="absolute top-20 right-10 w-96 h-96 bg-teal-200 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-drift animation-delay-2000 pointer-events-none"></div>
+      <div className="absolute bottom-10 left-10 w-80 h-80 bg-sky-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-drift animation-delay-4000 pointer-events-none"></div>
+      <div className="absolute top-1/2 right-0 w-88 h-88 bg-cyan-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-drift animation-delay-2000 pointer-events-none"></div>
 
-      {/* 3️⃣ Layer 3: Main Layout Stacking Subtopics Vertically */}
-      <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-6 pb-12 space-y-16 md:space-y-24 relative z-10">
-        
-        {/* ====================================================================
-            SECTION 1: ความหมายและองค์ประกอบการสื่อสารข้อมูล (1.2.1 & 1.2.2)
-            ==================================================================== */}
-        <section id="section-meaning-elements" className="space-y-10">
-          
-          {/* 1.2.1 ความหมายและวัตถุประสงค์ */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-7 bg-indigo-600 rounded-full" />
-              <h2 className="text-[26px] font-bold text-zinc-900 font-sans tracking-tight">
-                ความหมายและวัตถุประสงค์ของระบบเครือข่ายคอมพิวเตอร์
-              </h2>
-            </div>
-            
-            <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed max-w-4xl">
-              ระบบเครือข่ายคอมพิวเตอร์คือการรวบรวมเครื่องคอมพิวเตอร์และอุปกรณ์อิเล็กทรอนิกส์สากลมาเชื่อมต่อเข้าด้วยกันผ่านตัวนำสัญญาณทางกายภาพ 
-              วัตถุประสงค์เพื่อยกระดับขีดความสามารถการสื่อสาร แบ่งปันพื้นที่เก็บข้อมูล ดำเนินงานโปรแกรมพร้อมกันอย่างปลอดภัย และแชร์เครื่องมือฮาร์ดแวร์เพื่อลดต้นทุนเชิงบริหาร
-            </p>
+
+      {/* ─── Layer 3: Main Page Content ─── */}
+      <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-6 space-y-12 md:space-y-16 relative z-10">
+
+        {/* Section 1: Benefits */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-emerald-600 tracking-wider uppercase">
+              ประโยชน์ของเครือข่ายคอมพิวเตอร์
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              ทำไมเราต้องสร้างระบบเครือข่าย? (Network Value)
+            </h3>
           </div>
 
-          {/* 1.2.2 องค์ประกอบของการสื่อสารข้อมูล */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-7 bg-indigo-600 rounded-full" />
-              <h2 className="text-[26px] font-bold text-zinc-900 font-sans tracking-tight">
-                องค์ประกอบพื้นฐาน 5 ส่วนของการสื่อสารข้อมูล
-              </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Hardware Sharing */}
+            <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-6 hover:-translate-y-1 hover:shadow-2xl hover:border-emerald-500/40 transition-all duration-300 group">
+              <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center shadow-inner mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                <Printer className="w-8 h-8" />
+              </div>
+              <h4 className="text-xl font-bold mb-3 text-slate-800">แชร์ฮาร์ดแวร์</h4>
+              <p className="text-slate-500 text-[14.5px] leading-relaxed">
+                ใช้อุปกรณ์ราคาสูงร่วมกันได้ เช่น เครื่องพิมพ์ หรือสแกนเนอร์ส่วนกลาง ช่วยลดต้นทุนในการซื้ออุปกรณ์ให้พนักงานทุกคน
+              </p>
             </div>
 
-            <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed max-w-4xl">
-              การเดินทางรับส่งคำสั่งข้ามระบบเครือข่ายจะสมบูรณ์ได้ ต้องพึ่งพาการทำงานร่วมกันขององค์ประกอบสากลทั้ง 5 ข้อ ซึ่งเปรียบเหมือนสายการประสานที่ขาดกันไม่ได้:
-            </p>
-
-            {/* Element Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
-              {elements.map((el) => {
-                const IconComponent = el.icon;
-                const isActive = selectedElement === el.id;
-                return (
-                  <ConceptCard
-                    key={el.id}
-                    accent={el.color}
-                    active={isActive}
-                    onClick={() => setSelectedElement(el.id)}
-                    symbol={<IconComponent className="w-7 h-7" />}
-                    symbolFont="sans"
-                    title={el.title}
-                    description={el.en}
-                  />
-                );
-              })}
+            {/* Data Sharing */}
+            <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-6 hover:-translate-y-1 hover:shadow-2xl hover:border-emerald-500/40 transition-all duration-300 group">
+              <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center shadow-inner mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                <FileBox className="w-8 h-8" />
+              </div>
+              <h4 className="text-xl font-bold mb-3 text-slate-800">แชร์ข้อมูล</h4>
+              <p className="text-slate-500 text-[14.5px] leading-relaxed">
+                ผู้ใช้สามารถดึงไฟล์ข้อมูลจาก File Server ส่วนกลางมาใช้งานได้ทันที ไม่ต้องเซฟใส่แฟลชไดรฟ์เดินส่งกันอีกต่อไป
+              </p>
             </div>
 
-            {/* Detailed Element Display Panel */}
-            <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-2xl p-6 md:p-8 shadow-md transition-all duration-300">
-              {activeElementData && (
-                <div className="flex flex-col md:flex-row gap-6 items-start animate-fadeIn">
-                  <div className={`p-4 rounded-2xl bg-${activeElementData.color}-50 text-${activeElementData.color}-600 border border-${activeElementData.color}-100 shrink-0`}>
-                    {React.createElement(activeElementData.icon, { className: 'w-10 h-10' })}
-                  </div>
-                  <div className="space-y-4">
-                    <h3 className="text-xl font-bold text-slate-800">{activeElementData.title} ({activeElementData.en})</h3>
-                    <p className="text-[15px] text-slate-600 leading-relaxed max-w-3xl">{activeElementData.desc}</p>
-                    
-                    <div className="space-y-2 border-t border-slate-200/50 pt-3">
-                      <span className="text-[13px] font-bold text-slate-400 uppercase tracking-wider block">บทบาทเทคโนโลยีระดับลอจิก</span>
-                      <p className="text-[14px] text-slate-700 font-semibold">{activeElementData.tech}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
+            {/* Software Sharing */}
+            <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-6 hover:-translate-y-1 hover:shadow-2xl hover:border-emerald-500/40 transition-all duration-300 group">
+              <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center shadow-inner mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                <Server className="w-8 h-8" />
+              </div>
+              <h4 className="text-xl font-bold mb-3 text-slate-800">แชร์ซอฟต์แวร์</h4>
+              <p className="text-slate-500 text-[14.5px] leading-relaxed">
+                ติดตั้งโปรแกรมฐานข้อมูลหรือแอปพลิเคชันไว้ที่เครื่องแม่ข่าย แล้วให้เครื่องลูกข่ายประมวลผลผ่านเครือข่าย ช่วยให้บริหารจัดการง่าย
+              </p>
+            </div>
+          </div>
+
+          {/* Pros and Cons Box as Frosted Glass Callouts */}
+          <div className="grid md:grid-cols-2 gap-6 mt-6">
+            {/* Pros */}
+            <div className="bg-emerald-50/60 backdrop-blur-md border border-emerald-200/60 rounded-2xl p-6 border-l-[4px] border-l-emerald-500 leading-relaxed shadow-sm">
+              <h4 className="flex items-center gap-2 font-bold text-emerald-700 text-lg mb-4">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600" /> ข้อดีของการมีเครือข่าย
+              </h4>
+              <ul className="space-y-3">
+                <li className="flex gap-2.5 text-slate-700 text-sm md:text-[15px]">
+                  <span className="text-emerald-500 font-bold shrink-0">✓</span> 
+                  <span>ประหยัดค่าใช้จ่ายด้านฮาร์ดแวร์โดยการใช้ทรัพยากรร่วมกัน</span>
+                </li>
+                <li className="flex gap-2.5 text-slate-700 text-sm md:text-[15px]">
+                  <span className="text-emerald-500 font-bold shrink-0">✓</span> 
+                  <span>จัดเก็บและจัดการข้อมูลจากศูนย์กลาง (Centralized) เพิ่มความปลอดภัย</span>
+                </li>
+                <li className="flex gap-2.5 text-slate-700 text-sm md:text-[15px]">
+                  <span className="text-emerald-500 font-bold shrink-0">✓</span> 
+                  <span>สื่อสารและประสานงานภายในองค์กรได้อย่างสะดวกรวดเร็ว</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Cons */}
+            <div className="bg-rose-50/60 backdrop-blur-md border border-rose-200/60 rounded-2xl p-6 border-l-[4px] border-l-rose-500 leading-relaxed shadow-sm">
+              <h4 className="flex items-center gap-2 font-bold text-rose-700 text-lg mb-4">
+                <ShieldAlert className="w-5 h-5 text-rose-600" /> ข้อจำกัดและความเสี่ยง
+              </h4>
+              <ul className="space-y-3">
+                <li className="flex gap-2.5 text-slate-700 text-sm md:text-[15px]">
+                  <span className="text-rose-500 font-bold shrink-0">×</span> 
+                  <span>ต้นทุนการวางระบบ อุปกรณ์สวิตช์ เราเตอร์ และเดินสายสัญญาณค่อนข้างสูงในระยะแรก</span>
+                </li>
+                <li className="flex gap-2.5 text-slate-700 text-sm md:text-[15px]">
+                  <span className="text-rose-500 font-bold shrink-0">×</span> 
+                  <span>หากอุปกรณ์แม่ข่าย (Server) หรือสวิตช์หลักเสีย เครือข่ายจะชะงักทั้งหมด</span>
+                </li>
+                <li className="flex gap-2.5 text-slate-700 text-sm md:text-[15px]">
+                  <span className="text-rose-500 font-bold shrink-0">×</span> 
+                  <span>เสี่ยงต่อการถูกมัลแวร์คุกคามหรือโจรกรรมข้อมูลหากระบบความปลอดภัยไม่เข้มงวด</span>
+                </li>
+              </ul>
             </div>
           </div>
         </section>
 
-        {/* ====================================================================
-            SECTION 2: ประโยชน์และข้อจำกัด/ต้นทุน (1.2.3 & 1.2.4)
-            ==================================================================== */}
-        <section id="section-sharing-risks" className="space-y-10">
-          
-          {/* 1.2.3 ประโยชน์การแชร์ทรัพยากร */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-7 bg-indigo-600 rounded-full" />
-              <h2 className="text-[26px] font-bold text-zinc-900 font-sans tracking-tight">
-                ประโยชน์ของการแบ่งปันทรัพยากรร่วมกันบนระบบเครือข่าย
-              </h2>
-            </div>
+        {/* Section 2: 5 Elements */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-emerald-600 tracking-wider uppercase">
+              องค์ประกอบของการสื่อสาร
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              5 องค์ประกอบพื้นฐานของการสื่อสารข้อมูล (Communication Components)
+            </h3>
+          </div>
 
-            <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed max-w-4xl">
-              เทคโนโลยีเครือข่ายส่งสัญญาณถูกสรรค์สร้างขึ้นมาเพื่อยกระดับความคุ้มค่าของการดำเนินงาน โดยการจำแนกเป้าหมายการแชร์ร่วมกันออกเป็น **3 มิติเชิงอุตสาหกรรม**:
-            </p>
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
+            คลิกที่ไอคอนแต่ละจุดในผังระบบเครือข่าย เพื่อดูหน้าที่และการเชื่อมโยงขององค์ประกอบต่างๆ
+          </p>
 
-            {/* Sharing selector tabs */}
-            <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200 shadow-inner w-fit cursor-pointer">
-              {Object.keys(sharingBenefits).map((key) => (
-                <button
-                  key={key}
-                  onClick={() => setSelectedSharing(key)}
-                  className={`px-4 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer ${
-                    selectedSharing === key
-                      ? 'bg-white text-indigo-600 shadow-sm'
-                      : 'text-slate-500 hover:text-slate-700'
-                  }`}
-                >
-                  {key === 'hardware' ? 'แบ่งปันฮาร์ดแวร์' : key === 'software' ? 'แบ่งปันซอฟต์แวร์' : 'แบ่งปันข้อมูล'}
-                </button>
-              ))}
-            </div>
-
-            {/* Sharing benefit details card */}
-            <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-2xl p-6 md:p-8 shadow-sm space-y-4 transition-all duration-300">
-              <h4 className="text-[18px] font-bold text-slate-800">{sharingBenefits[selectedSharing].title}</h4>
-              <p className="text-[15px] text-slate-600 leading-relaxed max-w-4xl">{sharingBenefits[selectedSharing].desc}</p>
+          <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-[2.5rem] p-6 sm:p-10">
+            
+            {/* Interactive Network Map using viewBox for Perfect Coordinates */}
+            <div className="relative w-full h-[320px] mb-8">
               
-              <div className="space-y-2 border-t border-slate-200/50 pt-4">
-                <span className="text-[13px] font-bold text-slate-400 uppercase tracking-wider block">ตัวอย่างเคสและสถิติในองค์กร</span>
-                <ul className="space-y-2">
-                  {sharingBenefits[selectedSharing].examples.map((ex, i) => (
-                    <li key={i} className="flex items-center gap-3 text-[14px] text-slate-700 font-medium">
-                      <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full shrink-0" />
-                      {ex}
-                    </li>
-                  ))}
-                </ul>
+              {/* SVG Connecting Lines with Pixel-Perfect Center Connections */}
+              <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+                {/* 1. Main Path: Sender -> Medium -> Receiver */}
+                <path d="M 10 60 L 50 60 L 90 60" stroke="#E2E8F0" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+                {/* 2. Message Path: Sender -> Message -> Medium */}
+                <path d="M 10 60 L 30 20 L 50 60" stroke="#E2E8F0" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+                {/* 3. Protocol Path: Medium -> Protocol -> Receiver */}
+                <path d="M 50 60 L 70 20 L 90 60" stroke="#E2E8F0" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+
+                {/* --- Glowing Flow Animations based on Active Selection --- */}
+                {activeElement === 'sender' && (
+                  <>
+                    <path d="M 10 60 L 30 20" stroke="#3b82f6" strokeWidth="1.6" strokeDasharray="2 4" fill="none" strokeLinecap="round" className="animate-flow-svg-line" />
+                    <path d="M 10 60 L 50 60" stroke="#3b82f6" strokeWidth="1.6" strokeDasharray="2 4" fill="none" strokeLinecap="round" className="animate-flow-svg-line" />
+                  </>
+                )}
+                {activeElement === 'message' && (
+                  <path d="M 10 60 L 30 20 L 50 60" stroke="#6366f1" strokeWidth="1.6" strokeDasharray="2 4" fill="none" strokeLinecap="round" className="animate-flow-svg-line" />
+                )}
+                {activeElement === 'medium' && (
+                  <path d="M 10 60 L 50 60 L 90 60" stroke="#10b981" strokeWidth="1.6" strokeDasharray="2 4" fill="none" strokeLinecap="round" className="animate-flow-svg-line" />
+                )}
+                {activeElement === 'protocol' && (
+                  <path d="M 30 20 L 50 60 L 70 20" stroke="#f43f5e" strokeWidth="1.6" strokeDasharray="2 4" fill="none" strokeLinecap="round" className="animate-flow-svg-line" />
+                )}
+                {activeElement === 'receiver' && (
+                  <path d="M 50 60 L 90 60" stroke="#f97316" strokeWidth="1.6" strokeDasharray="2 4" fill="none" strokeLinecap="round" className="animate-flow-svg-line" />
+                )}
+              </svg>
+
+              {/* 5 Node Interactive Buttons */}
+              
+              {/* Sender Node */}
+              <button 
+                onClick={() => handleElementClick('sender')} 
+                className={`absolute left-[10%] top-[60%] -translate-x-1/2 -translate-y-1/2 group flex flex-col items-center gap-2 transition-all duration-300 cursor-pointer ${
+                  activeElement === 'sender' ? 'scale-110 z-20' : 'hover:scale-105 opacity-80 hover:opacity-100'
+                }`}
+              >
+                {activeElement === 'sender' && <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-xl animate-pulse"></div>}
+                <div className={`w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center border-4 shadow-lg z-10 transition-all duration-300 ${
+                  activeElement === 'sender' ? 'border-blue-500 text-blue-500' : 'border-slate-200 text-slate-400 group-hover:border-blue-300'
+                }`}>
+                  <div className={`transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6 ${activeElement === 'sender' ? 'animate-float' : ''}`}>
+                    <Send className="w-8 h-8 sm:w-10 sm:h-10" />
+                  </div>
+                </div>
+                <span className={`font-bold text-[13px] sm:text-sm bg-white/90 px-3 py-1 rounded-full border border-slate-100 shadow-sm backdrop-blur-sm transition-all duration-300 ${
+                  activeElement === 'sender' ? 'text-blue-600 border-blue-200' : 'text-slate-500 group-hover:text-blue-500'
+                }`}>
+                  Sender
+                </span>
+              </button>
+
+              {/* Message Node */}
+              <button 
+                onClick={() => handleElementClick('message')} 
+                className={`absolute left-[30%] top-[20%] -translate-x-1/2 -translate-y-1/2 group flex flex-col items-center gap-2 transition-all duration-300 cursor-pointer ${
+                  activeElement === 'message' ? 'scale-110 z-20' : 'hover:scale-105 opacity-80 hover:opacity-100'
+                }`}
+              >
+                {activeElement === 'message' && <div className="absolute inset-0 bg-indigo-500/20 rounded-full blur-xl animate-pulse"></div>}
+                <div className={`w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-2xl rotate-12 flex items-center justify-center border-4 shadow-lg z-10 transition-all duration-300 ${
+                  activeElement === 'message' ? 'border-indigo-500 text-indigo-500' : 'border-slate-200 text-slate-400 group-hover:border-indigo-300'
+                }`}>
+                  <div className={`transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6 -rotate-12 ${activeElement === 'message' ? 'animate-float' : ''}`}>
+                    <Mail className="w-6 h-6 sm:w-8 sm:h-8" />
+                  </div>
+                </div>
+                <span className={`font-bold text-[13px] sm:text-sm bg-white/90 px-3 py-1 rounded-full border border-slate-100 shadow-sm backdrop-blur-sm transition-all duration-300 ${
+                  activeElement === 'message' ? 'text-indigo-600 border-indigo-200' : 'text-slate-500 group-hover:text-indigo-500'
+                }`}>
+                  Message
+                </span>
+              </button>
+
+              {/* Medium Node */}
+              <button 
+                onClick={() => handleElementClick('medium')} 
+                className={`absolute left-[50%] top-[60%] -translate-x-1/2 -translate-y-1/2 group flex flex-col items-center gap-2 transition-all duration-300 cursor-pointer ${
+                  activeElement === 'medium' ? 'scale-110 z-20' : 'hover:scale-105 opacity-80 hover:opacity-100'
+                }`}
+              >
+                {activeElement === 'medium' && <div className="absolute inset-0 bg-emerald-500/20 rounded-full blur-xl animate-pulse"></div>}
+                <div className={`w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center border-4 shadow-lg z-10 transition-all duration-300 ${
+                  activeElement === 'medium' ? 'border-emerald-500 text-emerald-500' : 'border-slate-200 text-slate-400 group-hover:border-emerald-300'
+                }`}>
+                  <div className={`transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6 ${activeElement === 'medium' ? 'animate-float' : ''}`}>
+                    <Wifi className="w-8 h-8 sm:w-10 sm:h-10" />
+                  </div>
+                </div>
+                <span className={`font-bold text-[13px] sm:text-sm bg-white/90 px-3 py-1 rounded-full border border-slate-100 shadow-sm backdrop-blur-sm transition-all duration-300 ${
+                  activeElement === 'medium' ? 'text-emerald-600 border-emerald-200' : 'text-slate-500 group-hover:text-emerald-500'
+                }`}>
+                  Medium
+                </span>
+              </button>
+
+              {/* Protocol Node */}
+              <button 
+                onClick={() => handleElementClick('protocol')} 
+                className={`absolute left-[70%] top-[20%] -translate-x-1/2 -translate-y-1/2 group flex flex-col items-center gap-2 transition-all duration-300 cursor-pointer ${
+                  activeElement === 'protocol' ? 'scale-110 z-20' : 'hover:scale-105 opacity-80 hover:opacity-100'
+                }`}
+              >
+                {activeElement === 'protocol' && <div className="absolute inset-0 bg-rose-500/20 rounded-full blur-xl animate-pulse"></div>}
+                <div className={`w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-2xl -rotate-12 flex items-center justify-center border-4 shadow-lg z-10 transition-all duration-300 ${
+                  activeElement === 'protocol' ? 'border-rose-500 text-rose-500' : 'border-slate-200 text-slate-400 group-hover:border-rose-300'
+                }`}>
+                  <div className={`transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6 rotate-12 ${activeElement === 'protocol' ? 'animate-float' : ''}`}>
+                    <FileCheck2 className="w-6 h-6 sm:w-8 sm:h-8" />
+                  </div>
+                </div>
+                <span className={`font-bold text-[13px] sm:text-sm bg-white/90 px-3 py-1 rounded-full border border-slate-100 shadow-sm backdrop-blur-sm transition-all duration-300 ${
+                  activeElement === 'protocol' ? 'text-rose-600 border-rose-200' : 'text-slate-500 group-hover:text-rose-500'
+                }`}>
+                  Protocol
+                </span>
+              </button>
+
+              {/* Receiver Node */}
+              <button 
+                onClick={() => handleElementClick('receiver')} 
+                className={`absolute left-[90%] top-[60%] -translate-x-1/2 -translate-y-1/2 group flex flex-col items-center gap-2 transition-all duration-300 cursor-pointer ${
+                  activeElement === 'receiver' ? 'scale-110 z-20' : 'hover:scale-105 opacity-80 hover:opacity-100'
+                }`}
+              >
+                {activeElement === 'receiver' && <div className="absolute inset-0 bg-orange-500/20 rounded-full blur-xl animate-pulse"></div>}
+                <div className={`w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center border-4 shadow-lg z-10 transition-all duration-300 ${
+                  activeElement === 'receiver' ? 'border-orange-500 text-orange-500' : 'border-slate-200 text-slate-400 group-hover:border-orange-300'
+                }`}>
+                  <div className={`transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6 ${activeElement === 'receiver' ? 'animate-float' : ''}`}>
+                    <HardDriveDownload className="w-8 h-8 sm:w-10 sm:h-10" />
+                  </div>
+                </div>
+                <span className={`font-bold text-[13px] sm:text-sm bg-white/90 px-3 py-1 rounded-full border border-slate-100 shadow-sm backdrop-blur-sm transition-all duration-300 ${
+                  activeElement === 'receiver' ? 'text-orange-600 border-orange-200' : 'text-slate-500 group-hover:text-orange-500'
+                }`}>
+                  Receiver
+                </span>
+              </button>
+
+            </div>
+
+            {/* Dynamic Details Panel */}
+            <div className="max-w-4xl mx-auto rounded-3xl overflow-hidden mt-6">
+              <div className={`transition-all duration-300 transform ${isTransitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+                <div className={`p-6 sm:p-8 md:p-10 bg-white/80 backdrop-blur-xl border border-white/50 text-slate-800 rounded-3xl flex flex-col md:flex-row items-center gap-6 md:gap-8 shadow-xl border-l-[6px] ${commElements[activeElement].borderColor}`}>
+                  <div className={`p-5 rounded-2xl shrink-0 shadow-inner ${commElements[activeElement].bgColor} ${commElements[activeElement].textColor}`}>
+                    {React.cloneElement(commElements[activeElement].icon, { className: "w-12 h-12 md:w-16 md:h-16" })}
+                  </div>
+                  <div className="space-y-3">
+                    <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900">
+                      {commElements[activeElement].title}
+                    </h3>
+                    <p className="text-slate-600 text-[15px] md:text-base leading-relaxed">
+                      {commElements[activeElement].desc}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* 1.2.4 ข้อจำกัด ความเสี่ยง และต้นทุน */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-7 bg-indigo-600 rounded-full" />
-              <h2 className="text-[26px] font-bold text-zinc-900 font-sans tracking-tight">
-                ข้อจำกัด ความเสี่ยง และภาระต้นทุนในการจัดวางเครือข่าย
-              </h2>
-            </div>
-
-            <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed max-w-4xl">
-              การติดตั้งระบบมีความขัดแย้งเชิงความคุ้มค่าที่ผู้ดูแลระบบต้องพึงระวัง เนื่องจากถึงแม้จะได้รับประสิทธิภาพสูงขึ้น แต่ก็มาพร้อมกับข้อจำกัดและข้อแลกเปลี่ยนทางความมั่นคงปลอดภัยดังนี้:
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-2xl p-5 shadow-sm space-y-3">
-                <div className="p-2.5 bg-rose-50 text-rose-600 rounded-xl w-fit">
-                  <Shield className="w-6 h-6 animate-pulse" />
-                </div>
-                <h4 className="text-[16px] font-bold text-slate-800">ความมั่นคงปลอดภัย (Security Perils)</h4>
-                <p className="text-[13.5px] text-slate-500 leading-relaxed">
-                  เนื่องจากคอมพิวเตอร์เข้าถึงสายแกนเดียวกัน ทำให้หากมีเครื่องชิ้นหนึ่งติดไวรัสหรือมัลแวร์ จะสามารถแพร่กระจายตัวอย่างรวดเร็วข้ามวงแลนไปสู่เซิร์ฟเวอร์หลักได้อย่างง่ายดาย
-                </p>
-              </div>
-
-              <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-2xl p-5 shadow-sm space-y-3">
-                <div className="p-2.5 bg-amber-50 text-amber-600 rounded-xl w-fit">
-                  <Sliders className="w-6 h-6" />
-                </div>
-                <h4 className="text-[16px] font-bold text-slate-800">ต้นทุนเริ่มแรกสูง (Initial Investments)</h4>
-                <p className="text-[13.5px] text-slate-500 leading-relaxed">
-                  ต้องใช้เงินทุนเริ่มต้นมหาศาลในการจัดซื้อสาย UTP หมวดหมู่ Cat6/Cat6A, การวางตู้แร็คเซิร์ฟเวอร์, อุปกรณ์จัดเส้นทาง Router, คีย์สวิตช์แลน และจุดควบคุม Access Point
-                </p>
-              </div>
-
-              <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-2xl p-5 shadow-sm space-y-3">
-                <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl w-fit">
-                  <Wrench className="w-6 h-6" />
-                </div>
-                <h4 className="text-[16px] font-bold text-slate-800">การดูแลรักษา (Maintenance Complexity)</h4>
-                <p className="text-[13.5px] text-slate-500 leading-relaxed">
-                  เครือข่ายขนาดใหญ่จำเป็นต้องพึ่งพาช่างเทคนิควิศวกรเฉพาะทางในการควบคุมคิว จัด IP ซับเน็ตติ้ง ตรวจจับคลื่นสัญญาณทับซ้อน และทำสถิติรายงานการกู้ภัยหากสายแลนขาดชำรุด
-                </p>
-              </div>
-            </div>
           </div>
         </section>
 
-        {/* ====================================================================
-            SECTION 3: ทิศทางการส่งสัญญาณข้อมูล (Transmission Simulator) (1.2.5)
-            ==================================================================== */}
-        <section id="section-transmission" className="space-y-10">
-          <div className="space-y-6">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-7 bg-indigo-600 rounded-full" />
-              <h2 className="text-[26px] font-bold text-zinc-900 font-sans tracking-tight">
-                ทิศทางการส่งสัญญาณข้อมูลในระบบเครือข่าย
-              </h2>
-            </div>
-            
-            <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed max-w-4xl">
-              ทิศทางการสื่อสารข่าวสาร (Transmission Mode) ถูกระบุตามความขีดความสามารถการใช้สื่อกลาง โดยแบ่งออกเป็น **3 รูปแบบหลัก** ทางด้านวิศวกรรมเครือข่าย 
-              คุณสามารถกดทดลองและสั่งป้อนพัลส์สัญญาณส่งสวนทางกันเพื่อวิเคราะห์ลอจิกการชนกันของกระแสบิตข้อมูลในแบบจำลองอัจฉริยะด้านล่าง:
-            </p>
+        {/* Section 3: Transmission Modes */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-emerald-600 tracking-wider uppercase">
+              ทิศทางการไหลของข้อมูล
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              ทิศทางการส่งสัญญาณ (Transmission Mode)
+            </h3>
+          </div>
 
-            {/* Interactive Transmission Block */}
-            <div className="bg-slate-900 rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
-              <div className="p-4 bg-slate-950/80 border-b border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5">
-                  <ArrowRightLeft className="w-5 h-5 text-indigo-400" />
-                  <span className="font-mono text-xs font-semibold tracking-wider text-indigo-300">DATA TRANSMISSION MODE INTERACTIVE SIMULATOR</span>
-                </div>
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
+            รูปแบบและลักษณะการไหลเวียนของสัญญาณข้อมูลระหว่างอุปกรณ์ 2 ฝั่งในระบบสื่อสาร
+          </p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            {/* Simplex */}
+            <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-3xl p-6 sm:p-8 flex flex-col hover:border-blue-300/40 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 group cursor-default">
+              <div className="mb-4">
+                <span className="text-[13px] font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-100 font-mono tracking-wider">
+                  SIMPLEX
+                </span>
+                <h4 className="text-[20px] font-bold text-slate-800 mt-2">สื่อสารทางเดียว (Simplex)</h4>
+              </div>
+              <p className="text-slate-500 text-sm leading-relaxed mb-6 h-16">
+                ข้อมูลถูกส่งไปใน <strong className="text-blue-500">ทิศทางเดียวเสมอ (One-Way)</strong> ผู้ส่งทำหน้าที่ส่งอย่างเดียว และผู้รับทำหน้าที่รับอย่างเดียวโดยไม่มีทางโต้กลับได้
+              </p>
+              
+              {/* Animated Diagram */}
+              <div className="bg-slate-50/80 border border-slate-100 rounded-2xl p-6 flex justify-between items-center relative mt-auto h-32 overflow-hidden shadow-inner">
+                <Radio className="w-10 h-10 text-blue-500 z-10 bg-white p-2 rounded-xl border border-slate-200/80 shadow-sm" />
                 
-                {/* Control Toolbar */}
-                <div className="flex items-center gap-2 flex-wrap">
-                  {/* Select Mode */}
-                  <select
-                    value={selectedMode}
-                    onChange={(e) => {
-                      setSelectedMode(e.target.value);
-                      if (e.target.value === 'simplex') {
-                        setSendDirection('L2R');
-                      } else if (e.target.value === 'full') {
-                        setSendDirection('BOTH');
-                      } else {
-                        setSendDirection('L2R');
-                      }
-                      resetFlow();
-                    }}
-                    disabled={flowActive}
-                    className="bg-slate-800 text-slate-200 border border-slate-700/60 px-3 py-1 rounded-lg text-xs font-semibold focus:outline-none cursor-pointer"
-                  >
-                    <option value="simplex">Simplex Mode (ทางเดียว)</option>
-                    <option value="half">Half-Duplex Mode (กึ่งสองทาง)</option>
-                    <option value="full">Full-Duplex Mode (สองทางพร้อมกัน)</option>
-                  </select>
+                {/* Connecting Line */}
+                <div className="absolute left-16 right-16 h-1 bg-slate-200/80 top-1/2 -translate-y-1/2 rounded-full"></div>
+                
+                {/* Moving Packet */}
+                <div className="absolute w-4 h-4 bg-blue-500 rounded-full top-1/2 -translate-y-1/2 shadow-[0_0_10px_rgba(59,130,246,0.8)] animate-simplex"></div>
 
-                  {/* Half Duplex Direction Controls */}
-                  {selectedMode === 'half' && (
-                    <select
-                      value={sendDirection}
-                      onChange={(e) => {
-                        setSendDirection(e.target.value);
-                        resetFlow();
-                      }}
-                      disabled={flowActive}
-                      className="bg-slate-800 text-slate-200 border border-slate-700/60 px-3 py-1 rounded-lg text-xs font-semibold focus:outline-none cursor-pointer"
-                    >
-                      <option value="L2R">ซ้าย ➔ ขวา (ส่งข้อความ)</option>
-                      <option value="R2L">ขวา ➔ ซ้าย (ตอบรับ)</option>
-                      <option value="BOTH">ส่งชนกันพร้อมกัน (กระแสปะทะ!)</option>
-                    </select>
-                  )}
-
-                  <div className="h-5 w-px bg-slate-700/60" />
-
-                  <button
-                    onClick={startFlow}
-                    disabled={flowActive || flowStep === 5}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer ${
-                      flowActive || flowStep === 5
-                        ? 'bg-slate-800 text-slate-500'
-                        : 'bg-indigo-600 text-white hover:bg-indigo-500'
-                    }`}
-                  >
-                    <Play className="w-3 h-3" />
-                    PLAY
-                  </button>
-
-                  <button
-                    onClick={resetFlow}
-                    className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-lg text-xs font-bold cursor-pointer"
-                  >
-                    RESET
-                  </button>
-                </div>
+                <Smartphone className="w-10 h-10 text-slate-400 z-10 bg-white p-2 rounded-xl border border-slate-200/80 shadow-sm" />
               </div>
-
-              {/* Speed Controller */}
-              <div className="p-4 bg-slate-950/40 border-b border-slate-800/40 flex items-center justify-between">
-                <span className="text-[13px] font-semibold text-slate-400">ควบคุมความถี่สัญญาณการสื่อสาร (Hz):</span>
-                <div className="flex items-center gap-3">
-                  <input
-                    type="range"
-                    min="600"
-                    max="3000"
-                    step="300"
-                    value={3600 - flowSpeed}
-                    onChange={(e) => setFlowSpeed(3600 - parseInt(e.target.value))}
-                    className="w-32 accent-indigo-500 cursor-pointer"
-                  />
-                  <span className="text-xs font-mono text-indigo-400">{((3600 - flowSpeed) / 1000).toFixed(1)} Hz</span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 border-b border-slate-800/40">
-                {/* Visual SVG Transmission Canvas */}
-                <div className="lg:col-span-7 bg-slate-950 p-6 flex flex-col items-center justify-center min-h-[380px]">
-                  <div className="w-full text-center mb-3">
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                      ระบบสายส่ง: {selectedMode === 'simplex' ? 'SIMPLEX' : selectedMode === 'half' ? 'HALF-DUPLEX' : 'FULL-DUPLEX'}
-                    </span>
-                  </div>
-
-                  <svg width="600" height="380" viewBox="0 0 600 380" className="w-full max-w-[480px]">
-                    <defs>
-                      <marker id="arrowL" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="rgba(148, 163, 184, 0.4)" />
-                      </marker>
-                      <marker id="arrowL-active" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#818CF8" />
-                      </marker>
-                      <marker id="arrowR-active" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#34D399" />
-                      </marker>
-                    </defs>
-
-                    {/* Symmetrical Transmission Paths */}
-                    {/* Basic Line at y = 190 */}
-                    {selectedMode !== 'full' ? (
-                      <>
-                        <path
-                          d="M 180,190 H 420"
-                          stroke="rgba(148, 163, 184, 0.08)"
-                          strokeWidth="6"
-                          strokeLinecap="round"
-                        />
-                        
-                        {/* Simplex Active Flow */}
-                        {selectedMode === 'simplex' && (
-                          <path
-                            d="M 180,190 H 420"
-                            stroke={flowStep > 0 && flowStep < 5 ? '#818CF8' : 'rgba(148, 163, 184, 0.15)'}
-                            strokeWidth="2.5"
-                            markerEnd={flowStep > 0 && flowStep < 5 ? 'url(#arrowL-active)' : 'url(#arrowL)'}
-                            className={flowStep > 0 && flowStep < 5 ? 'animate-flow-dash' : ''}
-                            style={{ '--flow-anim-speed': `${flowSpeed / 1000}s` }}
-                          />
-                        )}
-
-                        {/* Half Duplex L2R Active Flow */}
-                        {selectedMode === 'half' && sendDirection === 'L2R' && (
-                          <path
-                            d="M 180,190 H 420"
-                            stroke={flowStep > 0 && flowStep < 5 ? '#818CF8' : 'rgba(148, 163, 184, 0.15)'}
-                            strokeWidth="2.5"
-                            markerEnd={flowStep > 0 && flowStep < 5 ? 'url(#arrowL-active)' : 'url(#arrowL)'}
-                            className={flowStep > 0 && flowStep < 5 ? 'animate-flow-dash' : ''}
-                            style={{ '--flow-anim-speed': `${flowSpeed / 1000}s` }}
-                          />
-                        )}
-
-                        {/* Half Duplex R2L Active Flow */}
-                        {selectedMode === 'half' && sendDirection === 'R2L' && (
-                          <path
-                            d="M 420,190 H 180"
-                            stroke={flowStep > 0 && flowStep < 5 ? '#34D399' : 'rgba(148, 163, 184, 0.15)'}
-                            strokeWidth="2.5"
-                            markerEnd={flowStep > 0 && flowStep < 5 ? 'url(#arrowR-active)' : 'url(#arrowL)'}
-                            className={flowStep > 0 && flowStep < 5 ? 'animate-flow-dash' : ''}
-                            style={{ '--flow-anim-speed': `${flowSpeed / 1000}s` }}
-                          />
-                        )}
-
-                        {/* Half Duplex Collision Signal Flow */}
-                        {selectedMode === 'half' && sendDirection === 'BOTH' && (
-                          <>
-                            <path
-                              d="M 180,190 L 300,190"
-                              stroke={flowStep === 3 ? '#EF4444' : '#818CF8'}
-                              strokeWidth="2.5"
-                              className={flowStep === 3 ? 'animate-flow-dash' : ''}
-                              style={{ '--flow-anim-speed': `${flowSpeed / 1000}s` }}
-                            />
-                            <path
-                              d="M 420,190 L 300,190"
-                              stroke={flowStep === 3 ? '#EF4444' : '#34D399'}
-                              strokeWidth="2.5"
-                              className={flowStep === 3 ? 'animate-flow-dash' : ''}
-                              style={{ '--flow-anim-speed': `${flowSpeed / 1000}s` }}
-                            />
-                            {flowStep >= 4 && (
-                              <circle cx="300" cy="190" r="15" fill="#EF4444" opacity="0.3" className="animate-ping" />
-                            )}
-                          </>
-                        )}
-                      </>
-                    ) : (
-                      // Full Duplex Double Parallel paths
-                      <>
-                        <path
-                          d="M 180,170 H 420"
-                          stroke="rgba(148, 163, 184, 0.08)"
-                          strokeWidth="6"
-                          strokeLinecap="round"
-                        />
-                        <path
-                          d="M 420,210 H 180"
-                          stroke="rgba(148, 163, 184, 0.08)"
-                          strokeWidth="6"
-                          strokeLinecap="round"
-                        />
-                        
-                        <path
-                          d="M 180,170 H 420"
-                          stroke={flowStep > 0 && flowStep < 5 ? '#818CF8' : 'rgba(148, 163, 184, 0.15)'}
-                          strokeWidth="2.5"
-                          markerEnd={flowStep > 0 && flowStep < 5 ? 'url(#arrowL-active)' : 'url(#arrowL)'}
-                          className={flowStep > 0 && flowStep < 5 ? 'animate-flow-dash' : ''}
-                          style={{ '--flow-anim-speed': `${flowSpeed / 1000}s` }}
-                        />
-                        <path
-                          d="M 420,210 H 180"
-                          stroke={flowStep > 0 && flowStep < 5 ? '#34D399' : 'rgba(148, 163, 184, 0.15)'}
-                          strokeWidth="2.5"
-                          markerEnd={flowStep > 0 && flowStep < 5 ? 'url(#arrowR-active)' : 'url(#arrowL)'}
-                          className={flowStep > 0 && flowStep < 5 ? 'animate-flow-dash' : ''}
-                          style={{ '--flow-anim-speed': `${flowSpeed / 1000}s` }}
-                        />
-                      </>
-                    )}
-
-                    {/* Nodes representing Sender and Receiver using foreignObject */}
-                    {/* Node 1: Sender (Left side, y=140, x=30) */}
-                    <foreignObject x={30} y={140} width={150} height={100}>
-                      <div className={`w-full h-full rounded-xl border flex flex-col justify-between p-3 transition-all duration-300 text-center ${
-                        flowStep === 1 || (flowStep === 3 && selectedMode === 'half')
-                          ? 'bg-slate-900 border-indigo-500 shadow-[0_0_12px_rgba(99,102,241,0.2)] text-indigo-400'
-                          : 'bg-slate-900/90 border-slate-800 text-slate-400'
-                      }`}>
-                        <div className="text-[11px] font-bold tracking-wider uppercase">SENDER / SOURCE</div>
-                        <div className="text-[12px] font-semibold text-slate-200 mt-1.5 leading-tight">เครื่องอมพิวเตอร์ส่งส่ง</div>
-                        <span className="text-[10px] text-slate-500 font-mono mt-1">IP: 192.168.1.50</span>
-                      </div>
-                    </foreignObject>
-
-                    {/* Node 2: Receiver (Right side, y=140, x=420) */}
-                    <foreignObject x={420} y={140} width={150} height={100}>
-                      <div className={`w-full h-full rounded-xl border flex flex-col justify-between p-3 transition-all duration-300 text-center ${
-                        flowStep === 2 || (flowStep === 3 && selectedMode === 'half')
-                          ? 'bg-slate-900 border-emerald-500 shadow-[0_0_12px_rgba(52,211,153,0.2)] text-emerald-400'
-                          : 'bg-slate-900/90 border-slate-800 text-slate-400'
-                      }`}>
-                        <div className="text-[11px] font-bold tracking-wider uppercase">RECEIVER / TARGET</div>
-                        <div className="text-[12px] font-semibold text-slate-200 mt-1.5 leading-tight">หน้าจอรับแสดงผล</div>
-                        <span className="text-[10px] text-slate-500 font-mono mt-1">IP: 192.168.1.120</span>
-                      </div>
-                    </foreignObject>
-
-                    {/* Collision Icon Indicator */}
-                    {selectedMode === 'half' && sendDirection === 'BOTH' && flowStep >= 4 && (
-                      <g transform="translate(285, 175)" className="animate-fadeIn">
-                        <circle cx="15" cy="15" r="18" fill="#EF4444" opacity="0.9" />
-                        <foreignObject x="0" y="0" width="30" height="30">
-                          <div className="w-full h-full flex items-center justify-center text-white">
-                            <AlertTriangle className="w-5 h-5 animate-pulse" />
-                          </div>
-                        </foreignObject>
-                      </g>
-                    )}
-                  </svg>
-                </div>
-
-                {/* Flow Logs Screen */}
-                <div className="lg:col-span-5 flex flex-col h-[380px]">
-                  <ConsoleScreen
-                    title="TRANSMISSION MONITOR LOGGER"
-                    logs={scenarioLogs}
-                    onClear={() => setScenarioLogs(['Console monitor ready...'])}
-                  />
-                </div>
+              <div className="text-center mt-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest font-mono">
+                สถานีส่งวิทยุ <span className="mx-1 text-blue-400">→</span> เครื่องรับวิทยุ
               </div>
             </div>
+
+            {/* Half-Duplex */}
+            <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-3xl p-6 sm:p-8 flex flex-col hover:border-purple-300/40 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 group cursor-default">
+              <div className="mb-4">
+                <span className="text-[13px] font-bold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-100 font-mono tracking-wider">
+                  HALF-DUPLEX
+                </span>
+                <h4 className="text-[20px] font-bold text-slate-800 mt-2">สื่อสารกึ่งสองทาง (Half-Duplex)</h4>
+              </div>
+              <p className="text-slate-500 text-sm leading-relaxed mb-6 h-16">
+                ส่งข้อมูลได้ทั้ง 2 ทิศทาง แต่ <strong className="text-purple-500">สวนทางกันในเวลาเดียวกันไม่ได้</strong> ต้องสลับกันทำหน้าที่ (ผลัดกันพูด)
+              </p>
+              
+              {/* Animated Diagram */}
+              <div className="bg-slate-50/80 border border-slate-100 rounded-2xl p-6 flex justify-between items-center relative mt-auto h-32 overflow-hidden shadow-inner">
+                <Radio className="w-10 h-10 text-purple-500 z-10 bg-white p-2 rounded-xl border border-slate-200/80 shadow-sm" />
+                
+                {/* Connecting Line */}
+                <div className="absolute left-16 right-16 h-1 bg-slate-200/80 top-1/2 -translate-y-1/2 rounded-full"></div>
+                
+                {/* Moving Packet Forward */}
+                <div className="absolute w-4 h-4 bg-purple-500 rounded-full top-1/2 -translate-y-1/2 shadow-[0_0_10px_rgba(168,85,247,0.8)] animate-hd-fwd"></div>
+                {/* Moving Packet Backward */}
+                <div className="absolute w-4 h-4 bg-orange-500 rounded-full top-1/2 -translate-y-1/2 shadow-[0_0_10px_rgba(249,115,22,0.8)] animate-hd-bwd"></div>
+
+                <Radio className="w-10 h-10 text-orange-500 z-10 bg-white p-2 rounded-xl border border-slate-200/80 shadow-sm" />
+              </div>
+              <div className="text-center mt-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest font-mono">
+                วอ. สื่อสาร <span className="mx-1 text-purple-400">↔️</span> วอ. สื่อสาร (สลับพูด)
+              </div>
+            </div>
+
+            {/* Full-Duplex */}
+            <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-3xl p-6 sm:p-8 flex flex-col hover:border-emerald-300/40 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 group cursor-default">
+              <div className="mb-4">
+                <span className="text-[13px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100 font-mono tracking-wider">
+                  FULL-DUPLEX
+                </span>
+                <h4 className="text-[20px] font-bold text-slate-800 mt-2">สื่อสารสองทางเต็มรูปแบบ (Full-Duplex)</h4>
+              </div>
+              <p className="text-slate-500 text-sm leading-relaxed mb-6 h-16">
+                รับและส่งข้อมูลได้สองทิศทาง <strong className="text-emerald-500">ในเวลาเดียวกันอย่างอิสระ</strong> สื่อสารได้พร้อมกันโดยช่องสัญญาณแยกกันชัดเจน
+              </p>
+              
+              {/* Animated Diagram */}
+              <div className="bg-slate-50/80 border border-slate-100 rounded-2xl p-6 flex justify-between items-center relative mt-auto h-32 overflow-hidden shadow-inner">
+                <Smartphone className="w-10 h-10 text-emerald-500 z-10 bg-white p-2 rounded-xl border border-slate-200/80 shadow-sm" />
+                
+                {/* Connecting Lines */}
+                <div className="absolute left-16 right-16 h-1 bg-slate-200/80 top-[40%] rounded-full"></div>
+                <div className="absolute left-16 right-16 h-1 bg-slate-200/80 top-[60%] rounded-full"></div>
+                
+                {/* Moving Packet Right */}
+                <div className="absolute w-3 h-3 bg-emerald-500 rounded-full top-[40%] -translate-y-1/2 shadow-[0_0_10px_rgba(16,185,129,0.8)] animate-fd-1"></div>
+                {/* Moving Packet Left */}
+                <div className="absolute w-3 h-3 bg-teal-500 rounded-full top-[60%] -translate-y-1/2 shadow-[0_0_10px_rgba(20,184,166,0.8)] animate-fd-2"></div>
+
+                <Smartphone className="w-10 h-10 text-teal-500 z-10 bg-white p-2 rounded-xl border border-slate-200/80 shadow-sm" />
+              </div>
+              <div className="text-center mt-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest font-mono">
+                สมาร์ทโฟน <span className="mx-1 text-emerald-400">⇄</span> สมาร์ทโฟน (พูดคุยพร้อมกัน)
+              </div>
+            </div>
+
           </div>
         </section>
 
-        {/* ====================================================================
-            SECTION 4 (NEW): Protocol Benchmark Race Lab + Medium Explorer
-            ==================================================================== */}
-        <section id="section-protocol-benchmark" className="space-y-10">
+        {/* ─── Layer 4: Standardized TeacherTask Footer ─── */}
+        <TeacherTask
+          title="ใบงานการประเมินองค์ประกอบและโหมดการสื่อสารในระบบเครือข่าย"
+          taskText={`คำชี้แจง: ให้นักเรียนตอบคำถามประเมินความรู้และวิเคราะห์กรณีศึกษาต่อไปนี้ลงในระบบการส่งงาน:
 
-          {/* Header */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-7 bg-violet-600 rounded-full" />
-              <h2 className="text-[26px] font-bold text-zinc-900 font-sans tracking-tight">
-                แล็บเปรียบเทียบโปรโตคอล: Protocol Benchmark Race
-              </h2>
-            </div>
-            <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed max-w-4xl">
-              จำลองการแข่งขันส่งข้อมูลของโปรโตคอลชั้นนำ 4 ตัว (HTTP/1.1, TCP, UDP, QUIC/HTTP3) 
-              บนสื่อกลางและขนาดแพ็กเก็ตที่กำหนด เพื่อสังเกตพฤติกรรมและลำดับความเร็ว
-            </p>
-          </div>
-
-          {/* Controls */}
-          <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-2xl p-6 md:p-8 shadow-md">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-              {/* Medium Selector */}
-              <div className="space-y-3">
-                <label className="text-[13px] font-bold text-slate-500 uppercase tracking-wider block">สื่อกลาง (Transmission Medium)</label>
-                <div className="grid grid-cols-1 gap-2">
-                  {[
-                    { id: 'fiber', label: 'ใยแก้วนำแสง (Fiber)', bw: 10000, color: 'cyan' },
-                    { id: 'utp', label: 'สายทองแดง UTP Cat6', bw: 1000, color: 'amber' },
-                    { id: 'wifi', label: 'Wi-Fi 6 (802.11ax)', bw: 600, color: 'emerald' },
-                    { id: 'cellular', label: '5G Cellular Network', bw: 300, color: 'rose' }
-                  ].map(m => (
-                    <button
-                      key={m.id}
-                      onClick={() => { setSelectedMedium(m.id); setBenchProgress({ http: 0, tcp: 0, udp: 0, quic: 0 }); setBenchFinished(false); setBenchWinner(''); }}
-                      className={`px-3 py-2.5 rounded-xl border-2 text-left text-[13px] font-semibold transition-all duration-200 active:scale-[0.98] ${
-                        selectedMedium === m.id
-                          ? `border-${m.color}-400 bg-${m.color}-50 text-${m.color}-700`
-                          : 'border-slate-200 bg-white/50 text-slate-600 hover:border-slate-300'
-                      }`}
-                    >
-                      {m.label}
-                      <span className="block text-[11px] font-normal text-slate-400 mt-0.5">Max {m.bw >= 1000 ? (m.bw/1000)+'Gbps' : m.bw+'Mbps'}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Packet Size Slider */}
-              <div className="space-y-3">
-                <label className="text-[13px] font-bold text-slate-500 uppercase tracking-wider block">
-                  ขนาดแพ็กเก็ต (Packet Size)
-                </label>
-                <div className="space-y-4">
-                  <div className="text-center">
-                    <span className="text-4xl font-black text-violet-600">{packetSize}</span>
-                    <span className="text-lg text-slate-500 ml-1">KB</span>
-                  </div>
-                  <input
-                    type="range" min="64" max="8192" step="64"
-                    value={packetSize}
-                    onChange={e => { setPacketSize(Number(e.target.value)); setBenchProgress({ http: 0, tcp: 0, udp: 0, quic: 0 }); setBenchFinished(false); setBenchWinner(''); }}
-                    className="w-full accent-violet-500"
-                  />
-                  <div className="flex justify-between text-[11px] text-slate-400">
-                    <span>64 KB (เล็ก)</span><span>4096 KB</span><span>8192 KB (ใหญ่)</span>
-                  </div>
-                </div>
-                <div className="mt-4 p-3 bg-violet-50 rounded-xl border border-violet-100 space-y-1">
-                  <p className="text-[12px] font-bold text-violet-700">ลักษณะแพ็กเก็ต</p>
-                  <p className="text-[12px] text-violet-600">
-                    {packetSize <= 512 ? '🔹 ขนาดเล็ก: เหมาะกับ Telemetry, IoT sensor data' :
-                     packetSize <= 2048 ? '🔷 ขนาดกลาง: เหมาะกับ Web content, Email, API response' :
-                     '🔶 ขนาดใหญ่: เหมาะกับ File Transfer, Video stream, Backup'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Protocol Info Panel */}
-              <div className="space-y-3">
-                <label className="text-[13px] font-bold text-slate-500 uppercase tracking-wider block">คุณสมบัติโปรโตคอล</label>
-                <div className="space-y-2">
-                  {[
-                    { name: 'HTTP/1.1', overhead: 'สูง', reliable: '✓', stream: '✗', color: 'blue', desc: 'Request-Response แบบ Sequential' },
-                    { name: 'TCP/IP', overhead: 'กลาง', reliable: '✓', stream: '✗', color: 'indigo', desc: 'Connection-oriented มี Handshake' },
-                    { name: 'UDP', overhead: 'ต่ำ', reliable: '✗', stream: '✓', color: 'orange', desc: 'Connectionless ไร้การยืนยัน' },
-                    { name: 'QUIC/HTTP3', overhead: 'ต่ำมาก', reliable: '✓', stream: '✓', color: 'purple', desc: 'Multiplexed ผ่าน UDP พร้อม TLS' }
-                  ].map(p => (
-                    <div key={p.name} className={`flex items-center gap-2 p-2 rounded-lg bg-${p.color}-50 border border-${p.color}-100`}>
-                      <div className={`w-2 h-2 rounded-full bg-${p.color}-500 shrink-0`} />
-                      <div className="flex-1 min-w-0">
-                        <span className={`text-[12px] font-bold text-${p.color}-700`}>{p.name}</span>
-                        <span className="text-[11px] text-slate-500 block truncate">{p.desc}</span>
-                      </div>
-                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-${p.color}-100 text-${p.color}-600 shrink-0`}>{p.overhead}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Race Track */}
-            <div className="border-t border-slate-100 pt-6 space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-[15px] font-bold text-slate-700">🏁 สนามแข่งขันส่งข้อมูล</h3>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => {
-                      if (benchRunning) return;
-                      setBenchFinished(false);
-                      setBenchWinner('');
-                      setBenchProgress({ http: 0, tcp: 0, udp: 0, quic: 0 });
-                      setBenchRunning(true);
-
-                      const mediumSpeeds = { fiber: 1.0, utp: 0.75, wifi: 0.55, cellular: 0.35 };
-                      const mediumFactor = mediumSpeeds[selectedMedium] || 1.0;
-                      const sizeOverhead = 1 - (packetSize / 16384); // ยิ่งใหญ่ยิ่งช้า (แตกต่างกัน)
-
-                      // base speeds per protocol (normalized 0-100 increments per tick)
-                      const baseRates = {
-                        http: (0.55 + sizeOverhead * 0.1) * mediumFactor,
-                        tcp:  (0.70 + sizeOverhead * 0.12) * mediumFactor,
-                        udp:  (0.90 + sizeOverhead * 0.05) * mediumFactor,
-                        quic: (0.85 + sizeOverhead * 0.14) * mediumFactor
-                      };
-
-                      const current = { http: 0, tcp: 0, udp: 0, quic: 0 };
-                      let winner = '';
-
-                      const interval = setInterval(() => {
-                        const randomJitter = () => (Math.random() - 0.5) * 4;
-                        current.http  = Math.min(100, current.http  + baseRates.http  * 3.5 + randomJitter());
-                        current.tcp   = Math.min(100, current.tcp   + baseRates.tcp   * 3.5 + randomJitter());
-                        current.udp   = Math.min(100, current.udp   + baseRates.udp   * 3.5 + randomJitter());
-                        current.quic  = Math.min(100, current.quic  + baseRates.quic  * 3.5 + randomJitter());
-
-                        setBenchProgress({ ...current });
-
-                        // Check winner
-                        const entries = Object.entries(current);
-                        const allDone = entries.every(([, v]) => v >= 100);
-                        if (!winner) {
-                          const firstDone = entries.find(([, v]) => v >= 100);
-                          if (firstDone) winner = firstDone[0];
-                        }
-
-                        if (allDone) {
-                          clearInterval(interval);
-                          setBenchRunning(false);
-                          setBenchFinished(true);
-                          setBenchWinner(winner);
-                        }
-                      }, 80);
-                    }}
-                    disabled={benchRunning}
-                    className="px-4 py-2 rounded-xl bg-violet-600 text-white text-[13px] font-bold hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.97]"
-                  >
-                    {benchRunning ? '⏳ กำลังแข่ง...' : '▶ เริ่มแข่งขัน'}
-                  </button>
-                  <button
-                    onClick={() => { setBenchProgress({ http: 0, tcp: 0, udp: 0, quic: 0 }); setBenchFinished(false); setBenchWinner(''); setBenchRunning(false); }}
-                    className="px-4 py-2 rounded-xl bg-slate-200 text-slate-700 text-[13px] font-bold hover:bg-slate-300 transition-all active:scale-[0.97]"
-                  >
-                    ↺ รีเซ็ต
-                  </button>
-                </div>
-              </div>
-
-              {/* Progress bars */}
-              <div className="space-y-3">
-                {[
-                  { key: 'http', label: 'HTTP/1.1', color: 'blue', emoji: '🌐' },
-                  { key: 'tcp', label: 'TCP/IP', color: 'indigo', emoji: '🔗' },
-                  { key: 'udp', label: 'UDP', color: 'orange', emoji: '⚡' },
-                  { key: 'quic', label: 'QUIC / HTTP3', color: 'purple', emoji: '🚀' }
-                ].map(p => (
-                  <div key={p.key} className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[13px] font-bold text-slate-700">{p.emoji} {p.label}</span>
-                      <div className="flex items-center gap-2">
-                        {benchFinished && benchWinner === p.key && (
-                          <span className="text-[11px] font-bold text-yellow-600 bg-yellow-100 px-2 py-0.5 rounded-full animate-bounce">🏆 ชนะ!</span>
-                        )}
-                        <span className="text-[13px] font-mono font-bold text-slate-500">{Math.min(100, Math.round(benchProgress[p.key]))}%</span>
-                      </div>
-                    </div>
-                    <div className="h-8 bg-slate-100 rounded-xl overflow-hidden relative">
-                      <div
-                        className={`h-full rounded-xl transition-all duration-75 relative overflow-hidden ${
-                          p.color === 'blue' ? 'bg-blue-500' :
-                          p.color === 'indigo' ? 'bg-indigo-500' :
-                          p.color === 'orange' ? 'bg-orange-500' :
-                          'bg-purple-500'
-                        }`}
-                        style={{ width: `${Math.min(100, benchProgress[p.key])}%` }}
-                      >
-                        {/* Shimmer effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
-                      </div>
-                      {/* Finish line */}
-                      <div className="absolute right-0 top-0 h-full w-1 bg-zinc-400/30" />
-                      <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400">🏁</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Result Banner */}
-              {benchFinished && (
-                <div className="mt-4 p-4 rounded-2xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200 animate-fadeIn">
-                  <div className="flex items-center gap-3">
-                    <span className="text-3xl">🏆</span>
-                    <div>
-                      <p className="text-[15px] font-black text-violet-800">
-                        ผู้ชนะ: {{ http: 'HTTP/1.1', tcp: 'TCP/IP', udp: 'UDP', quic: 'QUIC/HTTP3' }[benchWinner]}
-                      </p>
-                      <p className="text-[13px] text-violet-600">
-                        {{ 
-                          http: 'HTTP/1.1 ช้าที่สุดเพราะมี Header Overhead สูงและต้องรอ Response ทีละ Request', 
-                          tcp: 'TCP/IP มีความน่าเชื่อถือสูง แต่ช้ากว่า UDP เพราะมีกลไก Handshake และ ACK', 
-                          udp: 'UDP เร็วที่สุดในแพ็กเก็ตขนาดเล็ก เพราะไม่มี Connection Overhead แต่ไม่รับประกันการส่งถึง', 
-                          quic: 'QUIC/HTTP3 ชนะด้วยการรวม TLS + Multiplexing ใน 1 รอบ ไม่มี Head-of-line Blocking!'
-                        }[benchWinner]}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Medium Comparison Table */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-7 bg-cyan-600 rounded-full" />
-              <h2 className="text-[26px] font-bold text-zinc-900 font-sans tracking-tight">
-                ตารางเปรียบเทียบประสิทธิภาพสื่อกลางนำสัญญาณ
-              </h2>
-            </div>
-            <div className="overflow-x-auto rounded-2xl border border-slate-200 shadow-sm">
-              <table className="w-full text-[14px] text-left">
-                <thead>
-                  <tr className="bg-gradient-to-r from-cyan-600 to-blue-700 text-white">
-                    <th className="px-5 py-4 font-bold">สื่อกลาง</th>
-                    <th className="px-5 py-4 font-bold">แบนด์วิดท์สูงสุด</th>
-                    <th className="px-5 py-4 font-bold">Latency (ms)</th>
-                    <th className="px-5 py-4 font-bold">ต้านทาน EMI</th>
-                    <th className="px-5 py-4 font-bold">ระยะทางสูงสุด</th>
-                    <th className="px-5 py-4 font-bold">ต้นทุนต่อเมตร</th>
-                    <th className="px-5 py-4 font-bold">การใช้งานหลัก</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {[
-                    { name: '🔵 UTP Cat6 (Copper)', bw: '1 Gbps', lat: '< 1 ms', emi: '⚠️ ต่ำ', dist: '100 ม.', cost: '8–15 บ.', use: 'LAN ในอาคาร' },
-                    { name: '🟡 UTP Cat6A', bw: '10 Gbps', lat: '< 0.5 ms', emi: '⚠️ ต่ำ', dist: '100 ม.', cost: '18–30 บ.', use: 'Data Center LAN' },
-                    { name: '🔴 Coaxial Cable', bw: '500 Mbps', lat: '1–2 ms', emi: '✅ กลาง', dist: '500 ม.', cost: '20–35 บ.', use: 'สายเคเบิล/CCTV' },
-                    { name: '🟢 Fiber Optic (SM)', bw: '100 Gbps+', lat: '< 0.1 ms', emi: '✅✅ สูงมาก', dist: '100 กม.', cost: '50–120 บ.', use: 'MAN/WAN Backbone' },
-                    { name: '🟣 Wi-Fi 6 (5GHz)', bw: '9.6 Gbps', lat: '5–20 ms', emi: '✅ ปานกลาง', dist: '150 ม.', cost: 'ค่า AP', use: 'WLAN ทั่วไป' },
-                    { name: '⚫ 5G mmWave', bw: '10 Gbps', lat: '1–5 ms', emi: '✅ สูง', dist: '300 ม.', cost: 'ค่า SIM', use: 'Mobile Broadband' }
-                  ].map((row, i) => (
-                    <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}>
-                      <td className="px-5 py-3.5 font-bold text-slate-800">{row.name}</td>
-                      <td className="px-5 py-3.5 font-mono text-cyan-700 font-semibold">{row.bw}</td>
-                      <td className="px-5 py-3.5 font-mono text-green-700">{row.lat}</td>
-                      <td className="px-5 py-3.5">{row.emi}</td>
-                      <td className="px-5 py-3.5 text-slate-600">{row.dist}</td>
-                      <td className="px-5 py-3.5 text-slate-600">{row.cost}</td>
-                      <td className="px-5 py-3.5 text-slate-500 text-[13px]">{row.use}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-        </section>
-
-        {/* ====================================================================
-            SECTION 5: ใบงานและการประเมินท้ายบทเรียน (TeacherTask)
-            ==================================================================== */}
-        <SectionBlock>
-          <div className="space-y-6">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-7 bg-indigo-600 rounded-full" />
-              <h2 className="text-[26px] font-bold text-zinc-900 font-sans tracking-tight">
-                แบบฝึกหัดประเมินความรู้เบื้องต้นระบบเครือข่าย
-              </h2>
-            </div>
-            
-            <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed max-w-4xl">
-              ทบทวนลอจิกความเข้าใจเกี่ยวกับความหมาย องค์ประกอบ 5 ส่วนของสารสนเทศ ประโยชน์การแชร์ และทิศทางการไหลของกระแสบิต Half-Duplex/Full-Duplex ในองค์กร
-            </p>
-
-            <TeacherTask
-              title="ใบงานทบทวนความรู้เบื้องต้นเครือข่าย (Unit 1.2)"
-              taskText="ให้นักเรียนวิเคราะห์โจทย์คำถามตรรกะระบบเครือข่ายและเลือกคำตอบที่ถูกต้องที่สุดเพื่อเก็บคะแนนและประเมินผลการสอบผ่านหน่วยการเรียนรู้นี้"
-              questions={[
-                {
-                  question: 'ข้อใดอธิบายวัตถุประสงค์หลักของการจัดตั้งระบบเครือข่ายคอมพิวเตอร์ในองค์กรได้อย่างครอบคลุมที่สุด?',
-                  options: [
-                    'เพื่อช่วยประหยัดไฟและถนอมสุขภาพหน้าจอมอนิเตอร์พนักงาน',
-                    'เพื่อเชื่อมต่ออุปกรณ์ให้แลกเปลี่ยนสารสนเทศและแบ่งปันการใช้ทรัพยากรร่วมกัน',
-                    'เพื่อป้องกันการประกอบคอมพิวเตอร์ที่ชำรุดเสียหายเชิงกายภาพ',
-                    'เพื่อจำลองการบำรุงรักษาและเคลียร์พื้นที่จัดเก็บข้อมูลบน NVMe SSD เท่านั้น'
-                  ],
-                  correctIndex: 1
-                },
-                {
-                  question: 'ในองค์ประกอบ 5 ส่วนสากลของการสื่อสารข้อมูล ข้อใดเปรียบเสมือน "กฎและระเบียบร่วมกัน" เพื่อจัดรูปแบบบิตสัญญาณไม่ให้สื่อสารขัดข้อง?',
-                  options: [
-                    'ข้อมูลข่าวสาร (Message)',
-                    'ตัวแปลภาษาไดรเวอร์ (Device Driver)',
-                    'สื่อกลางนำสัญญาณ (Medium)',
-                    'โปรโตคอลการสื่อสาร (Protocol)'
-                  ],
-                  correctIndex: 3
-                },
-                {
-                  question: 'การติดตั้ง File Server เพื่อจัดโฟลเดอร์ให้พนักงานบัญชีและฝ่ายขายสามารถแก้ไขเอกสารชิ้นเดียวกันได้ จัดเป็นประโยชน์การแชร์ใด?',
-                  options: [
-                    'การแบ่งปันซอฟต์แวร์ประยุกต์ (Software Sharing)',
-                    'การแบ่งปันอุปกรณ์เครื่องพิมพ์ (Hardware Sharing)',
-                    'การแบ่งปันข้อมูลและสารสนเทศ (Data Sharing)',
-                    'การแบ่งปันสัญญาณ IP แอดเดรส (IP Address Sharing)'
-                  ],
-                  correctIndex: 2
-                },
-                {
-                  question: 'ระบบส่งพัลส์สัญญาณภาพเคลื่อนไหวสดจากกล้องวงจรปิด UHD ไปสตรีมแสดงผลยังหน้าจอมอนิเตอร์สถานีตู้ยาม จัดเป็นทิศทางการสื่อสารรูปแบบใด?',
-                  options: [
-                    'แบบทางเดียว (Simplex Mode)',
-                    'แบบกึ่งสองทางสลับส่ง (Half-Duplex Mode)',
-                    'แบบสองทางเต็มรูปแบบ (Full-Duplex Mode)',
-                    'แบบความเร็วเฉลี่ยผสม (Hybrid Mode)'
-                  ],
-                  correctIndex: 0
-                },
-                {
-                  question: 'ในสภาพแวดล้อมเครือข่ายแบบ Half-Duplex จะเกิดเหตุขัดข้องประการใดขึ้นหากอุปกรณ์ฝั่งรับและฝั่งส่งพยายามยิงบิตกระแสไฟฟ้าสวนทางกันพร้อมกันบนคู่สายแลนเดี่ยว?',
-                  options: [
-                    'ความเร็วของอินเทอร์เน็ตจะทวีคูณเป็นสองเท่า',
-                    'สาย UTP จะขาดกะทันหันเนื่องจากความร้อนสูง',
-                    'เกิดการชนกันของกระแสข้อมูลสัญญาณ (Collision) ทำให้บิตข้อความชำรุด',
-                    'สัญญาณจะทำการจัดเรียงคิวสลับวิทยุโดยไม่เกิดข้อผิดพลาดใดๆ'
-                  ],
-                  correctIndex: 2
-                }
-              ]}
-            />
-          </div>
-        </SectionBlock>
-
+1. วิเคราะห์ความสัมพันธ์: อธิบายหน้าที่ของ "โปรโตคอล (Protocol)" และ "สื่อกลาง (Medium)" และเหตุใดหากขาดส่วนใดส่วนหนึ่งไป ผู้รับสารจึงไม่สามารถรับข้อมูลที่ถูกต้องสมบูรณ์ได้
+2. การเลือกใช้โหมดการส่งสัญญาณ (Transmission Mode):
+   - หากได้รับมอบหมายให้ออกแบบระบบแจ้งเหตุเพลิงไหม้อัตโนมัติ (Fire Alarm System) จากเซนเซอร์ตรวจจับควันส่งไปยังแผงควบคุมหลัก ควรเลือกใช้โหมด Simplex, Half-Duplex หรือ Full-Duplex? เพราะเหตุใด?
+   - ระบบวิทยุสื่อสารพกพา (Walkie-Talkie) ของหน่วยกู้ภัยทำไมจึงใช้โหมด Half-Duplex แทนที่จะเป็น Full-Duplex? อธิบายปัจจัยเชิงโครงสร้างระบบและงบประมาณ
+3. สรุปความแตกต่างเชิงเปรียบเทียบ: จงเขียนตารางเปรียบเทียบข้อดีและข้อจำกัดของโหมด Simplex, Half-Duplex และ Full-Duplex ในมิติของ (1) ความคุ้มค่าของแบนด์วิดท์ (2) ความเร็วในการโต้ตอบ และ (3) ความยืดหยุ่นในการใช้งาน`}
+        />
       </main>
-    </>
+    </div>
   );
 }

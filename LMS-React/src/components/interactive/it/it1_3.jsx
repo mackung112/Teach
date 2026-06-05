@@ -1,1350 +1,593 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Globe,
-  Server,
-  Layers,
-  Network,
-  Shield,
-  Activity,
-  Cpu,
-  Monitor,
+import React, { useState } from 'react';
+import { 
+  Globe2, 
+  Building2, 
+  Home, 
+  Smartphone, 
+  Server, 
+  Users, 
+  Monitor, 
   Database,
-  User,
-  ArrowRight,
-  Play,
-  RotateCcw,
-  Sliders,
-  CheckCircle,
-  FileText,
+  ShieldCheck,
+  Zap,
   AlertTriangle,
-  ArrowRightLeft,
-  XCircle,
-  Wifi,
-  Lock,
-  Eye,
-  Settings,
-  HelpCircle,
-  Check,
-  Terminal,
-  Share2,
-  LockKeyhole,
-  Building,
-  Key
+  MapPin,
+  Laptop,
+  Headphones,
+  Watch,
+  Router,
+  Cloud,
+  Radio
 } from 'lucide-react';
-import {
-  AmbientBackdrop,
-  OptionSelector,
-  ConsoleScreen,
-  ConceptCard,
-  SectionBlock,
-  QuizEngine
-} from '../shared';
 import TeacherTask from '../../ui/TeacherTask';
 
+const CustomStyles = () => (
+  <style dangerouslySetInnerHTML={{__html: `
+    /* Existing Animations */
+    @keyframes data-flow-center {
+      0% { transform: translateY(0) scale(1); opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { transform: translateY(60px) scale(0.5); opacity: 0; }
+    }
+    @keyframes data-flow-diagonal-left {
+      0% { transform: translate(0, 0) scale(1); opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { transform: translate(-50px, 60px) scale(0.5); opacity: 0; }
+    }
+    @keyframes data-flow-diagonal-right {
+      0% { transform: translate(0, 0) scale(1); opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { transform: translate(50px, 60px) scale(0.5); opacity: 0; }
+    }
+    @keyframes p2p-flow-1 {
+      0% { left: 10%; top: 20%; opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { left: 90%; top: 20%; opacity: 0; }
+    }
+    @keyframes p2p-flow-2 {
+      0% { left: 90%; top: 20%; opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { left: 50%; top: 80%; opacity: 0; }
+    }
+    @keyframes p2p-flow-3 {
+      0% { left: 50%; top: 80%; opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { left: 10%; top: 20%; opacity: 0; }
+    }
+    @keyframes blob-drift {
+      0% { transform: translate(0px, 0px) scale(1); }
+      50% { transform: translate(20px, -20px) scale(1.05); }
+      100% { transform: translate(0px, 0px) scale(1); }
+    }
+    @keyframes dash {
+      to { stroke-dashoffset: -160; }
+    }
+
+    .animate-cs-center { animation: data-flow-center 2s infinite cubic-bezier(0.4, 0, 0.2, 1); }
+    .animate-cs-left { animation: data-flow-diagonal-left 2s infinite cubic-bezier(0.4, 0, 0.2, 1) 0.5s; }
+    .animate-cs-right { animation: data-flow-diagonal-right 2s infinite cubic-bezier(0.4, 0, 0.2, 1) 1s; }
+    .animate-p2p-1 { animation: p2p-flow-1 2s infinite linear; }
+    .animate-p2p-2 { animation: p2p-flow-2 2s infinite linear 0.6s; }
+    .animate-p2p-3 { animation: p2p-flow-3 2s infinite linear 1.2s; }
+    .animate-drift { animation: blob-drift 12s ease-in-out infinite; }
+    .animate-dash-flow { animation: dash 3s linear infinite; }
+
+    /* New Simulator Animations */
+    @keyframes sim-orbit {
+      0% { transform: rotate(0deg) translateX(60px) rotate(0deg); }
+      100% { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+    }
+    @keyframes sim-orbit-reverse {
+      0% { transform: rotate(180deg) translateX(60px) rotate(-180deg); }
+      100% { transform: rotate(540deg) translateX(60px) rotate(-540deg); }
+    }
+
+    .animate-sim-orbit { animation: sim-orbit 4s infinite linear; }
+    .animate-sim-orbit-rev { animation: sim-orbit-reverse 4s infinite linear; }
+
+    .sim-grid-bg {
+      background-size: 30px 30px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    }
+  `}} />
+);
+
+const NetworkSimulator = ({ scale }) => {
+  switch (scale) {
+    case 'PAN':
+      return (
+        <div className="relative w-full h-64 bg-slate-900 rounded-2xl overflow-hidden flex items-center justify-center border border-slate-700 shadow-inner">
+          <div className="absolute inset-0 sim-grid-bg"></div>
+          <div className="absolute top-3 left-4 text-xs font-mono text-pink-400 opacity-70 tracking-wider">SIMULATOR: PAN (PERSONAL AREA NETWORK)</div>
+          
+          {/* Center Device */}
+          <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-pink-500/20 rounded-full border border-pink-500/50 shadow-[0_0_15px_rgba(236,72,153,0.5)]">
+            <Smartphone className="w-8 h-8 text-pink-400" />
+            
+            {/* Bluetooth Waves */}
+            <div className="absolute inset-0 border-2 border-pink-400 rounded-full animate-ping opacity-60"></div>
+          </div>
+
+          {/* Orbiting Peripherals */}
+          <div className="absolute z-20 animate-sim-orbit">
+            <div className="w-10 h-10 bg-slate-800 rounded-full border border-slate-600 flex items-center justify-center shadow-lg">
+              <Headphones className="w-5 h-5 text-pink-300" />
+            </div>
+          </div>
+          <div className="absolute z-20 animate-sim-orbit-rev">
+            <div className="w-10 h-10 bg-slate-800 rounded-full border border-slate-600 flex items-center justify-center shadow-lg">
+              <Watch className="w-5 h-5 text-pink-300" />
+            </div>
+          </div>
+        </div>
+      );
+    case 'LAN':
+      return (
+        <div className="relative w-full h-64 bg-slate-900 rounded-2xl overflow-hidden flex items-center justify-center border border-slate-700 shadow-inner">
+          <div className="absolute inset-0 sim-grid-bg"></div>
+          <div className="absolute top-3 left-4 text-xs font-mono text-emerald-400 opacity-70 tracking-wider">SIMULATOR: LAN (LOCAL AREA NETWORK)</div>
+          
+          {/* Central Switch */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-emerald-500/20 rounded-xl border border-emerald-500/50 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.5)]">
+            <Server className="w-7 h-7 text-emerald-400" />
+          </div>
+
+          {/* Connecting Cables */}
+          <svg className="absolute inset-0 w-full h-full z-10" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <line x1="20" y1="25" x2="50" y2="50" stroke="#047857" strokeWidth="0.8" strokeDasharray="1.5" />
+            <line x1="80" y1="25" x2="50" y2="50" stroke="#047857" strokeWidth="0.8" strokeDasharray="1.5" />
+            <line x1="50" y1="80" x2="50" y2="50" stroke="#047857" strokeWidth="0.8" strokeDasharray="1.5" />
+          </svg>
+
+          {/* Data Packets */}
+          <div className="absolute top-[37%] left-[35%] w-2.5 h-2.5 bg-emerald-400 rounded-full animate-ping z-30 shadow-[0_0_8px_rgba(52,211,153,1)]"></div>
+          <div className="absolute top-[37%] left-[65%] w-2.5 h-2.5 bg-teal-400 rounded-full animate-ping z-30 shadow-[0_0_8px_rgba(45,212,191,1)]" style={{animationDelay: '0.3s'}}></div>
+          <div className="absolute top-[65%] left-[50%] w-2.5 h-2.5 bg-green-400 rounded-full animate-ping z-30 shadow-[0_0_8px_rgba(74,222,128,1)]" style={{animationDelay: '0.6s'}}></div>
+
+          {/* PCs */}
+          <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 z-20 bg-slate-800 p-2.5 rounded-xl border border-slate-700">
+            <Monitor className="w-6 h-6 text-slate-350" />
+          </div>
+          <div className="absolute top-1/4 left-3/4 -translate-x-1/2 -translate-y-1/2 z-20 bg-slate-800 p-2.5 rounded-xl border border-slate-700">
+            <Laptop className="w-6 h-6 text-slate-350" />
+          </div>
+          <div className="absolute top-3/4 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 bg-slate-800 p-2.5 rounded-xl border border-slate-700">
+            <Monitor className="w-6 h-6 text-slate-355" />
+          </div>
+        </div>
+      );
+    case 'MAN':
+      return (
+        <div className="relative w-full h-64 bg-slate-900 rounded-2xl overflow-hidden border border-slate-700 shadow-inner">
+          <div className="absolute inset-0 sim-grid-bg"></div>
+          <div className="absolute top-3 left-4 text-xs font-mono text-blue-400 opacity-70 tracking-wider">SIMULATOR: MAN (METROPOLITAN AREA NETWORK)</div>
+          
+          {/* Main ISP Router */}
+          <div className="absolute top-1/2 left-[20%] -translate-x-1/2 -translate-y-1/2 z-20 w-16 h-16 bg-blue-500/20 rounded-full border border-blue-500/50 flex items-center justify-center shadow-[0_0_20px_rgba(59,130,246,0.6)]">
+            <Router className="w-8 h-8 text-blue-400" />
+          </div>
+
+          {/* Fiber Lines */}
+          <svg className="absolute inset-0 w-full h-full z-10" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M 20 50 Q 50 20 80 25" fill="none" stroke="#1e3a8a" strokeWidth="1" />
+            <path d="M 20 50 Q 50 80 80 75" fill="none" stroke="#1e3a8a" strokeWidth="1" />
+            
+            {/* Animated Fiber Light */}
+            <path d="M 20 50 Q 50 20 80 25" fill="none" stroke="#60a5fa" strokeWidth="0.8" strokeDasharray="10 150" className="animate-dash-flow" />
+            <path d="M 20 50 Q 50 80 80 75" fill="none" stroke="#60a5fa" strokeWidth="0.8" strokeDasharray="10 150" className="animate-dash-flow" style={{animationDelay: '1s'}} />
+          </svg>
+
+          {/* City Buildings */}
+          <div className="absolute top-1/4 left-[80%] -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center">
+            <div className="bg-slate-800 p-2.5 rounded-xl border border-slate-700 shadow-md">
+              <Building2 className="w-8 h-8 text-blue-300" />
+            </div>
+            <span className="text-[10px] text-slate-400 mt-2 bg-slate-800 px-1.5 py-0.5 rounded font-mono">Branch A</span>
+          </div>
+          <div className="absolute top-3/4 left-[80%] -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center">
+            <div className="bg-slate-800 p-2.5 rounded-xl border border-slate-700 shadow-md">
+              <Building2 className="w-8 h-8 text-blue-300" />
+            </div>
+            <span className="text-[10px] text-slate-400 mt-2 bg-slate-800 px-1.5 py-0.5 rounded font-mono">Branch B</span>
+          </div>
+        </div>
+      );
+    case 'WAN':
+      return (
+        <div className="relative w-full h-64 bg-slate-900 rounded-2xl overflow-hidden flex items-center justify-center border border-slate-700 shadow-inner">
+          <div className="absolute inset-0 sim-grid-bg"></div>
+          <div className="absolute top-3 left-4 text-xs font-mono text-purple-400 opacity-70 tracking-wider">SIMULATOR: WAN (WIDE AREA NETWORK)</div>
+          
+          {/* Internet Cloud Core */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-24 h-16 bg-purple-900/40 rounded-full border border-purple-500/30 flex items-center justify-center shadow-[0_0_30px_rgba(168,85,247,0.4)] backdrop-blur-sm">
+            <Cloud className="w-10 h-10 text-purple-400" />
+          </div>
+
+          {/* Satellite and Waves */}
+          <div className="absolute top-[12%] left-[50%] -translate-x-1/2 z-10 opacity-75">
+             <Radio className="w-6 h-6 text-slate-450" />
+             <div className="absolute inset-0 border border-slate-500 rounded-full animate-ping"></div>
+          </div>
+
+          {/* Global Connections */}
+          <svg className="absolute inset-0 w-full h-full z-10" viewBox="0 0 100 100" preserveAspectRatio="none">
+            {/* Satellite links */}
+            <line x1="20" y1="50" x2="50" y2="15" stroke="#6b21a8" strokeWidth="0.5" strokeDasharray="1 2" />
+            <line x1="80" y1="50" x2="50" y2="15" stroke="#6b21a8" strokeWidth="0.5" strokeDasharray="1 2" />
+            {/* Submarine cables */}
+            <path d="M 20 50 Q 50 80 80 50" fill="none" stroke="#581c87" strokeWidth="1" />
+            <path d="M 20 50 Q 50 80 80 50" fill="none" stroke="#d8b4fe" strokeWidth="0.5" strokeDasharray="5 200" className="animate-dash-flow" />
+          </svg>
+
+          {/* Globes (Continents) */}
+          <div className="absolute top-1/2 left-[20%] -translate-x-1/2 -translate-y-1/2 z-20">
+            <div className="relative bg-slate-800 p-2 rounded-xl border border-slate-700 shadow-lg">
+              <Globe2 className="w-8 h-8 text-indigo-300" />
+              <div className="absolute inset-0 bg-indigo-500/10 rounded-full blur-md"></div>
+            </div>
+            <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-slate-400 bg-slate-800 px-2 py-0.5 rounded whitespace-nowrap font-mono">New York</span>
+          </div>
+          
+          <div className="absolute top-1/2 left-[80%] -translate-x-1/2 -translate-y-1/2 z-20">
+            <div className="relative bg-slate-800 p-2 rounded-xl border border-slate-700 shadow-lg">
+              <Globe2 className="w-8 h-8 text-indigo-300" />
+              <div className="absolute inset-0 bg-indigo-500/10 rounded-full blur-md"></div>
+            </div>
+            <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-slate-400 bg-slate-800 px-2 py-0.5 rounded whitespace-nowrap font-mono">Bangkok</span>
+          </div>
+        </div>
+      );
+    default:
+      return null;
+  }
+};
+
 export default function IT1_3() {
-  // ────────────────────────────────────────────────────────────────────────
-  // STATE DEFINITIONS
-  // ────────────────────────────────────────────────────────────────────────
+  const [activeScale, setActiveScale] = useState('LAN');
+  const [isAnimatingScale, setIsAnimatingScale] = useState(false);
 
-  // --- 1.3.1: จำแนกเครือข่ายตามระยะทาง ---
-  const [selectedDistance, setSelectedDistance] = useState('lan');
+  const handleScaleChange = (scale) => {
+    if (scale === activeScale) return;
+    setIsAnimatingScale(true);
+    setTimeout(() => {
+      setActiveScale(scale);
+      setIsAnimatingScale(false);
+    }, 250);
+  };
 
-  // --- 1.3.2 & 1.3.3: Client-Server vs Peer-to-Peer Simulator ---
-  const [simMode, setSimMode] = useState('clientserver'); // clientserver | peertopeer | perimeter
-  const [isServerCrashed, setIsServerCrashed] = useState(false);
-  const [p2pNodes, setP2pNodes] = useState({
-    NodeA: true,
-    NodeB: true,
-    NodeC: true,
-    NodeD: true
-  });
-  const [activeTransfer, setActiveTransfer] = useState(false);
-  const [transferProgress, setTransferProgress] = useState(0);
-  const [transferLog, setTransferLog] = useState([
-    '[ระบบ] แบบจำลองพร้อมทำงาน เลือกสถาปัตยกรรมด้านบนเพื่อทดสอบกลไกการรับส่งข้อมูล'
-  ]);
-  const [simulationSpeed, setSimulationSpeed] = useState(1500); // ms
-
-  // --- 1.3.4: Intranet, Extranet, Internet (Perimeter Security) ---
-  const [selectedPacketType, setSelectedPacketType] = useState('internal');
-  const [packetFlowStep, setPacketFlowStep] = useState(0); // 0 = ready, 1 = gateway, 2 = destination/block
-
-  // --- LATENCY HEATMAP SIMULATOR (NEW FEATURE) ---
-  const [pingTarget, setPingTarget] = useState('lan');
-  const [pinging, setPinging] = useState(false);
-  const [pingHistory, setPingHistory] = useState([]);
-  const [pingStats, setPingStats] = useState({ min: null, max: null, avg: null, loss: 0 });
-
-  // --- SECURITY ATTACK SIMULATOR (NEW FEATURE) ---
-  const [attackType, setAttackType] = useState('ddos');
-  const [attackRunning, setAttackRunning] = useState(false);
-  const [defenseEnabled, setDefenseEnabled] = useState(true);
-  const [attackProgress, setAttackProgress] = useState(0);
-  const [attackLog, setAttackLog] = useState(['ระบบพร้อมทำงาน เลือกประเภทการโจมตีและกด ▶ เพื่อจำลองสถานการณ์']);
-  const [systemHealth, setSystemHealth] = useState(100);
-
-  // ────────────────────────────────────────────────────────────────────────
-  // DATA CONFIGURATIONS
-  // ────────────────────────────────────────────────────────────────────────
-
-  // 1.3.1: ข้อมูลขนาดเครือข่าย
-  const networkSizes = {
-    pan: {
-      title: 'เครือข่ายส่วนบุคคล (Personal Area Network - PAN)',
-      range: '1 - 10 เมตร',
-      speed: '1 Mbps - 480 Mbps',
-      medium: 'คลื่นวิทยุความถี่สั้น (Bluetooth, Zigbee), ลำแสงอินฟราเรด (IR)',
-      protocol: 'IEEE 802.15.1 (Bluetooth), IEEE 802.15.4',
-      usecase: 'การเชื่อมต่อหูฟังไร้สาย (TWS) กับสมาร์ทโฟน, สมาร์ทวอทช์ส่งข้อมูลก้าวเดิน, การรับส่งไฟล์รูปภาพด่วนผ่าน AirDrop ในห้องส่วนตัว',
-      accent: 'emerald',
-      bgGradient: 'from-emerald-50 to-white'
+  const networkScales = {
+    PAN: {
+      name: 'PAN (Personal Area Network)',
+      thaiName: 'เครือข่ายส่วนบุคคล',
+      icon: <Smartphone className="w-8 h-8" />,
+      colorName: 'pink',
+      borderActive: 'border-pink-500',
+      bgActive: 'bg-pink-500',
+      bgLight: 'bg-pink-50',
+      textActive: 'text-pink-600',
+      textColorClass: 'text-pink-700',
+      badgeClass: 'bg-pink-100 text-pink-700',
+      distance: 'ระยะ 1 - 10 เมตร',
+      desc: 'เครือข่ายขนาดเล็กที่สุด ใช้เชื่อมต่ออุปกรณ์ส่วนตัวที่อยู่ใกล้กันมากๆ มักใช้เทคโนโลยีไร้สาย เช่น Bluetooth เชื่อมต่อหูฟังกับสมาร์ทโฟน',
+      examples: 'Bluetooth, NFC, การปล่อย Hotspot มือถือ'
     },
-    lan: {
-      title: 'เครือข่ายเฉพาะที่ (Local Area Network - LAN)',
-      range: '10 เมตร - 1 กิโลเมตร',
-      speed: '100 Mbps - 10 Gbps',
-      medium: 'สายทองแดงคู่ตีเกลียว (UTP Cat6), คลื่นอากาศแลนไร้สาย (Wi-Fi)',
-      protocol: 'IEEE 802.3 (Ethernet), IEEE 802.11 (Wi-Fi)',
-      usecase: 'การเชื่อมโยงระบบห้องคอมพิวเตอร์โรงเรียนอาชีวะ, การจัดส่งไฟล์เอกสารกลางในสำนักงานธุรกิจ, ระบบแชร์เครื่องพิมพ์ในแผนกจัดซื้อ',
-      accent: 'indigo',
-      bgGradient: 'from-indigo-50 to-white'
+    LAN: {
+      name: 'LAN (Local Area Network)',
+      thaiName: 'เครือข่ายท้องถิ่น',
+      icon: <Home className="w-8 h-8" />,
+      colorName: 'emerald',
+      borderActive: 'border-emerald-500',
+      bgActive: 'bg-emerald-500',
+      bgLight: 'bg-emerald-50',
+      textActive: 'text-emerald-600',
+      textColorClass: 'text-emerald-700',
+      badgeClass: 'bg-emerald-100 text-emerald-700',
+      distance: 'ระยะ 10 เมตร - 1 กิโลเมตร',
+      desc: 'เครือข่ายที่นิยมใช้มากที่สุด ครอบคลุมพื้นที่จำกัด เช่น ภายในห้อง อาคาร สำนักงาน หรือบ้าน นิยมใช้สาย UTP (สายแลน) หรือ Wi-Fi',
+      examples: 'เครือข่ายในห้องเรียน, ออฟฟิศ, เครือข่าย Wi-Fi ในบ้าน'
     },
-    man: {
-      title: 'เครือข่ายระดับเมือง (Metropolitan Area Network - MAN)',
-      range: '1 - 50 กิโลเมตร',
-      speed: '1 Gbps - 100 Gbps',
-      medium: 'สายใยแก้วนำแสงสมรรถนะสูง (Fiber Optic Backbone), คลื่นไมโครเวฟ',
-      protocol: 'Metro Ethernet, SD-WAN, DWDM',
-      usecase: 'เครือข่ายสายส่ง Fiber Ring เชื่อมโยงอาคารศาลากลางกับสำนักงานเขตทั่วกรุงเทพฯ, ระบบกล้องวงจรปิดครอบคลุมทางด่วนพิเศษทั่วเมืองหลวง',
-      accent: 'amber',
-      bgGradient: 'from-amber-50 to-white'
+    MAN: {
+      name: 'MAN (Metropolitan Area Network)',
+      thaiName: 'เครือข่ายระดับเมือง',
+      icon: <Building2 className="w-8 h-8" />,
+      colorName: 'blue',
+      borderActive: 'border-blue-500',
+      bgActive: 'bg-blue-500',
+      bgLight: 'bg-blue-50',
+      textActive: 'text-blue-600',
+      textColorClass: 'text-blue-700',
+      badgeClass: 'bg-blue-100 text-blue-700',
+      distance: 'ระยะ 1 - 50 กิโลเมตร',
+      desc: 'เครือข่ายที่เชื่อมโยง LAN หลายๆ วงเข้าด้วยกัน ครอบคลุมระดับเมืองหรือวิทยาเขต มักใช้สาย Fiber Optic ที่มีความเร็วสูงในการเชื่อมต่อ',
+      examples: 'เครือข่ายเคเบิลทีวีท้องถิ่น, เครือข่ายระหว่างตึกในมหาวิทยาลัย'
     },
-    wan: {
-      title: 'เครือข่ายบริเวณกว้าง (Wide Area Network - WAN)',
-      range: 'ข้ามจังหวัด ประเทศ หรือทั่วโลก',
-      speed: '10 Mbps - 100 Gbps+',
-      medium: 'โครงข่ายสายเคเบิลใยแก้วใต้ทะเล (Submarine Cables), สัญญาณผ่านดาวเทียมวงโคจรต่ำ (Low Earth Orbit Satellite)',
-      protocol: 'IP/MPLS, Frame Relay, Border Gateway Protocol (BGP)',
-      usecase: 'โครงข่ายอินเทอร์เน็ตเวิลด์ไวด์เว็บเชื่อมต่อข้อมูลข้ามทวีป, ระบบตู้เอทีเอ็ม (ATM) ธนาคารเชื่อมต่อแลกเปลี่ยนยอดบัญชีกับศูนย์คลังกรุงเทพฯ',
-      accent: 'rose',
-      bgGradient: 'from-rose-50 to-white'
+    WAN: {
+      name: 'WAN (Wide Area Network)',
+      thaiName: 'เครือข่ายระดับประเทศ/โลก',
+      icon: <Globe2 className="w-8 h-8" />,
+      colorName: 'purple',
+      borderActive: 'border-purple-500',
+      bgActive: 'bg-purple-500',
+      bgLight: 'bg-purple-50',
+      textActive: 'text-purple-600',
+      textColorClass: 'text-purple-700',
+      badgeClass: 'bg-purple-100 text-purple-700',
+      distance: 'ข้ามประเทศ - ทั่วโลก',
+      desc: 'เครือข่ายขนาดใหญ่ที่สุด เชื่อมต่อคอมพิวเตอร์และเครือข่ายย่อยๆ ทั่วโลกเข้าด้วยกัน อาศัยผู้ให้บริการสื่อสาร (ISP), ดาวเทียม หรือสายเคเบิลใต้น้ำ',
+      examples: 'อินเทอร์เน็ต (Internet), เครือข่ายธนาคารที่มีสาขาทั่วโลก'
     }
-  };
-
-  // ────────────────────────────────────────────────────────────────────────
-  // SIMULATOR LOGIC
-  // ────────────────────────────────────────────────────────────────────────
-
-  // เริ่มจำลองกระบวนการ Client-Server
-  const handleClientServerRequest = () => {
-    if (activeTransfer) return;
-    setActiveTransfer(true);
-    setTransferProgress(0);
-    setPacketFlowStep(0);
-
-    if (isServerCrashed) {
-      setTransferLog([
-        '[ส่งข่าวสาร] โหนดลูกข่าย (Client) พยายามจ่ายบิตข้อมูลร้องขอไปยังศูนย์กลาง...',
-        '[MEDIUM] สัญญาณผ่านสายทองแดงเดินทางด้วยทราฟฟิกปกติเข้าสู่จุดกึ่งกลาง (x = 400)',
-        '[ERROR] [ล้มเหลวอย่างรุนแรง] ศูนย์บริการคอมพิวเตอร์แม่ข่ายหลักขัดข้อง (Server Crashed)!',
-        '[SPOF ALERT] ตรวจพบจุดล้มเหลวเดี่ยว (Single Point of Failure)! ลอจิกการเชื่อมโยงขาดสะบั้น การแชร์ฐานข้อมูลหยุดชะงัก 100%'
-      ]);
-      setTransferProgress(50); // ค้างกลางทาง
-      setActiveTransfer(false);
-    } else {
-      setTransferLog([
-        '[ส่งข่าวสาร] โหนด Client 1 และ 2 เริ่มต้นส่งสารร้องขอ (HTTP GET Request) ลงสู่ช่องส่ง',
-        '[MEDIUM] กระแสบิตข้อมูลเคลื่อนผ่านสาย UTP คอนเนคเตอร์ มุ่งสู่กึ่งกลางเรขาคณิต (x = 400)',
-        '[SERVER] เครื่องแม่ข่ายประมวลผลดึงข้อมูลยอดขายประจำวันและแปลรหัส SQL สำเร็จ',
-        '[OUTPUT] แม่ข่ายส่งสารตอบกลับ (HTTP 200 OK) ปลายทางได้รับสถิติข้อมูลแชร์ราบรื่นเสร็จสมบูรณ์!'
-      ]);
-      
-      // อัปเดต Progress
-      let step = 0;
-      const interval = setInterval(() => {
-        step += 25;
-        setTransferProgress(step);
-        if (step >= 100) {
-          clearInterval(interval);
-          setActiveTransfer(false);
-        }
-      }, simulationSpeed / 4);
-    }
-  };
-
-  // เริ่มจำลองกระบวนการ Peer-to-Peer
-  const handleP2pTransfer = () => {
-    if (activeTransfer) return;
-    setActiveTransfer(true);
-    setTransferProgress(0);
-
-    const activeCount = Object.values(p2pNodes).filter(v => v).length;
-    if (activeCount < 2) {
-      setTransferLog([
-        '[ERROR] ต้องการโหนดที่อยู่ในสถานะออนไลน์ (Online) อย่างน้อย 2 โหนด เพื่อทำการรับส่งข้อมูลแบบสากล!'
-      ]);
-      setActiveTransfer(false);
-      return;
-    }
-
-    if (!p2pNodes.NodeA || !p2pNodes.NodeC) {
-      // โหนดหลักขัดข้อง แต่ยังมีตัวสำรองรันเนอร์
-      setTransferLog([
-        '[กระบวนการ] โหนด A พยายามส่งแฟ้มงานสต็อกสินค้าไปยังโหนด C โดยตรง...',
-        '[เส้นทางสำรอง] ตรวจพบโหนดปลายทางขัดข้องชั่วคราว! ระบบคัดกรองจัดสรรเส้นทางสำรอง',
-        '[PEER ROUTING] ข้อมูลทำการสลับโหมดผ่านโหนดเพื่อนบ้านที่เปิดใช้งานอยู่แทน',
-        '[เสร็จสิ้น] โครงข่ายแบบกระจายศูนย์ (Decentralized) ทำงานสำเร็จ ข้อมูลไหลเวียนต่อได้ ไร้ Single Point of Failure!'
-      ]);
-    } else {
-      setTransferLog([
-        '[กระบวนการ] โหนด A ทำการร้องขอไฟล์กับโหนด C ผ่านโครงข่ายสเปซกึ่งกลางไร้เซิร์ฟเวอร์',
-        '[MEDIUM] บิตข้อมูลไหลสวนทางกันบนสายสัญญาณแบบ Mesh ทั่วถึง (Full Connection)',
-        '[SUCCESS] ทั้งสองฝ่ายทำการดึงบล็อกข้อมูลชิ้นงานขนานพร้อมกันเสร็จสิ้น ความเร็วแลกเปลี่ยนสูงสุด!'
-      ]);
-    }
-
-    let step = 0;
-    const interval = setInterval(() => {
-      step += 25;
-      setTransferProgress(step);
-      if (step >= 100) {
-        clearInterval(interval);
-        setActiveTransfer(false);
-      }
-    }, simulationSpeed / 4);
-  };
-
-  // เริ่มจำลองกระบวนการแชร์พื้นที่ Intranet/Extranet/Internet
-  const handlePerimeterSend = () => {
-    if (activeTransfer) return;
-    setActiveTransfer(true);
-    setPacketFlowStep(1);
-    setTransferProgress(0);
-
-    if (selectedPacketType === 'internal') {
-      setTransferLog([
-        '[1. ข้อมูลนำเข้า] เอกสารทฤษฎีความลับการค้าภายในองค์กร (Intranet Content) เริ่มจ่ายเข้าระบบ...',
-        '[2. ด่านเกตเวย์] ดักกรอง ณ จุดเชื่อมต่อ (Firewall Security Inspection)...',
-        '[3. ตรวจสอบเงื่อนไข] ปฏิเสธการออกสู่ภายนอก! บล็อกแพ็กเก็ตไม่ให้ออกสู่โครงข่าย Extranet/Internet เพื่อป้องกันข้อมูลรั่วไหล'
-      ]);
-      
-      setTimeout(() => {
-        setPacketFlowStep(2);
-        setActiveTransfer(false);
-      }, simulationSpeed);
-    } else if (selectedPacketType === 'partner') {
-      setTransferLog([
-        '[1. ข้อมูลนำเข้า] ใบส่งของยอดบัญชีคู่ค้าภายนอก (Extranet Payload) เริ่มการส่ง...',
-        '[2. ด่านเกตเวย์] ตรวจสอบสิทธิ์การเข้ารหัสอุโมงค์ VPN (Virtual Private Network Auth)...',
-        '[3. ตรวจสอบเงื่อนไข] อนุญาตให้ผ่าน! ข้อมูลเข้าถึงระบบ Extranet ไปยังคู่ค้าธุรกิจที่ได้ลงทะเบียนยืนยันเรียบร้อย'
-      ]);
-
-      setTimeout(() => {
-        setPacketFlowStep(2);
-        setActiveTransfer(false);
-      }, simulationSpeed);
-    } else {
-      setTransferLog([
-        '[1. ข้อมูลนำเข้า] การสืบค้นหน้าเว็บไซต์สาธารณะ (Internet Web Query) เริ่มการจ่ายสัญญาณ...',
-        '[2. ด่านเกตเวย์] ผ่านกลไกการแปลงที่อยู่เน็ตเวิร์ก (NAT) มุ่งหน้าสู่ DNS สาธารณะ...',
-        '[3. ตรวจสอบเงื่อนไข] จัดส่งแพ็กเก็ตสำเร็จ! ลูกค้าสามารถมองเห็นบล็อกข้อมูลสินค้าบนคลาวด์จากภายนอกเสรี 100%'
-      ]);
-
-      setTimeout(() => {
-        setPacketFlowStep(2);
-        setActiveTransfer(false);
-      }, simulationSpeed);
-    }
-  };
-
-  // รีเซ็ตสถานะการจำลองทั้งหมด
-  const handleResetSimulator = () => {
-    setIsServerCrashed(false);
-    setP2pNodes({ NodeA: true, NodeB: true, NodeC: true, NodeD: true });
-    setActiveTransfer(false);
-    setTransferProgress(0);
-    setPacketFlowStep(0);
-    setTransferLog([
-      '[ระบบ] รีเซ็ตแบบจำลองเสร็จสมบูรณ์ ช่องสัญญาณและระดับความปลอดภัยพร้อมกลับเข้าสู่สภาวะปกติ'
-    ]);
   };
 
   return (
-    <>
-      {/* 1️⃣ Layer 1: Ambient Backdrop Glimmer Theme */}
-      <AmbientBackdrop
-        blobs={[
-          { color: 'bg-blue-200', size: 'w-96 h-96', position: '-top-10 -left-10', opacity: 'opacity-40' },
-          { color: 'bg-indigo-200', size: 'w-80 h-80', position: 'top-1/3 -right-10', opacity: 'opacity-35' },
-          { color: 'bg-purple-200', size: 'w-72 h-72', position: '-bottom-10 left-1/4', opacity: 'opacity-25' }
-        ]}
-      />
+    <div className="font-sans text-slate-800 pb-24 relative overflow-hidden">
+      <CustomStyles />
+      
+      {/* ─── Layer 1: Ambient Backdrop & 4 Blobs ─── */}
+      <div className="absolute top-10 left-10 w-72 h-72 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-drift pointer-events-none"></div>
+      <div className="absolute top-20 right-10 w-96 h-96 bg-teal-200 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-drift animation-delay-2000 pointer-events-none"></div>
+      <div className="absolute bottom-10 left-10 w-80 h-80 bg-sky-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-drift animation-delay-4000 pointer-events-none"></div>
+      <div className="absolute top-1/2 right-0 w-88 h-88 bg-cyan-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-drift animation-delay-2000 pointer-events-none"></div>
 
-      {/* 3️⃣ Layer 3: Flexible Subtopics & Interactive Visualizer */}
-      <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-6 pb-12 space-y-16 md:space-y-24 relative z-10">
+      {/* ─── Layer 3: Main Page Content ─── */}
+      <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-6 space-y-12 md:space-y-16 relative z-10">
         
-        {/* ====================================================================
-            SECTION 1: การจำแนกเครือข่ายตามระยะทางและขนาดพื้นที่ (1.3.1)
-            ==================================================================== */}
-        <section id="section-distance-types" className="space-y-8">
-          
-          <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-7 bg-indigo-600 rounded-full animate-pulse" />
-              <h2 className="text-[26px] font-bold text-zinc-900 tracking-tight">
-                การจำแนกประเภทเครือข่ายคอมพิวเตอร์ตามระยะทาง
-              </h2>
-            </div>
-            
-            <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed max-w-4xl">
-              ในทางวิศวกรรมการออกแบบระบบสารสนเทศ เครือข่ายสื่อสารข้อมูลจะถูกจำแนกออกเป็นประเภทหลักตามความกว้างขวางเชิงพื้นที่ (Coverage area) 
-              และข้อจำกัดทางกายภาพของสื่อกลางความถี่ สถาปัตยกรรมเหล่านี้ออกแบบขึ้นมาเพื่อแก้โจทย์ความมั่นคง ความคุ้มค่า และการกระจายสัญญาณที่ต่างระดับกัน:
-            </p>
+        {/* Section 1: Network Scale */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-emerald-600 tracking-wider uppercase">
+              ประเภทเครือข่ายตามขนาดพื้นที่
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              ประเภทเครือข่ายคอมพิวเตอร์ (Network Scale Types)
+            </h3>
           </div>
 
-          {/* Interactive Coverage Cards Selector */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {Object.keys(networkSizes).map((key) => {
-              const active = selectedDistance === key;
-              const sizeData = networkSizes[key];
-              
-              // Map Icon semantic
-              let SizeIcon = Wifi;
-              if (key === 'pan') SizeIcon = User;
-              if (key === 'lan') SizeIcon = Monitor;
-              if (key === 'man') SizeIcon = Building;
-              if (key === 'wan') SizeIcon = Globe;
+          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+            ระบบเครือข่ายถูกแบ่งประเภทตาม <strong className="text-emerald-600 font-semibold">ระยะทางและขอบเขตทางภูมิศาสตร์</strong> ตั้งแต่ระดับอุปกรณ์ใกล้ตัวไปจนถึงโครงข่ายเชื่อมสัญญาณครอบคลุมทั่วโลก
+          </p>
 
-              return (
-                <div
+          <div className="flex flex-col lg:flex-row gap-8 items-stretch">
+            
+            {/* Left: Interactive Selectors */}
+            <div className="lg:w-1/3 flex flex-col gap-3">
+              {Object.keys(networkScales).map((key) => (
+                <button
                   key={key}
-                  onClick={() => setSelectedDistance(key)}
-                  className={`bg-white/60 backdrop-blur-xl border rounded-2xl p-6 relative overflow-hidden transition-all duration-200 cursor-pointer hover:-translate-y-1 hover:shadow-lg ${
-                    active
-                      ? `border-${sizeData.accent}-500/50 ring-2 ring-${sizeData.accent}-300 ring-offset-2 shadow-md`
-                      : 'border-slate-200 hover:border-indigo-500/20'
-                  }`}
+                  onClick={() => handleScaleChange(key)}
+                  className={`network-btn relative p-5 rounded-2xl flex items-center gap-4 transition-all duration-300 border-2 overflow-hidden cursor-pointer w-full text-left
+                    ${activeScale === key 
+                      ? `${networkScales[key].borderActive} bg-white shadow-md scale-[1.02]` 
+                      : 'border-slate-100 bg-white/50 hover:bg-white hover:border-slate-200 hover:scale-[1.01]'}`}
                 >
-                  <div className={`absolute -top-4 -right-4 w-20 h-20 rounded-full bg-${sizeData.accent}-400 blur-2xl opacity-20 pointer-events-none`} />
+                  <div className={`absolute inset-0 bg-gradient-to-r ${activeScale === key ? 'from-emerald-50/30' : 'from-transparent'} to-transparent opacity-0 transition-opacity duration-300 ${activeScale === key ? 'opacity-100' : ''}`}></div>
                   
-                  <div className="flex justify-between items-start mb-4">
-                    <span className="font-mono text-xs font-bold text-slate-400 tracking-wider uppercase">{key} scale</span>
-                    <div className={`p-2.5 rounded-xl bg-${sizeData.accent}-50 text-${sizeData.accent}-600 border border-${sizeData.accent}-100`}>
-                      <SizeIcon className="w-5 h-5" />
-                    </div>
+                  <div className={`relative z-10 w-12 h-12 rounded-xl flex items-center justify-center text-white ${networkScales[key].bgActive} shadow-inner shrink-0`}>
+                    {networkScales[key].icon}
                   </div>
-
-                  <h3 className="text-[16px] font-bold text-slate-800 mb-1 leading-snug">
-                    {sizeData.title.split(' (')[0]}
-                  </h3>
-                  <p className="text-[13px] text-slate-500 font-mono mb-3">{sizeData.range}</p>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Detailed Coverage Information Display */}
-          <div className="bg-white/60 backdrop-blur-xl border border-white/40 rounded-[2rem] p-6 md:p-8 shadow-xl transition-all duration-300">
-            <div className="flex flex-col md:flex-row gap-8 items-start animate-fadeIn">
-              <div className="space-y-6 flex-1">
-                <div>
-                  <span className="text-xs font-mono font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-wider">
-                    เจาะลึกองค์ความรู้ระดับอุตสาหกรรม
-                  </span>
-                  <h3 className="text-2xl font-bold text-slate-800 mt-2.5">
-                    {networkSizes[selectedDistance].title}
-                  </h3>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 border-y border-slate-200/50 py-5">
-                  <div>
-                    <span className="text-[13px] font-bold text-slate-400 uppercase tracking-wider block">ระยะส่งสูงสุด</span>
-                    <p className="text-[15px] font-semibold text-slate-700 mt-1">{networkSizes[selectedDistance].range}</p>
+                  <div className="relative z-10 text-left">
+                    <h3 className={`font-bold text-lg ${activeScale === key ? networkScales[key].textActive : 'text-slate-700'}`}>
+                      {key}
+                    </h3>
+                    <p className="text-sm text-slate-500 font-medium">{networkScales[key].thaiName}</p>
                   </div>
-                  <div>
-                    <span className="text-[13px] font-bold text-slate-400 uppercase tracking-wider block">สปีดการรับส่งข้อมูล</span>
-                    <p className="text-[15px] font-semibold text-slate-700 mt-1">{networkSizes[selectedDistance].speed}</p>
-                  </div>
-                  <div>
-                    <span className="text-[13px] font-bold text-slate-400 uppercase tracking-wider block">โปรโตคอลแกนหลัก</span>
-                    <p className="text-[15px] font-semibold text-slate-700 mt-1 font-mono">{networkSizes[selectedDistance].protocol}</p>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <span className="text-[13px] font-bold text-slate-400 uppercase tracking-wider block mb-1">สื่อกลางหลักการรับส่ง (Transmission Medium)</span>
-                    <p className="text-[14.5px] text-slate-600 leading-relaxed font-medium">{networkSizes[selectedDistance].medium}</p>
-                  </div>
-                  <div>
-                    <span className="text-[13px] font-bold text-slate-400 uppercase tracking-wider block mb-1">ตัวอย่างการติดตั้งหน้างานจริง (Practical Usecases)</span>
-                    <p className="text-[14.5px] text-slate-700 font-semibold bg-slate-50 border border-slate-100 rounded-xl p-3.5 leading-relaxed">
-                      {networkSizes[selectedDistance].usecase}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ====================================================================
-            SECTION 2: สถาปัตยกรรมเครือข่ายและการจัดความปลอดภัย (1.3.2 - 1.3.4)
-            ==================================================================== */}
-        <section id="section-architectures-sim" className="space-y-8">
-          
-          <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-7 bg-indigo-600 rounded-full animate-pulse" />
-              <h2 className="text-[26px] font-bold text-zinc-900 tracking-tight">
-                สถาปัตยกรรมโครงสร้างเครือข่ายและการบริหารความปลอดภัย
-              </h2>
-            </div>
-            
-            <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed max-w-4xl">
-              สถาปัตยกรรมการแชร์ทรัพยากรระดับเซิร์ฟเวอร์บ่งชี้วิธีกระจายบทบาทของอุปกรณ์ลูกข่ายและแม่ข่าย 
-              ศึกษาการเปรียบเทียบเชิงลึกและลอจิกความปลอดภัยระหว่าง Client-Server และ Peer-to-Peer ในแบบจำลองอัจฉริยะด้านล่าง:
-            </p>
-          </div>
-
-          {/* Interactive Multi-Mode Dashboard */}
-          <div className="bg-slate-900 rounded-[2.5rem] border border-slate-800 shadow-2xl overflow-hidden">
-            
-            {/* Mode selection top menu bar */}
-            <div className="p-4 md:p-6 bg-slate-950/80 border-b border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="flex items-center gap-2.5">
-                <Network className="w-5 h-5 text-indigo-400" />
-                <span className="font-mono text-xs font-semibold tracking-wider text-indigo-300">
-                  NETWORK ARCHITECTURE & SECURITY PERIMETER SIMULATOR
-                </span>
-              </div>
-
-              {/* Toggle Buttons */}
-              <div className="flex bg-slate-800/80 border border-slate-700/60 p-1 rounded-xl shadow-inner cursor-pointer shrink-0">
-                <button
-                  onClick={() => { setSimMode('clientserver'); handleResetSimulator(); }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    simMode === 'clientserver' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  Client-Server
-                </button>
-                <button
-                  onClick={() => { setSimMode('peertopeer'); handleResetSimulator(); }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    simMode === 'peertopeer' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  Peer-to-Peer
-                </button>
-                <button
-                  onClick={() => { setSimMode('perimeter'); handleResetSimulator(); }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    simMode === 'perimeter' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  Intranet / Internet
-                </button>
-              </div>
-            </div>
-
-            {/* Dashboard Control panel */}
-            <div className="p-4 bg-slate-950/40 border-b border-slate-800/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              
-              {/* Dynamic Controls based on selected mode */}
-              <div className="flex items-center gap-3 flex-wrap">
-                {simMode === 'clientserver' && (
-                  <>
-                    <button
-                      onClick={handleClientServerRequest}
-                      disabled={activeTransfer}
-                      className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 text-white px-4 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
-                    >
-                      <Play className="w-3.5 h-3.5" />
-                      ส่งข่าวสาร (Request)
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsServerCrashed(!isServerCrashed);
-                        setTransferLog(prev => [
-                          ...prev,
-                          isServerCrashed
-                            ? '[ซ่อมบำรุง] ติดตั้งการ์ดแลนและโมดูล Server คืนสถานะ Active แล้ว'
-                            : '[ALERT] วิศวกรเครือข่ายปลดปลั๊กไฟเลี้ยงเซิร์ฟเวอร์แม่ข่ายหลักขัดข้องล้มเหลวชั่วคราว!'
-                        ]);
-                      }}
-                      className={`px-4 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all cursor-pointer ${
-                        isServerCrashed
-                          ? 'bg-emerald-600 text-white hover:bg-emerald-500'
-                          : 'bg-rose-600 text-white hover:bg-rose-500'
-                      }`}
-                    >
-                      {isServerCrashed ? 'ซ่อมแซมระบบ (Repair)' : 'จำลองแม่ข่ายล่ม (Crash Server)'}
-                    </button>
-                  </>
-                )}
-
-                {simMode === 'peertopeer' && (
-                  <>
-                    <button
-                      onClick={handleP2pTransfer}
-                      disabled={activeTransfer}
-                      className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 text-white px-4 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
-                    >
-                      <Play className="w-3.5 h-3.5" />
-                      ส่งไฟล์ตรง (P2P Share)
-                    </button>
-                    <div className="flex items-center gap-2 bg-slate-800 border border-slate-700/60 px-3 py-1 rounded-lg">
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">สลับสิทธิ์โหนดออนไลน์:</span>
-                      {Object.keys(p2pNodes).map(nodeKey => (
-                        <label key={nodeKey} className="flex items-center gap-1 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={p2pNodes[nodeKey]}
-                            onChange={(e) => {
-                              setP2pNodes(prev => ({ ...prev, [nodeKey]: e.target.checked }));
-                              setTransferLog(p => [...p, `[P2P] ปรับเปลี่ยนสถานะ ${nodeKey} เป็น ${e.target.checked ? 'ONLINE' : 'OFFLINE'}`]);
-                            }}
-                            className="rounded border-slate-700 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
-                          />
-                          <span className="text-xs font-mono font-bold text-slate-200">{nodeKey.replace('Node', '')}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </>
-                )}
-
-                {simMode === 'perimeter' && (
-                  <>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-slate-400">เลือกประเภทแพ็กเก็ตข้อมูล:</span>
-                      <select
-                        value={selectedPacketType}
-                        onChange={(e) => { setSelectedPacketType(e.target.value); setPacketFlowStep(0); }}
-                        disabled={activeTransfer}
-                        className="bg-slate-800 text-slate-200 border border-slate-700/60 px-3 py-1 rounded-lg text-xs font-semibold focus:outline-none cursor-pointer"
-                      >
-                        <option value="internal">1.3.4.1 เอกสารความลับแผนการเงินภายใน (Internal Confidential)</option>
-                        <option value="partner">1.3.4.2 ใบสลิปยอดสั่งพัสดุคู่ค้า VPN (B2B Partner Invoice)</option>
-                        <option value="public">1.3.4.3 บล็อกเกอร์โฆษณาสาธารณะ (Public Web Data)</option>
-                      </select>
-                    </div>
-                    <button
-                      onClick={handlePerimeterSend}
-                      disabled={activeTransfer}
-                      className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 text-white px-4 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
-                    >
-                      <Play className="w-3.5 h-3.5" />
-                      ส่งข้ามเกตเวย์ (Send Packet)
-                    </button>
-                  </>
-                )}
-
-                <button
-                  onClick={handleResetSimulator}
-                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer"
-                >
-                  <RotateCcw className="w-3 h-3" />
-                </button>
-              </div>
-
-              {/* Simulation Frequency Slider */}
-              <div className="flex items-center gap-3">
-                <span className="text-[12px] font-bold text-slate-500">ปรับความหน่วงวินาที:</span>
-                <input
-                  type="range"
-                  min="600"
-                  max="3000"
-                  step="400"
-                  value={3600 - simulationSpeed}
-                  onChange={(e) => setSimulationSpeed(3600 - parseInt(e.target.value))}
-                  className="w-24 accent-indigo-500 cursor-pointer"
-                />
-                <span className="text-xs font-mono text-indigo-400">{(simulationSpeed / 1000).toFixed(1)}s</span>
-              </div>
-            </div>
-
-            {/* Dashboard Graphics & Logs panel split */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 border-b border-slate-800/80">
-              
-              {/* Graphic SVG Panel (Col 7) */}
-              <div className="lg:col-span-7 bg-slate-950 p-6 flex flex-col items-center justify-center min-h-[380px]">
-                
-                {simMode === 'clientserver' && (
-                  <svg width="600" height="340" viewBox="0 0 600 340" className="w-full max-w-[480px]">
-                    <defs>
-                      <marker id="serverArrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="rgba(148, 163, 184, 0.3)" />
-                      </marker>
-                      <marker id="serverArrow-active" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill={isServerCrashed ? '#EF4444' : '#818CF8'} />
-                      </marker>
-                    </defs>
-
-                    {/* Symmetrical Connector Lines connecting exactly to center points of nodes */}
-                    {/* Node A (Client 1) - x:150, y:70. Node B (Client 2) - x:450, y:70. Node C (Client 3) - x:150, y:270. Node D (Client 4) - x:450, y:270 */}
-                    {/* Center Server Node - cx: 300, cy: 170 */}
-                    <path
-                      d="M 150,70 L 300,170"
-                      stroke={activeTransfer && !isServerCrashed ? '#818CF8' : isServerCrashed ? '#EF4444' : 'rgba(148, 163, 184, 0.15)'}
-                      strokeWidth="2.5"
-                      markerEnd={activeTransfer ? 'url(#serverArrow-active)' : 'url(#serverArrow)'}
-                      className={activeTransfer && !isServerCrashed ? 'animate-flow-dash' : ''}
-                      style={{ '--flow-anim-speed': `${simulationSpeed / 1000}s` }}
-                    />
-                    <path
-                      d="M 450,70 L 300,170"
-                      stroke={activeTransfer && !isServerCrashed ? '#818CF8' : isServerCrashed ? '#EF4444' : 'rgba(148, 163, 184, 0.15)'}
-                      strokeWidth="2.5"
-                      markerEnd={activeTransfer ? 'url(#serverArrow-active)' : 'url(#serverArrow)'}
-                      className={activeTransfer && !isServerCrashed ? 'animate-flow-dash' : ''}
-                      style={{ '--flow-anim-speed': `${simulationSpeed / 1000}s` }}
-                    />
-                    <path
-                      d="M 150,270 L 300,170"
-                      stroke={activeTransfer && !isServerCrashed ? '#818CF8' : isServerCrashed ? '#EF4444' : 'rgba(148, 163, 184, 0.15)'}
-                      strokeWidth="2.5"
-                      markerEnd={activeTransfer ? 'url(#serverArrow-active)' : 'url(#serverArrow)'}
-                      className={activeTransfer && !isServerCrashed ? 'animate-flow-dash' : ''}
-                      style={{ '--flow-anim-speed': `${simulationSpeed / 1000}s` }}
-                    />
-                    <path
-                      d="M 450,270 L 300,170"
-                      stroke={activeTransfer && !isServerCrashed ? '#818CF8' : isServerCrashed ? '#EF4444' : 'rgba(148, 163, 184, 0.15)'}
-                      strokeWidth="2.5"
-                      markerEnd={activeTransfer ? 'url(#serverArrow-active)' : 'url(#serverArrow)'}
-                      className={activeTransfer && !isServerCrashed ? 'animate-flow-dash' : ''}
-                      style={{ '--flow-anim-speed': `${simulationSpeed / 1000}s` }}
-                    />
-
-                    {/* Nodes - Client 1 (Top Left) */}
-                    <g transform="translate(90, 30)">
-                      <rect width="120" height="80" rx="16" fill="#1E293B" stroke="#475569" strokeWidth="2" />
-                      <text x="60" y="38" textAnchor="middle" fill="#94A3B8" fontSize="12" fontWeight="bold" fontFamily="sans-serif">CLIENT 1</text>
-                      <text x="60" y="58" textAnchor="middle" fill="#38BDF8" fontSize="11" fontWeight="bold" fontFamily="sans-serif">192.168.1.10</text>
-                      <circle cx="15" cy="15" r="5" fill="#22C55E" />
-                    </g>
-
-                    {/* Nodes - Client 2 (Top Right) */}
-                    <g transform="translate(390, 30)">
-                      <rect width="120" height="80" rx="16" fill="#1E293B" stroke="#475569" strokeWidth="2" />
-                      <text x="60" y="38" textAnchor="middle" fill="#94A3B8" fontSize="12" fontWeight="bold" fontFamily="sans-serif">CLIENT 2</text>
-                      <text x="60" y="58" textAnchor="middle" fill="#38BDF8" fontSize="11" fontWeight="bold" fontFamily="sans-serif">192.168.1.11</text>
-                      <circle cx="15" cy="15" r="5" fill="#22C55E" />
-                    </g>
-
-                    {/* Nodes - Central Server (Center) */}
-                    <g transform="translate(230, 125)">
-                      <rect
-                        width="140"
-                        height="90"
-                        rx="20"
-                        fill={isServerCrashed ? '#450A0A' : '#1E1B4B'}
-                        stroke={isServerCrashed ? '#EF4444' : '#4F46E5'}
-                        strokeWidth="3"
-                        className={activeTransfer && !isServerCrashed ? 'animate-pulse' : ''}
-                      />
-                      <Server className={`w-6 h-6 mx-auto mt-3 ${isServerCrashed ? 'text-rose-500' : 'text-indigo-400'}`} />
-                      <text x="70" y="55" textAnchor="middle" fill={isServerCrashed ? '#FCA5A5' : '#E0E7FF'} fontSize="13" fontWeight="bold" fontFamily="sans-serif">MAIN SERVER</text>
-                      <text x="70" y="73" textAnchor="middle" fill={isServerCrashed ? '#EF4444' : '#38BDF8'} fontSize="11" fontWeight="bold" fontFamily="mono">192.168.1.254</text>
-                    </g>
-
-                    {/* Nodes - Client 3 (Bottom Left) */}
-                    <g transform="translate(90, 230)">
-                      <rect width="120" height="80" rx="16" fill="#1E293B" stroke="#475569" strokeWidth="2" />
-                      <text x="60" y="38" textAnchor="middle" fill="#94A3B8" fontSize="12" fontWeight="bold" fontFamily="sans-serif">CLIENT 3</text>
-                      <text x="60" y="58" textAnchor="middle" fill="#38BDF8" fontSize="11" fontWeight="bold" fontFamily="sans-serif">192.168.1.12</text>
-                      <circle cx="15" cy="15" r="5" fill="#22C55E" />
-                    </g>
-
-                    {/* Nodes - Client 4 (Bottom Right) */}
-                    <g transform="translate(390, 230)">
-                      <rect width="120" height="80" rx="16" fill="#1E293B" stroke="#475569" strokeWidth="2" />
-                      <text x="60" y="38" textAnchor="middle" fill="#94A3B8" fontSize="12" fontWeight="bold" fontFamily="sans-serif">CLIENT 4</text>
-                      <text x="60" y="58" textAnchor="middle" fill="#38BDF8" fontSize="11" fontWeight="bold" fontFamily="sans-serif">192.168.1.13</text>
-                      <circle cx="15" cy="15" r="5" fill="#22C55E" />
-                    </g>
-                  </svg>
-                )}
-
-                {simMode === 'peertopeer' && (
-                  <svg width="600" height="340" viewBox="0 0 600 340" className="w-full max-w-[480px]">
-                    {/* Symmetrical P2P mesh links */}
-                    {/* Node A (150, 70), Node B (450, 70), Node C (150, 270), Node D (450, 270) */}
-                    <line x1="150" y1="70" x2="450" y2="70" stroke={p2pNodes.NodeA && p2pNodes.NodeB ? '#10B981' : 'rgba(148, 163, 184, 0.08)'} strokeWidth="2" strokeDasharray="4 4" />
-                    <line x1="150" y1="70" x2="150" y2="270" stroke={p2pNodes.NodeA && p2pNodes.NodeC ? '#10B981' : 'rgba(148, 163, 184, 0.08)'} strokeWidth="2" strokeDasharray="4 4" />
-                    <line x1="150" y1="70" x2="450" y2="270" stroke={p2pNodes.NodeA && p2pNodes.NodeD ? '#10B981' : 'rgba(148, 163, 184, 0.08)'} strokeWidth="2" strokeDasharray="4 4" />
-                    <line x1="450" y1="70" x2="150" y2="270" stroke={p2pNodes.NodeB && p2pNodes.NodeC ? '#10B981' : 'rgba(148, 163, 184, 0.08)'} strokeWidth="2" strokeDasharray="4 4" />
-                    <line x1="450" y1="70" x2="450" y2="270" stroke={p2pNodes.NodeB && p2pNodes.NodeD ? '#10B981' : 'rgba(148, 163, 184, 0.08)'} strokeWidth="2" strokeDasharray="4 4" />
-                    <line x1="150" y1="270" x2="450" y2="270" stroke={p2pNodes.NodeC && p2pNodes.NodeD ? '#10B981' : 'rgba(148, 163, 184, 0.08)'} strokeWidth="2" strokeDasharray="4 4" />
-
-                    {/* Active File Packet Path (A to C or secondary route) */}
-                    {activeTransfer && (
-                      <path
-                        d={p2pNodes.NodeA && p2pNodes.NodeC ? 'M 150,70 L 150,270' : 'M 150,70 L 450,70 L 450,270 L 150,270'}
-                        fill="none"
-                        stroke="#10B981"
-                        strokeWidth="3.5"
-                        className="animate-flow-dash"
-                        style={{ '--flow-anim-speed': `${simulationSpeed / 1000}s` }}
-                      />
-                    )}
-
-                    {/* Node A */}
-                    <g transform="translate(90, 30)">
-                      <rect width="120" height="80" rx="16" fill="#1E293B" stroke={p2pNodes.NodeA ? '#10B981' : '#EF4444'} strokeWidth="2" />
-                      <text x="60" y="38" textAnchor="middle" fill="#E2E8F0" fontSize="12" fontWeight="bold" fontFamily="sans-serif">NODE A</text>
-                      <text x="60" y="58" textAnchor="middle" fill={p2pNodes.NodeA ? '#10B981' : '#EF4444'} fontSize="11" fontWeight="bold" fontFamily="sans-serif">
-                        {p2pNodes.NodeA ? 'ONLINE' : 'CRASHED'}
-                      </text>
-                      <circle cx="15" cy="15" r="5" fill={p2pNodes.NodeA ? '#22C55E' : '#EF4444'} />
-                    </g>
-
-                    {/* Node B */}
-                    <g transform="translate(390, 30)">
-                      <rect width="120" height="80" rx="16" fill="#1E293B" stroke={p2pNodes.NodeB ? '#10B981' : '#EF4444'} strokeWidth="2" />
-                      <text x="60" y="38" textAnchor="middle" fill="#E2E8F0" fontSize="12" fontWeight="bold" fontFamily="sans-serif">NODE B</text>
-                      <text x="60" y="58" textAnchor="middle" fill={p2pNodes.NodeB ? '#10B981' : '#EF4444'} fontSize="11" fontWeight="bold" fontFamily="sans-serif">
-                        {p2pNodes.NodeB ? 'ONLINE' : 'CRASHED'}
-                      </text>
-                      <circle cx="15" cy="15" r="5" fill={p2pNodes.NodeB ? '#22C55E' : '#EF4444'} />
-                    </g>
-
-                    {/* Node C */}
-                    <g transform="translate(90, 230)">
-                      <rect width="120" height="80" rx="16" fill="#1E293B" stroke={p2pNodes.NodeC ? '#10B981' : '#EF4444'} strokeWidth="2" />
-                      <text x="60" y="38" textAnchor="middle" fill="#E2E8F0" fontSize="12" fontWeight="bold" fontFamily="sans-serif">NODE C</text>
-                      <text x="60" y="58" textAnchor="middle" fill={p2pNodes.NodeC ? '#10B981' : '#EF4444'} fontSize="11" fontWeight="bold" fontFamily="sans-serif">
-                        {p2pNodes.NodeC ? 'ONLINE' : 'CRASHED'}
-                      </text>
-                      <circle cx="15" cy="15" r="5" fill={p2pNodes.NodeC ? '#22C55E' : '#EF4444'} />
-                    </g>
-
-                    {/* Node D */}
-                    <g transform="translate(390, 230)">
-                      <rect width="120" height="80" rx="16" fill="#1E293B" stroke={p2pNodes.NodeD ? '#10B981' : '#EF4444'} strokeWidth="2" />
-                      <text x="60" y="38" textAnchor="middle" fill="#E2E8F0" fontSize="12" fontWeight="bold" fontFamily="sans-serif">NODE D</text>
-                      <text x="60" y="58" textAnchor="middle" fill={p2pNodes.NodeD ? '#10B981' : '#EF4444'} fontSize="11" fontWeight="bold" fontFamily="sans-serif">
-                        {p2pNodes.NodeD ? 'ONLINE' : 'CRASHED'}
-                      </text>
-                      <circle cx="15" cy="15" r="5" fill={p2pNodes.NodeD ? '#22C55E' : '#EF4444'} />
-                    </g>
-                  </svg>
-                )}
-
-                {simMode === 'perimeter' && (
-                  <svg width="600" height="340" viewBox="0 0 600 340" className="w-full max-w-[480px]">
-                    <defs>
-                      <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#4F46E5" stopOpacity="0.8" />
-                        <stop offset="100%" stopColor="#06B6D4" stopOpacity="0.8" />
-                      </linearGradient>
-                    </defs>
-
-                    {/* concentric Venn boundaries representing Intranet, Extranet, Internet */}
-                    {/* Zone 1: Intranet (Left Circle) */}
-                    <circle cx="180" cy="170" r="120" fill="none" stroke="rgba(79, 70, 229, 0.2)" strokeWidth="4" />
-                    <text x="100" y="80" fill="rgba(79, 70, 229, 0.6)" fontSize="13" fontWeight="bold" fontFamily="sans-serif">INTRANET ZONE</text>
-                    
-                    {/* Zone 2: Extranet (Middle Loop) */}
-                    <rect x="230" y="60" width="140" height="220" rx="30" fill="none" stroke="rgba(6, 182, 212, 0.2)" strokeWidth="4" />
-                    <text x="300" y="85" textAnchor="middle" fill="rgba(6, 182, 212, 0.6)" fontSize="13" fontWeight="bold" fontFamily="sans-serif">EXTRANET</text>
-
-                    {/* Zone 3: Internet (Right Loop) */}
-                    <circle cx="420" cy="170" r="120" fill="none" stroke="rgba(244, 63, 94, 0.15)" strokeWidth="4" />
-                    <text x="490" y="80" textAnchor="end" fill="rgba(244, 63, 94, 0.5)" fontSize="13" fontWeight="bold" fontFamily="sans-serif">INTERNET ZONE</text>
-
-                    {/* Center Gateway / Firewall (Symmetrical x = 300) */}
-                    <g transform="translate(275, 120)">
-                      <rect width="50" height="100" rx="12" fill="url(#shieldGrad)" stroke="#FFFFFF" strokeWidth="2" className="animate-pulse" />
-                      <Shield className="w-6 h-6 text-white mx-auto mt-6 animate-pulse" />
-                      <text x="25" y="85" textAnchor="middle" fill="#FFFFFF" fontSize="10" fontWeight="bold" fontFamily="sans-serif">GATEWAY</text>
-                    </g>
-
-                    {/* Dynamic Packet Path Animation */}
-                    {activeTransfer && packetFlowStep === 1 && (
-                      <circle cx="160" cy="170" r="8" fill="#F59E0B" className="animate-ping" />
-                    )}
-
-                    {/* Final state */}
-                    {packetFlowStep === 2 && selectedPacketType === 'internal' && (
-                      <>
-                        <path d="M 160,170 H 265" fill="none" stroke="#EF4444" strokeWidth="3" strokeDasharray="5 5" />
-                        <circle cx="265" cy="170" r="8" fill="#EF4444" />
-                        <XCircle className="w-5 h-5 text-rose-500" x="255" y="125" />
-                      </>
-                    )}
-
-                    {packetFlowStep === 2 && selectedPacketType === 'partner' && (
-                      <>
-                        <path d="M 160,170 H 300 H 350" fill="none" stroke="#22C55E" strokeWidth="3" />
-                        <circle cx="350" cy="170" r="8" fill="#22C55E" />
-                        <Check className="w-5 h-5 text-emerald-500" x="340" y="125" />
-                      </>
-                    )}
-
-                    {packetFlowStep === 2 && selectedPacketType === 'public' && (
-                      <>
-                        <path d="M 160,170 H 450" fill="none" stroke="#38BDF8" strokeWidth="3" />
-                        <circle cx="450" cy="170" r="8" fill="#38BDF8" />
-                        <Check className="w-5 h-5 text-sky-500" x="440" y="125" />
-                      </>
-                    )}
-                  </svg>
-                )}
-
-              </div>
-
-              {/* Console Logs Panel (Col 5) */}
-              <div className="lg:col-span-5 border-t lg:border-t-0 lg:border-l border-slate-800/80">
-                <ConsoleScreen
-                  title="ระบบตรวจสอบทราฟฟิกแพ็กเก็ตเครือข่าย"
-                  output={transferLog.join('\n')}
-                  height="h-[380px]"
-                />
-              </div>
-
-            </div>
-
-            {/* Bottom Progress Bar Panel */}
-            <div className="p-4 bg-slate-950/60 flex items-center justify-between gap-4">
-              <span className="text-xs font-bold text-slate-400">สถานะแบนด์วิดท์สายส่ง (Carrier Progress):</span>
-              <div className="flex-1 bg-slate-800 rounded-full h-2.5 overflow-hidden">
-                <div
-                  className="bg-indigo-500 h-2.5 rounded-full transition-all duration-300"
-                  style={{ width: `${transferProgress}%` }}
-                />
-              </div>
-              <span className="text-xs font-mono font-bold text-indigo-400">{transferProgress}%</span>
-            </div>
-
-          </div>
-
-          {/* Academic Table Comparison Matrix */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <h3 className="text-xl font-bold text-slate-800">
-                ตารางวิเคราะห์เปรียบเทียบสถาปัตยกรรมเครือข่ายเชิงปฏิบัติการ
-              </h3>
-            </div>
-            
-            <div className="overflow-x-auto rounded-2xl border border-slate-200 shadow-sm bg-white/60 backdrop-blur-xl">
-              <table className="min-w-full divide-y divide-slate-200">
-                <thead className="bg-slate-50">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">หัวข้อการเปรียบเทียบ</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-indigo-600 uppercase tracking-wider">Client-Server Architecture</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-emerald-600 uppercase tracking-wider">Peer-to-Peer Architecture</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-slate-100 font-sans text-sm text-slate-700">
-                  <tr>
-                    <td className="px-6 py-4 font-bold text-slate-800">ศูนย์กลางการควบคุม</td>
-                    <td className="px-6 py-4">รวมศูนย์กลาง (Centralized) ควบคุมสิทธิ์ทั้งหมดผ่านทางเครื่องแม่ข่าย</td>
-                    <td className="px-6 py-4">กระจายศูนย์กลาง (Decentralized) แต่ละเครื่องมีฐานะเท่าเทียมกันเป็นทั้งลูกข่ายและแม่ข่าย</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 font-bold text-slate-800">การติดตั้งและดูแลระบบ</td>
-                    <td className="px-6 py-4">ซับซ้อนสูง ต้องพึ่งพาผู้ดูแลระบบเฉพาะทาง (Network Administrator)</td>
-                    <td className="px-6 py-4">ง่ายมาก ผู้ใช้ทั่วไปสามารถจัดสายแลนต่อกันเองได้ทันที</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 font-bold text-slate-800">จุดล้มเหลวเดี่ยว (SPOF)</td>
-                    <td className="px-6 py-4 text-rose-600 font-semibold">มี (เซิร์ฟเวอร์ล่ม บริการทั้งหมดจะหยุดชะงัก)</td>
-                    <td className="px-6 py-4 text-emerald-600 font-semibold">ไม่มี (โหนดหนึ่งล่ม โหนดที่เหลือยังสื่อสารแลกเปลี่ยนกันได้ปกติ)</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 font-bold text-slate-800">ประสิทธิภาพเมื่อเครื่องลูกเพิ่มขึ้น</td>
-                    <td className="px-6 py-4">อาจติดขัด (Bottleneck) หากมีโหนดเข้ามาดึงไฟล์พร้อมๆ กันจำนวนมหาศาล</td>
-                    <td className="px-6 py-4">เสถียรยิ่งขึ้น ยิ่งมีคนช่วยปล่อยไฟล์มาก สปีดการแชร์จะยิ่งทวีความเร็ว</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 font-bold text-slate-800">ความมั่นคงปลอดภัยขั้นสูง</td>
-                    <td className="px-6 py-4 text-emerald-600 font-semibold">ดีเยี่ยม ป้องกันข้อมูลด้วยนโยบาย Domain, Firewall, Active Directory</td>
-                    <td className="px-6 py-4 text-rose-600 font-semibold">ต่ำ ควบคุมความปลอดภัยของสิทธิ์ข้ามเครื่องได้ยาก เสี่ยงไวรัสข้ามวง</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 font-bold text-slate-800">ต้นทุนการติดตั้งแรกเริ่ม</td>
-                    <td className="px-6 py-4">สูงมาก (ค่าใบอนุญาต OS Server, ฮาร์ดแวร์แม่ข่ายเฉพาะชิ้น)</td>
-                    <td className="px-6 py-4">ต่ำ (พึ่งพาเฉพาะสายแลนและเครื่องพีซีส่วนตัวปกติที่ใช้งานอยู่เดิม)</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-        </section>
-
-        {/* ====================================================================
-            NEW SECTION A: Network Latency Heatmap Ping Simulator
-            ==================================================================== */}
-        <section id="section-latency-heatmap" className="space-y-10">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-7 bg-rose-600 rounded-full" />
-              <h2 className="text-[26px] font-bold text-zinc-900 font-sans tracking-tight">
-                เครื่องวัดความหน่วงเร็วเครือข่าย: Network Latency Ping Simulator
-              </h2>
-            </div>
-            <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed max-w-4xl">
-              จำลองการทดสอบความหน่วง (Latency/Ping) ของเครือข่ายแต่ละประเภท พร้อมวิเคราะห์สถิติแบบเรียลไทม์
-            </p>
-          </div>
-
-          <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-2xl p-6 md:p-8 shadow-md">
-            {/* Target selector */}
-            <div className="flex flex-wrap gap-3 mb-6">
-              {[
-                { id: 'pan', label: 'PAN (Bluetooth)', baseMs: 3, jitter: 2, lossRate: 5, color: 'emerald' },
-                { id: 'lan', label: 'LAN (สายแลน)', baseMs: 0.5, jitter: 0.3, lossRate: 0, color: 'indigo' },
-                { id: 'wifi', label: 'Wi-Fi LAN', baseMs: 5, jitter: 8, lossRate: 2, color: 'sky' },
-                { id: 'man', label: 'MAN (Fiber)', baseMs: 20, jitter: 5, lossRate: 0, color: 'amber' },
-                { id: 'wan', label: 'WAN (Internet)', baseMs: 120, jitter: 40, lossRate: 3, color: 'rose' },
-                { id: 'satellite', label: 'Satellite LEO', baseMs: 35, jitter: 15, lossRate: 1, color: 'purple' }
-              ].map(t => (
-                <button
-                  key={t.id}
-                  onClick={() => { setPingTarget(t.id); setPingHistory([]); setPingStats({ min: null, max: null, avg: null, loss: 0 }); }}
-                  className={`px-4 py-2 rounded-xl border-2 text-[13px] font-semibold transition-all duration-200 active:scale-[0.97] ${
-                    pingTarget === t.id
-                      ? `border-${t.color}-500 bg-${t.color}-50 text-${t.color}-700`
-                      : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
-                  }`}
-                >
-                  {t.label}
                 </button>
               ))}
             </div>
 
-            {/* Ping Buttons */}
-            <div className="flex gap-3 mb-6">
-              <button
-                onClick={() => {
-                  if (pinging) return;
-                  const targets = {
-                    pan: { baseMs: 3, jitter: 2, lossRate: 5 },
-                    lan: { baseMs: 0.5, jitter: 0.3, lossRate: 0 },
-                    wifi: { baseMs: 5, jitter: 8, lossRate: 2 },
-                    man: { baseMs: 20, jitter: 5, lossRate: 0 },
-                    wan: { baseMs: 120, jitter: 40, lossRate: 3 },
-                    satellite: { baseMs: 35, jitter: 15, lossRate: 1 }
-                  };
-                  const cfg = targets[pingTarget];
-                  setPinging(true);
-                  const results = [];
-                  let lossCount = 0;
-                  let i = 0;
-                  const interval = setInterval(() => {
-                    const isLost = Math.random() * 100 < cfg.lossRate;
-                    const ms = isLost ? null : Math.max(0.1, cfg.baseMs + (Math.random() - 0.5) * cfg.jitter * 2);
-                    if (isLost) lossCount++;
-                    results.push({ id: i + 1, ms, lost: isLost });
-                    setPingHistory([...results]);
-                    i++;
-                    if (i >= 10) {
-                      clearInterval(interval);
-                      setPinging(false);
-                      const validMs = results.filter(r => !r.lost).map(r => r.ms);
-                      if (validMs.length > 0) {
-                        setPingStats({
-                          min: Math.min(...validMs).toFixed(2),
-                          max: Math.max(...validMs).toFixed(2),
-                          avg: (validMs.reduce((a, b) => a + b, 0) / validMs.length).toFixed(2),
-                          loss: ((lossCount / 10) * 100).toFixed(0)
-                        });
-                      }
-                    }
-                  }, 300);
-                }}
-                disabled={pinging}
-                className="px-5 py-2.5 rounded-xl bg-rose-600 text-white text-[13px] font-bold hover:bg-rose-700 disabled:opacity-50 transition-all active:scale-[0.97]"
-              >
-                {pinging ? '⏳ Pinging...' : '📶 Ping 10 ครั้ง'}
-              </button>
-              <button
-                onClick={() => { setPingHistory([]); setPingStats({ min: null, max: null, avg: null, loss: 0 }); }}
-                className="px-5 py-2.5 rounded-xl bg-slate-200 text-slate-700 text-[13px] font-bold hover:bg-slate-300 transition-all active:scale-[0.97]"
-              >
-                ↺ ล้างผล
-              </button>
-            </div>
-
-            {/* Ping Result Bars */}
-            {pingHistory.length > 0 && (
-              <div className="space-y-3">
-                <p className="text-[13px] font-bold text-slate-500 uppercase tracking-wider">ผลการวัด Ping</p>
-                <div className="space-y-1.5">
-                  {pingHistory.map(r => {
-                    const maxMs = { pan: 10, lan: 2, wifi: 30, man: 60, wan: 300, satellite: 100 }[pingTarget] || 200;
-                    const pct = r.lost ? 0 : Math.min(100, (r.ms / maxMs) * 100);
-                    const colorClass = r.lost ? 'bg-red-500' :
-                      r.ms < 5 ? 'bg-emerald-500' :
-                      r.ms < 30 ? 'bg-indigo-500' :
-                      r.ms < 100 ? 'bg-amber-500' : 'bg-rose-500';
-                    return (
-                      <div key={r.id} className="flex items-center gap-3">
-                        <span className="text-[11px] font-mono text-slate-400 w-12 shrink-0">Seq {r.id}</span>
-                        <div className="flex-1 h-6 bg-slate-100 rounded-lg overflow-hidden">
-                          <div
-                            className={`h-full rounded-lg transition-all duration-300 ${colorClass}`}
-                            style={{ width: r.lost ? '100%' : `${pct}%`, opacity: r.lost ? 0.3 : 1 }}
-                          />
-                        </div>
-                        <span className={`text-[12px] font-mono font-bold w-20 shrink-0 text-right ${
-                          r.lost ? 'text-red-600' :
-                          r.ms < 5 ? 'text-emerald-600' :
-                          r.ms < 30 ? 'text-indigo-600' :
-                          r.ms < 100 ? 'text-amber-600' : 'text-rose-600'
-                        }`}>
-                          {r.lost ? 'Request Timeout' : `${r.ms.toFixed(2)} ms`}
-                        </span>
+            {/* Right: Dynamic Display Panel with Simulator */}
+            <div className="lg:w-2/3">
+              <div className={`glass-panel rounded-3xl p-6 sm:p-8 h-full flex flex-col relative overflow-hidden shadow-lg border-l-[6px] transition-all duration-350 ${networkScales[activeScale].borderActive}`}>
+                
+                <div className={`relative z-10 flex flex-col h-full transition-all duration-300 transform ${isAnimatingScale ? 'opacity-0 translate-x-4' : 'opacity-100 translate-x-0'}`}>
+                  
+                  {/* Information Header */}
+                  <div className="mb-6 flex items-start justify-between">
+                    <div>
+                      <h3 className={`text-2xl sm:text-3xl font-extrabold mb-2 ${networkScales[activeScale].textColorClass}`}>
+                        {networkScales[activeScale].name}
+                      </h3>
+                      <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full font-bold text-xs ${networkScales[activeScale].badgeClass} border border-white/20 shadow-sm`}>
+                        <Zap className="w-3.5 h-3.5" /> 
+                        <span>ระยะ: {networkScales[activeScale].distance}</span>
                       </div>
-                    );
-                  })}
-                </div>
-
-                {/* Stats Summary */}
-                {pingStats.min !== null && (
-                  <div className="grid grid-cols-4 gap-3 mt-4">
-                    {[
-                      { label: 'Min', value: `${pingStats.min} ms`, color: 'emerald' },
-                      { label: 'Max', value: `${pingStats.max} ms`, color: 'rose' },
-                      { label: 'Avg', value: `${pingStats.avg} ms`, color: 'indigo' },
-                      { label: 'Packet Loss', value: `${pingStats.loss}%`, color: pingStats.loss > 0 ? 'red' : 'green' }
-                    ].map(s => (
-                      <div key={s.label} className={`p-3 rounded-xl bg-${s.color}-50 border border-${s.color}-100 text-center`}>
-                        <p className={`text-[18px] font-black text-${s.color}-700`}>{s.value}</p>
-                        <p className={`text-[11px] font-bold text-${s.color}-500 uppercase`}>{s.label}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Latency Quality Legend */}
-                <div className="flex flex-wrap gap-3 mt-2">
-                  {[
-                    { color: 'bg-emerald-500', label: '< 5 ms — เยี่ยม (Gaming/Real-time)' },
-                    { color: 'bg-indigo-500', label: '5–30 ms — ดีมาก (Video Call)' },
-                    { color: 'bg-amber-500', label: '30–100 ms — พอใช้ (Web browsing)' },
-                    { color: 'bg-rose-500', label: '> 100 ms — สูงมาก (มีปัญหา)' }
-                  ].map(l => (
-                    <div key={l.label} className="flex items-center gap-1.5">
-                      <div className={`w-3 h-3 rounded-full ${l.color}`} />
-                      <span className="text-[12px] text-slate-600">{l.label}</span>
                     </div>
-                  ))}
+                  </div>
+                  
+                  {/* Visual Simulator Area */}
+                  <div className="mb-6">
+                     <NetworkSimulator scale={activeScale} />
+                  </div>
+                  
+                  {/* Details Footer */}
+                  <div className="mt-auto grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <h4 className="text-[13px] font-bold text-slate-400 uppercase tracking-wider mb-2">คำอธิบาย</h4>
+                      <p className="text-slate-600 text-sm leading-relaxed">
+                        {networkScales[activeScale].desc}
+                      </p>
+                    </div>
+                    <div className="bg-white/60 rounded-xl p-4 border border-white/80 shadow-sm">
+                      <h4 className="text-[13px] font-bold text-slate-400 uppercase tracking-wider mb-2">ตัวอย่างการใช้งาน</h4>
+                      <p className="text-slate-800 font-semibold text-sm leading-relaxed">{networkScales[activeScale].examples}</p>
+                    </div>
+                  </div>
+
                 </div>
+
               </div>
-            )}
+            </div>
+
           </div>
         </section>
 
-        {/* ====================================================================
-            NEW SECTION B: Cyber Attack & Defense Simulator
-            ==================================================================== */}
-        <section id="section-security-attack" className="space-y-10">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-7 bg-red-600 rounded-full animate-pulse" />
-              <h2 className="text-[26px] font-bold text-zinc-900 font-sans tracking-tight">
-                เครื่องจำลองการโจมตีและป้องกันระบบ: Cyber Attack & Defense Simulator
-              </h2>
-            </div>
-            <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed max-w-4xl">
-              ทดสอบสถานการณ์การโจมตีเครือข่ายรูปแบบต่างๆ และเปรียบเทียบผลลัพธ์ระหว่าง การเปิด/ปิดระบบป้องกัน (Firewall/IDS)
-            </p>
+        {/* Section 2: Network Architecture */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-emerald-600 tracking-wider uppercase">
+              สถาปัตยกรรมระบบเครือข่าย
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              สถาปัตยกรรมเครือข่าย (Network Architecture)
+            </h3>
           </div>
 
-          <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-2xl p-6 md:p-8 shadow-md space-y-6">
-            {/* System Health Bar */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-[13px] font-bold text-slate-600">🖥️ สุขภาพระบบ (System Health)</span>
-                <span className={`text-[20px] font-black ${
-                  systemHealth > 70 ? 'text-emerald-600' :
-                  systemHealth > 40 ? 'text-amber-600' : 'text-red-600'
-                }`}>{systemHealth}%</span>
-              </div>
-              <div className="h-5 bg-slate-100 rounded-full overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all duration-500 ${
-                    systemHealth > 70 ? 'bg-gradient-to-r from-emerald-400 to-green-500' :
-                    systemHealth > 40 ? 'bg-gradient-to-r from-amber-400 to-yellow-500' :
-                    'bg-gradient-to-r from-red-500 to-rose-600 animate-pulse'
-                  }`}
-                  style={{ width: `${systemHealth}%` }}
-                />
-              </div>
-            </div>
+          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+            รูปแบบการจัดระเบียบและกำหนดบทบาทหน้าที่ของคอมพิวเตอร์แต่ละเครื่องในระบบโครงข่ายในการแลกเปลี่ยนข้อมูล
+          </p>
 
-            {/* Controls Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Attack Type */}
-              <div className="space-y-3">
-                <p className="text-[13px] font-bold text-slate-500 uppercase tracking-wider">ประเภทการโจมตี</p>
-                <div className="grid grid-cols-1 gap-2">
-                  {[
-                    { id: 'ddos', label: '🟥 DDoS Attack', desc: 'ส่งทราฟฟิกปริมาณมหาศาลเพื่อทำให้เซิร์ฟเวอร์ล้มเหลว (Bandwidth Exhaustion)' },
-                    { id: 'mitm', label: '👁️ MITM Attack', desc: 'ดักฟังการสื่อสารกลางทาง (Man-in-the-Middle Eavesdropping)' },
-                    { id: 'phishing', label: '🎣 Phishing', desc: 'หลอลวงเพื่อให้ผู้ใช้กรอกข้อมูลเข้าสู่เว็บปลอมแปลง' },
-                    { id: 'ransomware', label: '🔒 Ransomware', desc: 'เข้าเชื่อมต่อและเข้ารหัสไฟล์ในระบบ LAN เพื่อเรียกค่าไถ่ถอน' }
-                  ].map(a => (
-                    <button
-                      key={a.id}
-                      onClick={() => setAttackType(a.id)}
-                      disabled={attackRunning}
-                      className={`px-4 py-3 rounded-xl border-2 text-left transition-all duration-200 active:scale-[0.98] disabled:opacity-60 ${
-                        attackType === a.id
-                          ? 'border-red-400 bg-red-50'
-                          : 'border-slate-200 bg-white/50 hover:border-slate-300'
-                      }`}
-                    >
-                      <p className="text-[13px] font-bold text-slate-800">{a.label}</p>
-                      <p className="text-[11px] text-slate-500">{a.desc}</p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Defense Toggle + Console */}
-              <div className="space-y-3">
-                <p className="text-[13px] font-bold text-slate-500 uppercase tracking-wider">การป้องกันระบบ</p>
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200">
-                  <button
-                    onClick={() => setDefenseEnabled(d => !d)}
-                    disabled={attackRunning}
-                    className={`relative w-14 h-7 rounded-full transition-all duration-300 ${
-                      defenseEnabled ? 'bg-emerald-500' : 'bg-slate-300'
-                    }`}
-                  >
-                    <span className={`absolute top-0.5 w-6 h-6 rounded-full bg-white shadow transition-all duration-300 ${
-                      defenseEnabled ? 'left-7' : 'left-0.5'
-                    }`} />
-                  </button>
-                  <div>
-                    <p className="text-[13px] font-bold text-slate-800">
-                      {defenseEnabled ? '✅ Firewall + IDS/IPS เปิดใช้งาน' : '❌ ระบบป้องกันถูกปิดใช้งาน'}
-                    </p>
-                    <p className="text-[11px] text-slate-500">
-                      {defenseEnabled ? 'ระบบจะตรวจจับการโจมตีและป้องกันความเสียหาย' : 'เสี่ยง! ระบบไม่มีการป้องกันใดๆ'}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Attack progress */}
-                <div className="space-y-2">
-                  <p className="text-[12px] font-bold text-slate-500">ความคืบหน้าการโจมตี</p>
-                  <div className="h-4 bg-slate-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-red-500 to-rose-600 rounded-full transition-all duration-200"
-                      style={{ width: `${attackProgress}%` }}
-                    />
-                  </div>
-                  <p className="text-[11px] text-right font-mono text-slate-400">{attackProgress.toFixed(0)}%</p>
-                </div>
-
-                {/* Console Log */}
-                <div className="h-40 bg-zinc-900 rounded-xl p-3 overflow-y-auto font-mono text-[11px] leading-relaxed">
-                  {attackLog.map((line, i) => (
-                    <p key={i} className={`${
-                      line.includes('[BLOCKED]') || line.includes('ป้องกัน') ? 'text-emerald-400' :
-                      line.includes('[ATTACK]') || line.includes('โจมตี') ? 'text-red-400' :
-                      line.includes('[ALERT]') ? 'text-yellow-400' :
-                      'text-zinc-400'
-                    }`}>{line}</p>
-                  ))}
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => {
-                      if (attackRunning) return;
-                      setAttackRunning(true);
-                      setAttackProgress(0);
-                      setSystemHealth(100);
-                      const attackNames = { ddos: 'DDoS', mitm: 'MITM', phishing: 'Phishing', ransomware: 'Ransomware' };
-                      const name = attackNames[attackType];
-                      const logs = [
-                        `[⏱] การโจมตี ${name} เริ่มต้น... จำเป้าหมายเซิร์ฟเวอร์สุขภาพ`,
-                        `[ATTACK] ${name === 'DDoS' ? 'ส่งอานวิธี HTTP Flood 50,000 req/s เข้า IP เป้าหมาย...' : name === 'MITM' ? 'ดักฟังการเชื่อมต่อ ARP Spoofing บน LAN...' : name === 'Phishing' ? 'ส่ง Email แอบอ้างสิทธิ์รับประกาศการ (Spear Phishing)...' : 'แอบเข้าระบบผ่านช่องโหว่ประตูพอร์ต 445 (SMB)...'}`,
-                        defenseEnabled
-                          ? `[ALERT] IDS ตรวจพบรูปแบบการโจมตี! กำลังปี้กัน IP แหล่งที่มา...`
-                          : `[ALERT] ไม่พบระบบป้องกัน! การโจมตีกำลังต่อเนื่องโดยไม่มีอุปสรรค...`
-                      ];
-                      setAttackLog(logs);
-
-                      let progress = 0;
-                      let health = 100;
-                      const interval = setInterval(() => {
-                        progress = Math.min(100, progress + (defenseEnabled ? 1.2 : 3.5));
-                        if (!defenseEnabled) health = Math.max(0, health - 2.5);
-                        setAttackProgress(progress);
-                        setSystemHealth(Math.round(health));
-
-                        if (progress >= 100) {
-                          clearInterval(interval);
-                          setAttackRunning(false);
-                          if (defenseEnabled) {
-                            setAttackLog(prev => [...prev,
-                              `[BLOCKED] 🛡️ Firewall บล็อกการโจมตีสำเร็จ! ระบบยังทำงานปกติสุข Health: ${Math.round(health)}%`,
-                              `[สรุป] ระบบความปลอดภัยทำงานได้อย่างมีประสิทธิภาพ - นี่คือความสำคัญของ Firewall + IDS ในเครือข่ายองค์กร`
-                            ]);
-                          } else {
-                            setAttackLog(prev => [...prev,
-                              `[CRITICAL] ⚠️ ระบบถูกเจาะเข้าสำเร็จ! สุขภาพระบบเหลือ ${Math.round(health)}%`,
-                              `[บทเรียน] ฟาร์วอลและ IDS คือระบบนิรภัยที่ขาดไม่ได้ เปิดการป้องกันเพื่อป้องกันการสูญเสียข้อมูล!`
-                            ]);
-                          }
-                        }
-                      }, 80);
-                    }}
-                    disabled={attackRunning}
-                    className="flex-1 py-2.5 rounded-xl bg-red-600 text-white text-[13px] font-bold hover:bg-red-700 disabled:opacity-50 transition-all active:scale-[0.97]"
-                  >
-                    {attackRunning ? '⏳ กำลังโจมตี...' : '▶ เริ่มจำลองการโจมตี'}
-                  </button>
-                  <button
-                    onClick={() => { setAttackProgress(0); setSystemHealth(100); setAttackLog(['ระบบรีเซ็ตแล้ว พร้อมสำหรับการทดสอบใหม่']); setAttackRunning(false); }}
-                    className="px-4 py-2.5 rounded-xl bg-slate-200 text-slate-700 text-[13px] font-bold hover:bg-slate-300 transition-all active:scale-[0.97]"
-                  >
-                    ↺ Reset
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Attack Summary Table */}
-            <div className="border-t border-slate-100 pt-6 overflow-x-auto">
-              <p className="text-[13px] font-bold text-slate-500 uppercase tracking-wider mb-3">สรุปประเภทการโจมตีและวิธีป้องกัน</p>
-              <table className="w-full text-[13px] text-left">
-                <thead>
-                  <tr className="bg-slate-800 text-white">
-                    <th className="px-4 py-3 font-bold">ประเภทการโจมตี</th>
-                    <th className="px-4 py-3 font-bold">เป้าหมาย</th>
-                    <th className="px-4 py-3 font-bold">ช่องโหว่</th>
-                    <th className="px-4 py-3 font-bold">วิธีป้องกันหลัก</th>
-                    <th className="px-4 py-3 font-bold">ระดับอันตราย</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {[
-                    { name: 'DDoS', target: 'Bandwidth/Server', vuln: 'Open Port, No Rate Limit', defense: 'CDN, Rate Limiting, DDoS Scrubbing', level: '🟥 สูงมาก' },
-                    { name: 'MITM', target: 'Data in Transit', vuln: 'Unencrypted HTTP, ARP Cache', defense: 'HTTPS/TLS, VPN, HSTS', level: '🟠 สูง' },
-                    { name: 'Phishing', target: 'ผู้ใช้งาน (Human Layer)', vuln: 'User Awareness ต่ำ', defense: 'Email Filter, 2FA, Training', level: '🟡 กลาง' },
-                    { name: 'Ransomware', target: 'File System, Network Share', vuln: 'SMB Vulnerability, No Backup', defense: 'Antivirus, Network Segmentation, Backup', level: '🟥 สูงมาก' }
-                  ].map((row, i) => (
-                    <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50/60'}>
-                      <td className="px-4 py-3 font-bold text-slate-800">{row.name}</td>
-                      <td className="px-4 py-3 text-slate-600">{row.target}</td>
-                      <td className="px-4 py-3 text-rose-600 text-[12px]">{row.vuln}</td>
-                      <td className="px-4 py-3 text-emerald-700 text-[12px]">{row.defense}</td>
-                      <td className="px-4 py-3">{row.level}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        {/* ====================================================================
-            GAMIFICATION ZONE & ASSESSMENT (Consolidated MCQ)
-            ==================================================================== */}
-        <section id="section-gamification-mcq" className="space-y-8">
-          
-          <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-7 bg-indigo-600 rounded-full animate-pulse" />
-              <h2 className="text-[26px] font-bold text-zinc-900 tracking-tight">
-                ด่านทดสอบความรู้และใบงานปลายทาง (Assessments)
-              </h2>
-            </div>
+          <div className="grid md:grid-cols-2 gap-8">
             
-            <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed max-w-4xl">
-              ทบทวนขีดความสามารถการจำแนกขนาดและสถาปัตยกรรมความมั่นคงปลอดภัยของเครือข่ายคอมพิวเตอร์ 
-              ตอบคำถามระดับวิชาชีพ 5 ข้อด้านล่างเพื่อประเมินความพร้อมสู่การทำงานจริงในสนามอุตสาหกรรมอัจฉริยะ:
-            </p>
+            {/* Client-Server Architecture */}
+            <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-[2.5rem] p-8 flex flex-col relative group border-l-[6px] border-l-blue-500 hover:shadow-2xl transition-all duration-300">
+              <div className="absolute inset-0 bg-gradient-to-b from-blue-50/10 to-transparent rounded-[2.5rem] pointer-events-none"></div>
+              
+              <div className="relative z-10 mb-8">
+                <h3 className="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-3">
+                  <Server className="text-blue-600 w-7 h-7" />
+                  แบบพึ่งพาเครื่องแม่ข่าย <span className="text-lg font-normal text-slate-500">(Client-Server)</span>
+                </h3>
+                <p className="text-slate-500 text-[14.5px] leading-relaxed">
+                  มีเครื่องคอมพิวเตอร์แม่ข่าย (Server) ทำหน้าที่ประมวลผล จัดเก็บข้อมูล และให้บริการทรัพยากรส่วนกลางแก่เครื่องลูกข่าย (Clients)
+                </p>
+              </div>
+
+              {/* Animation Box */}
+              <div className="bg-slate-50/80 rounded-3xl h-64 border border-slate-100 shadow-inner relative flex justify-center items-center overflow-hidden mb-8">
+                
+                {/* Lines */}
+                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                  <line x1="50" y1="30" x2="50" y2="80" stroke="#cbd5e1" strokeWidth="0.8" strokeDasharray="2 2" />
+                  <line x1="50" y1="30" x2="20" y2="80" stroke="#cbd5e1" strokeWidth="0.8" strokeDasharray="2 2" />
+                  <line x1="50" y1="30" x2="80" y2="80" stroke="#cbd5e1" strokeWidth="0.8" strokeDasharray="2 2" />
+                </svg>
+
+                {/* Server (Top Center) */}
+                <div className="absolute top-[15%] w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 z-20 group-hover:animate-float">
+                  <Database className="w-8 h-8" />
+                </div>
+
+                {/* Data Packets (Animated) */}
+                <div className="absolute top-[30%] w-3 h-3 bg-blue-400 rounded-full shadow-[0_0_10px_rgba(96,165,250,0.8)] z-10 animate-cs-center"></div>
+                <div className="absolute top-[30%] w-3 h-3 bg-cyan-400 rounded-full shadow-[0_0_10px_rgba(34,211,238,0.8)] z-10 animate-cs-left"></div>
+                <div className="absolute top-[30%] w-3 h-3 bg-indigo-400 rounded-full shadow-[0_0_10px_rgba(129,140,248,0.8)] z-10 animate-cs-right"></div>
+
+                {/* Clients (Bottom) */}
+                <div className="absolute bottom-[10%] left-[20%] -translate-x-1/2 w-12 h-12 bg-white border border-slate-200 text-slate-500 rounded-xl flex items-center justify-center z-20 shadow-sm">
+                  <Laptop className="w-6 h-6" />
+                </div>
+                <div className="absolute bottom-[10%] left-[50%] -translate-x-1/2 w-12 h-12 bg-white border border-slate-200 text-slate-500 rounded-xl flex items-center justify-center z-20 shadow-sm">
+                  <Monitor className="w-6 h-6" />
+                </div>
+                <div className="absolute bottom-[10%] left-[80%] -translate-x-1/2 w-12 h-12 bg-white border border-slate-200 text-slate-500 rounded-xl flex items-center justify-center z-20 shadow-sm">
+                  <Smartphone className="w-6 h-6" />
+                </div>
+              </div>
+
+              {/* Pros & Cons as callouts */}
+              <div className="grid grid-cols-2 gap-4 mt-auto">
+                <div className="bg-emerald-50/60 backdrop-blur-md border border-emerald-200/60 rounded-2xl p-4 border-l-[3px] border-l-emerald-500 shadow-sm">
+                  <div className="font-bold text-emerald-700 text-sm mb-2 flex items-center gap-1"><ShieldCheck className="w-4 h-4 text-emerald-600"/> ข้อดี</div>
+                  <ul className="text-xs text-slate-650 space-y-1.5 leading-relaxed font-semibold">
+                    <li>✓ ความปลอดภัยระบบสูง</li>
+                    <li>✓ จัดเก็บและสำรองข้อมูลจากจุดเดียว</li>
+                    <li>✓ รองรับการขยายตัวขนาดใหญ่</li>
+                  </ul>
+                </div>
+                <div className="bg-rose-50/60 backdrop-blur-md border border-rose-200/60 rounded-2xl p-4 border-l-[3px] border-l-rose-500 shadow-sm">
+                  <div className="font-bold text-rose-700 text-sm mb-2 flex items-center gap-1"><AlertTriangle className="w-4 h-4 text-rose-600"/> ข้อจำกัด</div>
+                  <ul className="text-xs text-slate-655 space-y-1.5 leading-relaxed font-semibold">
+                    <li>× ต้นทุนซื้อแม่ข่ายลิขสิทธิ์สูง</li>
+                    <li>× หาก Server ล่มระบบทั้งหมดดับ</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Peer-to-Peer Architecture */}
+            <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-[2.5rem] p-8 flex flex-col relative group border-l-[6px] border-l-orange-500 hover:shadow-2xl transition-all duration-300">
+              <div className="absolute inset-0 bg-gradient-to-b from-orange-50/10 to-transparent rounded-[2.5rem] pointer-events-none"></div>
+              
+              <div className="relative z-10 mb-8">
+                <h3 className="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-3">
+                  <Users className="text-orange-600 w-7 h-7" />
+                  แบบเท่าเทียมกัน <span className="text-lg font-normal text-slate-500">(Peer-to-Peer)</span>
+                </h3>
+                <p className="text-slate-500 text-[14.5px] leading-relaxed">
+                  คอมพิวเตอร์ทุกเครื่องเชื่อมโยงกันตรงแบบเท่าเทียม (Peer) ไม่มีแม่ข่าย ทุกเครื่องเป็นทั้งผู้ให้และผู้รับบริการร่วมกัน
+                </p>
+              </div>
+
+              {/* Animation Box */}
+              <div className="bg-slate-50/80 rounded-3xl h-64 border border-slate-100 shadow-inner relative flex justify-center items-center overflow-hidden mb-8">
+                
+                {/* Lines */}
+                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                  <line x1="20" y1="20" x2="80" y2="20" stroke="#cbd5e1" strokeWidth="0.8" strokeDasharray="2 2" />
+                  <line x1="80" y1="20" x2="50" y2="80" stroke="#cbd5e1" strokeWidth="0.8" strokeDasharray="2 2" />
+                  <line x1="50" y1="80" x2="20" y2="20" stroke="#cbd5e1" strokeWidth="0.8" strokeDasharray="2 2" />
+                </svg>
+
+                {/* Data Packets (Animated along the triangle) */}
+                <div className="absolute w-3 h-3 bg-orange-405 rounded-full shadow-[0_0_10px_rgba(251,146,60,0.8)] z-10 animate-p2p-1"></div>
+                <div className="absolute w-3 h-3 bg-rose-405 rounded-full shadow-[0_0_10px_rgba(244,63,94,0.8)] z-10 animate-p2p-2"></div>
+                <div className="absolute w-3 h-3 bg-yellow-405 rounded-full shadow-[0_0_10px_rgba(250,204,21,0.8)] z-10 animate-p2p-3"></div>
+
+                {/* Peers (Nodes) */}
+                <div className="absolute top-[20%] left-[20%] -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-orange-50 border border-orange-200 text-orange-600 rounded-full flex items-center justify-center z-20 shadow-md group-hover:animate-float">
+                  <Laptop className="w-6 h-6" />
+                </div>
+                <div className="absolute top-[20%] left-[80%] -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-orange-50 border border-orange-200 text-orange-600 rounded-full flex items-center justify-center z-20 shadow-md group-hover:animate-float" style={{animationDelay: '1s'}}>
+                  <Monitor className="w-6 h-6" />
+                </div>
+                <div className="absolute top-[80%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-orange-50 border border-orange-200 text-orange-600 rounded-full flex items-center justify-center z-20 shadow-md group-hover:animate-float" style={{animationDelay: '2s'}}>
+                  <Smartphone className="w-6 h-6" />
+                </div>
+              </div>
+
+              {/* Pros & Cons as callouts */}
+              <div className="grid grid-cols-2 gap-4 mt-auto">
+                <div className="bg-emerald-50/60 backdrop-blur-md border border-emerald-200/60 rounded-2xl p-4 border-l-[3px] border-l-emerald-500 shadow-sm">
+                  <div className="font-bold text-emerald-700 text-sm mb-2 flex items-center gap-1"><ShieldCheck className="w-4 h-4 text-emerald-600"/> ข้อดี</div>
+                  <ul className="text-xs text-slate-650 space-y-1.5 leading-relaxed font-semibold">
+                    <li>✓ ต้นทุนต่ำมาก ไม่ต้องใช้แม่ข่าย</li>
+                    <li>✓ ติดตั้งเริ่มต้นระบบทำได้ง่าย</li>
+                    <li>✓ หากจุดใดเสียระบบไม่ล่มทั้งหมด</li>
+                  </ul>
+                </div>
+                <div className="bg-rose-50/60 backdrop-blur-md border border-rose-200/60 rounded-2xl p-4 border-l-[3px] border-l-rose-500 shadow-sm">
+                  <div className="font-bold text-rose-700 text-sm mb-2 flex items-center gap-1"><AlertTriangle className="w-4 h-4 text-rose-600"/> ข้อจำกัด</div>
+                  <ul className="text-xs text-slate-655 space-y-1.5 leading-relaxed font-semibold">
+                    <li>× ความปลอดภัยของเครือข่ายต่ำ</li>
+                    <li>× ข้อมูลกระจัดกระจายจัดการยาก</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
           </div>
-
-          {/* Gamified Quiz Engine */}
-          <QuizEngine
-            title="เกมทดสอบ: สถาปนิกและผู้คัดกรองสัญญาณเครือข่าย"
-            description="วิเคราะห์สถานการณ์เพื่อเลือกประเภทโครงสร้างและแนวทางความปลอดภัยที่ถูกต้องที่สุด"
-            levels={[
-              {
-                title: 'โจทย์ที่ 1: การจำแนกประเภทตามระยะทาง',
-                desc: 'โรงเรียนต้องการเชื่อมโยงห้องปฏิบัติการคอมพิวเตอร์ 2 ห้องที่อยู่ในตึกเรียนเดียวกัน ระยะทางห่างกันประมาณ 50 เมตร สื่อกลางเป็นสายแลน UTP ถือเป็นเครือข่ายขนาดใด?',
-                options: [
-                  { key: 'A', text: 'PAN (Personal Area Network)', isCorrect: false },
-                  { key: 'B', text: 'LAN (Local Area Network)', isCorrect: true },
-                  { key: 'C', text: 'MAN (Metropolitan Area Network)', isCorrect: false },
-                  { key: 'D', text: 'WAN (Wide Area Network)', isCorrect: false }
-                ],
-                tip: 'เครือข่ายเฉพาะภายในอาคารหรือตึกเดียวกัน ระยะไม่เกิน 1 กิโลเมตร ถือเป็นระดับท้องถิ่น'
-              },
-              {
-                title: 'โจทย์ที่ 2: วิกฤตจุดล้มเหลวเดี่ยว (SPOF)',
-                desc: 'หากบริษัทนำเสนอระบบจัดเก็บคลาวด์แชร์ข้อมูลโดยใช้เครื่องเก็บข้อมูล NAS ตัวหลักเพียงตัวเดียว และระบบขัดข้องล่มลง ส่งผลให้พนักงานทุกคนไม่สามารถทำงานต่อได้ ลักษณะปัญหานี้สอดคล้องกับคุณสมบัติใด?',
-                options: [
-                  { key: 'A', text: 'การชนกันของทราฟฟิกบัส (Bus Collision)', isCorrect: false },
-                  { key: 'B', text: 'ความปลอดภัยระบบไร้สายบกพร่อง (Wireless Defect)', isCorrect: false },
-                  { key: 'C', text: 'จุดล้มเหลวเดี่ยว (Single Point of Failure - SPOF)', isCorrect: true },
-                  { key: 'D', text: 'การกระจายข้อมูลเท่าเทียมกัน (Decentralized Path)', isCorrect: false }
-                ],
-                tip: 'เมื่อการล่มสลายของจุดศูนย์กลางจุดเดียวส่งผลกระทบต่อทั้งระบบ เรียกว่า Single Point of Failure'
-              },
-              {
-                title: 'โจทย์ที่ 3: สถาปัตยกรรมเครือข่ายแบบ Peer-to-Peer',
-                desc: 'ข้อใดคือข้อดีสำคัญของการเลือกใช้ระบบแชร์ไฟล์ P2P (เช่น BitTorrent) เมื่อเทียบกับระบบดาวน์โหลดผ่านเซิร์ฟเวอร์หลักเชิงธุรกิจ?',
-                options: [
-                  { key: 'A', text: 'ผู้ดูแลระบบสามารถควบคุมนโยบายความมั่นคงปลอดภัยแบบรวมศูนย์ได้ดีกว่า', isCorrect: false },
-                  { key: 'B', text: 'ไม่มีความเสี่ยงต่อมัลแวร์แพร่กระจายตัวข้ามเครื่องคอมพิวเตอร์', isCorrect: false },
-                  { key: 'C', text: 'ต้นทุนเริ่มแรกในการซื้อเครื่องแม่ข่ายพรีเมียมราคาแพงสูงขึ้น', isCorrect: false },
-                  { key: 'D', text: 'ไม่มีจุดล้มเหลวเดี่ยว และแบนด์วิดท์ยิ่งดีขึ้นเมื่อจำนวนผู้ปล่อยไฟล์มากขึ้น', isCorrect: true }
-                ],
-                tip: 'ระบบ Peer-to-Peer กระจายภาระงานแชร์ทำให้ระบบทนทานต่อการล่มและดึงความเร็วได้ดีเยี่ยม'
-              },
-              {
-                title: 'โจทย์ที่ 4: ความปลอดภัยระดับขอบเขต (Perimeter Security)',
-                desc: 'บริษัทห้างร้านขนาดใหญ่จำยอมต้องการให้ "คู่ค้าจัดจำหน่ายภายนอก (Vendors)" สามารถเข้าถึงตารางสต็อกสินค้ารายวันได้ แต่ห้ามเข้าถึงข้อมูลการจ่ายภาษีและบัญชีลับส่วนตัวของพนักงาน ควรจัดระเบียบโครงสร้างความปลอดภัยนี้ในขอบเขตใด?',
-                options: [
-                  { key: 'A', text: 'เครือข่ายส่วนตัวภายใน (Intranet Zone)', isCorrect: false },
-                  { key: 'B', text: 'เครือข่ายกึ่งภายนอกสำหรับคู่ค้า (Extranet Zone)', isCorrect: true },
-                  { key: 'C', text: 'เครือข่ายสาธารณะเสรีไร้ขอบเขต (Internet Zone)', isCorrect: false },
-                  { key: 'D', text: 'เครือข่ายเฉพาะบุคคล (PAN Zone)', isCorrect: false }
-                ],
-                tip: 'เครือข่ายกึ่งโปร่งใสที่ยินยอมให้บุคคลภายนอกที่ได้รับอนุมัติเฉพาะชิ้นผ่าน VPN เข้ามา เรียกว่า Extranet'
-              },
-              {
-                title: 'โจทย์ที่ 5: สถาปัตยกรรมการเชื่อมต่อของธนาคารข้ามประเทศ',
-                desc: 'ระบบสัญญารับส่งยอดตู้ ATM ข้ามจังหวัด หรือการทำรายการธุรกรรมตัดบัตรเครดิตระหว่างประเทศไทยกับสหรัฐอเมริกา ต้องประสานการทำรายการผ่านประเภทเครือข่ายขนาดพื้นที่ข้อใด?',
-                options: [
-                  { key: 'A', text: 'PAN (Personal Area Network)', isCorrect: false },
-                  { key: 'B', text: 'LAN (Local Area Network)', isCorrect: false },
-                  { key: 'C', text: 'MAN (Metropolitan Area Network)', isCorrect: false },
-                  { key: 'D', text: 'WAN (Wide Area Network)', isCorrect: true }
-                ],
-                tip: 'โครงข่ายเชื่อมข้อมูลระดับข้ามรัฐ ข้ามประเทศ ข้ามมหาสมุทร ถือเป็นขอบเขตบริเวณกว้าง (Wide)'
-              }
-            ]}
-            accentColor="from-blue-500/20 to-indigo-500/20"
-            icon={<Network className="w-8 h-8 text-indigo-400" />}
-          />
-
-          {/* Consolidated Written Assessment (TeacherTask) */}
-          <TeacherTask
-            title="ภารกิจประจำหน่วย 1.3: ออกแบบสถาปัตยกรรมและระดับสิทธิ์ความมั่นคงปลอดภัยสำหรับระบบไอทีองค์กร"
-            taskText={`วิเคราะห์สถานการณ์เพื่อตอบคำถามลงใบงานให้ครบถ้วนทุกข้อการวิเคราะห์:
-1. ให้เปรียบเทียบระยะทางความกว้างของ PAN, LAN, MAN, WAN และระบุว่าระบบสถิติกดบัตรเข้าคิวโรงพยาบาลควรจัดอยู่ในประเภทใด
-2. อธิบายความหมายและวิกฤตของ Single Point of Failure (SPOF) ที่มักเกิดขึ้นใน Client-Server พร้อมเสนอแนวทางการลดความเสี่ยง 1 แนวทาง
-3. ให้เปรียบเทียบข้อดี-ข้อเสียของสถาปัตยกรรมแบบ Peer-to-Peer เมื่อองค์กรนำมาใช้จัดระเบียบสตรีมไฟล์ขนาดใหญ่ในเครือข่าย
-4. จำแนกขอบเขตระหว่าง Intranet, Extranet, Internet และอธิบายความแตกต่างในการคัดกรองข้อมูลของระบบเกตเวย์ความปลอดภัย`}
-          />
-
         </section>
 
+        {/* ─── Layer 4: Standardized TeacherTask Footer ─── */}
+        <TeacherTask
+          title="ใบงานการเปรียบเทียบสเกลและสถาปัตยกรรมเครือข่าย"
+          taskText={`คำชี้แจง: ให้นักเรียนวิเคราะห์สถานการณ์จำลองต่อไปนี้และเขียนรายงานส่งในระบบ:
+
+1. การออกแบบเครือข่ายสำหรับร้านกาแฟ Co-Working Space:
+   - หากคุณเป็นผู้ควบคุมงานวางระบบเครือข่ายให้กับร้านกาแฟ 3 ชั้นที่มีลูกค้าเข้าใช้งานพร้อมกันเฉลี่ย 150 คน อุปกรณ์บริการจุดใดของร้านที่ควรเชื่อมต่อกันแบบ PAN, LAN และเครือข่ายภายนอกควรส่งสัญญาณผ่าน WAN อย่างไร?
+   - อธิบายเหตุผลที่ระบบจัดการธุรกรรมเงินสด (POS) ของทางร้านควรแยกสิทธิ์ความปลอดภัยออกจากเครือข่ายลูกค้าทั่วไปตามเงื่อนไขทางกายภาพ
+2. การเลือกสถาปัตยกรรมระบบ:
+   - บริษัทเทคโนโลยีแห่งหนึ่งต้องการสร้างแอปพลิเคชันสำหรับส่งไฟล์วิดีโอขนาดใหญ่ (ระดับ 4K) ระหว่างพนักงานภายในตึกสำนักงาน 5 ชั้น จงวิเคราะห์เชิงเปรียบเทียบระหว่างสถาปัตยกรรม Client-Server และ Peer-to-Peer ว่าระบบใดจะช่วยลดแบนด์วิดท์ฝั่งเซิร์ฟเวอร์หลักได้ดีกว่า และระบบใดเหมาะสมในแง่การบริหารความปลอดภัย
+3. สรุปประเภทเครือข่าย: อธิบายข้อจำกัดเชิงเทคนิคในการขยายขนาดเครือข่ายท้องถิ่น (LAN) ไปสู่ระดับเมือง (MAN) ทั้งในแง่ของสื่อสัญญาณที่เลือกใช้และอุปกรณ์โครงข่ายหลัก`}
+        />
       </main>
-    </>
+    </div>
   );
 }

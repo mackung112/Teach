@@ -1,1337 +1,597 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Globe,
-  Server,
-  Layers,
-  Network,
-  Shield,
-  Activity,
-  Cpu,
-  Monitor,
-  Database,
-  User,
-  ArrowRight,
-  Play,
-  RotateCcw,
-  Sliders,
-  CheckCircle,
-  FileText,
-  AlertTriangle,
-  ArrowRightLeft,
-  XCircle,
-  Wifi,
-  Lock,
-  Eye,
-  Settings,
-  HelpCircle,
-  Check,
-  Terminal,
-  Share2,
-  Trash2,
-  GitCommit,
-  Workflow
+import React, { useState } from 'react';
+import { 
+  Network, 
+  Share2, 
+  Circle, 
+  Grid, 
+  GitMerge, 
+  Monitor, 
+  Server, 
+  CheckCircle2, 
+  AlertTriangle, 
+  Zap, 
+  Info 
 } from 'lucide-react';
-import {
-  AmbientBackdrop,
-  OptionSelector,
-  ConsoleScreen,
-  ConceptCard,
-  SectionBlock,
-  QuizEngine
-} from '../shared';
 import TeacherTask from '../../ui/TeacherTask';
 
-export default function IT1_4() {
-  // ────────────────────────────────────────────────────────────────────────
-  // STATE DEFINITIONS
-  // ────────────────────────────────────────────────────────────────────────
-
-  // --- 1.4.1 - 1.4.5: สลับประเภท Topology ในการศึกษาทฤษฎี ---
-  const [selectedTopology, setSelectedTopology] = useState('star');
-
-  // --- 1.4.6: Topology Collision & Fault Simulator State ---
-  const [simMode, setSimMode] = useState('bus'); // bus | star | ring | mesh
-  const [simStep, setSimStep] = useState(0); // 0 = ready, 1 = moving, 2 = result/collision
-  const [isCentralSwitchCrashed, setIsCentralSwitchCrashed] = useState(false);
-  const [meshCables, setMeshCables] = useState({
-    AC: true,
-    AB: true,
-    BC: true,
-    AD: true,
-    BD: true,
-    CD: true
-  });
-  const [tokenPosition, setTokenPosition] = useState(0); // 0, 90, 180, 270 degrees
-  const [tokenCarrier, setTokenCarrier] = useState(null); // node currently holding token
-  const [activeTransfer, setActiveTransfer] = useState(false);
-  const [transferProgress, setTransferProgress] = useState(0);
-  const [transferLog, setTransferLog] = useState([
-    '[ระบบ] แบบจำลองโทโพโลยีพร้อมทำงาน เลือกโหมดด้านบนเพื่อตรวจสอบกลไกการรับส่งข้อมูล'
-  ]);
-  const [simSpeed, setSimSpeed] = useState(1500); // ms
-
-  // --- 1.4.6: เครื่องคำนวณและวิเคราะห์ต้นทุนการติดตั้งเครือข่าย ---
-  const [numNodes, setNumNodes] = useState(6);
-  const [avgDistance, setAvgDistance] = useState(25);
-  const [cableType, setCableType] = useState('utp');
-  const [switchType, setSwitchType] = useState('basic');
-
-  // ────────────────────────────────────────────────────────────────────────
-  // DATA CONFIGURATIONS
-  // ────────────────────────────────────────────────────────────────────────
-
-  const topologiesInfo = {
-    bus: {
-      title: 'การเชื่อมต่อแบบบัส (Bus Topology)',
-      desc: 'ใช้สายเคเบิลแกนหลักร่วมกัน (Single Coaxial Backbone) โหนดทุกเครื่องต่อพ่วงผ่านตัวเชื่อม T-Connector และปิดขอบสายด้วยตัวต้านทาน Terminator ป้องกันสัญญาณสะท้อนกลับ',
-      advantages: 'ใช้สายสัญญาณน้อยมาก ต้นทุนเริ่มแรกต่ำที่สุด ติดตั้งง่าย ไม่ต้องการอุปกรณ์ศูนย์กลางสลับข้อมูลซับซ้อน',
-      disadvantages: 'หากสาย Backbone หลักชำรุดเสียหาย โครงข่ายทั้งหมดจะล่มลงทันที วิเคราะห์หาจุดบกพร่องยาก และเสี่ยงข้อมูลชนกัน (Collision) สูงเมื่อมีทราฟฟิกพร้อมกัน',
-      accent: 'amber',
-      bgGradient: 'from-amber-50 to-white'
-    },
-    star: {
-      title: 'การเชื่อมต่อแบบดาว (Star Topology)',
-      desc: 'รูปแบบที่นิยมใช้มากที่สุดในปัจจุบัน ทุกโหนดเชื่อมโยงโดยตรงเข้าสู่ศูนย์กลางการสื่อสารหลัก (Switch หรือ Hub) ผ่านพอร์ต RJ-45 และสายคู่ตีเกลียวอิสระ',
-      advantages: 'หากสายของโหนดลูกเครื่องใดขาด จะไม่ส่งผลกระทบต่อเครื่องอื่นๆ, ค้นหาจุดเสียหายได้ง่าย, ไม่มีปัญหาสัญญาณชนกันเพราะ Switch ช่วยกระจายพอร์ต',
-      disadvantages: 'มาพร้อมความเสี่ยง จุดล้มเหลวเดี่ยว (Single Point of Failure) หากอุปกรณ์ Switch ศูนย์กลางขัดข้อง โครงข่ายทั้งหมดจะดับสนิท และต้องใช้สายเคเบิลจำนวนมาก',
-      accent: 'indigo',
-      bgGradient: 'from-indigo-50 to-white'
-    },
-    ring: {
-      title: 'การเชื่อมต่อแบบวงแหวน (Ring Topology)',
-      desc: 'ต่อโหนดเป็นวงกลมวงปิดทางเดียว (Closed Loop) ข้อมูลส่งเวียนเป็นทิศทางเดียว โหนดจะคุยได้เมื่อครอบครองเหรียญอนุญาตสื่อสารที่วิ่งสับรอบ เรียกว่า โทเคน (Token passing)',
-      advantages: 'หมดปัญหาเรื่องสัญญาณชนกัน (No Collision) เนื่องจากแต่ละเครื่องต้องถือ Token ถึงจะสามารถคุยได้ ทำให้บริหารแบนด์วิดท์ได้สม่ำเสมอ',
-      disadvantages: 'หากเครื่องคอมพิวเตอร์หรือการ์ดแลนของโหนดชิ้นใดชิ้นหนึ่งเสีย วงแหวนสัญญาณจะขาด ทำให้ทั้งเครือข่ายหยุดทำงานทันที และขยายโหนดเพิ่มทำได้ยาก',
-      accent: 'emerald',
-      bgGradient: 'from-emerald-50 to-white'
-    },
-    mesh: {
-      title: 'การเชื่อมต่อแบบเมช (Mesh Topology)',
-      desc: 'การต่อสายสัญญาณแบบซ้ำซ้อนสูงสุด มีทั้ง Full Mesh (ทุกเครื่องมีพอร์ตต่อเครื่องอื่นโดยตรงทั้งหมด) และ Partial Mesh (ต่อสำรองสายเฉพาะจุดสำคัญ)',
-      advantages: 'ความทนทานเป็นเลิศ (High Fault Tolerance) หากสายเชื่อมจุดใดขาด ข้อมูลจะทำการอ้อมเปลี่ยนเส้นทางสำรอง (Routing redirection) ทันที มีความเป็นส่วนตัวสูงสุด',
-      disadvantages: 'สิ้นเปลืองค่าสายเคเบิลมหาศาล ($N(N-1)/2$ เส้น), การตั้งค่าโปรโตคอลการหาเส้นทางซับซ้อน และต้องพึ่งพาแผงพอร์ตเชื่อมต่อ (NIC Port) จำนวนมาก',
-      accent: 'rose',
-      bgGradient: 'from-rose-50 to-white'
-    },
-    hybrid: {
-      title: 'การเชื่อมต่อแบบผสม (Hybrid Topology)',
-      desc: 'การผสมผสานจุดเด่นของ Topology ตั้งแต่ 2 ประเภทขึ้นไปเข้ามาอยู่ในระบบเครือข่ายเดียวกัน เช่น Star-Bus หรือ Star-Ring เพื่อบริหารพื้นที่ขนาดใหญ่',
-      advantages: 'ยืดหยุ่นสูงสุด สามารถขยายโครงข่ายข้ามตึก ข้ามแผนก ได้โดยไม่รบกวนแกนเดิม รองรับการเติบโตเชิงธุรกิจขององค์กรระดับมหภาค',
-      disadvantages: 'ค่าบำรุงรักษาสูง อุปกรณ์จัดหาเส้นทางมีความหลากหลาย และต้องใช้ช่างผู้เชี่ยวชาญที่มีความเข้าใจโครงสร้างพอร์ตเชื่อมต่อที่ซับซ้อน',
-      accent: 'purple',
-      bgGradient: 'from-purple-50 to-white'
+const CustomStyles = () => (
+  <style dangerouslySetInnerHTML={{__html: `
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
     }
-  };
-
-  // ────────────────────────────────────────────────────────────────────────
-  // SIMULATOR LOGIC
-  // ────────────────────────────────────────────────────────────────────────
-
-  // จำลอง Bus Topology Collision
-  const handleBusCollision = () => {
-    if (activeTransfer) return;
-    setActiveTransfer(true);
-    setSimStep(1);
-    setTransferProgress(0);
-    setTransferLog([
-      '[เริ่มต้นจำลอง] โหนดลูกข่ายเครื่องที่ 1 และเครื่องที่ 4 ทำการส่งแพ็กเก็ตข้อมูลลงสาย Backbone แกนร่วมพร้อมๆ กัน...',
-      '[backbone] แพ็กเก็ตแล่นผ่านสายสัญญาณ Coaxial มาพะวักพะวนกึ่งกลางสายส่งร่วมกัน'
-    ]);
-
-    let step = 0;
-    const interval = setInterval(() => {
-      step += 25;
-      setTransferProgress(step);
-      
-      if (step === 50) {
-        setSimStep(2); // collision happening at x = 300
-        setTransferLog(prev => [
-          ...prev,
-          '[ALERT - COLLISION] [ตรวจพบกระแสข้อมูลปะทะชนกัน!] ระดับแรงดันไฟฟ้าสะท้อนชนกันที่แกนกลางทางเรขาคณิต (x = 300) ข้อมูลบิดเบี้ยว 100%!',
-          '[CSMA/CD LOGIC] การ์ด NIC ตรวจพบความถี่ผิดปกติ ส่งสัญญาณ Jam Signal เพื่อแจ้งเตือนขอระงับการส่งทันที',
-          '[วิธีแก้ไข] โหนดแต่ละเครื่องต้องถอยกลับ และสุ่มเวลาเพื่อสับคิวรอส่งข้อมูลใหม่อีกรอบ (Random Backoff Time)'
-        ]);
-      }
-
-      if (step >= 100) {
-        clearInterval(interval);
-        setActiveTransfer(false);
-      }
-    }, simSpeed / 4);
-  };
-
-  // จำลอง Star Topology Flow & SPOF
-  const handleStarFlow = () => {
-    if (activeTransfer) return;
-    setActiveTransfer(true);
-    setSimStep(1);
-    setTransferProgress(0);
-
-    if (isCentralSwitchCrashed) {
-      setTransferLog([
-        '[ส่งข้อมูล] โหนดเครื่องที่ 1 จ่ายกระแสสัญญาณมุ่งตรงเข้าสู่ สวิตช์ศูนย์กลาง (Switch)...',
-        '[SPOF ALERT] [ล้มเหลว!] สวิตช์ศูนย์กลางชำรุดขัดข้อง (Central Switch Fault)!',
-        '[วิเคราะห์ปัญหา] จุดล้มเหลวเดี่ยวเกิดปัญหา ระบบทั้งหมดไม่สามารถส่งคำสั่งสลับช่องสัญญาณได้ เครื่องลูกข่ายตัดขาดการเชื่อมโยงทันที'
-      ]);
-      setTransferProgress(50);
-      setActiveTransfer(false);
-    } else {
-      setTransferLog([
-        '[ส่งข้อมูล] โหนดเครื่องที่ 1 ร้องขอส่งไฟล์ไปยังโหนดเครื่องที่ 3 ทางสาย UTP ส่วนตัว...',
-        '[SWITCH] สวิตช์ศูนย์กลางอ่านตาราง MAC Address Table เพื่อตรวจสอบพอร์ตเป้าหมาย...',
-        '[SUCCESS] สวิตช์ส่งกระแสข้อมูลเข้าหาพอร์ตของเครื่องที่ 3 สำเร็จ ข้อมูลแลกเปลี่ยนกันรวดเร็วไร้การชนสัญญาณ!'
-      ]);
-
-      let step = 0;
-      const interval = setInterval(() => {
-        step += 25;
-        setTransferProgress(step);
-        if (step >= 100) {
-          clearInterval(interval);
-          setActiveTransfer(false);
-        }
-      }, simSpeed / 4);
+    
+    /* Topology Animations via SVG stroke-dasharray and CSS */
+    @keyframes dash-move {
+      to { stroke-dashoffset: -100; }
     }
-  };
-
-  // จำลอง Ring Topology Token Passing
-  const handleRingTokenPassing = () => {
-    if (activeTransfer) return;
-    setActiveTransfer(true);
-    setTransferProgress(0);
-    setTransferLog([
-      '[1. เริ่มกลไก] เหรียญสิทธิ์สื่อสาร (Token Frame) หมุนตามเข็มนาฬิกาไปยังโหนดต่างๆ ในวงแหวน...',
-      '[2. ครองเหรียญ] โหนดที่ 1 ต้องการส่งข้อมูล ทำการดึงและครอบครอง Token ชั่วคราว (สลักสถานะเป็น BUSY)...',
-      '[3. ตรวจสอบแอดเดรส] สัญญาณเดินทางเป็นวงแหวนผ่านโหนดที่ 2 เพื่อตรวจสอบพิกัด โดยโหนดที่ 2 ทำการทวนสัญญาณให้เท่านั้น...',
-      '[4. เข้าถึงผู้รับ] โหนดที่ 3 (ผู้รับ) ตรวจสอบพบเป็นแพ็กเก็ตตน คัดลอกข้อมูล และส่ง Acknowledgement วิ่งกลับมายังต้นทางเพื่อส่งสิทธิ์คืน'
-    ]);
-
-    let angle = 0;
-    const interval = setInterval(() => {
-      angle += 90;
-      setTokenPosition(angle % 360);
-      setTransferProgress(angle * 100 / 360);
-      
-      if (angle >= 360) {
-        clearInterval(interval);
-        setActiveTransfer(false);
-      }
-    }, simSpeed / 4);
-  };
-
-  // จำลอง Mesh Topology Cable Cut Redirection
-  const handleMeshRouting = () => {
-    if (activeTransfer) return;
-    setActiveTransfer(true);
-    setSimStep(1);
-    setTransferProgress(0);
-
-    const directPath = meshCables.AC;
-    if (directPath) {
-      setTransferLog([
-        '[เส้นทางส่ง] โหนด A จ่ายกระแสสัญญาณผ่านพอร์ต 1 ตรงเข้าหาสายส่งตรงไปยังโหนด C...',
-        '[SUCCESS] สายสัญญาณสมบูรณ์ 100% ข้อมูลวิ่งเข้าเส้นทางหลักเร็วที่สุดโดยตรง'
-      ]);
-    } else {
-      // สายตรงหลักขาด แต่ Mesh มีสายสำรอง
-      const backupPathAvailable = meshCables.AB && meshCables.BC;
-      if (backupPathAvailable) {
-        setTransferLog([
-          '[เส้นทางส่ง] โหนด A พยายามส่งตรงไปยังโหนด C...',
-          '[สายขาด!] ตรวจพบสายสัญญาณหลัก A ➔ C ขาดชำรุดหรือคลื่นกวน!',
-          '[DYNAMIC ROUTING] ระบบโปรโตคอล Mesh ทำการจัดเส้นทางใหม่ (Redirection path): ส่งผ่าน A ➔ B แล้วต่อ B ➔ C...',
-          '[เสร็จสิ้น] ข้อมูลส่งถึงปลายทางสำเร็จอย่างปลอดภัยด้วยสายสัญญาณสำรอง ระบบ Mesh ทนทานสูงสุด!'
-        ]);
-      } else {
-        setTransferLog([
-          '[เส้นทางส่ง] โหนด A พยายามส่งผ่านสำรอง...',
-          '[ERROR] สายสำรองทั้งหมดขาดสะบั้น! โครงข่ายขัดข้องเนื่องจากการล้มสลายของลิงก์ย่อยเกินขีดจำกัด'
-        ]);
-        setTransferProgress(50);
-        setActiveTransfer(false);
-        return;
-      }
+    @keyframes packet-travel {
+      0% { offset-distance: 0%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { offset-distance: 100%; opacity: 0; }
+    }
+    @keyframes node-pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--rgb-color), 0.7); }
+      70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(var(--rgb-color), 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--rgb-color), 0); }
     }
 
-    let step = 0;
-    const interval = setInterval(() => {
-      step += 25;
-      setTransferProgress(step);
-      if (step >= 100) {
-        clearInterval(interval);
-        setActiveTransfer(false);
-      }
-    }, simSpeed / 4);
-  };
+    .animate-dash {
+      animation: dash-move 3s linear infinite;
+    }
+    .animate-dash-fast {
+      animation: dash-move 1.5s linear infinite;
+    }
+    .animate-dash-reverse {
+      animation: dash-move 3s linear infinite reverse;
+    }
 
-  // รีเซ็ตสถานะการจำลองทั้งหมด
-  const handleResetSimulator = () => {
-    setSimStep(0);
-    setIsCentralSwitchCrashed(false);
-    setMeshCables({ AC: true, AB: true, BC: true, AD: true, BD: true, CD: true });
-    setTokenPosition(0);
-    setActiveTransfer(false);
-    setTransferProgress(0);
-    setTransferLog([
-      '[ระบบ] รีเซ็ตแบบจำลองเสร็จสมบูรณ์ สายสัญญาณและโทโพโลยีกลับคืนสู่ความพร้อมใช้งานปกติแล้ว'
-    ]);
-  };
+    .sim-grid-bg {
+      background-size: 30px 30px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    }
 
-  return (
-    <>
-      {/* 1️⃣ Layer 1: Ambient Backdrop Glimmer Theme */}
-      <AmbientBackdrop
-        blobs={[
-          { color: 'bg-emerald-200', size: 'w-96 h-96', position: '-top-10 -left-10', opacity: 'opacity-35' },
-          { color: 'bg-teal-200', size: 'w-80 h-80', position: 'top-1/3 -right-10', opacity: 'opacity-30' },
-          { color: 'bg-indigo-200', size: 'w-72 h-72', position: '-bottom-10 left-1/4', opacity: 'opacity-25' }
-        ]}
-      />
+    @keyframes blob-drift {
+      0% { transform: translate(0px, 0px) scale(1); }
+      50% { transform: translate(25px, -25px) scale(1.05); }
+      100% { transform: translate(0px, 0px) scale(1); }
+    }
+    .animate-drift {
+      animation: blob-drift 15s ease-in-out infinite;
+    }
+  `}} />
+);
 
-      {/* 3️⃣ Layer 3: Flexible Subtopics & Interactive Visualizer */}
-      <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-6 pb-12 space-y-16 md:space-y-24 relative z-10">
-        
-        {/* ====================================================================
-            SECTION 1: ทำความเข้าใจ 5 สถาปัตยกรรม (1.4.1 - 1.4.5)
-            ==================================================================== */}
-        <section id="section-topologies-theory" className="space-y-8">
+// Component สำหรับแสดงหน้าจอจำลองการวิ่งของข้อมูล (Simulator)
+const TopologySimulator = ({ type }) => {
+  switch (type) {
+    case 'Bus':
+      return (
+        <div className="relative w-full h-72 bg-slate-950/95 backdrop-blur-xl rounded-3xl overflow-hidden flex items-center justify-center border border-white/10 shadow-inner">
+          <div className="absolute inset-0 sim-grid-bg"></div>
+          <div className="absolute top-3 right-4 text-[9px] font-mono text-slate-500 font-bold tracking-widest">
+            SIMULATOR: BUS_TOPOLOGY
+          </div>
           
-          <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-7 bg-indigo-600 rounded-full animate-pulse" />
-              <h2 className="text-[26px] font-bold text-zinc-900 tracking-tight">
-                รูปแบบการเชื่อมต่อเครือข่ายทางกายภาพ (Network Topology)
-              </h2>
-            </div>
+          <svg className="absolute inset-0 w-full h-full z-10" preserveAspectRatio="none">
+            {/* Backbone Cable */}
+            <line x1="10%" y1="35%" x2="90%" y2="35%" stroke="#ea580c" strokeWidth="6" strokeLinecap="round" />
+            <line x1="10%" y1="35%" x2="90%" y2="35%" stroke="#fdba74" strokeWidth="2" strokeDasharray="10 15" className="animate-dash" />
             
-            <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed max-w-4xl">
-              โครงสร้างรูปแบบการจัดวาง (Topology) คือแผนผังระเบียบทางวิศวกรรมในการเชื่อมต่อสายและทราฟฟิกข้อมูลของแต่ละเครื่องคอมพิวเตอร์ 
-              ซึ่งแต่ละรูปแบบล้วนมีขีดความสามารถ ข้อจำกัด และค่าตอบแทนด้านประสิทธิภาพและงบประมาณการจัดซื้อที่ผู้พัฒนาเครือข่ายต้องประเมิน:
-            </p>
+            {/* Drop Lines */}
+            <line x1="25%" y1="35%" x2="25%" y2="65%" stroke="#f97316" strokeWidth="3" />
+            <line x1="50%" y1="35%" x2="50%" y2="65%" stroke="#f97316" strokeWidth="3" />
+            <line x1="75%" y1="35%" x2="75%" y2="65%" stroke="#f97316" strokeWidth="3" />
+            
+            {/* Animated Data Packet */}
+            <circle cx="25%" cy="35%" r="5" fill="#fef08a" className="animate-ping" style={{ animationDuration: '2s' }} />
+            <circle cx="50%" cy="35%" r="5" fill="#fef08a" className="animate-ping" style={{ animationDuration: '2.5s', animationDelay: '0.5s' }} />
+          </svg>
+
+          {/* Nodes */}
+          <div className="absolute top-[65%] left-[25%] -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-slate-900 border-2 border-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Monitor className="w-6 h-6 text-orange-300 animate-pulse" style={{ animationDuration: '3s' }} />
+          </div>
+          <div className="absolute top-[65%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-slate-900 border-2 border-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Monitor className="w-6 h-6 text-orange-300 animate-pulse" style={{ animationDuration: '4s' }} />
+          </div>
+          <div className="absolute top-[65%] left-[75%] -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-slate-900 border-2 border-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Monitor className="w-6 h-6 text-orange-300 animate-pulse" style={{ animationDuration: '5s' }} />
+          </div>
+          
+          {/* Terminators */}
+          <div className="absolute top-[35%] left-[10%] -translate-x-1/2 -translate-y-1/2 w-4 h-8 bg-slate-600 border border-slate-500 rounded-sm z-20 shadow-md"></div>
+          <div className="absolute top-[35%] left-[90%] -translate-x-1/2 -translate-y-1/2 w-4 h-8 bg-slate-600 border border-slate-500 rounded-sm z-20 shadow-md"></div>
+        </div>
+      );
+
+    case 'Star':
+      return (
+        <div className="relative w-full h-72 bg-slate-950/95 backdrop-blur-xl rounded-3xl overflow-hidden flex items-center justify-center border border-white/10 shadow-inner">
+          <div className="absolute inset-0 sim-grid-bg"></div>
+          <div className="absolute top-3 right-4 text-[9px] font-mono text-slate-500 font-bold tracking-widest">
+            SIMULATOR: STAR_TOPOLOGY
+          </div>
+          
+          <svg className="absolute inset-0 w-full h-full z-10" preserveAspectRatio="none">
+            {/* Connection Lines */}
+            <line x1="50%" y1="50%" x2="20%" y2="20%" stroke="#2563eb" strokeWidth="3" />
+            <line x1="50%" y1="50%" x2="80%" y2="20%" stroke="#2563eb" strokeWidth="3" />
+            <line x1="50%" y1="50%" x2="20%" y2="80%" stroke="#2563eb" strokeWidth="3" />
+            <line x1="50%" y1="50%" x2="80%" y2="80%" stroke="#2563eb" strokeWidth="3" />
+            
+            {/* Animated Data Packets (In and Out) */}
+            <line x1="20%" y1="20%" x2="50%" y2="50%" stroke="#93c5fd" strokeWidth="3" strokeDasharray="10 100" className="animate-dash" />
+            <line x1="50%" y1="50%" x2="80%" y2="80%" stroke="#93c5fd" strokeWidth="3" strokeDasharray="10 100" className="animate-dash" style={{ animationDelay: '1.5s' }} />
+          </svg>
+
+          {/* Central Hub/Switch */}
+          <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-20 w-16 h-16 bg-blue-600 border-2 border-blue-400 shadow-[0_0_25px_rgba(59,130,246,0.6)] rounded-2xl flex items-center justify-center">
+            <Server className="w-8 h-8 text-white" />
           </div>
 
-          {/* Selector Row of Topologies — แนวนอนเรียงกัน */}
-          <div className="flex flex-row gap-3 overflow-x-auto pb-2">
-            {[
-              {
-                key: 'bus',
-                label: 'บัส',
-                labelEn: 'Bus',
-                accent: 'amber',
-                svg: (
-                  <svg viewBox="0 0 90 48" className="w-full h-full">
-                    {/* Backbone cable */}
-                    <line x1="8" y1="24" x2="82" y2="24" stroke="#D97706" strokeWidth="3" strokeLinecap="round"/>
-                    {/* Terminators */}
-                    <rect x="4" y="20" width="5" height="8" rx="1" fill="#92400E"/>
-                    <rect x="81" y="20" width="5" height="8" rx="1" fill="#92400E"/>
-                    {/* Nodes drop lines */}
-                    {[20, 38, 56, 72].map((x, i) => (
-                      <g key={i}>
-                        <line x1={x} y1="24" x2={x} y2="10" stroke="#D97706" strokeWidth="1.5"/>
-                        <rect x={x-6} y="4" width="12" height="8" rx="2" fill="#FEF3C7" stroke="#D97706" strokeWidth="1.2"/>
-                      </g>
-                    ))}
-                  </svg>
-                )
-              },
-              {
-                key: 'star',
-                label: 'ดาว',
-                labelEn: 'Star',
-                accent: 'indigo',
-                svg: (
-                  <svg viewBox="0 0 90 48" className="w-full h-full">
-                    {/* Switch center */}
-                    <rect x="36" y="18" width="18" height="12" rx="3" fill="#E0E7FF" stroke="#4F46E5" strokeWidth="1.5"/>
-                    {/* Spokes to nodes */}
-                    {[
-                      [8, 8, 36, 22], [44, 4, 45, 18], [78, 8, 54, 22],
-                      [8, 40, 36, 28], [44, 44, 45, 30], [78, 40, 54, 28]
-                    ].map(([x1,y1,x2,y2], i) => (
-                      <g key={i}>
-                        <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#818CF8" strokeWidth="1.5"/>
-                        <circle cx={x1} cy={y1} r="5" fill="#EEF2FF" stroke="#4F46E5" strokeWidth="1.2"/>
-                      </g>
-                    ))}
-                  </svg>
-                )
-              },
-              {
-                key: 'ring',
-                label: 'วงแหวน',
-                labelEn: 'Ring',
-                accent: 'emerald',
-                svg: (
-                  <svg viewBox="0 0 90 48" className="w-full h-full">
-                    {/* Ring circle */}
-                    <circle cx="45" cy="24" r="16" fill="none" stroke="#10B981" strokeWidth="2" strokeDasharray="none"/>
-                    {/* 4 nodes on ring */}
-                    {[0, 90, 180, 270].map((deg, i) => {
-                      const r = 16;
-                      const rad = (deg - 90) * Math.PI / 180;
-                      const cx = 45 + r * Math.cos(rad);
-                      const cy = 24 + r * Math.sin(rad);
-                      return <rect key={i} x={cx-5} y={cy-4} width="10" height="8" rx="2" fill="#D1FAE5" stroke="#10B981" strokeWidth="1.2"/>;
-                    })}
-                  </svg>
-                )
-              },
-              {
-                key: 'mesh',
-                label: 'เมช',
-                labelEn: 'Mesh',
-                accent: 'rose',
-                svg: (
-                  <svg viewBox="0 0 90 48" className="w-full h-full">
-                    {/* 4 nodes */}
-                    {[[16,10],[74,10],[16,38],[74,38]].map(([x,y],i) => (
-                      <rect key={i} x={x-7} y={y-6} width="14" height="12" rx="2.5" fill="#FFF1F2" stroke="#F43F5E" strokeWidth="1.3"/>
-                    ))}
-                    {/* All-to-all connections */}
-                    {[[16,10,74,10],[16,10,16,38],[16,10,74,38],
-                      [74,10,16,38],[74,10,74,38],[16,38,74,38]].map(([x1,y1,x2,y2],i) => (
-                      <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#FB7185" strokeWidth="1.2" opacity="0.8"/>
-                    ))}
-                  </svg>
-                )
-              },
-              {
-                key: 'hybrid',
-                label: 'ผสม',
-                labelEn: 'Hybrid',
-                accent: 'purple',
-                svg: (
-                  <svg viewBox="0 0 90 48" className="w-full h-full">
-                    {/* Star cluster left */}
-                    <rect x="14" y="20" width="10" height="8" rx="2" fill="#F3E8FF" stroke="#9333EA" strokeWidth="1.3"/>
-                    {[[6,10],[6,30],[24,10],[24,30]].map(([x,y],i) => (
-                      <g key={i}>
-                        <line x1="19" y1="24" x2={x} y2={y} stroke="#C084FC" strokeWidth="1.2"/>
-                        <circle cx={x} cy={y} r="4" fill="#FAF5FF" stroke="#9333EA" strokeWidth="1"/>
-                      </g>
-                    ))}
-                    {/* Bus backbone right */}
-                    <line x1="44" y1="24" x2="84" y2="24" stroke="#9333EA" strokeWidth="2"/>
-                    {[52,64,76].map((x,i) => (
-                      <g key={i}>
-                        <line x1={x} y1="24" x2={x} y2="12" stroke="#C084FC" strokeWidth="1.2"/>
-                        <rect x={x-5} y="6" width="10" height="8" rx="1.5" fill="#F3E8FF" stroke="#9333EA" strokeWidth="1"/>
-                      </g>
-                    ))}
-                    {/* Bridge link */}
-                    <line x1="24" y1="24" x2="44" y2="24" stroke="#9333EA" strokeWidth="1.5" strokeDasharray="3 2"/>
-                  </svg>
-                )
-              }
-            ].map(({ key, label, labelEn, accent, svg }) => {
-              const active = selectedTopology === key;
+          {/* Nodes */}
+          <div className="absolute top-[20%] left-[20%] -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-slate-900 border-2 border-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Monitor className="w-6 h-6 text-blue-300" />
+          </div>
+          <div className="absolute top-[20%] left-[80%] -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-slate-900 border-2 border-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Monitor className="w-6 h-6 text-blue-300" />
+          </div>
+          <div className="absolute top-[80%] left-[20%] -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-slate-900 border-2 border-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Monitor className="w-6 h-6 text-blue-300" />
+          </div>
+          <div className="absolute top-[80%] left-[80%] -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-slate-900 border-2 border-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Monitor className="w-6 h-6 text-blue-300" />
+          </div>
+        </div>
+      );
+
+    case 'Ring':
+      return (
+        <div className="relative w-full h-72 bg-slate-950/95 backdrop-blur-xl rounded-3xl overflow-hidden flex items-center justify-center border border-white/10 shadow-inner">
+          <div className="absolute inset-0 sim-grid-bg"></div>
+          <div className="absolute top-3 right-4 text-[9px] font-mono text-slate-500 font-bold tracking-widest">
+            SIMULATOR: RING_TOPOLOGY
+          </div>
+          
+          <svg className="absolute inset-0 w-full h-full z-10" preserveAspectRatio="none">
+            {/* Ring Cable */}
+            <ellipse cx="50%" cy="50%" rx="35%" ry="35%" fill="none" stroke="#10b981" strokeWidth="4" />
+            
+            {/* Animated Token/Data moving in circle */}
+            <ellipse cx="50%" cy="50%" rx="35%" ry="35%" fill="none" stroke="#6ee7b7" strokeWidth="4" strokeDasharray="20 300" className="animate-dash-fast" />
+          </svg>
+
+          {/* Nodes (Positioned symmetrically on the circle path) */}
+          <div className="absolute top-[15%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-slate-900 border-2 border-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Monitor className="w-6 h-6 text-emerald-300" />
+          </div>
+          <div className="absolute top-[50%] left-[85%] -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-slate-900 border-2 border-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Monitor className="w-6 h-6 text-emerald-300" />
+          </div>
+          <div className="absolute top-[85%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-slate-900 border-2 border-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Monitor className="w-6 h-6 text-emerald-300" />
+          </div>
+          <div className="absolute top-[50%] left-[15%] -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-slate-900 border-2 border-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Monitor className="w-6 h-6 text-emerald-300" />
+          </div>
+        </div>
+      );
+
+    case 'Mesh':
+      return (
+        <div className="relative w-full h-72 bg-slate-950/95 backdrop-blur-xl rounded-3xl overflow-hidden flex items-center justify-center border border-white/10 shadow-inner">
+          <div className="absolute inset-0 sim-grid-bg"></div>
+          <div className="absolute top-3 right-4 text-[9px] font-mono text-slate-500 font-bold tracking-widest">
+            SIMULATOR: FULL_MESH_TOPOLOGY
+          </div>
+          
+          <svg className="absolute inset-0 w-full h-full z-10" preserveAspectRatio="none">
+            <g stroke="#8b5cf6" strokeWidth="2" opacity="0.6">
+              {/* Node 1 to others */}
+              <line x1="50%" y1="15%" x2="85%" y2="40%" />
+              <line x1="50%" y1="15%" x2="70%" y2="80%" />
+              <line x1="50%" y1="15%" x2="30%" y2="80%" />
+              <line x1="50%" y1="15%" x2="15%" y2="40%" />
+              {/* Node 2 to others */}
+              <line x1="85%" y1="40%" x2="70%" y2="80%" />
+              <line x1="85%" y1="40%" x2="30%" y2="80%" />
+              <line x1="85%" y1="40%" x2="15%" y2="40%" />
+              {/* Node 3 to others */}
+              <line x1="70%" y1="80%" x2="30%" y2="80%" />
+              <line x1="70%" y1="80%" x2="15%" y2="40%" />
+              {/* Node 4 to 5 */}
+              <line x1="30%" y1="80%" x2="15%" y2="40%" />
+            </g>
+            
+            {/* Animated Data Packets across multiple paths */}
+            <g stroke="#c4b5fd" strokeWidth="3" strokeDasharray="10 100" className="animate-dash">
+              <line x1="15%" y1="40%" x2="50%" y2="15%" />
+              <line x1="70%" y1="80%" x2="30%" y2="80%" style={{ animationDelay: '0.5s' }} />
+              <line x1="85%" y1="40%" x2="30%" y2="80%" style={{ animationDelay: '1s' }} />
+            </g>
+          </svg>
+
+          {/* Nodes (Pentagon arrangement for symmetry) */}
+          <div className="absolute top-[15%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-slate-900 border-2 border-purple-500 rounded-full flex items-center justify-center shadow-lg">
+            <Monitor className="w-5 h-5 text-purple-300" />
+          </div>
+          <div className="absolute top-[40%] left-[85%] -translate-x-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-slate-900 border-2 border-purple-500 rounded-full flex items-center justify-center shadow-lg">
+            <Monitor className="w-5 h-5 text-purple-300" />
+          </div>
+          <div className="absolute top-[80%] left-[70%] -translate-x-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-slate-900 border-2 border-purple-500 rounded-full flex items-center justify-center shadow-lg">
+            <Monitor className="w-5 h-5 text-purple-300" />
+          </div>
+          <div className="absolute top-[80%] left-[30%] -translate-x-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-slate-900 border-2 border-purple-500 rounded-full flex items-center justify-center shadow-lg">
+            <Monitor className="w-5 h-5 text-purple-300" />
+          </div>
+          <div className="absolute top-[40%] left-[15%] -translate-x-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-slate-900 border-2 border-purple-500 rounded-full flex items-center justify-center shadow-lg">
+            <Monitor className="w-5 h-5 text-purple-300" />
+          </div>
+        </div>
+      );
+
+    case 'Hybrid':
+      return (
+        <div className="relative w-full h-72 bg-slate-950/95 backdrop-blur-xl rounded-3xl overflow-hidden flex items-center justify-center border border-white/10 shadow-inner">
+          <div className="absolute inset-0 sim-grid-bg"></div>
+          <div className="absolute top-3 right-4 text-[9px] font-mono text-slate-500 font-bold tracking-widest">
+            SIMULATOR: HYBRID (STAR + BUS)
+          </div>
+          
+          <svg className="absolute inset-0 w-full h-full z-10" preserveAspectRatio="none">
+            {/* Main Backbone (Bus) */}
+            <line x1="20%" y1="50%" x2="80%" y2="50%" stroke="#f43f5e" strokeWidth="4" />
+            <line x1="20%" y1="50%" x2="80%" y2="50%" stroke="#fda4af" strokeWidth="2" strokeDasharray="15 30" className="animate-dash" />
+            
+            {/* Left Star Connections */}
+            <line x1="30%" y1="50%" x2="15%" y2="25%" stroke="#e11d48" strokeWidth="2" />
+            <line x1="30%" y1="50%" x2="45%" y2="25%" stroke="#e11d48" strokeWidth="2" />
+            
+            {/* Right Star Connections */}
+            <line x1="70%" y1="50%" x2="55%" y2="75%" stroke="#e11d48" strokeWidth="2" />
+            <line x1="70%" y1="50%" x2="85%" y2="75%" stroke="#e11d48" strokeWidth="2" />
+          </svg>
+
+          {/* Hubs/Switches on Backbone */}
+          <div className="absolute top-[50%] left-[30%] -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-rose-600 border-2 border-rose-400 rounded-xl flex items-center justify-center shadow-lg">
+            <Server className="w-6 h-6 text-white" />
+          </div>
+          <div className="absolute top-[50%] left-[70%] -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-rose-600 border-2 border-rose-400 rounded-xl flex items-center justify-center shadow-lg">
+            <Server className="w-6 h-6 text-white" />
+          </div>
+
+          {/* End Nodes */}
+          <div className="absolute top-[25%] left-[15%] -translate-x-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-slate-900 border-2 border-rose-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Monitor className="w-5 h-5 text-rose-300" />
+          </div>
+          <div className="absolute top-[25%] left-[45%] -translate-x-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-slate-900 border-2 border-rose-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Monitor className="w-5 h-5 text-rose-300" />
+          </div>
+          <div className="absolute top-[75%] left-[55%] -translate-x-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-slate-900 border-2 border-rose-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Monitor className="w-5 h-5 text-rose-300" />
+          </div>
+          <div className="absolute top-[75%] left-[85%] -translate-x-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-slate-900 border-2 border-rose-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Monitor className="w-5 h-5 text-rose-300" />
+          </div>
+        </div>
+      );
+    default:
+      return null;
+  }
+};
+
+export default function IT1_4() {
+  const [activeTopology, setActiveTopology] = useState('Star');
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const handleTopologyChange = (type) => {
+    if (type === activeTopology) return;
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setActiveTopology(type);
+      setIsTransitioning(false);
+    }, 200);
+  };
+
+  const topologiesData = {
+    Bus: {
+      name: 'แบบบัส (Bus Topology)',
+      icon: <Share2 className="w-6 h-6" />,
+      color: 'orange',
+      textClass: 'text-orange-655',
+      bgLight: 'bg-orange-50/60',
+      textLight: 'text-orange-700',
+      borderLight: 'border-orange-200/60',
+      borderLeft: 'border-l-orange-500',
+      desc: 'ใช้สายสัญญาณเส้นเดียว (Backbone) เป็นแกนหลัก คอมพิวเตอร์ทุกเครื่องเชื่อมต่อเข้ากับสายแกนหลักนี้ผ่านตัวเชื่อมต่อ (T-Connector)',
+      pros: [
+        'ใช้สายสัญญาณน้อย ประหยัดต้นทุน',
+        'ติดตั้งและขยายเครือข่ายได้ง่าย',
+        'โครงสร้างไม่ซับซ้อน เหมาะกับเครือข่ายขนาดเล็ก'
+      ],
+      cons: [
+        'หากสายแกนหลักขาด เครือข่ายจะล่มทั้งหมด (Single Point of Failure)',
+        'ข้อมูลชนกันได้ง่าย (Collision) หากส่งข้อมูลพร้อมกัน',
+        'ตรวจสอบจุดที่เสียได้ยาก'
+      ],
+      useCase: 'ระบบเครือข่ายขนาดเล็กในอดีต หรือการเดินสายสัญญาณเซนเซอร์ในโรงงานอุตสาหกรรมบางประเภท'
+    },
+    Star: {
+      name: 'แบบดาว (Star Topology)',
+      icon: <Network className="w-6 h-6" />,
+      color: 'blue',
+      textClass: 'text-blue-655',
+      bgLight: 'bg-blue-50/60',
+      textLight: 'text-blue-700',
+      borderLight: 'border-blue-200/60',
+      borderLeft: 'border-l-blue-500',
+      desc: 'คอมพิวเตอร์ทุกเครื่องเชื่อมต่อเข้ากับอุปกรณ์ศูนย์กลาง เช่น Switch หรือ Hub การส่งข้อมูลต้องผ่านจุดศูนย์กลางเสมอ (เป็นรูปแบบที่นิยมที่สุดในปัจจุบัน)',
+      pros: [
+        'หากสายสัญญาณของเครื่องใดขาด จะไม่กระทบกับเครื่องอื่น',
+        'จัดการและตรวจสอบปัญหาได้ง่ายผ่านจุดศูนย์กลาง',
+        'ลดปัญหาข้อมูลชนกัน (หากใช้ Switch)'
+      ],
+      cons: [
+        'ใช้สายสัญญาณเปลืองกว่าแบบบัส (ต้องลากสายจากทุกเครื่องมาที่ศูนย์กลาง)',
+        'หากอุปกรณ์ศูนย์กลาง (Switch) เสีย เครือข่ายล่มทั้งหมด'
+      ],
+      useCase: 'เครือข่าย LAN ในสำนักงาน, บ้านพักอาศัย, ห้องปฏิบัติการคอมพิวเตอร์ทั่วไป'
+    },
+    Ring: {
+      name: 'แบบวงแหวน (Ring Topology)',
+      icon: <Circle className="w-6 h-6" />,
+      color: 'emerald',
+      textClass: 'text-emerald-655',
+      bgLight: 'bg-emerald-50/60',
+      textLight: 'text-emerald-700',
+      borderLight: 'border-emerald-200/60',
+      borderLeft: 'border-l-emerald-500',
+      desc: 'คอมพิวเตอร์เชื่อมต่อกันเป็นวงกลม ข้อมูลถูกส่งไปในทิศทางเดียวกันโดยใช้ระบบ "โทเคน (Token Passing)" เครื่องที่มีโทเคนเท่านั้นถึงจะส่งข้อมูลได้',
+      pros: [
+        'ไม่มีปัญหาข้อมูลชนกันเลย เพราะต้องรอรอบคิวโทเคน',
+        'คอมพิวเตอร์ทุกเครื่องมีสิทธิ์เข้าถึงเครือข่ายเท่าเทียมกัน',
+        'ประสิทธิภาพไม่ตกแม้มีปริมาณข้อมูลมาก'
+      ],
+      cons: [
+        'หากสายขาดจุดเดียว หรือเครื่องใดเครื่องหนึ่งเสีย วงแหวนจะขาดและเครือข่ายล่มทันที',
+        'การเพิ่ม/ลดเครื่องทำได้ยาก เพราะต้องตัดต่อสายในวงแหวนใหม่',
+        'ข้อมูลอาจส่งถึงช้าหากวงแหวนมีขนาดใหญ่'
+      ],
+      useCase: 'เครือข่ายที่มีปริมาณข้อมูลหนาแน่นคงที่ หรือเครือข่าย Backbone ของใยแก้วนำแสงในอดีต (FDDI)'
+    },
+    Mesh: {
+      name: 'แบบเมช (Mesh Topology)',
+      icon: <Grid className="w-6 h-6" />,
+      color: 'slate',
+      textClass: 'text-slate-700',
+      bgLight: 'bg-slate-50/60',
+      textLight: 'text-slate-700',
+      borderLight: 'border-slate-200/60',
+      borderLeft: 'border-l-slate-500',
+      desc: 'คอมพิวเตอร์ทุกเครื่องในเครือข่ายเชื่อมต่อโยงใยถึงกันหมดแบบใยแมงมุม (Full Mesh) หรือเชื่อมแค่บางส่วน (Partial Mesh) หากเส้นทางใดขาด ข้อมูลจะหาเส้นทางอื่นไปแทน',
+      pros: [
+        'มีความเสถียรและทนทานต่อความเสียหายสูงสุด (High Fault Tolerance)',
+        'ข้อมูลไม่ติดขัดเพราะมีหลายเส้นทางให้เลือกเดิน',
+        'มีความปลอดภัยและเป็นส่วนตัวสูง'
+      ],
+      cons: [
+        'ต้นทุนสูงมากที่สุด เพราะต้องใช้สายสัญญาณจำนวนมหาศาล',
+        'การติดตั้งและตั้งค่าซับซ้อนมาก',
+        'จัดการเครือข่ายได้ยากเมื่อขยายขนาด'
+      ],
+      useCase: 'เครือข่ายอินเทอร์เน็ตระดับโลก (WAN), เครือข่ายทางการทหาร, หรือการเชื่อมต่อระหว่าง Core Router ในศูนย์ข้อมูล'
+    },
+    Hybrid: {
+      name: 'แบบผสม (Hybrid Topology)',
+      icon: <GitMerge className="w-6 h-6" />,
+      color: 'rose',
+      textClass: 'text-rose-655',
+      bgLight: 'bg-rose-50/60',
+      textLight: 'text-rose-700',
+      borderLight: 'border-rose-200/60',
+      borderLeft: 'border-l-rose-500',
+      desc: 'เป็นการนำรูปแบบการเชื่อมต่อ (Topology) ตั้งแต่ 2 รูปแบบขึ้นไปมาผสมผสานกัน เช่น นำเครือข่ายแบบ Star หลายๆ วงมาเชื่อมต่อกันด้วยสายแกนหลักแบบ Bus (Tree Topology)',
+      pros: [
+        'มีความยืดหยุ่นสูง สามารถออกแบบให้เข้ากับโครงสร้างองค์กรได้',
+        'รองรับการขยายเครือข่ายขนาดใหญ่ (Scalability) ได้ดี',
+        'ดึงข้อดีของแต่ละ Topology มาใช้งานร่วมกันได้'
+      ],
+      cons: [
+        'มีความซับซ้อนในการจัดการและการบำรุงรักษา',
+        'อาจมีต้นทุนสูงขึ้นอยู่กับอุปกรณ์และรูปแบบที่เลือกใช้'
+      ],
+      useCase: 'เครือข่ายในองค์กรขนาดใหญ่, มหาวิทยาลัย ที่มีหลายอาคารและหลายแผนกย่อย'
+    }
+  };
+
+  const activeStyles = {
+    Bus: 'text-white bg-gradient-to-r from-orange-500 to-amber-500 shadow-lg shadow-orange-500/30 ring-2 ring-orange-400 ring-offset-2 ring-offset-slate-50',
+    Star: 'text-white bg-gradient-to-r from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/30 ring-2 ring-blue-400 ring-offset-2 ring-offset-slate-50',
+    Ring: 'text-white bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400 ring-offset-2 ring-offset-slate-50',
+    Mesh: 'text-white bg-gradient-to-r from-slate-700 to-zinc-800 shadow-lg shadow-slate-600/30 ring-2 ring-slate-500 ring-offset-2 ring-offset-slate-50',
+    Hybrid: 'text-white bg-gradient-to-r from-rose-500 to-pink-500 shadow-lg shadow-rose-500/30 ring-2 ring-rose-400 ring-offset-2 ring-offset-slate-50',
+  };
+  
+  const iconColors = {
+    Bus: 'text-orange-500',
+    Star: 'text-blue-500',
+    Ring: 'text-emerald-500',
+    Mesh: 'text-slate-600',
+    Hybrid: 'text-rose-500',
+  };
+
+  const activeData = topologiesData[activeTopology];
+
+  return (
+    <div className="font-sans text-slate-800 pb-20 relative overflow-hidden">
+      <CustomStyles />
+      
+      {/* ─── Layer 1: Ambient Backdrop & 4 Blobs ─── */}
+      <div className="absolute top-10 left-10 w-72 h-72 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-drift pointer-events-none"></div>
+      <div className="absolute top-20 right-10 w-96 h-96 bg-teal-200 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-drift pointer-events-none" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute bottom-10 left-10 w-80 h-80 bg-sky-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-drift pointer-events-none" style={{ animationDelay: '4s' }}></div>
+      <div className="absolute top-1/2 right-0 w-88 h-88 bg-cyan-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-drift pointer-events-none" style={{ animationDelay: '2s' }}></div>
+
+      {/* ─── Layer 3: Main Page Content ─── */}
+      <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-6 space-y-12 md:space-y-16 relative z-10">
+        
+        {/* Intro Section - Fluid Open-Air Design */}
+        <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
+          โครงสร้างการเชื่อมต่อหรือ <strong className="text-emerald-600 font-semibold">โทโพโลยีเครือข่าย (Network Topology)</strong> คือการวางแผนผังทางกายภาพ (Physical Layout) และการไหลเชิงตรรกะ (Logical Flow) ในการส่งข้อมูลระหว่างอุปกรณ์ต่างๆ ในเครือข่ายคอมพิวเตอร์ การทำความเข้าใจข้อดีและข้อจำกัดของแต่ละรูปแบบช่วยให้วิศวกรโครงข่ายสามารถออกแบบและแก้ไขปัญหาเครือข่ายได้อย่างถูกต้อง แม่นยำ และมีประสิทธิภาพสูงสุด
+        </p>
+
+        {/* Section 1: Main Simulator and Information Block */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-emerald-600 tracking-wider uppercase">
+              วิเคราะห์โครงสร้างผังเชื่อมโยงอุปกรณ์
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              รูปแบบการเชื่อมต่อเครือข่ายและระบบจำลองเสถียรภาพ (Interactive Topology Simulator)
+            </h3>
+          </div>
+
+          {/* Selector Menu */}
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8">
+            {Object.keys(topologiesData).map((key) => {
+              const data = topologiesData[key];
+              const isActive = activeTopology === key;
               return (
                 <button
                   key={key}
-                  onClick={() => setSelectedTopology(key)}
-                  className={`flex-1 min-w-[130px] bg-white/70 backdrop-blur-xl border rounded-2xl px-4 pt-4 pb-3 text-center cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg active:scale-[0.97] ${
-                    active
-                      ? `border-${accent}-400 ring-2 ring-${accent}-300 ring-offset-2 shadow-md bg-white`
-                      : 'border-slate-200 hover:border-slate-300'
-                  }`}
+                  onClick={() => handleTopologyChange(key)}
+                  className={`relative px-5 py-3 rounded-2xl flex items-center gap-3 transition-all duration-300 font-bold overflow-hidden shadow-sm cursor-pointer hover:scale-[1.02] active:scale-98
+                    ${isActive 
+                      ? activeStyles[key]
+                      : 'bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-slate-200'
+                    }`}
                 >
-                  {/* Mini SVG Diagram */}
-                  <div className={`w-full h-12 mb-3 rounded-xl p-1 ${active ? `bg-${accent}-50` : 'bg-slate-50'} transition-colors duration-200`}>
-                    {svg}
+                  <div className={`relative z-10 ${isActive ? 'text-white' : iconColors[key]} transition-colors duration-300`}>
+                    {data.icon}
                   </div>
-                  {/* Labels */}
-                  <p className={`text-[14px] font-black leading-tight ${active ? `text-${accent}-700` : 'text-slate-700'}`}>
-                    {label}
-                  </p>
-                  <p className={`text-[11px] font-semibold mt-0.5 ${active ? `text-${accent}-500` : 'text-slate-400'}`}>
-                    {labelEn}
-                  </p>
+                  <span className="relative z-10 text-[14.5px] tracking-tight">{data.name.split(' ')[0]}</span>
                 </button>
-              );
+              )
             })}
           </div>
 
-          {/* Detailed Academic Display Card */}
-          <div className="bg-white/60 backdrop-blur-xl border border-white/40 rounded-[2rem] p-6 md:p-8 shadow-xl transition-all duration-300">
-            <div className="flex flex-col md:flex-row gap-8 items-start animate-fadeIn">
-              <div className="space-y-6 flex-1">
-                <div>
-                  <span className="text-xs font-mono font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-wider">
-                    เอกสารประกอบวิชาชีพและวิเคราะห์ทางเทคนิค
-                  </span>
-                  <h3 className="text-2xl font-bold text-slate-800 mt-2.5">
-                    {topologiesInfo[selectedTopology].title}
-                  </h3>
-                  <p className="text-[15.5px] text-slate-600 mt-2 leading-relaxed font-medium">
-                    {topologiesInfo[selectedTopology].desc}
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 border-t border-slate-200/50 pt-5">
-                  <div className="bg-emerald-50/50 border border-emerald-100 rounded-2xl p-5 space-y-2">
-                    <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider block">จุดเด่นสำคัญ (Advantages)</span>
-                    <p className="text-[14px] text-emerald-800 leading-relaxed font-semibold">
-                      {topologiesInfo[selectedTopology].advantages}
-                    </p>
-                  </div>
-                  <div className="bg-rose-50/50 border border-rose-100 rounded-2xl p-5 space-y-2">
-                    <span className="text-xs font-bold text-rose-600 uppercase tracking-wider block">ข้อจำกัดหลัก (Disadvantages)</span>
-                    <p className="text-[14px] text-rose-800 leading-relaxed font-semibold">
-                      {topologiesInfo[selectedTopology].disadvantages}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ====================================================================
-            SECTION 2: เครื่องจำลองการชนกันและจุดขัดข้องระบบ (Simulator Zone)
-            ==================================================================== */}
-        <section id="section-collision-sim" className="space-y-8">
-          
-          <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-7 bg-indigo-600 rounded-full animate-pulse" />
-              <h2 className="text-[26px] font-bold text-zinc-900 tracking-tight">
-                แบบจำลองลอจิกความขัดข้องและการชนกันของสัญญาณในแต่ละ Topology
-              </h2>
-            </div>
-            
-            <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed max-w-4xl">
-              ทดสอบกลไกและข้อจำกัดการสื่อสารทางกายภาพของแต่ละรูปแบบการจัดวงจร 
-              วิเคราะห์ความแตกต่างของอัตราการกวนของคลื่น ทราฟฟิก และกระแสไฟฟ้าอ้อมในหน้าจำลองด้านล่าง:
-            </p>
-          </div>
-
-          {/* Advanced Multi-Mode Simulator Block */}
-          <div className="bg-slate-900 rounded-[2.5rem] border border-slate-800 shadow-2xl overflow-hidden">
-            
-            {/* Top Menu Bar */}
-            <div className="p-4 md:p-6 bg-slate-950/80 border-b border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="flex items-center gap-2.5">
-                <Workflow className="w-5 h-5 text-indigo-400" />
-                <span className="font-mono text-xs font-semibold tracking-wider text-indigo-300">
-                  TOPOLOGY COLLISION & FAULT RECOVERY SIMULATOR
-                </span>
-              </div>
-
-              {/* Mode Selection buttons */}
-              <div className="flex bg-slate-800/80 border border-slate-700/60 p-1 rounded-xl shadow-inner cursor-pointer shrink-0">
-                <button
-                  onClick={() => { setSimMode('bus'); handleResetSimulator(); }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    simMode === 'bus' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  Bus (Collision)
-                </button>
-                <button
-                  onClick={() => { setSimMode('star'); handleResetSimulator(); }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    simMode === 'star' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  Star (SPOF)
-                </button>
-                <button
-                  onClick={() => { setSimMode('ring'); handleResetSimulator(); }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    simMode === 'ring' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  Ring (Token Passing)
-                </button>
-                <button
-                  onClick={() => { setSimMode('mesh'); handleResetSimulator(); }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    simMode === 'mesh' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  Mesh (Fault Redirection)
-                </button>
-              </div>
-            </div>
-
-            {/* Controls panel bar */}
-            <div className="p-4 bg-slate-950/40 border-b border-slate-800/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          {/* Main Visual Display and Pros/Cons */}
+          <div className="glass-panel rounded-[2.5rem] p-6 sm:p-10 border border-slate-200/60 shadow-xl bg-white/60 backdrop-blur-xl">
+            <div className={`transition-all duration-300 transform ${isTransitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
               
-              <div className="flex items-center gap-3 flex-wrap">
-                {simMode === 'bus' && (
-                  <button
-                    onClick={handleBusCollision}
-                    disabled={activeTransfer}
-                    className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 text-white px-4 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
-                  >
-                    <Play className="w-3.5 h-3.5" />
-                    ชนสัญญาณกัน (Simulate Collision)
-                  </button>
-                )}
-
-                {simMode === 'star' && (
-                  <>
-                    <button
-                      onClick={handleStarFlow}
-                      disabled={activeTransfer}
-                      className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 text-white px-4 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
-                    >
-                      <Play className="w-3.5 h-3.5" />
-                      ส่งข้อมูลผ่านบอร์ด (Send Data)
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsCentralSwitchCrashed(!isCentralSwitchCrashed);
-                        setTransferLog(prev => [
-                          ...prev,
-                          isCentralSwitchCrashed
-                            ? '[ซ่อมบำรุง] เปิดการจ่ายไฟและรีบูตหน่วยควบคุม Switch ประสบความสำเร็จ'
-                            : '[ALERT] วิศวกรเครือข่ายถอดระบบสลับสัญญาณ (Central Switch) ดำเนินการอัดโปรโตคอลขัดข้องชั่วคราว!'
-                        ]);
-                      }}
-                      className={`px-4 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all cursor-pointer ${
-                        isCentralSwitchCrashed
-                          ? 'bg-emerald-600 text-white hover:bg-emerald-500'
-                          : 'bg-rose-600 text-white hover:bg-rose-500'
-                      }`}
-                    >
-                      {isCentralSwitchCrashed ? 'ซ่อมสวิตช์ระบบ (Repair Switch)' : 'จำลองสวิตช์ล่ม (Crash Switch)'}
-                    </button>
-                  </>
-                )}
-
-                {simMode === 'ring' && (
-                  <button
-                    onClick={handleRingTokenPassing}
-                    disabled={activeTransfer}
-                    className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 text-white px-4 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
-                  >
-                    <Play className="w-3.5 h-3.5" />
-                    รันโทเคนรอบแหวน (Token Run)
-                  </button>
-                )}
-
-                {simMode === 'mesh' && (
-                  <>
-                    <button
-                      onClick={handleMeshRouting}
-                      disabled={activeTransfer}
-                      className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 text-white px-4 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
-                    >
-                      <Play className="w-3.5 h-3.5" />
-                      จัดส่งและอ้อมเส้นทาง (Mesh Route)
-                    </button>
-                    <div className="flex items-center gap-2 bg-slate-800 border border-slate-700/60 px-3 py-1 rounded-lg">
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">เชื่อมสาย A-C:</span>
-                      <input
-                        type="checkbox"
-                        checked={meshCables.AC}
-                        onChange={(e) => {
-                          setMeshCables(prev => ({ ...prev, AC: e.target.checked }));
-                          setTransferLog(p => [...p, `[MESH] ปรับสายหลัก A ➔ C เป็น ${e.target.checked ? 'CONNECT' : 'CUT/DISCONNECTED'}`]);
-                        }}
-                        className="rounded border-slate-700 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
-                      />
-                      <span className="text-xs font-mono font-bold text-slate-200">{meshCables.AC ? 'ต่อสายแลน' : 'ตัดสายแลน'}</span>
-                    </div>
-                  </>
-                )}
-
-                <button
-                  onClick={handleResetSimulator}
-                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer"
-                >
-                  <RotateCcw className="w-3 h-3" />
-                </button>
-              </div>
-
-              {/* Speed controls */}
-              <div className="flex items-center gap-3">
-                <span className="text-[12px] font-bold text-slate-500">ความถี่สัญญาณ:</span>
-                <input
-                  type="range"
-                  min="600"
-                  max="3000"
-                  step="400"
-                  value={3600 - simSpeed}
-                  onChange={(e) => setSimSpeed(3600 - parseInt(e.target.value))}
-                  className="w-24 accent-indigo-500 cursor-pointer"
-                />
-                <span className="text-xs font-mono text-indigo-400">{(simSpeed / 1000).toFixed(1)}s</span>
-              </div>
-            </div>
-
-            {/* Split Graphic (Col 7) / Logs Panel (Col 5) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 border-b border-slate-800/80">
-              
-              <div className="lg:col-span-7 bg-slate-950 p-6 flex flex-col items-center justify-center min-h-[380px]">
+              <div className="grid lg:grid-cols-2 gap-10">
                 
-                {simMode === 'bus' && (
-                  <svg width="600" height="340" viewBox="0 0 600 340" className="w-full max-w-[480px]">
-                    {/* Symmetrical horizontal backbone cable at y = 170 */}
-                    <path d="M 80,170 H 520" stroke="#475569" strokeWidth="6" strokeLinecap="round" />
-                    
-                    {/* Terminators at end */}
-                    <rect x="70" y="150" width="10" height="40" fill="#94A3B8" rx="2" />
-                    <rect x="520" y="150" width="10" height="40" fill="#94A3B8" rx="2" />
-
-                    {/* Nodes connectors at center alignment */}
-                    <line x1="140" y1="100" x2="140" y2="170" stroke="#475569" strokeWidth="3" />
-                    <line x1="240" y1="100" x2="240" y2="170" stroke="#475569" strokeWidth="3" />
-                    <line x1="360" y1="100" x2="360" y2="170" stroke="#475569" strokeWidth="3" />
-                    <line x1="460" y1="100" x2="460" y2="170" stroke="#475569" strokeWidth="3" />
-
-                    {/* Collision path flow anim */}
-                    {activeTransfer && (
-                      <>
-                        {/* Node 1 to center */}
-                        <path
-                          d="M 140,100 V 170 H 300"
-                          fill="none"
-                          stroke={simStep === 2 ? '#EF4444' : '#F59E0B'}
-                          strokeWidth="3.5"
-                          className="animate-flow-dash"
-                          style={{ '--flow-anim-speed': `${simSpeed / 1000}s` }}
-                        />
-                        {/* Node 4 to center */}
-                        <path
-                          d="M 460,100 V 170 H 300"
-                          fill="none"
-                          stroke={simStep === 2 ? '#EF4444' : '#F59E0B'}
-                          strokeWidth="3.5"
-                          className="animate-flow-dash"
-                          style={{ '--flow-anim-speed': `${simSpeed / 1000}s` }}
-                        />
-                      </>
-                    )}
-
-                    {/* Node 1 */}
-                    <g transform="translate(90, 30)">
-                      <rect width="100" height="70" rx="14" fill="#1E293B" stroke="#64748B" strokeWidth="2" />
-                      <text x="50" y="40" textAnchor="middle" fill="#E2E8F0" fontSize="11" fontWeight="bold" fontFamily="sans-serif">NODE 1</text>
-                    </g>
-                    {/* Node 2 */}
-                    <g transform="translate(190, 30)">
-                      <rect width="100" height="70" rx="14" fill="#1E293B" stroke="#64748B" strokeWidth="2" />
-                      <text x="50" y="40" textAnchor="middle" fill="#E2E8F0" fontSize="11" fontWeight="bold" fontFamily="sans-serif">NODE 2</text>
-                    </g>
-                    {/* Node 3 */}
-                    <g transform="translate(310, 30)">
-                      <rect width="100" height="70" rx="14" fill="#1E293B" stroke="#64748B" strokeWidth="2" />
-                      <text x="50" y="40" textAnchor="middle" fill="#E2E8F0" fontSize="11" fontWeight="bold" fontFamily="sans-serif">NODE 3</text>
-                    </g>
-                    {/* Node 4 */}
-                    <g transform="translate(410, 30)">
-                      <rect width="100" height="70" rx="14" fill="#1E293B" stroke="#64748B" strokeWidth="2" />
-                      <text x="50" y="40" textAnchor="middle" fill="#E2E8F0" fontSize="11" fontWeight="bold" fontFamily="sans-serif">NODE 4</text>
-                    </g>
-
-                    {/* Symmetrical Collision explode symbol at x = 300 */}
-                    {simStep === 2 && (
-                      <g transform="translate(280, 150)">
-                        <circle cx="20" cy="20" r="22" fill="#EF4444" opacity="0.3" className="animate-ping" />
-                        <polygon points="20,0 25,12 38,15 28,24 33,37 20,30 7,37 12,24 2,15 15,12" fill="#F59E0B" stroke="#EF4444" strokeWidth="2" />
-                      </g>
-                    )}
-                  </svg>
-                )}
-
-                {simMode === 'star' && (
-                  <svg width="600" height="340" viewBox="0 0 600 340" className="w-full max-w-[480px]">
-                    <defs>
-                      <marker id="starArrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="rgba(148, 163, 184, 0.3)" />
-                      </marker>
-                      <marker id="starArrow-active" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill={isCentralSwitchCrashed ? '#EF4444' : '#818CF8'} />
-                      </marker>
-                    </defs>
-
-                    {/* Symmetrical connectors to central Switch (cx: 300, cy: 170) */}
-                    <path
-                      d="M 150,70 L 300,170"
-                      stroke={activeTransfer && !isCentralSwitchCrashed ? '#818CF8' : isCentralSwitchCrashed ? '#EF4444' : 'rgba(148, 163, 184, 0.15)'}
-                      strokeWidth="2.5"
-                      markerEnd={activeTransfer ? 'url(#starArrow-active)' : 'url(#starArrow)'}
-                      className={activeTransfer && !isCentralSwitchCrashed ? 'animate-flow-dash' : ''}
-                      style={{ '--flow-anim-speed': `${simSpeed / 1000}s` }}
-                    />
-                    <path
-                      d="M 450,70 L 300,170"
-                      stroke={activeTransfer && !isCentralSwitchCrashed ? '#818CF8' : isCentralSwitchCrashed ? '#EF4444' : 'rgba(148, 163, 184, 0.15)'}
-                      strokeWidth="2.5"
-                      markerEnd={activeTransfer ? 'url(#starArrow-active)' : 'url(#starArrow)'}
-                      className={activeTransfer && !isCentralSwitchCrashed ? 'animate-flow-dash' : ''}
-                      style={{ '--flow-anim-speed': `${simSpeed / 1000}s` }}
-                    />
-                    <path
-                      d="M 150,270 L 300,170"
-                      stroke={activeTransfer && !isCentralSwitchCrashed ? '#818CF8' : isCentralSwitchCrashed ? '#EF4444' : 'rgba(148, 163, 184, 0.15)'}
-                      strokeWidth="2.5"
-                      markerEnd={activeTransfer ? 'url(#starArrow-active)' : 'url(#starArrow)'}
-                      className={activeTransfer && !isCentralSwitchCrashed ? 'animate-flow-dash' : ''}
-                      style={{ '--flow-anim-speed': `${simSpeed / 1000}s` }}
-                    />
-                    <path
-                      d="M 450,270 L 300,170"
-                      stroke={activeTransfer && !isCentralSwitchCrashed ? '#818CF8' : isCentralSwitchCrashed ? '#EF4444' : 'rgba(148, 163, 184, 0.15)'}
-                      strokeWidth="2.5"
-                      markerEnd={activeTransfer ? 'url(#starArrow-active)' : 'url(#starArrow)'}
-                      className={activeTransfer && !isCentralSwitchCrashed ? 'animate-flow-dash' : ''}
-                      style={{ '--flow-anim-speed': `${simSpeed / 1000}s` }}
-                    />
-
-                    {/* Nodes - Client 1 */}
-                    <g transform="translate(90, 30)">
-                      <rect width="120" height="80" rx="16" fill="#1E293B" stroke="#475569" strokeWidth="2" />
-                      <text x="60" y="38" textAnchor="middle" fill="#94A3B8" fontSize="12" fontWeight="bold" fontFamily="sans-serif">CLIENT 1</text>
-                      <text x="60" y="58" textAnchor="middle" fill="#38BDF8" fontSize="11" fontWeight="bold" fontFamily="sans-serif">192.168.1.10</text>
-                      <circle cx="15" cy="15" r="5" fill="#22C55E" />
-                    </g>
-
-                    {/* Nodes - Client 2 */}
-                    <g transform="translate(390, 30)">
-                      <rect width="120" height="80" rx="16" fill="#1E293B" stroke="#475569" strokeWidth="2" />
-                      <text x="60" y="38" textAnchor="middle" fill="#94A3B8" fontSize="12" fontWeight="bold" fontFamily="sans-serif">CLIENT 2</text>
-                      <text x="60" y="58" textAnchor="middle" fill="#38BDF8" fontSize="11" fontWeight="bold" fontFamily="sans-serif">192.168.1.11</text>
-                      <circle cx="15" cy="15" r="5" fill="#22C55E" />
-                    </g>
-
-                    {/* Center Switch (x:230, y:125) */}
-                    <g transform="translate(230, 125)">
-                      <rect
-                        width="140"
-                        height="90"
-                        rx="20"
-                        fill={isCentralSwitchCrashed ? '#450A0A' : '#1E1B4B'}
-                        stroke={isCentralSwitchCrashed ? '#EF4444' : '#4F46E5'}
-                        strokeWidth="3"
-                        className={activeTransfer && !isCentralSwitchCrashed ? 'animate-pulse' : ''}
-                      />
-                      <Network className={`w-6 h-6 mx-auto mt-3 ${isCentralSwitchCrashed ? 'text-rose-500' : 'text-indigo-400'}`} />
-                      <text x="70" y="55" textAnchor="middle" fill={isCentralSwitchCrashed ? '#FCA5A5' : '#E0E7FF'} fontSize="13" fontWeight="bold" fontFamily="sans-serif">CENTRAL SWITCH</text>
-                      <text x="70" y="73" textAnchor="middle" fill={isCentralSwitchCrashed ? '#EF4444' : '#38BDF8'} fontSize="11" fontWeight="bold" fontFamily="mono">192.168.1.254</text>
-                    </g>
-
-                    {/* Nodes - Client 3 */}
-                    <g transform="translate(90, 230)">
-                      <rect width="120" height="80" rx="16" fill="#1E293B" stroke="#475569" strokeWidth="2" />
-                      <text x="60" y="38" textAnchor="middle" fill="#94A3B8" fontSize="12" fontWeight="bold" fontFamily="sans-serif">CLIENT 3</text>
-                      <text x="60" y="58" textAnchor="middle" fill="#38BDF8" fontSize="11" fontWeight="bold" fontFamily="sans-serif">192.168.1.12</text>
-                      <circle cx="15" cy="15" r="5" fill="#22C55E" />
-                    </g>
-
-                    {/* Nodes - Client 4 */}
-                    <g transform="translate(390, 230)">
-                      <rect width="120" height="80" rx="16" fill="#1E293B" stroke="#475569" strokeWidth="2" />
-                      <text x="60" y="38" textAnchor="middle" fill="#94A3B8" fontSize="12" fontWeight="bold" fontFamily="sans-serif">CLIENT 4</text>
-                      <text x="60" y="58" textAnchor="middle" fill="#38BDF8" fontSize="11" fontWeight="bold" fontFamily="sans-serif">192.168.1.13</text>
-                      <circle cx="15" cy="15" r="5" fill="#22C55E" />
-                    </g>
-                  </svg>
-                )}
-
-                {simMode === 'ring' && (
-                  <svg width="600" height="340" viewBox="0 0 600 340" className="w-full max-w-[480px]">
-                    {/* Symmetrical ring circular path */}
-                    <circle cx="300" cy="170" r="100" fill="none" stroke="rgba(16, 185, 129, 0.15)" strokeWidth="6" />
-
-                    {/* Active circular flow path */}
-                    {activeTransfer && (
-                      <circle
-                        cx="300"
-                        cy="170"
-                        r="100"
-                        fill="none"
-                        stroke="#10B981"
-                        strokeWidth="3"
-                        strokeDasharray="8 8"
-                        className="animate-spin"
-                        style={{ animationDuration: `${simSpeed * 2 / 1000}s` }}
-                      />
-                    )}
-
-                    {/* Symmetrical Nodes along the ring at 90deg steps */}
-                    {/* Node 1 (Top: 300, 70) */}
-                    <g transform="translate(250, 20)">
-                      <rect width="100" height="50" rx="12" fill="#1E293B" stroke="#10B981" strokeWidth="2" />
-                      <text x="50" y="30" textAnchor="middle" fill="#E2E8F0" fontSize="11" fontWeight="bold" fontFamily="sans-serif">NODE 1</text>
-                    </g>
-                    {/* Node 2 (Right: 400, 170) */}
-                    <g transform="translate(420, 145)">
-                      <rect width="100" height="50" rx="12" fill="#1E293B" stroke="#10B981" strokeWidth="2" />
-                      <text x="50" y="30" textAnchor="middle" fill="#E2E8F0" fontSize="11" fontWeight="bold" fontFamily="sans-serif">NODE 2</text>
-                    </g>
-                    {/* Node 3 (Bottom: 300, 270) */}
-                    <g transform="translate(250, 270)">
-                      <rect width="100" height="50" rx="12" fill="#1E293B" stroke="#10B981" strokeWidth="2" />
-                      <text x="50" y="30" textAnchor="middle" fill="#E2E8F0" fontSize="11" fontWeight="bold" fontFamily="sans-serif">NODE 3</text>
-                    </g>
-                    {/* Node 4 (Left: 200, 170) */}
-                    <g transform="translate(80, 145)">
-                      <rect width="100" height="50" rx="12" fill="#1E293B" stroke="#10B981" strokeWidth="2" />
-                      <text x="50" y="30" textAnchor="middle" fill="#E2E8F0" fontSize="11" fontWeight="bold" fontFamily="sans-serif">NODE 4</text>
-                    </g>
-
-                    {/* Rotating Token icon */}
-                    <g
-                      transform={`translate(300, 170) rotate(${tokenPosition}) translate(100, 0)`}
-                    >
-                      <circle cx="0" cy="0" r="10" fill="#F59E0B" className="animate-pulse" />
-                      <text x="0" y="4" textAnchor="middle" fill="#FFFFFF" fontSize="10" fontWeight="bold" fontFamily="sans-serif">T</text>
-                    </g>
-                  </svg>
-                )}
-
-                {simMode === 'mesh' && (
-                  <svg width="600" height="340" viewBox="0 0 600 340" className="w-full max-w-[480px]">
-                    {/* Full Mesh links */}
-                    <line x1="150" y1="70" x2="450" y2="70" stroke={meshCables.AB ? '#3B82F6' : 'rgba(148, 163, 184, 0.08)'} strokeWidth="2.5" />
-                    <line x1="150" y1="70" x2="150" y2="270" stroke={meshCables.AC ? '#3B82F6' : 'rgba(148, 163, 184, 0.08)'} strokeWidth="2.5" strokeDasharray={meshCables.AC ? 'none' : '3 3'} />
-                    <line x1="150" y1="70" x2="450" y2="270" stroke={meshCables.AD ? '#3B82F6' : 'rgba(148, 163, 184, 0.08)'} strokeWidth="2.5" />
-                    <line x1="450" y1="70" x2="150" y2="270" stroke={meshCables.BC ? '#3B82F6' : 'rgba(148, 163, 184, 0.08)'} strokeWidth="2.5" />
-                    <line x1="450" y1="70" x2="450" y2="270" stroke={meshCables.BD ? '#3B82F6' : 'rgba(148, 163, 184, 0.08)'} strokeWidth="2.5" />
-                    <line x1="150" y1="270" x2="450" y2="270" stroke={meshCables.CD ? '#3B82F6' : 'rgba(148, 163, 184, 0.08)'} strokeWidth="2.5" />
-
-                    {/* Symmetrical active packet flow */}
-                    {activeTransfer && (
-                      <path
-                        d={meshCables.AC ? 'M 150,70 L 150,270' : 'M 150,70 L 450,70 L 150,270'}
-                        fill="none"
-                        stroke="#22C55E"
-                        strokeWidth="3.5"
-                        className="animate-flow-dash"
-                        style={{ '--flow-anim-speed': `${simSpeed / 1000}s` }}
-                      />
-                    )}
-
-                    {/* Nodes - Node A */}
-                    <g transform="translate(90, 30)">
-                      <rect width="120" height="80" rx="16" fill="#1E293B" stroke="#3B82F6" strokeWidth="2" />
-                      <text x="60" y="38" textAnchor="middle" fill="#E2E8F0" fontSize="12" fontWeight="bold" fontFamily="sans-serif">NODE A</text>
-                      <circle cx="15" cy="15" r="5" fill="#22C55E" />
-                    </g>
-                    {/* Nodes - Node B */}
-                    <g transform="translate(390, 30)">
-                      <rect width="120" height="80" rx="16" fill="#1E293B" stroke="#3B82F6" strokeWidth="2" />
-                      <text x="60" y="38" textAnchor="middle" fill="#E2E8F0" fontSize="12" fontWeight="bold" fontFamily="sans-serif">NODE B</text>
-                      <circle cx="15" cy="15" r="5" fill="#22C55E" />
-                    </g>
-                    {/* Nodes - Node C */}
-                    <g transform="translate(90, 230)">
-                      <rect width="120" height="80" rx="16" fill="#1E293B" stroke="#3B82F6" strokeWidth="2" />
-                      <text x="60" y="38" textAnchor="middle" fill="#E2E8F0" fontSize="12" fontWeight="bold" fontFamily="sans-serif">NODE C</text>
-                      <circle cx="15" cy="15" r="5" fill="#22C55E" />
-                    </g>
-                    {/* Nodes - Node D */}
-                    <g transform="translate(390, 230)">
-                      <rect width="120" height="80" rx="16" fill="#1E293B" stroke="#3B82F6" strokeWidth="2" />
-                      <text x="60" y="38" textAnchor="middle" fill="#E2E8F0" fontSize="12" fontWeight="bold" fontFamily="sans-serif">NODE D</text>
-                      <circle cx="15" cy="15" r="5" fill="#22C55E" />
-                    </g>
-                  </svg>
-                )}
-
-              </div>
-
-              {/* Console Logs Panel (Col 5) */}
-              <div className="lg:col-span-5 border-t lg:border-t-0 lg:border-l border-slate-800/80">
-                <ConsoleScreen
-                  title="ตัววิเคราะห์คิวสถานะ Topology"
-                  output={transferLog.join('\n')}
-                  height="h-[380px]"
-                />
-              </div>
-
-            </div>
-
-            {/* Carrier Progress Bar */}
-            <div className="p-4 bg-slate-950/60 flex items-center justify-between gap-4">
-              <span className="text-xs font-bold text-slate-400">สถานะแบนด์วิดท์สายส่ง (Carrier Progress):</span>
-              <div className="flex-1 bg-slate-800 rounded-full h-2.5 overflow-hidden">
-                <div
-                  className="bg-indigo-500 h-2.5 rounded-full transition-all duration-300"
-                  style={{ width: `${transferProgress}%` }}
-                />
-              </div>
-              <span className="text-xs font-mono font-bold text-indigo-400">{transferProgress}%</span>
-            </div>
-
-          </div>
-
-          {/* Symmetrical Matrix Comparison Table */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <h3 className="text-xl font-bold text-slate-800">
-                ตารางวิเคราะห์เปรียบเทียบสถาปัตยกรรมแบบ Topology เชิงอุตสาหกรรม
-              </h3>
-            </div>
-            
-            <div className="overflow-x-auto rounded-2xl border border-slate-200 shadow-sm bg-white/60 backdrop-blur-xl">
-              <table className="min-w-full divide-y divide-slate-200">
-                <thead className="bg-slate-50">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Topology</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">สถิติสายเคเบิล</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-rose-500 uppercase tracking-wider">จุดล้มเหลวเดี่ยว (SPOF)</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-emerald-600 uppercase tracking-wider">ประสิทธิภาพ CSMA / CD</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">ความยากง่ายในการกู้ภัย</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-slate-100 font-sans text-sm text-slate-700">
-                  <tr>
-                    <td className="px-6 py-4 font-bold text-slate-800">Bus Topology</td>
-                    <td className="px-6 py-4">น้อยที่สุด ( Backbone เส้นเดียว )</td>
-                    <td className="px-6 py-4 text-rose-600 font-semibold">มี ( หากสาย Backbone หลักชำรุด )</td>
-                    <td className="px-6 py-4 text-rose-600 font-semibold">เกิดการชนข้อมูลสูงเมื่อแชร์ส่งพร้อมกัน</td>
-                    <td className="px-6 py-4">ยากมาก ( ต้องไล่เคาะจุด T-Connector ทั่ววง )</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 font-bold text-slate-800">Star Topology</td>
-                    <td className="px-6 py-4">ปานกลาง ( $N$ เส้นต่อจุดแลน )</td>
-                    <td className="px-6 py-4 text-rose-600 font-semibold">มี ( หาก Switch หลักล่ม )</td>
-                    <td className="px-6 py-4 text-emerald-600 font-semibold">ดีเยี่ยม ( ไร้การชน สวิตช์สับพอร์ตให้ )</td>
-                    <td className="px-6 py-4 text-emerald-600 font-semibold">ง่ายที่สุด ( โหนดขาด สวิตช์แจ้งเตือนไฟทันที )</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 font-bold text-slate-800">Ring Topology</td>
-                    <td className="px-6 py-4">ปานกลาง ( เชื่อมกันเป็นห่วงวงแหวน )</td>
-                    <td className="px-6 py-4 text-rose-600 font-semibold">มี ( หากสายขาดระหว่างโหนดใดๆ )</td>
-                    <td className="px-6 py-4 text-emerald-600 font-semibold">ดีเยี่ยม ( สัญญาณเดินทางทางเดียวตามคิว Token )</td>
-                    <td className="px-6 py-4">ปานกลาง ( ต้องไล่สืบแผงรับส่งการ์ดแลน )</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 font-bold text-slate-800">Mesh Topology</td>
-                    <td className="px-6 py-4 text-rose-600 font-semibold">มหาศาล ($N(N-1)/2$ เส้น)</td>
-                    <td className="px-6 py-4 text-emerald-600 font-semibold">ไม่มี ( ทนทานชำรุดสูง มีสายอ้อมสำรอง )</td>
-                    <td className="px-6 py-4 text-emerald-600 font-semibold">ดีเยี่ยม ( ช่องส่งเฉพาะจุด ไม่ติดขัด )</td>
-                    <td className="px-6 py-4">ปานกลาง-ยาก ( ตั้งค่าระบบจัดหาเส้นทางซับซ้อน )</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* 1.4.6: เครื่องคำนวณและวิเคราะห์ต้นทุนการติดตั้งเครือข่าย (Deployment Cost & Cable Calculator) */}
-          <div className="bg-white/60 backdrop-blur-xl border border-white/40 rounded-[2rem] p-6 md:p-8 shadow-xl space-y-6">
-            <div>
-              <span className="text-xs font-mono font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-wider">
-                1.4.6 สื่อจำลองอินเตอร์แอคทีฟวิเคราะห์ราคาและการวางงบประมาณ
-              </span>
-              <h3 className="text-2xl font-bold text-slate-800 mt-2.5">
-                เครื่องคำนวณภาระต้นทุนสายส่งและการติดตั้ง Topology เชิงพาณิชย์
-              </h3>
-              <p className="text-[14.5px] text-slate-500 mt-1">
-                ปรับแต่งสถิติทางกายภาพของจำนวนโหนด ระยะสาย และชนิดอุปกรณ์ เพื่อวิเคราะห์ปริมาณความยาวสายรวม ($m$) และงบประมาณเปรียบเทียบในแต่ละรูปแบบ
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              
-              {/* Left Column: Parameter Adjusters (Col 5) */}
-              <div className="lg:col-span-5 bg-slate-50/80 border border-slate-100 rounded-2xl p-5 md:p-6 space-y-6">
-                <span className="text-[13px] font-bold text-slate-400 uppercase tracking-wider block border-b border-slate-200 pb-2">
-                  แผงควบคุมปัจจัยทางกายภาพ (Inputs)
-                </span>
-
-                {/* Number of Nodes Slider */}
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center text-sm font-semibold text-slate-700">
-                    <span>จำนวนอุปกรณ์คอมพิวเตอร์ (Nodes):</span>
-                    <span className="font-mono text-indigo-600">{numNodes} เครื่อง</span>
+                {/* Left Column: Information Details and Simulator */}
+                <div className="flex flex-col gap-6">
+                  <div>
+                    <h3 className={`text-2xl font-bold mb-3 ${activeData.textClass} flex items-center gap-3`}>
+                      {activeData.icon} {activeData.name}
+                    </h3>
+                    <p className="text-zinc-600 leading-relaxed text-[16px] md:text-[17px] font-normal bg-white/60 p-5 rounded-2xl border border-white/80 shadow-sm">
+                      {activeData.desc}
+                    </p>
                   </div>
-                  <input
-                    type="range"
-                    min="2"
-                    max="12"
-                    step="1"
-                    value={numNodes}
-                    onChange={(e) => setNumNodes(parseInt(e.target.value))}
-                    className="w-full accent-indigo-600 cursor-pointer"
-                  />
-                  <span className="text-[11px] text-slate-400 block leading-tight">
-                    *โหนดที่มากขึ้นส่งผลทวีคูณต่อสาย Mesh: $N(N-1)/2$ = {(numNodes * (numNodes - 1)) / 2} เส้นสัญญาณ
-                  </span>
-                </div>
 
-                {/* Distance Slider */}
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center text-sm font-semibold text-slate-700">
-                    <span>ระยะทางเฉลี่ยระหว่างโหนด (Distance):</span>
-                    <span className="font-mono text-indigo-600">{avgDistance} เมตร</span>
+                  <div className="flex-grow flex flex-col justify-center">
+                    <TopologySimulator type={activeTopology} />
                   </div>
-                  <input
-                    type="range"
-                    min="5"
-                    max="100"
-                    step="5"
-                    value={avgDistance}
-                    onChange={(e) => setAvgDistance(parseInt(e.target.value))}
-                    className="w-full accent-indigo-600 cursor-pointer"
-                  />
+
+                  {/* Use Case Box - Styled as Frosted Glass Callout */}
+                  <div className={`p-5 rounded-2xl border-l-[3.5px] shadow-sm bg-white/70 backdrop-blur-md ${activeData.borderLeft} ${activeData.borderLight}`}>
+                    <h4 className={`text-sm font-bold uppercase tracking-wider mb-2 flex items-center gap-2 ${activeData.textClass}`}>
+                      <Zap className="w-4 h-4" /> ความเหมาะสมในการนำไปใช้งาน (Real-world Use Case)
+                    </h4>
+                    <p className="text-zinc-700 text-[14.5px] font-medium leading-relaxed">
+                      {activeData.useCase}
+                    </p>
+                  </div>
                 </div>
 
-                {/* Cable Type Dropdown */}
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-700 block">ชนิดสายเคเบิลสื่อกลาง (Transmission Medium):</label>
-                  <select
-                    value={cableType}
-                    onChange={(e) => setCableType(e.target.value)}
-                    className="w-full bg-white border border-slate-200 rounded-lg p-2 text-sm font-semibold text-slate-700 focus:outline-none focus:border-indigo-500 cursor-pointer"
-                  >
-                    <option value="utp">สายคู่ตีเกลียว UTP Cat6 (15 บิต/เมตร)</option>
-                    <option value="coaxial">สายโคแอกเชียล Coaxial (25 บิต/เมตร)</option>
-                    <option value="fiber">สายใยแก้วนำแสง Fiber Optic (45 บิต/เมตร)</option>
-                  </select>
-                </div>
-
-                {/* Switch Class Dropdown */}
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-700 block">เกรดสวิตช์แกนกลาง Star (Switch Quality):</label>
-                  <select
-                    value={switchType}
-                    onChange={(e) => setSwitchType(e.target.value)}
-                    className="w-full bg-white border border-slate-200 rounded-lg p-2 text-sm font-semibold text-slate-700 focus:outline-none focus:border-indigo-500 cursor-pointer"
-                  >
-                    <option value="basic">Basic Business Switch (8-16 ports Unmanaged)</option>
-                    <option value="managed">Managed Enterprise Switch (Security & VLans)</option>
-                  </select>
-                </div>
-
-              </div>
-
-              {/* Right Column: Comparative Dashboard (Col 7) */}
-              <div className="lg:col-span-7 space-y-6">
-                <span className="text-[13px] font-bold text-slate-400 uppercase tracking-wider block">
-                  รายงานผลลัพธ์และเปรียบเทียบงบประมาณ (Outputs)
-                </span>
-
-                {/* Calculations logic nested dynamically in rendering */}
-                {(() => {
-                  const cablePrice = cableType === 'utp' ? 15 : cableType === 'fiber' ? 45 : 25;
+                {/* Right Column: Pros and Cons */}
+                <div className="flex flex-col gap-5 justify-start">
                   
-                  // 1. Bus
-                  const busCableLength = (numNodes - 1) * avgDistance + (numNodes * 2);
-                  const busCableCost = busCableLength * cablePrice;
-                  const busDeviceCost = 2 * 150 + numNodes * 100; 
-                  const busTotalCost = busCableCost + busDeviceCost;
-
-                  // 2. Star
-                  const starCableLength = numNodes * avgDistance;
-                  const starCableCost = starCableLength * cablePrice;
-                  let starDeviceCost = 0;
-                  if (switchType === 'basic') {
-                    starDeviceCost = numNodes <= 8 ? 1200 : 2400;
-                  } else {
-                    starDeviceCost = numNodes <= 8 ? 4500 : 8500;
-                  }
-                  const starTotalCost = starCableCost + starDeviceCost;
-
-                  // 3. Ring
-                  const ringCableLength = numNodes * avgDistance;
-                  const ringCableCost = ringCableLength * cablePrice;
-                  const ringDeviceCost = numNodes * 350; 
-                  const ringTotalCost = ringCableCost + ringDeviceCost;
-
-                  // 4. Full Mesh
-                  const meshLinks = (numNodes * (numNodes - 1)) / 2;
-                  const meshCableLength = meshLinks * avgDistance;
-                  const meshCableCost = meshCableLength * cablePrice;
-                  const meshDeviceCost = numNodes * (numNodes - 1) * 450; 
-                  const meshTotalCost = meshCableCost + meshDeviceCost;
-
-                  // Find max cost for styling progress bars proportionally
-                  const maxCost = Math.max(busTotalCost, starTotalCost, ringTotalCost, meshTotalCost);
-
-                  // Technical recommendation text generator
-                  let recTitle = "";
-                  let recDesc = "";
-                  if (numNodes <= 4 && avgDistance <= 20) {
-                    recTitle = "Bus / Star (ขนาดกะทัดรัด ประหยัดสายส่งสูง)";
-                    recDesc = "จำนวนอุปกรณ์น้อยและพื้นที่จำกัด การวางสาย Bus เส้นเดียวหรือการติดตั้ง Star Switch 8 พอร์ตรุ่นเริ่มต้น จะมีความคุ้มค่าที่สุด โดยไม่จำเป็นต้องใช้สายใยแก้วนำแสงหรือระบบ Managed ราคาแพง.";
-                  } else if (numNodes > 8 || avgDistance > 45) {
-                    recTitle = "Star Topology (แนะแนวระดับวิชาชีพในองค์กร)";
-                    recDesc = "โหนดมากกว่า 8 เครื่อง และระยะสายห่างกัน การวางแบบ Star เกรด Managed Switch จะมอบเสถียรภาพสูงสุด เนื่องจากสายขาดจุดเดียวไม่กระทบจุดอื่น และการชนของข้อมูลเกือบเป็นศูนย์ ในขณะที่ Mesh จะกินต้นทุนค่าสายมหาศาล.";
-                  } else if (meshTotalCost > 35000 && numNodes <= 6) {
-                    recTitle = "Mesh / Star Hybrid (ทนทานสูง ปราศจาก SPOF)";
-                    recDesc = "ระบบ Mesh มอบสายสำรองที่ทนทานสูงมาก แต่ต้นทุนจะพุ่งขึ้นเรื่อยๆ ตามเครื่องคอมพิวเตอร์ที่เพิ่ม หากไม่ต้องการระบบ Redundancy ซ้ำซ้อน ให้เลือก Star เพื่อความสมดุลด้านราคา.";
-                  } else {
-                    recTitle = "Star Topology (สากลประหยัดงบและขยายพอร์ตง่าย)";
-                    recDesc = "การติดตั้งแบบ Star ได้รับการประเมินว่ามอบค่าเฉลี่ยประสิทธิภาพและราคาดีที่สุด มีความยืดหยุ่นสูง ซ่อมบำรุงและกู้คืนปัญหาไดรเวอร์พอร์ตเครือข่ายขัดข้องได้สะดวกรวดเร็ว.";
-                  }
-
-                  return (
-                    <div className="space-y-5">
-                      {/* Cost Bars comparison list */}
-                      <div className="space-y-3 bg-slate-50 border border-slate-100 rounded-2xl p-5">
-                        
-                        {/* Bus Cost Row */}
-                        <div className="space-y-1.5">
-                          <div className="flex justify-between text-xs font-bold text-slate-600">
-                            <span>1. Bus Topology (สายรวม {busCableLength} เมตร)</span>
-                            <span className="font-mono text-slate-800">{busTotalCost.toLocaleString()} บาท</span>
-                          </div>
-                          <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
-                            <div className="bg-amber-500 h-3 rounded-full transition-all duration-300" style={{ width: `${(busTotalCost / maxCost) * 100}%` }} />
-                          </div>
-                        </div>
-
-                        {/* Star Cost Row */}
-                        <div className="space-y-1.5">
-                          <div className="flex justify-between text-xs font-bold text-slate-600">
-                            <span>2. Star Topology (สายรวม {starCableLength} เมตร + Switch)</span>
-                            <span className="font-mono text-slate-800">{starTotalCost.toLocaleString()} บาท</span>
-                          </div>
-                          <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
-                            <div className="bg-indigo-600 h-3 rounded-full transition-all duration-300" style={{ width: `${(starTotalCost / maxCost) * 100}%` }} />
-                          </div>
-                        </div>
-
-                        {/* Ring Cost Row */}
-                        <div className="space-y-1.5">
-                          <div className="flex justify-between text-xs font-bold text-slate-600">
-                            <span>3. Ring Topology (สายรวม {ringCableLength} เมตร + Adapters)</span>
-                            <span className="font-mono text-slate-800">{ringTotalCost.toLocaleString()} บาท</span>
-                          </div>
-                          <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
-                            <div className="bg-emerald-500 h-3 rounded-full transition-all duration-300" style={{ width: `${(ringTotalCost / maxCost) * 100}%` }} />
-                          </div>
-                        </div>
-
-                        {/* Mesh Cost Row */}
-                        <div className="space-y-1.5">
-                          <div className="flex justify-between text-xs font-bold text-slate-600">
-                            <span>4. Full Mesh Topology (สายรวม {meshCableLength} เมตร + {meshLinks} ลิงก์)</span>
-                            <span className="font-mono text-slate-800">{meshTotalCost.toLocaleString()} บาท</span>
-                          </div>
-                          <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
-                            <div className="bg-rose-500 h-3 rounded-full transition-all duration-300" style={{ width: `${(meshTotalCost / maxCost) * 100}%` }} />
-                          </div>
-                        </div>
-
+                  {/* Pros Section */}
+                  <div className="bg-emerald-50/60 backdrop-blur-md border border-emerald-250/60 rounded-3xl p-6 border-l-[3.5px] border-l-emerald-500 shadow-sm flex flex-col">
+                    <div className="flex items-center gap-3 mb-4 pb-3 border-b border-emerald-100/40">
+                      <div className="w-10 h-10 rounded-xl bg-emerald-100/80 text-emerald-600 flex items-center justify-center shadow-inner shrink-0">
+                        <CheckCircle2 className="w-6 h-6" />
                       </div>
-
-                      {/* Technical Recommendation Box */}
-                      <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 space-y-2">
-                        <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider block">
-                          คำแนะนำจากวิศวกรระบบและอาจารย์ที่ปรึกษา:
-                        </span>
-                        <h4 className="text-base font-bold text-indigo-900 leading-snug">
-                          {recTitle}
-                        </h4>
-                        <p className="text-[13.5px] text-indigo-700 leading-relaxed font-medium">
-                          {recDesc}
-                        </p>
-                      </div>
+                      <h4 className="text-lg font-bold text-emerald-800">ข้อดี (Advantages)</h4>
                     </div>
-                  );
-                })()}
+                    <ul className="space-y-3">
+                      {activeData.pros.map((pro, index) => (
+                        <li key={index} className="flex items-start gap-2 text-emerald-900/80 text-[14.5px] font-semibold">
+                          <span className="text-emerald-650 font-bold mt-0.5">✓</span>
+                          <span className="leading-relaxed">{pro}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Cons Section */}
+                  <div className="bg-rose-50/60 backdrop-blur-md border border-rose-250/60 rounded-3xl p-6 border-l-[3.5px] border-l-rose-500 shadow-sm flex flex-col">
+                    <div className="flex items-center gap-3 mb-4 pb-3 border-b border-rose-100/40">
+                      <div className="w-10 h-10 rounded-xl bg-rose-100/80 text-rose-600 flex items-center justify-center shadow-inner shrink-0">
+                        <AlertTriangle className="w-6 h-6" />
+                      </div>
+                      <h4 className="text-lg font-bold text-rose-800">ข้อจำกัด (Disadvantages)</h4>
+                    </div>
+                    <ul className="space-y-3">
+                      {activeData.cons.map((con, index) => (
+                        <li key={index} className="flex items-start gap-2 text-rose-900/80 text-[14.5px] font-semibold">
+                          <span className="text-rose-500 font-bold mt-0.5">×</span>
+                          <span className="leading-relaxed">{con}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                </div>
 
               </div>
-
             </div>
-
           </div>
 
-        </section>
-
-        {/* ====================================================================
-            GAMIFICATION ZONE & ASSESSMENT (Consolidated MCQ)
-            ==================================================================== */}
-        <section id="section-gamification-mcq" className="space-y-8">
-          
-          <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-7 bg-indigo-600 rounded-full animate-pulse" />
-              <h2 className="text-[26px] font-bold text-zinc-900 tracking-tight">
-                ด่านทดสอบความรู้และใบงานปลายทาง (Assessments)
-              </h2>
+          {/* Concept Notice */}
+          <div className="mt-8 flex items-start gap-4 p-5 bg-slate-900/90 backdrop-blur-md text-slate-350 rounded-2xl border border-white/10 max-w-4xl mx-auto shadow-xl">
+            <div className="p-2 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-xl shrink-0">
+              <Info className="w-5 h-5" />
             </div>
-            
-            <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed max-w-4xl">
-              ตอบคำถามระดับทฤษฎีและลอจิกสเป็ก Topology ทั้ง 5 ข้อ เพื่อเคลียร์ภารกิจและใบงานระดับวิชาชีพ:
+            <p className="leading-relaxed text-[14.5px] font-normal">
+              <strong className="text-white">ข้อสำคัญน่ารู้:</strong> ในเชิงปฏิบัติของการออกแบบเครือข่ายปัจจุบัน เครือข่ายส่วนใหญ่จะใช้การเชื่อมต่อทางกายภาพแบบดาว <strong className="text-blue-300 font-semibold">(Physical Star)</strong> ด้วยการโยงสายจากคอมพิวเตอร์ทุกเครื่องมาที่ตู้ Switch กลาง แต่ในทางตรรกะอาจทำงานเป็นรูปแบบบัส <strong className="text-blue-300 font-semibold">(Logical Bus)</strong> หากใช้อุปกรณ์ Hub แบบเก่า ดังนั้นการเลือกใช้อุปกรณ์ศูนย์กลางเป็น Switch อัจฉริยะจึงมีความสำคัญยิ่งในการจัดการสัญญาณและป้องกันการชนกันของข้อมูล
             </p>
           </div>
-
-          {/* Quiz Engine */}
-          <QuizEngine
-            title="เกมทดสอบ: สถาปัตยกรและวิศวกรวางทราฟฟิกเครือข่าย"
-            description="วิเคราะห์ลักษณะโครงสร้างทางกายภาพและคัดกรองปัญหาสายส่งคอมพิวเตอร์ที่ถูกต้องที่สุด"
-            levels={[
-              {
-                title: 'โจทย์ที่ 1: การเชื่อมปิดขอบสาย Backbone',
-                desc: 'ในการติดตั้ง Bus Topology อุปกรณ์ข้อใดมีความสำคัญสูงสุดในการดูดซับสัญญาณและป้องกันการสะท้อนกลับของกระแสไฟฟ้าปลายสาย?',
-                options: [
-                  { key: 'A', text: 'T-Connector', isCorrect: false },
-                  { key: 'B', text: 'Terminator (ตัวต้านทานปิดขอบ)', isCorrect: true },
-                  { key: 'C', text: 'Central Switch', isCorrect: false },
-                  { key: 'D', text: 'Token Frame', isCorrect: false }
-                ],
-                tip: 'อุปกรณ์ที่ปิดท้ายสายของ Coaxial เพื่อป้องกันสัญญาณหักล้าง เรียกว่า Terminator'
-              },
-              {
-                title: 'โจทย์ที่ 2: วัตถุประสงค์ของ Token passing',
-                desc: 'ในการทำหน้าที่ของ Ring Topology กลไกการเวียนส่ง Token มีวัตถุประสงค์แกนหลักอย่างไรในลอจิก Data Link Layer?',
-                options: [
-                  { key: 'A', text: 'เพื่อรักษาค่าโวลต์ให้แบรนด์วิดท์กระจายเร็วขึ้น', isCorrect: false },
-                  { key: 'B', text: 'ป้องกันสัญญาณข้อมูลชนกัน (Collision Avoidance)', isCorrect: true },
-                  { key: 'C', text: 'เพื่อจ่าย IP Address แบบอัตโนมัติ', isCorrect: false },
-                  { key: 'D', text: 'เพื่อแปลงคลื่นอนาล็อกเป็นดิจิทัลข่าวสาร', isCorrect: false }
-                ],
-                tip: 'การถือสิทธิ์ Token การคุยทีละเครื่อง ช่วยขจัดปัญหาการชนกันอย่างเด็ดขาด'
-              },
-              {
-                title: 'โจทย์ที่ 3: สถิติสายเคเบิลของ Full Mesh',
-                desc: 'หากสำนักงานมีเซิร์ฟเวอร์ย่อย 6 โหนด และต้องการเชื่อมโยงด้วย Full Mesh Topology ต้องจัดหากล่องพอร์ตแลนและเชื่อมสายสัญญาณทั้งหมดจำนวนเท่าใด?',
-                options: [
-                  { key: 'A', text: '6 เส้น', isCorrect: false },
-                  { key: 'B', text: '12 เส้น', isCorrect: false },
-                  { key: 'C', text: '15 เส้น', isCorrect: true },
-                  { key: 'D', text: '30 เส้น', isCorrect: false }
-                ],
-                tip: 'คำนวณตามสูตรสากล: N(N-1)/2 ➔ 6(5)/2 = 15 เส้น'
-              },
-              {
-                title: 'โจทย์ที่ 4: การขยายอาคารข้ามแผนก',
-                desc: 'องค์กรขนาดใหญ่เชื่อมตึกแผนกไอที ตึกแผนกการเงิน และตึกฝ่ายผลิตเข้าด้วยกัน โดยแต่ละตึกรัน Star Topology แล้วนำ Switch แกนหลักมาเชื่อมกันลงสาย Backbone สอดคล้องกับประเภทข้อใด?',
-                options: [
-                  { key: 'A', text: 'Bus Topology', isCorrect: false },
-                  { key: 'B', text: 'Ring Topology', isCorrect: false },
-                  { key: 'C', text: 'Mesh Topology', isCorrect: false },
-                  { key: 'D', text: 'Hybrid Topology (แบบผสม)', isCorrect: true }
-                ],
-                tip: 'การผสมกันหลายลักษณะข้ามตึกเรียนและสำนักงาน จัดอยู่ในกลุ่มรูปแบบผสม'
-              },
-              {
-                title: 'โจทย์ที่ 5: การค้นหาโหนดขาดสายเคเบิลล้มเหลว',
-                desc: 'ข้อใดคือเหตุผลที่ Star Topology กลายเป็นรูปแบบสถาปัตยกรรมทางกายภาพยอดนิยมที่สุดของหน่วยงานธุรกิจยุคปัจจุบัน?',
-                options: [
-                  { key: 'A', text: 'เพราะไม่มีจุดล้มเหลวเดี่ยวกลางระบบ', isCorrect: false },
-                  { key: 'B', text: 'ประหยัดสายสัญญาณและคาร์บอนฟุตพริ้นท์ดีที่สุด', isCorrect: false },
-                  { key: 'C', text: 'โหนดชำรุดขาดเครื่องเดียว เครื่องที่เหลือไม่กระทบ และค้นหาจุดเสียหายง่าย', isCorrect: true },
-                  { key: 'D', text: 'มีขั้นตอนการเข้าหัวสาย RJ-45 ที่ง่ายกว่าบัส', isCorrect: false }
-                ],
-                tip: 'Star ทนทานต่อการชำรุดของเครื่องลูกข่ายเดี่ยว ทำให้ระบบยังรันต่อไปได้อย่างสง่างาม'
-              }
-            ]}
-            accentColor="from-emerald-500/20 to-teal-500/20"
-            icon={<GitCommit className="w-8 h-8 text-emerald-400" />}
-          />
-
-          {/* Consolidated Written Assessment (TeacherTask) */}
-          <TeacherTask
-            title="ภารกิจประจำหน่วย 1.4: ออกแบบแผนผัง Topology และการคำนวณความซ้ำซ้อนเพื่อติดตั้งเน็ตเวิร์กองค์กร"
-            taskText={`วิเคราะห์สถานการณ์เพื่อดำเนินการเขียนรายงานส่งทางช่องทางปฏิบัติ:
-1. อธิบายกลไกทางฟิสิกส์และการแก้ไขปัญหาเมื่อสัญญาณข้อมูลชนกัน (Collision) ในการสื่อสารแบบ Bus Topology
-2. ให้วาด/ออกแบบแผนผังความกะทัดรัด (Diagram) ของ Star Topology พร้อมระบุขอบเขตของความมั่นคงและ Single Point of Failure
-3. คำนวณสายสัญญาณหากโหนดเครือข่ายมีขนาด N = 8 และต้องการวางแบบ Full Mesh พร้อมแจกแจงข้อดีข้อเสียเปรียบเทียบกับ Star
-4. ให้เสนอการออกแบบระบบแบบ Hybrid Topology เพื่อรองรับขอบเขตการขยายธุรกิจข้ามจังหวัดของบริษัทจัดจำหน่ายสินค้าอัจฉริยะ`}
-          />
-
         </section>
 
+        {/* ─── Layer 4: Standardized TeacherTask Footer ─── */}
+        <TeacherTask
+          title="กิจกรรมปฏิบัติการ: การจัดทำบัญชีฮาร์ดแวร์สำหรับสำนักงาน (IT Asset Inventory)"
+          taskText={`คำชี้แจง: ให้นักเรียนสวมบทบาทเป็นเจ้าหน้าที่ IT Support ของสำนักงานแห่งหนึ่ง และจัดทำตารางบัญชีฮาร์ดแวร์ (IT Asset Inventory) พร้อมอธิบายแนวทางการวางระบบเชื่อมต่อเครือข่ายของอุปกรณ์เหล่านี้ โดยตอบคำถามและทำงานส่งดังต่อไปนี้:
+
+1. ตารางบันทึกบัญชีฮาร์ดแวร์สำนักงาน (Hardware Asset Inventory Table):
+   ให้นักเรียนเขียนตารางข้อมูลสำหรับคอมพิวเตอร์และอุปกรณ์โครงข่ายในแผนก IT และแผนกบัญชี จำนวน 5 เครื่องลงในรายงาน โดยระบุข้อมูลดังนี้:
+   - รหัสอุปกรณ์ (Asset ID) เช่น IT-PC-001, AC-PC-002, IT-SW-001
+   - ประเภทอุปกรณ์ (Asset Type) เช่น Workstation, Server, Switch, Network Printer
+   - รายละเอียดสเปกฮาร์ดแวร์ (Specifications) เช่น CPU, RAM, SSD หรือจำนวนพอร์ต
+   - หมายเลขซีเรียล (Serial Number) เช่น S/N: PC-992837
+   - สถานะอุปกรณ์ (Status) เช่น Active, Maintenance, Spare
+   - แผนกและที่ตั้ง (Location/Department) เช่น IT Office, Accounting Dept
+
+2. การวิเคราะห์เลือกโทโพโลยีเครือข่าย (Network Topology Selection):
+   - หากต้องการวางสายสัญญาณเครือข่าย LAN เพื่อเชื่อมต่ออุปกรณ์ทั้ง 5 เครื่องนี้เข้าด้วยกัน ให้นักเรียนเลือก "โทโพโลยีที่เหมาะสมที่สุด" สำหรับใช้ในสำนักงาน
+   - อธิบายเหตุผลสนับสนุนเชิงวิชาการอย่างน้อย 3 ข้อ (เช่น ความง่ายในการขยายเครือข่าย, ความคุ้มค่าทางราคา, ความทนทานต่อความเสียหายกรณีสายขาด)
+
+3. สถานการณ์จำลองการวิเคราะห์ระบบ (Troubleshooting Scenario):
+   - สมมติว่ามีสายสัญญาณสายหนึ่งขาดในระบบเครือข่ายที่คุณเลือก จงวิเคราะห์และตอบว่า คอมพิวเตอร์เครื่องอื่นยังคงสื่อสารหากันได้หรือไม่? เพราะเหตุใด? และจะมีข้อแนะนำในการเพิ่มเสถียรภาพระบบนี้อย่างไร`}
+        />
       </main>
-    </>
+    </div>
   );
 }

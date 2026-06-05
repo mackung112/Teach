@@ -1,234 +1,272 @@
 const itCourse = {
     id: "31910-0001",
     title: "ระบบปฏิบัติการ บำรุงรักษา และเครือข่ายคอมพิวเตอร์เบื้องต้น",
-    description: "ศึกษาและปฏิบัติเกี่ยวกับองค์ประกอบคอมพิวเตอร์เชิงลึก การประกอบชิ้นส่วน การติดตั้งระบบปฏิบัติการ ไดรเวอร์ อุปกรณ์และสื่อกลางเครือข่าย การตั้งค่า IP Address ซับเน็ตติ้ง การบำรุงรักษาเชิงป้องกัน และทักษะวิเคราะห์แก้ปัญหาการทำงานของคอมพิวเตอร์และระบบเครือข่ายระดับสากล",
+    description: "ศึกษาและปฏิบัติเกี่ยวกับระบบปฏิบัติการ การประกอบและบำรุงรักษาเครื่องคอมพิวเตอร์ อุปกรณ์และสื่อกลางเครือข่าย การตั้งค่าโปรโตคอล IP Address การแชร์ทรัพยากร ตลอดจนกระบวนการวิเคราะห์และแก้ไขปัญหาไอทีระดับวิชาชีพ",
     icon: "💻",
     chapters: [
         {
             id: 1,
-            title: "หน่วยที่ 1 พื้นฐานระบบคอมพิวเตอร์และเครือข่าย",
+            title: "บทที่ 1: ปูพื้นฐานระบบคอมพิวเตอร์และเครือข่าย",
             lessons: [
                 {
                     id: "1.1",
-                    title: "1.1 องค์ประกอบของระบบคอมพิวเตอร์เชิงลึก",
-                    mainTitle: "องค์ประกอบของระบบคอมพิวเตอร์เชิงลึก",
-                    subTitle: "(Computer System Architecture & Components)",
-                    description: "เจาะลึกความหมาย หน้าที่ และบทบาทของระบบคอมพิวเตอร์ ร่วมถึงการทำความเข้าใจฮาร์ดแวร์ ซอฟต์แวร์ บุคลากร ข้อมูล และอุตสาหกรรมยุคดิจิทัล 4.0",
+                    title: "1.1 สถาปัตยกรรมคอมพิวเตอร์เบื้องต้น",
+                    mainTitle: "สถาปัตยกรรมคอมพิวเตอร์เบื้องต้น",
+                    subTitle: "(Computer System Architecture)",
+                    description: "ทำความรู้จัก ฮาร์ดแวร์ ซอฟต์แวร์ และวงจรการประมวลผลข้อมูล (Input, Process, Storage, Output)",
                     content: "[it1_1]"
                 },
                 {
                     id: "1.2",
-                    title: "1.2 ความรู้เบื้องต้นเกี่ยวกับระบบเครือข่ายคอมพิวเตอร์",
-                    mainTitle: "ความรู้เบื้องต้นเกี่ยวกับระบบเครือข่ายคอมพิวเตอร์",
+                    title: "1.2 ก้าวแรกสู่ระบบเครือข่าย",
+                    mainTitle: "ก้าวแรกสู่ระบบเครือข่าย",
                     subTitle: "(Introduction to Computer Networks)",
-                    description: "ความหมายและวัตถุประสงค์หลักของเครือข่าย องค์ประกอบ 5 ส่วนของการสื่อสารข้อมูล ประโยชน์การแชร์ทรัพยากร และต้นทุนความเสี่ยงในระบบ",
+                    description: "เครือข่ายคอมพิวเตอร์คือหัวใจสำคัญของการแบ่งปันทรัพยากรและการแลกเปลี่ยนข้อมูลข่าวสารระหว่างอุปกรณ์ การทำความเข้าใจจุดประสงค์ องค์ประกอบ และทิศทางการสื่อสารจึงเป็นรากฐานสู่โลกไอทีและวิศวกรรมระบบ<br/><br/>เครือข่ายคอมพิวเตอร์ (Computer Network) คือการนำคอมพิวเตอร์และอุปกรณ์ตั้งแต่ 2 เครื่องขึ้นไปมาเชื่อมต่อกัน เพื่อเป้าหมายสูงสุดคือ <strong class=\"text-emerald-600\">การแชร์ทรัพยากร (Resource Sharing)</strong> ให้เกิดความคุ้มค่าและรวดเร็ว",
                     content: "[it1_2]"
                 },
                 {
                     id: "1.3",
-                    title: "1.3 ประเภทและโครงสร้างของระบบเครือข่าย",
-                    mainTitle: "ประเภทและโครงสร้างของระบบเครือข่าย",
-                    subTitle: "(Types & Architectures of Networks)",
-                    description: "จำแนกเครือข่ายตามระยะทาง (PAN, LAN, MAN, WAN) เปรียบเทียบสถาปัตยกรรมเครือข่ายแบบ Client-Server และ Peer-to-Peer รวมถึงเครือข่าย Intranet/Extranet/Internet",
+                    title: "1.3 ประเภทและโครงสร้างเครือข่าย (Network Types)",
+                    mainTitle: "ประเภทและโครงสร้างเครือข่าย",
+                    subTitle: "(Network Types & Architectures)",
+                    description: "ระบบเครือข่ายคอมพิวเตอร์สามารถจำแนกประเภทได้หลากหลายมิติ การแบ่งตามขนาดพื้นที่ทางภูมิศาสตร์ (Scale) และสถาปัตยกรรมการให้บริการ (Architecture) เป็นหลักการสำคัญที่ช่วยให้วิศวกรระบบสามารถออกแบบโครงข่ายเพื่อเชื่อมต่อและแชร์ทรัพยากรได้อย่างคุ้มค่า ปลอดภัย และมีประสิทธิภาพสูงสุด",
                     content: "[it1_3]"
                 },
                 {
                     id: "1.4",
-                    title: "1.4 รูปแบบการเชื่อมต่อเครือข่าย (Network Topology)",
-                    mainTitle: "รูปแบบการเชื่อมต่อเครือข่าย (Network Topology)",
+                    title: "1.4 โทโพโลยีเครือข่าย (Network Topology)",
+                    mainTitle: "โทโพโลยีเครือข่าย",
                     subTitle: "(Network Topologies)",
-                    description: "เจาะลึก Topology แบบ Bus, Star, Ring, Mesh และ Hybrid วิเคราะห์ข้อดี ข้อเสีย และข้อจำกัดความเหมาะสมในการเชื่อมต่อติดตั้งจริงในองค์กร",
+                    description: "โทโพโลยีเครือข่าย (Network Topology) คือโครงสร้างทางกายภาพและทางตรรกะในการเชื่อมต่อคอมพิวเตอร์และอุปกรณ์โครงข่ายเข้าด้วยกัน การทำความเข้าใจข้อดี ข้อจำกัด และรูปแบบ Bus, Star, Ring, Mesh และ Hybrid ช่วยให้สามารถออกแบบและติดตั้งเครือข่ายได้อย่างมีเสถียรภาพและประหยัดต้นทุนสูงสุด",
                     content: "[it1_4]"
                 }
             ]
         },
         {
             id: 2,
-            title: "หน่วยที่ 2 ฮาร์ดแวร์และการประกอบคอมพิวเตอร์",
+            title: "บทที่ 2: เจาะลึกฮาร์ดแวร์และการประกอบคอมพิวเตอร์",
             lessons: [
                 {
                     id: "2.1",
-                    title: "2.1 เจาะลึกอุปกรณ์และชิ้นส่วนคอมพิวเตอร์",
-                    mainTitle: "เจาะลึกอุปกรณ์และชิ้นส่วนคอมพิวเตอร์",
+                    title: "2.1 รู้จักชิ้นส่วนหลัก",
+                    mainTitle: "รู้จักชิ้นส่วนหลัก",
                     subTitle: "(Hardware Components)",
-                    description: "ทำความเข้าใจหน้าที่และสเปคของ CPU, Motherboard, RAM, Storage, PSU, GPU รวมถึงเคสคอมพิวเตอร์และชนิดจอภาพแบบละเอียด",
+                    description: "ทำความรู้จัก CPU, Motherboard, RAM, Storage (HDD/SSD), PSU และ VGA แบบละเอียด",
                     content: "[it2_1]"
                 },
                 {
                     id: "2.2",
-                    title: "2.2 เครื่องมือและข้อควรระวังในการประกอบและซ่อมบำรุง",
-                    mainTitle: "เครื่องมือและข้อควรระวังในการประกอบและซ่อมบำรุง",
+                    title: "2.2 ความปลอดภัยในการปฏิบัติงาน",
+                    mainTitle: "ความปลอดภัยในการปฏิบัติงาน",
                     subTitle: "(Assembly Tools & Safety)",
-                    description: "เรียนรู้เครื่องมือช่างคอมพิวเตอร์ขั้นพื้นฐาน ความเป็นอันตรายของไฟฟ้าสถิต (ESD) วิธีการป้องกัน และข้อควรระวังด้านความปลอดภัยต่อตนเองและฮาร์ดแวร์",
+                    description: "รู้จักเครื่องมือช่างคอมพิวเตอร์เบื้องต้น และขั้นตอนการป้องกันอันตรายจากไฟฟ้าสถิต (ESD)",
                     content: "[it2_2]"
                 },
                 {
                     id: "2.3",
-                    title: "2.3 ขั้นตอนการประกอบคอมพิวเตอร์อย่างเป็นระบบ",
-                    mainTitle: "ขั้นตอนการประกอบคอมพิวเตอร์อย่างเป็นระบบ",
+                    title: "2.3 การประกอบคอมพิวเตอร์ทีละขั้นตอน",
+                    mainTitle: "การประกอบคอมพิวเตอร์ทีละขั้นตอน",
                     subTitle: "(Step-by-Step Computer Assembly)",
-                    description: "เรียนรู้คู่มือประกอบคอมพิวเตอร์ทีละขั้นตอนอย่างเป็นระบบ ตั้งแต่การเตรียมเคส ติดตั้ง CPU, RAM, Storage, เมนบอร์ด เดินสายไฟ เลย์เอาต์แผงหน้าเคส และการจัดระเบียบสายสัญญาณ",
+                    description: "การจัดเตรียมเคส ติดตั้งชิ้นส่วน ไปจนถึงศิลปะการจัดสายไฟ (Cable Management) ภายใน",
                     content: "[it2_3]"
                 },
                 {
                     id: "2.4",
-                    title: "2.4 การตรวจสอบและทดสอบระบบเบื้องต้น",
-                    mainTitle: "การตรวจสอบและทดสอบระบบเบื้องต้น",
-                    subTitle: "(Initial Post-Assembly Testing)",
-                    description: "กระบวนการ Power-On Self-Test (POST) การแปลเสียง Beep Code และไฟ LED สลักหน้าจอ ตรวจสุขภาพอุปกรณ์ใน UEFI/BIOS รวมถึงเปิดแรมความเร็วสูง XMP/EXPO",
+                    title: "2.4 การตรวจสอบระบบ (POST & BIOS)",
+                    mainTitle: "การตรวจสอบระบบ (POST & BIOS)",
+                    subTitle: "(POST & BIOS Setup)",
+                    description: "การทดสอบเปิดเครื่องครั้งแรก การแปลความเสียง Beep Code และการตั้งค่า BIOS/UEFI เบื้องต้น",
                     content: "[it2_4]"
                 }
             ]
         },
         {
             id: 3,
-            title: "หน่วยที่ 3 ระบบปฏิบัติการและการติดตั้ง",
+            title: "บทที่ 3: ระบบปฏิบัติการและการเตรียมความพร้อม",
             lessons: [
                 {
                     id: "3.1",
-                    title: "3.1 สถาปัตยกรรมและหลักการทำงานของระบบปฏิบัติการ",
-                    mainTitle: "สถาปัตยกรรมและหลักการทำงานของระบบปฏิบัติการ",
-                    subTitle: "(OS Architecture & Concepts)",
-                    description: "บทบาทหน้าที่ของ OS ส่วนประกอบ Kernel/Shell/UI ระบบการจัดการ 4 ด้าน สถาปัตยกรรม 32-bit vs 64-bit และเปรียบเทียบ OS ตระกูลต่างๆ",
+                    title: "3.1 บทบาทของระบบปฏิบัติการ (OS)",
+                    mainTitle: "บทบาทของระบบปฏิบัติการ (OS)",
+                    subTitle: "(Operating System Architecture)",
+                    description: "หน้าที่ โครงสร้าง และเปรียบเทียบความแตกต่างระหว่าง OS ยอดนิยม (Windows, macOS, Linux)",
                     content: "[it3_1]"
                 },
                 {
                     id: "3.2",
-                    title: "3.2 การเตรียมการก่อนติดตั้งระบบปฏิบัติการ",
-                    mainTitle: "การเตรียมการก่อนติดตั้งระบบปฏิบัติการ",
-                    subTitle: "(Pre-installation Preparation)",
-                    description: "วิเคราะห์ System Requirements การทำตัวติดตั้งบูต USB (Rufus) เรียนรู้ระบบไฟล์ FAT32/NTFS/exFAT ความแตกต่างของตารางพาร์ติชัน MBR/GPT และลิขสิทธิ์สิทธิ์ประเภทต่างๆ",
+                    title: "3.2 การเตรียมสื่อติดตั้ง",
+                    mainTitle: "การเตรียมสื่อติดตั้ง",
+                    subTitle: "(Pre-installation & Bootable USB)",
+                    description: "ขั้นตอนการสร้าง USB Bootable เรียนรู้ระบบไฟล์ (FAT32, NTFS) และโครงสร้างพาร์ติชัน (MBR/GPT)",
                     content: "[it3_2]"
                 },
                 {
                     id: "3.3",
-                    title: "3.3 กระบวนการติดตั้งระบบปฏิบัติการและตั้งค่าพื้นฐาน",
-                    mainTitle: "กระบวนการติดตั้งระบบปฏิบัติการและตั้งค่าพื้นฐาน",
+                    title: "3.3 การติดตั้ง Windows OS",
+                    mainTitle: "การติดตั้ง Windows OS",
                     subTitle: "(Operating System Installation)",
-                    description: "ขั้นตอนปฏิบัติในการติดตั้ง Windows OS แบบ Clean Install การลบ แบ่ง และสร้างพาร์ติชัน การตั้งค่าเริ่มต้นช่วง OOBE ความแตกต่าง Local กับ Microsoft Account",
+                    description: "ขั้นตอนการลงระบบปฏิบัติการแบบล้างเครื่อง (Clean Install) การจัดการพาร์ติชัน และ OOBE",
                     content: "[it3_3]"
                 },
                 {
                     id: "3.4",
-                    title: "3.4 การจัดการไดรเวอร์และการอัปเดต",
-                    mainTitle: "การจัดการไดรเวอร์และการอัปเดต",
+                    title: "3.4 การจัดการไดรเวอร์ (Device Drivers)",
+                    mainTitle: "การจัดการไดรเวอร์ (Device Drivers)",
                     subTitle: "(Device Drivers & System Update)",
-                    description: "ความสำคัญและหน้าที่ของไดรเวอร์ วิธีตรวจสอบอุปกรณ์ที่ไม่มีไดรเวอร์ผ่าน Device Manager การติดตั้งไดรเวอร์และระบบความปลอดภัยผ่าน Windows Update",
+                    description: "การตรวจสอบ ค้นหา โหลด และติดตั้ง Driver อุปกรณ์ต่างๆ ให้ฮาร์ดแวร์ทำงานได้สมบูรณ์",
                     content: "[it3_4]"
                 }
             ]
         },
         {
             id: 4,
-            title: "หน่วยที่ 4 อุปกรณ์และสื่อกลางในระบบเครือข่าย",
+            title: "บทที่ 4: สื่อกลางและการเชื่อมต่อทางกายภาพ",
             lessons: [
                 {
                     id: "4.1",
-                    title: "4.1 อุปกรณ์เครือข่ายระดับฮาร์ดแวร์พื้นฐาน",
-                    mainTitle: "อุปกรณ์เครือข่ายระดับฮาร์ดแวร์พื้นฐาน",
+                    title: "4.1 อุปกรณ์เครือข่ายพื้นฐาน",
+                    mainTitle: "อุปกรณ์เครือข่ายพื้นฐาน",
                     subTitle: "(Network Devices & Hardware)",
-                    description: "เจาะลึก NIC, Hub, Repeater, Switch, Router, AP, Firewall, Modem หน้าที่และสเปคการนำใช้งานเบื้องต้น",
+                    description: "ทำความรู้จักการทำงานของ NIC, Hub, Switch, Router, Access Point และ Modem",
                     content: "[it4_1]"
                 },
                 {
                     id: "4.2",
-                    title: "4.2 สื่อกลางการเชื่อมต่อแบบใช้สาย",
-                    mainTitle: "สื่อกลางการเชื่อมต่อแบบใช้สาย",
+                    title: "4.2 สายสัญญาณและสื่อกลาง",
+                    mainTitle: "สายสัญญาณและสื่อกลาง",
                     subTitle: "(Wired Transmission Media)",
-                    description: "ทฤษฎีสายคู่เกลียว UTP/STP, หมวดหมู่สาย UTP (Cat5e/6/6a), สาย Coaxial และสายใยแก้วนำแสง (Fiber Optic) ทั้ง Single-mode และ Multi-mode",
+                    description: "ศึกษาคุณสมบัติของสาย UTP, Coaxial, Fiber Optic และข้อควรระวังในการติดตั้งเดินสายสัญญาณ",
                     content: "[it4_2]"
                 },
                 {
                     id: "4.3",
-                    title: "4.3 การเข้าหัวสายสัญญาณ UTP และการทดสอบ",
-                    mainTitle: "การเข้าหัวสายสัญญาณ UTP และการทดสอบ",
+                    title: "4.3 มาตรฐานการเข้าหัวสาย LAN",
+                    mainTitle: "มาตรฐานการเข้าหัวสาย LAN",
                     subTitle: "(RJ-45 Crimping & Testing)",
-                    description: "การจัดระเบียบเรียงสีตามมาตรฐาน EIA/TIA 568A และ 568B ขั้นตอนและทักษะปฏิบัติเข้าหัวแบบสายตรง (Straight-through), สายไขว้ (Crossover), Keystone Jack และ Patch Panel",
+                    description: "โครงสร้างหัว RJ-45, มาตรฐานการเรียงสี TIA/EIA-568A/B และการเข้าสายตรง (Straight)/สายไขว้ (Crossover)",
                     content: "[it4_3]"
                 },
                 {
                     id: "4.4",
-                    title: "4.4 สื่อกลางการเชื่อมต่อแบบไร้สาย",
-                    mainTitle: "สื่อกลางการเชื่อมต่อแบบไร้สาย",
-                    subTitle: "(Wireless Transmission Media)",
-                    description: "คลื่นวิทยุ ไมโครเวฟ อินฟราเรด มาตรฐาน IEEE 802.11 (Wi-Fi 4/5/6), เทคโนโลยี Bluetooth และระบบความปลอดภัยไร้สาย WEP/WPA/WPA2/WPA3",
+                    title: "4.4 การเชื่อมต่อไร้สาย (Wireless)",
+                    mainTitle: "การเชื่อมต่อไร้สาย (Wireless)",
+                    subTitle: "(Wireless & Bluetooth Technologies)",
+                    description: "มาตรฐานการเชื่อมต่อ Wi-Fi (802.11) คลื่นความถี่ (2.4GHz/5GHz) และเทคโนโลยี Bluetooth",
                     content: "[it4_4]"
                 }
             ]
         },
         {
             id: 5,
-            title: "หน่วยที่ 5 การบำรุงรักษาและการใช้โปรแกรมอรรถประโยชน์",
+            title: "บทที่ 5: โปรโตคอล IP Address และการแชร์ทรัพยากร",
             lessons: [
                 {
                     id: "5.1",
-                    title: "5.1 การใช้โปรแกรมอรรถประโยชน์สำหรับระบบและไฟล์",
-                    mainTitle: "การใช้โปรแกรมอรรถประโยชน์สำหรับระบบและไฟล์",
-                    subTitle: "(Utility Programs)",
-                    description: "ความหมายซอฟต์แวร์ยูทิลิตี้ การจัดการบีบอัดไฟล์ (7-Zip) ล้างไฟล์ขยะระบบ (Disk Cleanup) การจัดระเบียบเศษไฟล์ข้อมูล (Defrag) และการกู้ระบบผ่าน sfc / chkdsk",
+                    title: "5.1 มาตรฐานการสื่อสาร",
+                    mainTitle: "มาตรฐานการสื่อสาร",
+                    subTitle: "(OSI Model & TCP/IP Protocol Suite)",
+                    description: "ทำความเข้าใจแบบจำลองการรับส่งข้อมูล OSI Model 7 ชั้น และชุดโปรโตคอล TCP/IP",
                     content: "[it5_1]"
                 },
                 {
                     id: "5.2",
-                    title: "5.2 การรักษาความปลอดภัย การสำรอง และการกู้คืนข้อมูล",
-                    mainTitle: "การรักษาความปลอดภัย การสำรอง และการกู้คืนข้อมูล",
-                    subTitle: "(Data Security & Backup)",
-                    description: "ภัยคุกคามไซเบอร์ สแกนกำจัดไวรัส (Windows Defender) กฎสำรองข้อมูล 3-2-1 การสร้าง Restore Point การใช้งานกู้คืนไฟล์ข้อมูล และลิขสิทธิ์สิทธิ์ พ.ร.บ.คอมพิวเตอร์",
+                    title: "5.2 โครงสร้าง IP Address (IPv4)",
+                    mainTitle: "โครงสร้าง IP Address (IPv4)",
+                    subTitle: "(IP Addressing & Classes)",
+                    description: "ความหมายของ Network ID/Host ID, คลาสไอพี (Class A,B,C), Public/Private IP และ Subnet Mask",
                     content: "[it5_2]"
                 },
                 {
                     id: "5.3",
-                    title: "5.3 การบำรุงรักษาฮาร์ดแวร์คอมพิวเตอร์เชิงป้องกัน",
-                    mainTitle: "การบำรุงรักษาฮาร์ดแวร์คอมพิวเตอร์เชิงป้องกัน",
-                    subTitle: "(Preventive Maintenance)",
-                    description: "ขอบข่ายงานบำรุงรักษาเชิงป้องกันคอมพิวเตอร์สำนักงาน การทำความสะอาดภายนอกและเป่ากำจัดฝุ่นละอองภายใน การใช้ S.M.A.R.T ตรวจสอบดิสก์ และบำรุงรักษาเครื่องพิมพ์",
+                    title: "5.3 การตั้งค่า IP และ Subnetting เบื้องต้น",
+                    mainTitle: "การตั้งค่า IP และ Subnetting เบื้องต้น",
+                    subTitle: "(IP Config & Subnetting)",
+                    description: "การกำหนด Static/Dynamic IP (DHCP) และแนวทางการแบ่งวงเครือข่ายย่อย",
                     content: "[it5_3]"
                 },
                 {
                     id: "5.4",
-                    title: "5.4 การเฝ้าระวังและวิเคราะห์ประสิทธิภาพระบบ",
-                    mainTitle: "การเฝ้าระวังและวิเคราะห์ประสิทธิภาพระบบ",
-                    subTitle: "(System & Network Monitoring)",
-                    description: "การตรวจเช็คทรัพยากรผ่าน Task Manager / Resource Monitor ตรรกะโปรแกรมตรวจสอบ Advanced IP Scanner / Wireshark และการตรวจบันทึก Log Event Viewer",
+                    title: "5.4 การทดสอบและแชร์ทรัพยากร",
+                    mainTitle: "การทดสอบและแชร์ทรัพยากร",
+                    subTitle: "(Network Diagnostics & Resource Sharing)",
+                    description: "การใช้คำสั่ง Ping, Tracert ตรวจสอบระบบเครือข่าย และขั้นตอนแชร์โฟลเดอร์/เครื่องพิมพ์ในวงแลน",
                     content: "[it5_4]"
                 }
             ]
         },
         {
             id: 6,
-            title: "หน่วยที่ 6 การวิเคราะห์ สรุปปัญหา และจัดทำรายงาน",
+            title: "บทที่ 6: การบำรุงรักษาระบบและโปรแกรมอรรถประโยชน์",
             lessons: [
                 {
                     id: "6.1",
-                    title: "6.1 กระบวนการวิเคราะห์และแก้ไขปัญหาอย่างเป็นระบบ",
-                    mainTitle: "กระบวนการวิเคราะห์และแก้ไขปัญหาอย่างเป็นระบบ",
-                    subTitle: "(Systematic Troubleshooting Methodology)",
-                    description: "ขั้นตอนการแก้ไขปัญหา 6 สเตปตามมาตรฐานสากล เทคนิคสัมภาษณ์ผู้ใช้ การแยกลักษณะปัญหา ความหมาย Error/Debug LED/Beep Code และการวิเคราะห์ Configuration Changes",
+                    title: "6.1 เครื่องมือจัดการระบบจาก Windows (Built-in Tools)",
+                    mainTitle: "เครื่องมือจัดการระบบจาก Windows (Built-in Tools)",
+                    subTitle: "(Windows Built-in Utilities)",
+                    description: "การใช้ Disk Cleanup, Storage Sense และการจัดระเบียบข้อมูลดิสก์ (Defragmentation)",
                     content: "[it6_1]"
                 },
                 {
                     id: "6.2",
-                    title: "6.2 การวิเคราะห์และแก้ไขปัญหาระบบเครือข่าย",
-                    mainTitle: "การวิเคราะห์และแก้ไขปัญหาระบบเครือข่าย",
-                    subTitle: "(Network Troubleshooting)",
-                    description: "แก้ไขปัญหาเครือข่ายเชิงกายภาพแลน การตรวจแก้ไข IP ชน การหลุดแจกไอพี APIPA ใช้ nslookup, netstat, arp ตรวจสอบเซิร์ฟเวอร์ และแก้ไขสิทธิ์ SMB",
+                    title: "6.2 การตรวจสอบและซ่อมแซมไฟล์ระบบ",
+                    mainTitle: "การตรวจสอบและซ่อมแซมไฟล์ระบบ",
+                    subTitle: "(System & Registry Repair)",
+                    description: "การใช้งานคำสั่ง Command Prompt พื้นฐานสำหรับซ่อมแซมไฟล์ระบบ (sfc /scannow, chkdsk)",
                     content: "[it6_2]"
                 },
                 {
                     id: "6.3",
-                    title: "6.3 การแก้ไขปัญหาอุปกรณ์ต่อพ่วงและการใช้แหล่งข้อมูลช่วยเหลือ",
-                    mainTitle: "การแก้ไขปัญหาอุปกรณ์ต่อพ่วงและการใช้แหล่งข้อมูลช่วยเหลือ",
-                    subTitle: "(Peripherals Troubleshooting)",
-                    description: "แก้ปัญหา Print Spooler ค้าง การอ้างอิงและเปิด Service Manuals ค้นหา Support Forums ช่างเทคนิค และประยุกต์ใช้ AI วินิจฉัยจุดบกพร่องระบบอัตโนมัติ",
+                    title: "6.3 การป้องกันและสำรองข้อมูล",
+                    mainTitle: "การป้องกันและสำรองข้อมูล",
+                    subTitle: "(Security & Data Backup)",
+                    description: "ศึกษาภัยคุกคามไซเบอร์เบื้องต้น การอัปเดต Antivirus และขั้นตอนการสร้าง System Restore Point",
                     content: "[it6_3]"
                 },
                 {
                     id: "6.4",
-                    title: "6.4 การจัดการเอกสาร การบันทึกประวัติ และจัดทำรายงาน",
-                    mainTitle: "การจัดการเอกสาร การบันทึกประวัติ และจัดทำรายงาน",
-                    subTitle: "(IT Maintenance Report & Inventory)",
-                    description: "ลงทะเบียนประวัติซ่อมและคลังจัดเก็บ (Asset Logs) การทำใบงานแจ้งซ่อม IT Ticketing System การเขียนสรุปรายงาน RCA และจัดทำคู่มือสั้นพนักงาน (User Self-Help Guide)",
+                    title: "6.4 การตรวจสอบประสิทธิภาพ (Monitoring Tools)",
+                    mainTitle: "การตรวจสอบประสิทธิภาพ (Monitoring Tools)",
+                    subTitle: "(System Performance Monitoring)",
+                    description: "การใช้ Task Manager และ Resource Monitor ค้นหาสาเหตุอาการเครื่องช้าและหน่วงผิดปกติ",
                     content: "[it6_4]"
+                }
+            ]
+        },
+        {
+            id: 7,
+            title: "บทที่ 7: การวิเคราะห์และแก้ไขปัญหาไอที",
+            lessons: [
+                {
+                    id: "7.1",
+                    title: "7.1 ระเบียบวิธีแก้ปัญหา (Troubleshooting Methodology)",
+                    mainTitle: "ระเบียบวิธีแก้ปัญหา",
+                    subTitle: "(Troubleshooting Methodology)",
+                    description: "กระบวนการ 6 ขั้นตอนตามหลักสากลในการค้นหาสาเหตุ แยกแยะประเภท และแก้ไขปัญหาไอที",
+                    content: "[it7_1]"
+                },
+                {
+                    id: "7.2",
+                    title: "7.2 การวิเคราะห์ปัญหาเครือข่ายและฮาร์ดแวร์",
+                    mainTitle: "การวิเคราะห์ปัญหาเครือข่ายและฮาร์ดแวร์",
+                    subTitle: "(Network & Hardware Diagnosis)",
+                    description: "การแยกแยะสาเหตุอาการเสีย (Hardware/Software) และการใช้เครื่องมือคำสั่ง (ipconfig, netstat)",
+                    content: "[it7_2]"
+                },
+                {
+                    id: "7.3",
+                    title: "7.3 การอ่านบันทึกระบบ (Windows Logs)",
+                    mainTitle: "การอ่านบันทึกระบบ (Windows Logs)",
+                    subTitle: "(Event Viewer System Logs)",
+                    description: "การใช้งาน Event Viewer เพื่อสืบสวนข้อผิดพลาด หาสาเหตุเครื่องค้าง ดับ หรือระบบล่ม",
+                    content: "[it7_3]"
+                },
+                {
+                    id: "7.4",
+                    title: "7.4 การจัดทำระบบเอกสาร (IT Helpdesk Documentation)",
+                    mainTitle: "การจัดทำระบบเอกสาร (IT Helpdesk Documentation)",
+                    subTitle: "(IT Maintenance Report & RCA)",
+                    description: "ความสำคัญของบันทึกประวัติการซ่อม แนะนำระบบ IT Ticketing และการเขียนรายงาน RCA อย่างมืออาชีพ",
+                    content: "[it7_4]"
                 }
             ]
         }
