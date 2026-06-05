@@ -234,14 +234,14 @@ export default function ComponentName() {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 text-left">
-              <div className="bg-gradient-to-br from-indigo-50/60 to-white p-5 rounded-2xl border border-indigo-150 shadow-sm space-y-2">
+              <div className="bg-gradient-to-br from-indigo-50/60 to-white p-5 rounded-2xl border border-indigo-100 shadow-sm space-y-2">
                 <span className="p-2.5 rounded-xl bg-indigo-100 text-indigo-700 inline-block"><User className="w-5 h-5" /></span>
                 <h6 className="font-bold text-indigo-950 text-[16px]">บัญชีท้องถิ่น (Local Account)</h6>
                 <p className="text-[13px] text-zinc-500 leading-relaxed font-sans">
                   เป็นบัญชีแบบดั้งเดิมที่รหัสผ่านและข้อมูลประจำตัวจะถูกแฮชและล็อกไว้ภายในฐานข้อมูลความปลอดภัยภายในฮาร์ดแวร์ดิสก์เครื่องนั้นเดี่ยวๆ (SAM Database) ข้อมูลพฤติกรรมไม่หลุดไปอินเทอร์เน็ต ทว่าหากทำรหัสผ่านสูญหายจะกู้คืนได้ยากลำบากและไม่มีบริการซิงค์ไฟล์คลาวด์ข้ามเครื่อง
                 </p>
               </div>
-              <div className="bg-gradient-to-br from-fuchsia-50/60 to-white p-5 rounded-2xl border border-fuchsia-150 shadow-sm space-y-2">
+              <div className="bg-gradient-to-br from-fuchsia-50/60 to-white p-5 rounded-2xl border border-fuchsia-100 shadow-sm space-y-2">
                 <span className="p-2.5 rounded-xl bg-fuchsia-100 text-fuchsia-700 inline-block"><Server className="w-5 h-5" /></span>
                 <h6 className="font-bold text-fuchsia-950 text-[16px]">บัญชีคลาวด์ (Microsoft/Cloud Account)</h6>
                 <p className="text-[13px] text-zinc-500 leading-relaxed font-sans">
@@ -711,7 +711,7 @@ function SetupPartitionManager() {
                       <tr
                         key={d.id}
                         onClick={() => handleSelect(d.id)}
-                        className={`border-b border-slate-150 cursor-pointer transition-all text-[11px] ${
+                        className={`border-b border-slate-100 cursor-pointer transition-all text-[11px] ${
                           isSelected 
                             ? 'bg-sky-100 text-sky-950 font-bold border-l-4 border-l-sky-600' 
                             : 'hover:bg-slate-50 text-slate-600'
@@ -807,7 +807,7 @@ function SetupPartitionManager() {
               
               <div className="w-full bg-slate-900 h-16 rounded-2xl overflow-hidden border border-slate-800 flex">
                 {drives.map(d => {
-                  let dColor = 'bg-slate-850';
+                  let dColor = 'bg-slate-800';
                   if (d.type === 'System Reserved') dColor = 'bg-fuchsia-600';
                   else if (d.type === 'Primary' || d.type === 'Primary (C:)') dColor = d.formatted ? 'bg-sky-500' : 'bg-sky-800/80';
                   
@@ -1170,7 +1170,7 @@ function UserAccountSimulator() {
                       <input
                         type="text" value={localName} onChange={(e) => setLocalName(e.target.value)}
                         placeholder="Enter user name..."
-                        className="w-full p-2.5 bg-slate-950 border border-slate-850 rounded-lg text-white focus:outline-none focus:border-fuchsia-500"
+                        className="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-fuchsia-500"
                       />
                     </div>
                     <div className="space-y-1">
@@ -1178,19 +1178,19 @@ function UserAccountSimulator() {
                       <input
                         type="password" value={localPass} onChange={(e) => setLocalPass(e.target.value)}
                         placeholder="••••••••"
-                        className="w-full p-2.5 bg-slate-950 border border-slate-850 rounded-lg text-white focus:outline-none focus:border-fuchsia-500"
+                        className="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-fuchsia-500"
                       />
                     </div>
                     <div className="space-y-1">
                       <label className="text-[10px] font-bold text-slate-400 uppercase">Security Question #1</label>
-                      <select value={localQuestion} onChange={(e) => setLocalQuestion(e.target.value)} className="w-full p-2.5 bg-slate-950 border border-slate-850 rounded-lg text-slate-300 focus:outline-none">
+                      <select value={localQuestion} onChange={(e) => setLocalQuestion(e.target.value)} className="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-slate-300 focus:outline-none">
                         <option>คุณชื่อสัตว์เลี้ยงตัวแรกคืออะไร?</option>
                         <option>คุณเกิดที่จังหวัดอะไร?</option>
                         <option>ชื่อเล่นมารดาของท่านคืออะไร?</option>
                       </select>
                       <input
                         type="text" placeholder="คำตอบความปลอดภัย..."
-                        className="w-full p-2.5 bg-slate-950 border border-slate-850 rounded-lg text-white focus:outline-none focus:border-fuchsia-500 mt-1"
+                        className="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-fuchsia-500 mt-1"
                       />
                     </div>
                   </>
@@ -1201,10 +1201,10 @@ function UserAccountSimulator() {
                       <input
                         type="email" value={msEmail} onChange={(e) => setMsEmail(e.target.value)}
                         placeholder="someone@example.com"
-                        className="w-full p-2.5 bg-slate-950 border border-slate-850 rounded-lg text-white focus:outline-none focus:border-fuchsia-500"
+                        className="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-fuchsia-500"
                       />
                     </div>
-                    <div className="p-3 bg-slate-950 border border-slate-850 rounded-lg text-[10.5px] leading-relaxed text-slate-400">
+                    <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg text-[10.5px] leading-relaxed text-slate-400">
                       💡 <strong>ข้อกำหนดระบบ:</strong> บัญชีคลาวด์องค์กรได้รับการเข้ารหัสผ่าน 2FA สากล ช่วยรักษาข้อมูล OneDrive และการจัดเก็บบันทึกรหัสลับ BitLocker
                     </div>
                   </>
@@ -1239,7 +1239,7 @@ function UserAccountSimulator() {
             ) : (
               <button
                 onClick={() => setStage('input')}
-                className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-350 font-bold cursor-pointer active:scale-98 transition-all"
+                className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold cursor-pointer active:scale-98 transition-all"
               >
                 ปรับแก้ข้อมูลบัญชี (RESET)
               </button>
@@ -1372,7 +1372,7 @@ function PrivacyPinSimulator() {
                     { id: 'inking', label: 'Inking & Typing (ประวัติแป้นพิมพ์)', desc: 'บันทึกคำศัพท์และการขีดเขียนปากกาเพื่อนำไปเรียนรู้ AI' },
                     { id: 'findMyDevice', label: 'Find My Device (สิทธิ์ตามหาเครื่อง)', desc: 'รันระบบพิกัดพื้นหลังตลอดเวลาเพื่อใช้ระบุตำแหน่งเมื่อเครื่องหาย' }
                   ].map(item => (
-                    <div key={item.id} className="flex justify-between items-center p-2.5 rounded-xl bg-slate-950 border border-slate-850">
+                    <div key={item.id} className="flex justify-between items-center p-2.5 rounded-xl bg-slate-950 border border-slate-800">
                       <div className="space-y-0.5">
                         <span className="font-bold text-slate-200 text-xs block">{item.label}</span>
                         <span className="text-[9.5px] text-slate-500 font-normal leading-normal block">{item.desc}</span>
@@ -1380,7 +1380,7 @@ function PrivacyPinSimulator() {
                       <button
                         onClick={() => toggleSwitch(item.id)}
                         className={`w-11 h-6 rounded-full p-1 cursor-pointer transition-all duration-300 ${
-                          toggles[item.id] ? 'bg-indigo-650' : 'bg-slate-800'
+                          toggles[item.id] ? 'bg-indigo-600' : 'bg-slate-800'
                         }`}
                       >
                         <div className={`w-4 h-4 bg-white rounded-full transition-transform duration-300 ${
@@ -1423,7 +1423,7 @@ function PrivacyPinSimulator() {
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
                     <button
                       key={num} onClick={() => handleKeyPress(String(num))}
-                      className="py-2 bg-slate-950 border border-slate-850 hover:bg-slate-850 text-white font-bold rounded-lg cursor-pointer text-xs active:scale-98 transition-all"
+                      className="py-2 bg-slate-950 border border-slate-800 hover:bg-slate-800 text-white font-bold rounded-lg cursor-pointer text-xs active:scale-98 transition-all"
                     >
                       {num}
                     </button>
@@ -1431,10 +1431,10 @@ function PrivacyPinSimulator() {
                   <button onClick={deletePin} className="py-2 bg-slate-800 hover:bg-slate-700 text-rose-300 font-bold rounded-lg cursor-pointer text-[10px] active:scale-98 transition-all">
                     CLR
                   </button>
-                  <button onClick={() => handleKeyPress('0')} className="py-2 bg-slate-950 border border-slate-850 hover:bg-slate-850 text-white font-bold rounded-lg cursor-pointer text-xs active:scale-98 transition-all">
+                  <button onClick={() => handleKeyPress('0')} className="py-2 bg-slate-950 border border-slate-800 hover:bg-slate-800 text-white font-bold rounded-lg cursor-pointer text-xs active:scale-98 transition-all">
                     0
                   </button>
-                  <button onClick={verifyAndSavePin} className="py-2 bg-indigo-650 hover:bg-indigo-750 text-white font-bold rounded-lg cursor-pointer text-[10px] active:scale-98 transition-all">
+                  <button onClick={verifyAndSavePin} className="py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg cursor-pointer text-[10px] active:scale-98 transition-all">
                     OK
                   </button>
                 </div>
@@ -1473,7 +1473,7 @@ function PrivacyPinSimulator() {
             {(stage === 'pin' || stage === 'success') && (
               <button
                 onClick={handleReset}
-                className="w-full py-2.5 rounded-xl bg-slate-850 hover:bg-slate-800 text-slate-350 font-bold cursor-pointer active:scale-98 transition-all"
+                className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-800 text-slate-300 font-bold cursor-pointer active:scale-98 transition-all"
               >
                 ปรับเปลี่ยนการตั้งค่าใหม่ (RESET)
               </button>

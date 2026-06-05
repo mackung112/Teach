@@ -71,7 +71,7 @@ const IndentationCard = () => {
           {/* Controls & Explanation */}
           <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 flex-1 flex flex-col justify-center">
-              <span className="block text-xs font-bold text-slate-550 uppercase tracking-wider mb-4">
+              <span className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">
                 ทดลองสลับมุมมองจัดระเบียบย่อหน้า:
               </span>
 
@@ -128,7 +128,7 @@ const IndentationCard = () => {
                 </span>
               </span>
 
-              <div className="font-mono text-xs md:text-sm leading-loose text-slate-350 space-y-1 relative">
+              <div className="font-mono text-xs md:text-sm leading-loose text-slate-300 space-y-1 relative">
                 {isIndented ? (
                   indentedCode.map((line, idx) => {
                     const hasIndent = line.indent > 0;
@@ -193,11 +193,11 @@ const CommentCard = () => {
       <div className="absolute top-0 right-0 w-48 h-48 bg-purple-50/50 rounded-bl-full z-0 pointer-events-none"></div>
 
       <div className="relative z-10">
-        <span className="bg-purple-50 text-purple-650 border border-purple-100 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1 mb-3">
+        <span className="bg-purple-50 text-purple-600 border border-purple-100 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1 mb-3">
           <Star className="w-3.5 h-3.5" /> คำอธิบายช่วยความจำ
         </span>
         <h4 className="text-2xl md:text-3xl font-bold text-slate-800 mb-3 flex items-center gap-2">
-          <Database className="w-7 h-7 text-purple-650" />
+          <Database className="w-7 h-7 text-purple-600" />
           การเขียนหมายเหตุ (Comment) ในรหัสเทียม
         </h4>
         <p className="text-slate-600 text-[15px] leading-relaxed mb-6">
@@ -210,7 +210,7 @@ const CommentCard = () => {
           {/* Controls & Explanation */}
           <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 flex-1 flex flex-col justify-center">
-              <span className="block text-xs font-bold text-slate-550 uppercase tracking-wider mb-4">
+              <span className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">
                 สวิตช์เปิด/ปิดหน้าต่างคำอธิบายลอจิก:
               </span>
 
@@ -219,15 +219,15 @@ const CommentCard = () => {
                 onClick={() => setShowComments(!showComments)}
                 className={`w-full py-4.5 px-6 rounded-2xl font-bold text-sm transition-all active:scale-98 flex items-center justify-center gap-2.5 shadow-md ${
                   showComments
-                    ? 'bg-purple-650 hover:bg-purple-700 text-white shadow-purple-650/10'
-                    : 'bg-white border border-slate-200 text-slate-650 hover:bg-slate-50'
+                    ? 'bg-purple-600 hover:bg-purple-700 text-white shadow-purple-600/10'
+                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                 }`}
               >
                 <RefreshCw className={`w-4 h-4 ${showComments ? 'rotate-180 transition-transform duration-500' : ''}`} />
                 <span>{showComments ? 'ซ่อนคำอธิบายหมายเหตุ (Hide Comments)' : 'แสดงคำอธิบายหมายเหตุ (Show Comments)'}</span>
               </button>
 
-              <div className="mt-6 bg-white border border-slate-200 p-4 rounded-xl text-xs leading-relaxed text-slate-550 flex gap-2">
+              <div className="mt-6 bg-white border border-slate-200 p-4 rounded-xl text-xs leading-relaxed text-slate-500 flex gap-2">
                 <Info className="w-4 h-4 text-purple-500 shrink-0 mt-0.5" />
                 <span>ในการพัฒนาจริง ยิ่งอัลกอริทึมซับซ้อนมากเท่าใด การเขียนคอมเมนต์ชี้แจงจะมีค่าอย่างยิ่งต่อตัวเราและโปรแกรมเมอร์ในทีม</span>
               </div>
@@ -254,7 +254,7 @@ const CommentCard = () => {
                     {line.comment && (
                       <span className={`font-mono text-[10px] md:text-xs transition-all duration-300 md:ml-4 ${
                         showComments 
-                          ? 'text-emerald-450 opacity-100 font-bold' 
+                          ? 'text-emerald-400 opacity-100 font-bold' 
                           : 'text-slate-700 opacity-20 select-none'
                       }`}>
                         // {showComments ? line.comment : '...'}
@@ -382,7 +382,7 @@ const RefactoringStudio = () => {
         {/* Left column: Controls (Span 4) */}
         <div className="lg:col-span-4 flex flex-col justify-between space-y-6">
           <div className="bg-slate-900 rounded-3xl p-6 border border-slate-800 space-y-5 flex-1 flex flex-col justify-center">
-            <span className="block text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-slate-850 pb-2 mb-2">
+            <span className="block text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-slate-800 pb-2 mb-2">
               REFACTOR CONTROLLERS
             </span>
 
@@ -392,7 +392,7 @@ const RefactoringStudio = () => {
               className={`w-full py-3.5 px-5 rounded-2xl font-bold text-xs transition-all active:scale-95 flex items-center justify-between border ${
                 indented
                   ? 'bg-indigo-600 border-indigo-500 text-white'
-                  : 'bg-slate-950 border-slate-800 text-slate-350 hover:bg-slate-900'
+                  : 'bg-slate-950 border-slate-800 text-slate-300 hover:bg-slate-900'
               }`}
             >
               <span className="flex items-center gap-2">
@@ -408,7 +408,7 @@ const RefactoringStudio = () => {
               className={`w-full py-3.5 px-5 rounded-2xl font-bold text-xs transition-all active:scale-95 flex items-center justify-between border ${
                 commented
                   ? 'bg-purple-600 border-purple-500 text-white'
-                  : 'bg-slate-950 border-slate-800 text-slate-350 hover:bg-slate-900'
+                  : 'bg-slate-950 border-slate-800 text-slate-300 hover:bg-slate-900'
               }`}
             >
               <span className="flex items-center gap-2">
@@ -424,7 +424,7 @@ const RefactoringStudio = () => {
               className={`w-full py-3.5 px-5 rounded-2xl font-bold text-xs transition-all active:scale-95 flex items-center justify-between border ${
                 capitalized
                   ? 'bg-cyan-600 border-cyan-500 text-slate-950 font-extrabold'
-                  : 'bg-slate-950 border-slate-800 text-slate-350 hover:bg-slate-900'
+                  : 'bg-slate-950 border-slate-800 text-slate-300 hover:bg-slate-900'
               }`}
             >
               <span className="flex items-center gap-2">
@@ -448,7 +448,7 @@ const RefactoringStudio = () => {
         {/* Middle column: Live Code Editor display (Span 5) */}
         <div className="lg:col-span-5 bg-slate-900 rounded-3xl p-6 border border-slate-800 flex flex-col justify-between shadow-inner">
           <div>
-            <span className="block text-[10px] font-mono text-indigo-400 uppercase tracking-widest mb-4 border-b border-slate-850 pb-2 flex items-center gap-1.5">
+            <span className="block text-[10px] font-mono text-indigo-400 uppercase tracking-widest mb-4 border-b border-slate-800 pb-2 flex items-center gap-1.5">
               <Code2 className="w-3.5 h-3.5" /> refactor_playground.py
             </span>
 
@@ -459,11 +459,11 @@ const RefactoringStudio = () => {
                 return (
                   <div key={idx} className="flex flex-col md:flex-row md:items-center justify-between">
                     <div>
-                      <span className="w-5 text-[8px] text-slate-655 text-right select-none font-bold mr-3 mt-0.5">{idx + 1}</span>
+                      <span className="w-5 text-[8px] text-slate-600 text-right select-none font-bold mr-3 mt-0.5">{idx + 1}</span>
                       <span className="font-mono transition-all duration-300">{textLine}</span>
                     </div>
                     {commentText && (
-                      <span className="text-[10px] text-emerald-450 font-bold font-mono transition-opacity duration-300 animate-fade-in md:ml-4">
+                      <span className="text-[10px] text-emerald-400 font-bold font-mono transition-opacity duration-300 animate-fade-in md:ml-4">
                         {commentText}
                       </span>
                     )}
@@ -475,8 +475,8 @@ const RefactoringStudio = () => {
         </div>
 
         {/* Right column: Readability Gauge & Reward (Span 3) */}
-        <div className="lg:col-span-3 bg-slate-900 rounded-3xl p-6 border border-slate-850 flex flex-col justify-between shadow-inner items-center text-center">
-          <span className="block text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-3 border-b border-slate-850 pb-2 w-full text-left">
+        <div className="lg:col-span-3 bg-slate-900 rounded-3xl p-6 border border-slate-800 flex flex-col justify-between shadow-inner items-center text-center">
+          <span className="block text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-3 border-b border-slate-800 pb-2 w-full text-left">
             READABILITY GAUGE
           </span>
 
@@ -515,7 +515,7 @@ const RefactoringStudio = () => {
                 <span>สุดยอด! รหัสเทียมระดับโปร</span>
               </div>
             ) : (
-              <div className="bg-slate-950/80 p-3 rounded-2xl border border-slate-850 text-slate-400 text-[10px] leading-relaxed">
+              <div className="bg-slate-950/80 p-3 rounded-2xl border border-slate-800 text-slate-400 text-[10px] leading-relaxed">
                 {readabilityScore < 50 
                   ? 'รหัสค่อนข้างยุ่งเหยิง รบกวนสลับคำสั่งควบคุมเพื่อเริ่มเยื้องบล็อก' 
                   : 'ใกล้สำเร็จแล้ว! เติมคอมเมนต์หรือสับคำพิมพ์ใหญ่ให้สมบูรณ์'}
@@ -550,7 +550,7 @@ end
 (ข้อปฏิบัติ: ปรับตัวแปรและโครงสร้างคำสั่งคีย์เวิร์ดให้เป็นตัวพิมพ์ใหญ่สากล, มีการเยื้องย่อหน้า (Indentation) แบ่งระดับบล็อกควบคุม และใส่คอมเมนต์คำอธิบายประกอบการทำงานให้เรียบร้อยครบถ้วน)`;
 
   return (
-    <div className="font-sans text-slate-850 pb-24 selection:bg-indigo-150 selection:text-indigo-900 relative">
+    <div className="font-sans text-slate-800 pb-24 selection:bg-indigo-100 selection:text-indigo-900 relative">
       {/* Ambient backgrounds blur overlay */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-[10%] left-[-5%] w-[450px] h-[450px] rounded-full bg-indigo-500/10 blur-[130px] animate-pulse"></div>

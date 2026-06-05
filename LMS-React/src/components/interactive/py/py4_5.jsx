@@ -39,7 +39,7 @@ const ComparisonOverview = () => {
           <Search className="w-7 h-7 text-amber-500" />
           ตารางเครื่องหมายเปรียบเทียบใน Python
         </h4>
-        <p className="text-slate-655 text-[15px] leading-relaxed mb-8">
+        <p className="text-slate-600 text-[15px] leading-relaxed mb-8">
           ตัวดำเนินการเปรียบเทียบ (Comparison Operators) ใช้สำหรับทดสอบสมมติฐานระหว่างข้อมูล 2 ฝั่ง 
           โดยคอมพิวเตอร์จะคืนค่าเป็นตรรกะ <strong>Boolean</strong> คือ <strong>True (จริง)</strong> หรือ <strong>False (เท็จ)</strong> เพียงอย่างใดอย่างหนึ่งเท่านั้น:
         </p>
@@ -52,7 +52,7 @@ const ComparisonOverview = () => {
                   {op.symbol}
                 </span>
                 <h5 className="font-bold text-slate-800 text-[15px] mb-1">{op.name}</h5>
-                <p className="text-slate-550 text-xs leading-relaxed mb-4">{op.desc}</p>
+                <p className="text-slate-500 text-xs leading-relaxed mb-4">{op.desc}</p>
               </div>
               
               <div className="bg-slate-100 p-2.5 rounded-xl border border-slate-200/50 flex justify-between items-center font-mono text-xs text-slate-700">
@@ -78,41 +78,41 @@ const EqualityWarning = () => {
       <div className="absolute top-0 right-0 w-80 h-80 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
       
       <div className="lg:w-1/2 relative z-10">
-        <div className="inline-flex items-center gap-2 text-rose-455 font-bold mb-4 bg-rose-500/10 border border-rose-500/30 px-4 py-1.5 rounded-full text-xs uppercase tracking-wider">
+        <div className="inline-flex items-center gap-2 text-rose-500 font-bold mb-4 bg-rose-500/10 border border-rose-500/30 px-4 py-1.5 rounded-full text-xs uppercase tracking-wider">
           <AlertOctagon className="w-4 h-4 shrink-0 animate-pulse" /> ข้อควรระวังระดับสูงสุดของโปรแกรมเมอร์
         </div>
         <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight">
           อย่าสับสนระหว่าง <br/>
-          <code className="text-amber-455 bg-slate-850 px-2.5 py-0.5 rounded font-mono font-bold">=</code> กับ <code className="text-emerald-455 bg-slate-850 px-2.5 py-0.5 rounded font-mono font-bold">==</code>
+          <code className="text-amber-500 bg-slate-800 px-2.5 py-0.5 rounded font-mono font-bold">=</code> กับ <code className="text-emerald-500 bg-slate-800 px-2.5 py-0.5 rounded font-mono font-bold">==</code>
         </h3>
-        <p className="text-slate-405 text-sm md:text-[15px] leading-relaxed">
+        <p className="text-slate-400 text-sm md:text-[15px] leading-relaxed">
           นี่คือจุดผิดพลาดยอดฮิตอันดับ 1 ของคนหัดเขียนโค้ด! เครื่องหมายกำหนดค่าเดี่ยวกับเครื่องหมายเปรียบเทียบเท่ากับมีหน้าตาคล้ายกัน แต่ทำงานต่างกันโดยสิ้นเชิงในคอมพิวเตอร์:
         </p>
       </div>
 
       <div className="lg:w-1/2 w-full flex flex-col gap-4 relative z-10 font-sans">
-        <div className="bg-slate-850/60 border border-slate-800 p-5 rounded-2xl">
+        <div className="bg-slate-800/60 border border-slate-800 p-5 rounded-2xl">
           <div className="flex items-center gap-4 mb-2">
-            <span className="text-3xl font-black font-mono text-amber-455 w-12 text-center">=</span>
+            <span className="text-3xl font-black font-mono text-amber-500 w-12 text-center">=</span>
             <div>
               <h4 className="font-bold text-white text-sm md:text-base">กำหนดค่า (Assignment)</h4>
               <p className="text-xs text-slate-400">นำข้อมูลฝั่งขวา เข้าไปจัดเก็บไว้ในตัวแปรกล่องฝั่งซ้าย</p>
             </div>
           </div>
-          <code className="block bg-slate-950 p-2.5 rounded-lg text-xs text-slate-300 font-mono mt-2 text-center border border-slate-850">
+          <code className="block bg-slate-950 p-2.5 rounded-lg text-xs text-slate-300 font-mono mt-2 text-center border border-slate-800">
             <span className="text-blue-400">score</span> = <span className="text-purple-400">100</span> <span className="text-slate-500 ml-2"># score เก็บค่า 100</span>
           </code>
         </div>
 
         <div className="bg-emerald-950/20 border border-emerald-500/30 p-5 rounded-2xl">
           <div className="flex items-center gap-4 mb-2">
-            <span className="text-3xl font-black font-mono text-emerald-455 w-12 text-center">==</span>
+            <span className="text-3xl font-black font-mono text-emerald-500 w-12 text-center">==</span>
             <div>
               <h4 className="font-bold text-white text-sm md:text-base">เปรียบเทียบความเท่ากัน (Equality)</h4>
               <p className="text-xs text-slate-400">ยิงคำถามถาม CPU ว่า ข้อมูล 2 ฝั่ง มีค่าเท่ากันใช่หรือไม่?</p>
             </div>
           </div>
-          <code className="block bg-slate-950 p-2.5 rounded-lg text-xs text-slate-300 font-mono mt-2 text-center border border-slate-850">
+          <code className="block bg-slate-950 p-2.5 rounded-lg text-xs text-slate-300 font-mono mt-2 text-center border border-slate-800">
             <span className="text-yellow-300">print</span>(<span className="text-blue-400">score</span> == <span className="text-purple-400">100</span>) <span className="text-slate-500 ml-2"># ผลลัพธ์เป็น: True</span>
           </code>
         </div>
@@ -171,7 +171,7 @@ const LogicScalePlayground = () => {
           <Scale className="w-7 h-7 text-amber-500" />
           เครื่องจำลองตาชั่งตรรกะเปรียบเทียบ
         </h4>
-        <p className="text-slate-655 max-w-xl mx-auto leading-relaxed text-sm md:text-[15px]">
+        <p className="text-slate-600 max-w-xl mx-auto leading-relaxed text-sm md:text-[15px]">
           กรอกตัวเลขทั้งสองฝั่ง และปรับเครื่องหมายเปรียบเทียบ สังเกตการถ่วงดุลของตาชั่งน้ำหนักและการวิเคราะห์บูลีนในโค้ด Python:
         </p>
       </div>
@@ -194,7 +194,7 @@ const LogicScalePlayground = () => {
               <select 
                 value={operator}
                 onChange={(e) => setOperator(e.target.value)}
-                className="w-full bg-slate-800 text-amber-405 font-mono font-bold text-center h-12 rounded-xl border-2 border-slate-700 appearance-none focus:outline-none focus:border-amber-400 pr-10 pl-6 cursor-pointer"
+                className="w-full bg-slate-800 text-amber-400 font-mono font-bold text-center h-12 rounded-xl border-2 border-slate-700 appearance-none focus:outline-none focus:border-amber-400 pr-10 pl-6 cursor-pointer"
               >
                 {operators.map((op) => (
                   <option key={op.symbol} value={op.symbol}>
@@ -219,7 +219,7 @@ const LogicScalePlayground = () => {
           </div>
         </div>
 
-        <div className="lg:col-span-4 bg-slate-900 rounded-3xl p-6 border border-slate-855 flex flex-col justify-between items-center shadow-inner">
+        <div className="lg:col-span-4 bg-slate-900 rounded-3xl p-6 border border-slate-800 flex flex-col justify-between items-center shadow-inner">
           <span className="block text-[9px] font-mono text-slate-500 uppercase tracking-widest text-center mb-4">
             # ตาชั่งจำลองตรรกศาสตร์ (Balance Physics)
           </span>
@@ -249,12 +249,12 @@ const LogicScalePlayground = () => {
             </svg>
           </div>
 
-          <div className="text-[10px] text-center text-slate-450 leading-relaxed mt-4">
+          <div className="text-[10px] text-center text-slate-400 leading-relaxed mt-4">
             ตาชั่งเอียงดุลตามค่าน้ำหนักตัวแปร: ซ้าย = <strong className="text-white">{leftVal}</strong> | ขวา = <strong className="text-white">{rightVal}</strong>
           </div>
         </div>
 
-        <div className="lg:col-span-4 bg-slate-955 rounded-3xl p-6 border border-slate-900 flex flex-col justify-between gap-6">
+        <div className="lg:col-span-4 bg-slate-950 rounded-3xl p-6 border border-slate-900 flex flex-col justify-between gap-6">
           <div>
             <div className="flex justify-between items-center text-slate-500 text-[10px] font-mono border-b border-slate-900 pb-2 mb-4">
               <span># python sandbox code</span>
@@ -277,7 +277,7 @@ const LogicScalePlayground = () => {
               <div className={`px-8 py-3 rounded-2xl text-2xl font-black font-mono tracking-wide shadow-lg border-2 inline-block transition-all duration-300 ${
                 result
                   ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400 shadow-emerald-500/5'
-                  : 'bg-rose-500/10 border-rose-500 text-rose-455 shadow-rose-500/5'
+                  : 'bg-rose-500/10 border-rose-500 text-rose-500 shadow-rose-500/5'
               }`}>
                 {result ? 'True' : 'False'}
               </div>
@@ -361,7 +361,7 @@ const BooleanPortalGame = () => {
       <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-amber-500/10 to-emerald-500/10 rounded-bl-full blur-3xl -z-0 pointer-events-none"></div>
 
       <div className="relative z-10 text-center mb-8">
-        <span className="bg-amber-500/10 text-amber-450 border border-amber-500/30 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-widest inline-flex items-center gap-1.5 mb-3">
+        <span className="bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-widest inline-flex items-center gap-1.5 mb-3">
           <Sparkles className="w-3.5 h-3.5" /> Gamification Zone
         </span>
         <h3 className="text-3xl font-bold text-white mb-3 flex items-center justify-center gap-2.5">
@@ -378,7 +378,7 @@ const BooleanPortalGame = () => {
           <div>
             <div className="flex justify-between items-center mb-4">
               <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">ด่านทดสอบที่ {level} / 5</span>
-              <span className="text-xs font-mono text-slate-450">คะแนนสะสม: <strong className="text-emerald-400">{score}</strong></span>
+              <span className="text-xs font-mono text-slate-400">คะแนนสะสม: <strong className="text-emerald-400">{score}</strong></span>
             </div>
 
             <div className="flex gap-1.5 mb-6">
@@ -394,15 +394,15 @@ const BooleanPortalGame = () => {
 
             {level <= 5 ? (
               <>
-                <div className="bg-slate-955 rounded-2xl p-6 border border-slate-900 text-center font-mono py-10 shadow-inner">
-                  <div className="text-[10px] text-slate-505 uppercase tracking-wider mb-3">// ประเมินลอจิกสมการนี้</div>
+                <div className="bg-slate-950 rounded-2xl p-6 border border-slate-900 text-center font-mono py-10 shadow-inner">
+                  <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-3">// ประเมินลอจิกสมการนี้</div>
                   <div className="text-2xl md:text-3xl font-bold text-white tracking-widest">
                     {activeChallenge.formula}
                   </div>
                 </div>
 
                 {gameStatus === 'playing' && (
-                  <div className="bg-amber-955/20 border border-amber-900/40 p-4 rounded-xl text-amber-300 text-[12px] leading-relaxed mt-6 flex gap-2">
+                  <div className="bg-amber-950/20 border border-amber-900/40 p-4 rounded-xl text-amber-300 text-[12px] leading-relaxed mt-6 flex gap-2">
                     <Info className="w-5 h-5 shrink-0 text-amber-400 mt-0.5 animate-pulse" />
                     <span><strong>เคล็ดพอร์ทัล:</strong> {activeChallenge.tip}</span>
                   </div>
@@ -419,7 +419,7 @@ const BooleanPortalGame = () => {
                 )}
 
                 {gameStatus === 'fail' && (
-                  <div className="bg-rose-500/15 border border-rose-500/30 p-4 rounded-xl text-rose-455 text-xs md:text-sm mt-6 flex gap-2.5 items-center">
+                  <div className="bg-rose-500/15 border border-rose-500/30 p-4 rounded-xl text-rose-500 text-xs md:text-sm mt-6 flex gap-2.5 items-center">
                     <AlertOctagon className="w-6 h-6 shrink-0 animate-bounce" />
                     <div>
                       <strong className="block text-white">ประเมินลอจิกผิดพลาด!</strong>
@@ -429,7 +429,7 @@ const BooleanPortalGame = () => {
                 )}
               </>
             ) : (
-              <div className="text-center py-10 bg-slate-955 rounded-2xl border border-slate-900">
+              <div className="text-center py-10 bg-slate-950 rounded-2xl border border-slate-900">
                 <Trophy className="w-16 h-16 text-amber-400 mx-auto mb-4 animate-bounce" />
                 <h5 className="text-xl font-bold text-white mb-2">จบภารกิจพอร์ทัลเปรียบเทียบ!</h5>
                 <p className="text-slate-400 text-sm max-w-xs mx-auto leading-relaxed">
@@ -462,7 +462,7 @@ const BooleanPortalGame = () => {
             {gameStatus === 'fail' && (
               <button
                 onClick={() => setGameStatus('playing')}
-                className="w-full bg-slate-750 hover:bg-slate-700 text-white px-6 py-3.5 rounded-xl font-bold transition-all active:scale-98 text-xs md:text-sm"
+                className="w-full bg-slate-700 hover:bg-slate-700 text-white px-6 py-3.5 rounded-xl font-bold transition-all active:scale-98 text-xs md:text-sm"
               >
                 ลองวิเคราะห์และแก้ตัวอีกรอบ
               </button>
@@ -506,11 +506,11 @@ const BooleanPortalGame = () => {
               disabled={gameStatus !== 'playing' || level > 5}
               className={`flex-1 p-6 rounded-2xl border-2 text-center transition-all duration-300 flex flex-col items-center justify-center gap-3 active:scale-95 ${
                 gameStatus === 'playing' && level <= 5
-                  ? 'bg-rose-500/10 border-rose-500/40 hover:bg-rose-500/25 hover:border-rose-400 text-rose-350 hover:shadow-[0_0_20px_rgba(244,63,94,0.25)]'
+                  ? 'bg-rose-500/10 border-rose-500/40 hover:bg-rose-500/25 hover:border-rose-400 text-rose-300 hover:shadow-[0_0_20px_rgba(244,63,94,0.25)]'
                   : 'bg-slate-900/40 border-slate-800 text-slate-500 opacity-40 cursor-not-allowed'
               }`}
             >
-              <div className="w-12 h-12 rounded-full bg-rose-500/20 text-rose-455 flex items-center justify-center font-bold text-lg border border-rose-500/35">
+              <div className="w-12 h-12 rounded-full bg-rose-500/20 text-rose-500 flex items-center justify-center font-bold text-lg border border-rose-500/35">
                 F
               </div>
               <strong className="block text-sm font-bold uppercase tracking-wider">False Gate</strong>
@@ -548,7 +548,7 @@ export default function py4_5() {
       {/* Layer 1: Ambient Background Glow Layers */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-[10%] left-[-5%] w-[450px] h-[450px] rounded-full bg-amber-100/40 blur-[130px] animate-pulse"></div>
-        <div className="absolute bottom-[20%] right-[5%] w-[500px] h-[500px] rounded-full bg-orange-150/40 blur-[140px]"></div>
+        <div className="absolute bottom-[20%] right-[5%] w-[500px] h-[500px] rounded-full bg-orange-100/40 blur-[140px]"></div>
       </div>
 
       <main className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 pt-10 space-y-16">

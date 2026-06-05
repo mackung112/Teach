@@ -346,7 +346,7 @@ export default function py1_4() {
               </div>
 
               {/* Console log display */}
-              <div className="bg-slate-900 border border-slate-850 rounded-xl p-3 shadow-2xl font-mono text-[12px] min-h-[90px] relative">
+              <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-2xl font-mono text-[12px] min-h-[90px] relative">
                 <div className="absolute top-2 right-4 text-[9px] text-amber-500/60">Pip Output terminal</div>
                 <div className="text-zinc-600 mb-1.5">// Pip console logs:</div>
                 

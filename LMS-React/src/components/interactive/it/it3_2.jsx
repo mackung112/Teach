@@ -543,7 +543,7 @@ function SystemRequirementsChecker() {
 
             {/* Security Flags (TPM and Secure Boot) */}
             <div className="grid grid-cols-2 gap-3 pt-2">
-              <label className="flex items-center gap-2.5 p-3 rounded-xl border border-slate-250 bg-white/50 cursor-pointer hover:bg-white select-none">
+              <label className="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-white/50 cursor-pointer hover:bg-white select-none">
                 <input
                   type="checkbox" checked={secureBoot}
                   onChange={(e) => { setSecureBoot(e.target.checked); setAuditResult(null); }}
@@ -555,7 +555,7 @@ function SystemRequirementsChecker() {
                 </div>
               </label>
 
-              <label className="flex items-center gap-2.5 p-3 rounded-xl border border-slate-250 bg-white/50 cursor-pointer hover:bg-white select-none">
+              <label className="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-white/50 cursor-pointer hover:bg-white select-none">
                 <input
                   type="checkbox" checked={tpm}
                   onChange={(e) => { setTpm(e.target.checked); setAuditResult(null); }}
@@ -905,7 +905,7 @@ function RufusBootableSimulator() {
                   className={`w-full py-2.5 rounded-xl font-bold text-xs transition-all ${
                     status === 'RUNNING'
                       ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                      : 'bg-indigo-650 hover:bg-indigo-700 text-white cursor-pointer active:scale-98 shadow-md'
+                      : 'bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer active:scale-98 shadow-md'
                   }`}
                 >
                   จัดเตรียมสื่อใหม่ (RESET)
@@ -1093,7 +1093,7 @@ function FileSystemLimitSimulator() {
             ) : (
               <button
                 onClick={handleReset}
-                className="w-full py-3 text-sm font-bold text-white bg-indigo-650 hover:bg-indigo-700 active:scale-98 shadow-md cursor-pointer transition-all rounded-xl"
+                className="w-full py-3 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-98 shadow-md cursor-pointer transition-all rounded-xl"
               >
                 เคลียร์พารามิเตอร์ (RESET)
               </button>
@@ -1311,7 +1311,7 @@ function PartitionTableSimulator() {
 
               <div className="flex flex-wrap gap-2.5">
                 {partitions.map(p => (
-                  <div key={p.id} className="p-3 bg-white border border-slate-250 rounded-xl flex items-center gap-3 shrink-0">
+                  <div key={p.id} className="p-3 bg-white border border-slate-200 rounded-xl flex items-center gap-3 shrink-0">
                     <span className={`w-3.5 h-3.5 rounded-full ${p.color}`} />
                     <div>
                       <p className="text-xs font-bold text-slate-800">{p.name}</p>
@@ -1369,7 +1369,7 @@ function PartitionTableSimulator() {
                 {/* Render Unallocated Space */}
                 {unallocatedSpace > 0 && (
                   <div
-                    className="bg-slate-850 h-full border-r border-slate-950 flex flex-col justify-center items-center text-slate-400 transition-all duration-300"
+                    className="bg-slate-800 h-full border-r border-slate-950 flex flex-col justify-center items-center text-slate-400 transition-all duration-300"
                     style={{ width: `${(unallocatedSpace / totalCapacity) * 100}%` }}
                   >
                     <span className="text-[10px] font-bold">Unallocated</span>
@@ -1657,7 +1657,7 @@ function LicensingConsultantSimulator() {
                             : 'border-rose-500 bg-rose-50 text-rose-950'
                           : selectedKey !== null
                           ? 'border-slate-200 bg-slate-50/50 text-slate-400 cursor-not-allowed'
-                          : 'border-slate-250 bg-white hover:bg-slate-50 text-slate-700'
+                          : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
                       }`}
                     >
                       {opt.label}
@@ -1690,7 +1690,7 @@ function LicensingConsultantSimulator() {
           {!completed && selectedKey && (
             <button
               onClick={handleNext}
-              className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-750 text-white text-xs font-bold transition-all duration-200 cursor-pointer shadow-md flex items-center justify-center gap-1.5"
+              className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all duration-200 cursor-pointer shadow-md flex items-center justify-center gap-1.5"
             >
               เลื่อนสู่โจทย์เคสถัดไป
               <ArrowRight className="w-4 h-4" />

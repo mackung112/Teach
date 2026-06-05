@@ -299,7 +299,7 @@ export default function SQL1_2() {
       <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-6 space-y-12 md:space-y-16 relative z-10">
         
         {/* ─── Intro Section ─── */}
-        <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+        <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
           การจัดแบ่งประเภทของฐานข้อมูลตามโครงสร้างและรูปแบบการจัดเก็บข้อมูลในปัจจุบันได้รับการพัฒนาให้มีความหลากหลาย 
           เพื่อตอบสนองต่อลักษณะความซับซ้อนและขนาดข้อมูล (Scale) ที่เปลี่ยนไปอย่างรวดเร็ว 
           เราสามารถแบ่งประเภทฐานข้อมูลตามมาตรฐานสากลเชิงวิศวกรรมคอมพิวเตอร์ออกเป็น 6 หมวดหมู่หลักดังต่อไปนี้:
@@ -496,7 +496,7 @@ export default function SQL1_2() {
                       className={`px-3 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all
                         ${nosqlTab === tab.id
                           ? 'bg-cyan-950/40 text-cyan-400 border border-cyan-800/60 shadow-inner'
-                          : 'text-slate-500 hover:text-slate-350'
+                          : 'text-slate-500 hover:text-slate-300'
                         }`}
                     >
                       {tab.label}
@@ -652,7 +652,7 @@ ${docHobbies.map(h => `    "${h}"`).join(',\n')}
                         </div>
                       </div>
 
-                      <div className="mt-4 pt-3 border-t border-slate-850">
+                      <div className="mt-4 pt-3 border-t border-slate-800">
                         <span className="text-[10px] text-slate-500 block mb-2 font-mono">BUCKET MEMORY STATE</span>
                         <div className="grid grid-cols-2 gap-2">
                           {Object.keys(kvStore).map(key => (
@@ -1247,7 +1247,7 @@ ${docHobbies.map(h => `    "${h}"`).join(',\n')}
                 </div>
 
                 {/* Logs console */}
-                <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-xs font-mono text-slate-350">
+                <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-xs font-mono text-slate-300">
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-[10px] text-slate-500 uppercase tracking-widest">ETL LOG STREAM MONITOR</span>
                     <button

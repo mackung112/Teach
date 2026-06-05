@@ -361,8 +361,8 @@ export default function oop1_1() {
         >
           {/* ดีไซน์เปิดโปร่งโล่งแบบไร้กรอบ (Fluid Open-Air Layout) */}
           <div className="space-y-6 leading-relaxed mb-6">
-            <p className="text-[16px] md:text-[17px] font-normal text-zinc-650">
-              การติดตั้งสภาพแวดล้อมการเขียนโปรแกรมเชิงวัตถุด้วยภาษา Python จำเป็นต้องเริ่มต้นจากการเข้าสู่แหล่งเก็บข้อมูลอย่างเป็นทางการคือเว็บไซต์ <span className="bg-orange-50/60 border border-orange-250/50 px-2.5 py-0.5 rounded-lg text-orange-700 font-semibold text-sm">python.org</span> เท่านั้น 
+            <p className="text-[16px] md:text-[17px] font-normal text-zinc-600">
+              การติดตั้งสภาพแวดล้อมการเขียนโปรแกรมเชิงวัตถุด้วยภาษา Python จำเป็นต้องเริ่มต้นจากการเข้าสู่แหล่งเก็บข้อมูลอย่างเป็นทางการคือเว็บไซต์ <span className="bg-orange-50/60 border border-orange-200/50 px-2.5 py-0.5 rounded-lg text-orange-700 font-semibold text-sm">python.org</span> เท่านั้น 
               หลีกเลี่ยงการดาวน์โหลดจากคลังข้อมูลภายนอกที่ไม่ได้รับรอง เพื่อป้องกันสปายแวร์หรือแพ็กเกจที่เกิดการดัดแปลงสภาพโครงสร้าง
             </p>
 
@@ -399,8 +399,8 @@ export default function oop1_1() {
           accent="amber"
         >
           <div className="space-y-6 leading-relaxed mb-8">
-            <p className="text-[16px] md:text-[17px] font-normal text-zinc-650">
-              เมื่อรันไฟล์ตัวติดตั้งที่ดาวน์โหลดมา การตั้งค่าสำคัญที่สุดคือการติ๊กทำเครื่องหมายถูกที่ช่อง <span className="bg-amber-50/60 border border-amber-250/50 px-2.5 py-0.5 rounded-lg text-amber-700 font-semibold text-sm">Add python.exe to PATH</span> 
+            <p className="text-[16px] md:text-[17px] font-normal text-zinc-600">
+              เมื่อรันไฟล์ตัวติดตั้งที่ดาวน์โหลดมา การตั้งค่าสำคัญที่สุดคือการติ๊กทำเครื่องหมายถูกที่ช่อง <span className="bg-amber-50/60 border border-amber-200/50 px-2.5 py-0.5 rounded-lg text-amber-700 font-semibold text-sm">Add python.exe to PATH</span> 
               ก่อนทำการกดปุ่มเริ่มติดตั้ง เพราะขั้นตอนนี้จะบันทึกเส้นทางตำแหน่งที่อยู่ของตัวแปลภาษาลงในตัวแปรระบบปฏิบัติการ (Environment Variables) ทำให้สามารถเรียกคำสั่งรันโปรแกรมได้จากทุกโฟลเดอร์ในเครื่องคอมพิวเตอร์
             </p>
 
@@ -437,7 +437,7 @@ export default function oop1_1() {
                   </div>
                   <div className="flex gap-1">
                     <span className="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
-                    <span className="w-2.5 h-2.5 rounded-full bg-slate-350"></span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
                   </div>
                 </div>
 
@@ -545,7 +545,7 @@ export default function oop1_1() {
 
               {/* Right Panel: Simulated Windows Terminal Console */}
               <div className="flex flex-col justify-between gap-4">
-                <div className="bg-slate-950 rounded-2xl border border-white/10 p-5 shadow-2xl flex-1 flex flex-col justify-between min-h-[300px] relative font-mono text-[13.5px] leading-relaxed text-zinc-150">
+                <div className="bg-slate-950 rounded-2xl border border-white/10 p-5 shadow-2xl flex-1 flex flex-col justify-between min-h-[300px] relative font-mono text-[13.5px] leading-relaxed text-zinc-100">
                   <span className="text-[9px] font-mono text-slate-500 absolute top-3 left-3"># WINDOWS COMMAND PROMPT</span>
                   
                   <div className="flex-1 overflow-y-auto max-h-[260px] no-scrollbar pt-6 space-y-2 text-zinc-300">
@@ -618,7 +618,7 @@ export default function oop1_1() {
           accent="orange"
         >
           <div className="space-y-6 leading-relaxed mb-8">
-            <p className="text-[16px] md:text-[17px] font-normal text-zinc-650">
+            <p className="text-[16px] md:text-[17px] font-normal text-zinc-600">
               เมื่อติดตั้งระบบสำเร็จแล้ว ก่อนที่เราจะสอบทานด้วยการสั่งรันโปรเจกต์ นักเรียนวิศวกรรมคอมพิวเตอร์จำเป็นต้องเข้าใจตรรกะเชิงลึกของการประมวลผล 
               ระบบ **CPython** จะทำงานโดยนำซอร์สโค้ดที่คุณเขียนไปทำการตรวจสอบความถูกต้องเชิงไวยากรณ์ แปลงค่านำส่งเป็นรหัสกลาง หรือ **Bytecode (.pyc)** 
               เพื่อส่งต่อให้ตัวประมวลผลในเครื่องจักรเสมือน **PVM (Python Virtual Machine)** ดำเนินการเปลี่ยนสภาพเป็นชุดสัญญาณรันงานจริงสู่หน่วยประมวลผลหลักของเครื่อง
@@ -724,7 +724,7 @@ export default function oop1_1() {
                   <div className={`w-40 py-2.5 rounded-xl border text-center transition-all duration-300 font-mono text-xs z-10
                     ${pvmStep >= 1 
                       ? 'bg-orange-600/20 border-orange-500 text-orange-300 ring-2 ring-orange-500/20 font-bold scale-105' 
-                      : 'bg-slate-800/80 border-slate-700 text-slate-450'
+                      : 'bg-slate-800/80 border-slate-700 text-slate-400'
                     }`}
                   >
                     1. Source Code (.py)
@@ -734,7 +734,7 @@ export default function oop1_1() {
                   <div className={`w-40 py-2.5 rounded-xl border text-center transition-all duration-300 font-mono text-xs z-10
                     ${pvmStep >= 2 
                       ? 'bg-orange-600/20 border-orange-500 text-orange-300 ring-2 ring-orange-500/20 font-bold scale-105' 
-                      : 'bg-slate-800/80 border-slate-700 text-slate-450'
+                      : 'bg-slate-800/80 border-slate-700 text-slate-400'
                     }`}
                   >
                     2. CPython Compiler
@@ -744,7 +744,7 @@ export default function oop1_1() {
                   <div className={`w-40 py-2.5 rounded-xl border text-center transition-all duration-300 font-mono text-xs z-10
                     ${pvmStep >= 3 
                       ? 'bg-orange-600/20 border-orange-500 text-orange-300 ring-2 ring-orange-500/20 font-bold scale-105' 
-                      : 'bg-slate-800/80 border-slate-700 text-slate-450'
+                      : 'bg-slate-800/80 border-slate-700 text-slate-400'
                     }`}
                   >
                     3. Bytecode (.pyc)
@@ -754,7 +754,7 @@ export default function oop1_1() {
                   <div className={`w-40 py-2.5 rounded-xl border text-center transition-all duration-300 font-mono text-xs z-10
                     ${pvmStep >= 4 
                       ? 'bg-emerald-600/20 border-emerald-500 text-emerald-300 ring-2 ring-emerald-500/20 font-bold scale-105' 
-                      : 'bg-slate-800/80 border-slate-700 text-slate-450'
+                      : 'bg-slate-800/80 border-slate-700 text-slate-400'
                     }`}
                   >
                     4. PVM Virtual Machine
@@ -782,7 +782,7 @@ export default function oop1_1() {
                   <span className="text-[9px] font-mono text-slate-500 absolute top-3 left-3"># PVM RUNTIME LOGS</span>
                   <div className="space-y-2 mt-4 font-mono text-[13px] leading-relaxed">
                     {pvmLogs.length === 0 && (
-                      <p className="text-slate-650 italic">กดคลิกรันโค้ดจำลองเพื่อดูความสัมพันธ์ของรันไทม์เบื้องหลัง...</p>
+                      <p className="text-slate-600 italic">กดคลิกรันโค้ดจำลองเพื่อดูความสัมพันธ์ของรันไทม์เบื้องหลัง...</p>
                     )}
                     {pvmLogs.map((log, i) => (
                       <div key={i} className="text-orange-300 flex items-start gap-2 animate-fadeIn">
@@ -807,27 +807,27 @@ export default function oop1_1() {
           accent="rose"
         >
           <div className="space-y-6 leading-relaxed mb-8">
-            <p className="text-[16px] md:text-[17px] font-normal text-zinc-650">
-              ภายหลังจากติดตั้งเสร็จสิ้น ขั้นตอนสำคัญที่สุดคือการใช้หน้าต่างดำ <span className="bg-rose-50/60 border border-rose-250/50 px-2.5 py-0.5 rounded-lg text-rose-700 font-semibold text-sm">Command Line Interface</span> เพื่อรันคำสั่งเช็คสภาพความถูกต้อง 
+            <p className="text-[16px] md:text-[17px] font-normal text-zinc-600">
+              ภายหลังจากติดตั้งเสร็จสิ้น ขั้นตอนสำคัญที่สุดคือการใช้หน้าต่างดำ <span className="bg-rose-50/60 border border-rose-200/50 px-2.5 py-0.5 rounded-lg text-rose-700 font-semibold text-sm">Command Line Interface</span> เพื่อรันคำสั่งเช็คสภาพความถูกต้อง 
               และลองเข้าสู่โหมดการเขียนโค้ดเพื่อทดสอบระบบรันไทม์ของแท้ โดยสามารถเรียกคำสั่งมาตรฐานในการสอบทานดังนี้:
             </p>
 
             <ul className="space-y-3.5 pl-2">
               <li className="flex items-start gap-3">
                 <ArrowRight className="w-4 h-4 text-rose-500 mt-1 shrink-0" />
-                <span className="text-[15px] text-slate-650">
+                <span className="text-[15px] text-slate-600">
                   <strong className="text-slate-800">python --version:</strong> ตรวจสอบว่า Windows รู้จักตำแหน่งของภาษา และดึงหมายเลขรุ่นเวอร์ชันระบบออกมาแสดงจริง
                 </span>
               </li>
               <li className="flex items-start gap-3">
                 <ArrowRight className="w-4 h-4 text-rose-500 mt-1 shrink-0" />
-                <span className="text-[15px] text-slate-650">
+                <span className="text-[15px] text-slate-600">
                   <strong className="text-slate-800">pip --version:</strong> สอบทานความสมบูรณ์แบบของผู้จัดการแพ็กเกจไลบรารี สำหรับเตรียมการดาวน์โหลดเครื่องมือธุรกิจในหน่วยถัดไป
                 </span>
               </li>
               <li className="flex items-start gap-3">
                 <ArrowRight className="w-4 h-4 text-rose-500 mt-1 shrink-0" />
-                <span className="text-[15px] text-slate-650">
+                <span className="text-[15px] text-slate-600">
                   <strong className="text-slate-800">python (REPL Interactive Shell):</strong> พิมพ์คำสั่ง <code>python</code> เพื่อย้ายระบบเข้าสู่สภาพแวดล้อมรันชุดคำสั่งทีละบรรทัด สังเกตสัญลักษณ์เครื่องหมาย &gt;&gt;&gt; ท้ายบรรทัด
                 </span>
               </li>
@@ -854,13 +854,13 @@ export default function oop1_1() {
                     <div className="space-y-2.5">
                       <button
                         onClick={() => runCliPreset('python --version')}
-                        className="w-full text-left px-4 py-3.5 bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-rose-500/40 text-slate-200 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98]"
+                        className="w-full text-left px-4 py-3.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-rose-500/40 text-slate-200 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98]"
                       >
                         python --version
                       </button>
                       <button
                         onClick={() => runCliPreset('pip --version')}
-                        className="w-full text-left px-4 py-3.5 bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-rose-500/40 text-slate-200 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98]"
+                        className="w-full text-left px-4 py-3.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-rose-500/40 text-slate-200 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98]"
                       >
                         pip --version
                       </button>
@@ -873,7 +873,7 @@ export default function oop1_1() {
                       </button>
                       <button
                         onClick={() => runCliPreset('pip install pygame')}
-                        className="w-full text-left px-4 py-3.5 bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-rose-500/40 text-slate-200 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98]"
+                        className="w-full text-left px-4 py-3.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-rose-500/40 text-slate-200 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98]"
                       >
                         pip install pygame
                       </button>
@@ -886,21 +886,21 @@ export default function oop1_1() {
                       
                       <button
                         onClick={() => runCliPreset('print("Welcome to OOP")')}
-                        className="w-full text-left px-4 py-3.5 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-200 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98]"
+                        className="w-full text-left px-4 py-3.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98]"
                       >
                         print("Welcome to OOP")
                       </button>
                       
                       <button
                         onClick={() => runCliPreset('class Student: pass')}
-                        className="w-full text-left px-4 py-3.5 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-200 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98]"
+                        className="w-full text-left px-4 py-3.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98]"
                       >
                         class Student: pass
                       </button>
 
                       <button
                         onClick={() => runCliPreset('exit()')}
-                        className="w-full text-left px-4 py-3.5 bg-slate-950 border border-slate-800 text-rose-450 hover:text-rose-400 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98] font-bold"
+                        className="w-full text-left px-4 py-3.5 bg-slate-950 border border-slate-800 text-rose-400 hover:text-rose-400 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98] font-bold"
                       >
                         exit() (กลับออกมาสู่ CMD ปกติ)
                       </button>

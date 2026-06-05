@@ -528,7 +528,7 @@ export default function DSA1_3() {
 
                         <button
                           onClick={handlePrimitiveAlloc}
-                          className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg cursor-pointer transition-all shadow shadow-indigo-650/40"
+                          className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg cursor-pointer transition-all shadow shadow-indigo-600/40"
                         >
                           จองแรมหน่วยความจำเดี่ยว (O(1))
                         </button>
@@ -605,7 +605,7 @@ export default function DSA1_3() {
                         </div>
 
                         <div className="space-y-2">
-                          <span className="text-[10px] font-bold text-slate-450 block uppercase">1) กองซ้อน (Stack - LIFO):</span>
+                          <span className="text-[10px] font-bold text-slate-400 block uppercase">1) กองซ้อน (Stack - LIFO):</span>
                           <div className="flex gap-2">
                             <button
                               onClick={handleStackPush}
@@ -623,7 +623,7 @@ export default function DSA1_3() {
                         </div>
 
                         <div className="space-y-2 pt-1">
-                          <span className="text-[10px] font-bold text-slate-450 block uppercase">2) คิว (Queue - FIFO):</span>
+                          <span className="text-[10px] font-bold text-slate-400 block uppercase">2) คิว (Queue - FIFO):</span>
                           <div className="flex gap-2">
                             <button
                               onClick={handleQueueEnqueue}
@@ -700,7 +700,7 @@ export default function DSA1_3() {
                 </div>
 
                 {/* Status bar */}
-                <div className="mt-6 pt-3 border-t border-slate-800 text-[11px] font-mono text-emerald-400 leading-relaxed bg-black/30 p-2.5 rounded-lg border border-slate-850">
+                <div className="mt-6 pt-3 border-t border-slate-800 text-[11px] font-mono text-emerald-400 leading-relaxed bg-black/30 p-2.5 rounded-lg border border-slate-800">
                   <span className="text-zinc-500 block text-[9px] uppercase tracking-wider mb-0.5">Terminal Log Output:</span>
                   {statusMsg}
                 </div>
@@ -740,7 +740,7 @@ export default function DSA1_3() {
                         ))}
                       </div>
 
-                      <div className="bg-slate-900 border border-slate-850 p-4 rounded-xl space-y-2">
+                      <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
                         <span className="text-[9px] font-mono text-slate-500 uppercase block">Memory Allocation Analysis:</span>
                         <div className="grid grid-cols-2 gap-4 text-xs font-mono">
                           <div>
@@ -752,7 +752,7 @@ export default function DSA1_3() {
                             <span className="text-indigo-400 font-bold">{allocatedPrimitive.size} Bytes</span>
                           </div>
                         </div>
-                        <div className="pt-2 border-t border-slate-850">
+                        <div className="pt-2 border-t border-slate-800">
                           <span className="text-[9px] font-mono text-slate-500 block uppercase">Binary Structure inside RAM:</span>
                           <span className="text-[11.5px] font-mono text-emerald-400 font-bold tracking-wider block mt-0.5">
                             {allocatedPrimitive.binary}
@@ -774,7 +774,7 @@ export default function DSA1_3() {
                               className={`flex-1 min-w-[70px] border rounded-xl p-2.5 flex flex-col items-center justify-between min-h-[110px] transition-all duration-300 ${
                                 activeIndex === idx
                                   ? 'bg-indigo-900/40 border-indigo-400 scale-[1.03] shadow shadow-indigo-400/30'
-                                  : 'bg-slate-900 border-slate-850'
+                                  : 'bg-slate-900 border-slate-800'
                               }`}
                             >
                               <span className="text-[8px] font-mono text-slate-500">Index {idx}</span>
@@ -792,7 +792,7 @@ export default function DSA1_3() {
                         </div>
                       </div>
 
-                      <div className="bg-slate-900 border border-slate-850 p-4 rounded-xl space-y-1 text-xs">
+                      <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-1 text-xs">
                         <span className="text-[9px] font-mono text-slate-500 uppercase block mb-1">Array Theoretical Specs:</span>
                         <div className="grid grid-cols-2 gap-3 font-mono leading-relaxed">
                           <div>
@@ -907,7 +907,7 @@ export default function DSA1_3() {
                                   idx === 0 && pulseNode === 'stack-top'
                                     ? 'bg-indigo-900/40 border-indigo-400 scale-105'
                                     : idx === 0
-                                    ? 'bg-slate-950/90 border-slate-750'
+                                    ? 'bg-slate-950/90 border-slate-700'
                                     : 'bg-slate-900/50 opacity-70'
                                 }`}
                               >
@@ -938,7 +938,7 @@ export default function DSA1_3() {
                                     idx === queueData.length - 1 && pulseNode === 'queue-rear'
                                       ? 'bg-cyan-900/40 border-cyan-400 scale-105'
                                       : idx === 0
-                                      ? 'bg-slate-950/90 border-slate-750 border-l-2 border-l-cyan-400'
+                                      ? 'bg-slate-950/90 border-slate-700 border-l-2 border-l-cyan-400'
                                       : 'bg-slate-900/50 opacity-80'
                                   }`}
                                 >
@@ -1062,24 +1062,24 @@ export default function DSA1_3() {
                 </div>
 
                 {/* Theoretical Output Metrics panel */}
-                <div className="mt-4 bg-slate-900/60 border border-slate-850 p-4 rounded-xl">
+                <div className="mt-4 bg-slate-900/60 border border-slate-800 p-4 rounded-xl">
                   <div className="text-[10px] font-mono text-slate-500 uppercase block mb-2">Structure Performance Metrics:</div>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs font-mono">
-                    <div className="bg-slate-950/40 p-2.5 rounded-lg border border-slate-850">
+                    <div className="bg-slate-950/40 p-2.5 rounded-lg border border-slate-800">
                       <span className="text-slate-500 text-[9px] block">จัดสรรพื้นที่แรม (Memory Layout)</span>
                       <span className="text-white font-bold block mt-0.5">
                         {activeTab === 'primitive' || activeTab === 'array' ? 'Contiguous (ต่อเนื่อง)' : 'Scattered (กระจายตัว)'}
                       </span>
                     </div>
 
-                    <div className="bg-slate-950/40 p-2.5 rounded-lg border border-slate-850">
+                    <div className="bg-slate-950/40 p-2.5 rounded-lg border border-slate-800">
                       <span className="text-slate-500 text-[9px] block">สัญกรณ์ความเร็วค้นหา (Search Big O)</span>
                       <span className="text-indigo-300 font-bold block mt-0.5">
                         {activeTab === 'primitive' ? 'O(1) Direct' : activeTab === 'array' ? 'O(N) Linear' : activeTab === 'tree' ? 'O(log N) Avg' : 'O(N) Traversal'}
                       </span>
                     </div>
 
-                    <div className="bg-slate-950/40 p-2.5 rounded-lg border border-slate-850 col-span-2 md:col-span-1">
+                    <div className="bg-slate-950/40 p-2.5 rounded-lg border border-slate-800 col-span-2 md:col-span-1">
                       <span className="text-slate-500 text-[9px] block">ลักษณะความสัมพันธ์ (Relationship)</span>
                       <span className="text-cyan-300 font-bold block mt-0.5">
                         {activeTab === 'primitive' ? 'เดี่ยว (Single Value)' : activeTab === 'tree' ? 'ลำดับชั้น (Hierarchical)' : activeTab === 'graph' ? 'โครงข่ายโยง (Network)' : 'เชิงเส้น (Sequence)'}

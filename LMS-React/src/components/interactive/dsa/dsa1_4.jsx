@@ -225,7 +225,7 @@ export default function DSA1_4() {
                       className={`px-4 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 cursor-pointer
                         ${representationTab === tab.id
                           ? 'bg-emerald-600 text-white shadow shadow-emerald-600/25 border-emerald-500'
-                          : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-350 hover:bg-slate-50'
+                          : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
                         }`}
                     >
                       {tab.label}
@@ -270,7 +270,7 @@ export default function DSA1_4() {
                     <p className="text-[13px] text-zinc-400 leading-relaxed font-sans">
                       การเขียนรหัสลอจิกจำลองที่ลอกเลียนไวยากรณ์ภาษาคอมพิวเตอร์อย่างเป็นระเบียบ แต่ยังอ่านเข้าใจง่าย:
                     </p>
-                    <pre className="bg-black/50 p-4 rounded-xl border border-slate-800 font-mono text-[12.5px] text-emerald-350 leading-relaxed overflow-x-auto">
+                    <pre className="bg-black/50 p-4 rounded-xl border border-slate-800 font-mono text-[12.5px] text-emerald-300 leading-relaxed overflow-x-auto">
 {`ALGORITHM CalculateSum(N)
   INPUT: Integer N
   OUTPUT: Integer sum of 1 to N
@@ -292,7 +292,7 @@ END`}
                   <div className="grow flex flex-col justify-between items-stretch animate-fadeIn">
                     <div className="flex gap-4 items-stretch h-[280px]">
                       {/* Flowchart Diagram SVG (Absolute Center Connection concept) */}
-                      <div className="w-[180px] bg-black/40 border border-slate-850 rounded-xl overflow-hidden relative shadow-inner shrink-0">
+                      <div className="w-[180px] bg-black/40 border border-slate-800 rounded-xl overflow-hidden relative shadow-inner shrink-0">
                         <svg className="absolute inset-0 w-full h-full">
                           {/* Flow lines */}
                           <g stroke="#334155" strokeWidth="2">
@@ -533,7 +533,7 @@ END`}
                   {/* Step counter and status indicator lights */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Step counter monitor */}
-                    <div className="bg-slate-900 border border-slate-850 p-4 rounded-2xl flex flex-col justify-between h-[96px] relative overflow-hidden">
+                    <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col justify-between h-[96px] relative overflow-hidden">
                       <span className="text-[10px] font-mono text-slate-500 uppercase">Iteration Loop Step Counter:</span>
                       <span className="text-2xl font-bold font-mono text-white tracking-widest mt-1">
                         {iterations.toLocaleString()}
@@ -544,13 +544,13 @@ END`}
                     </div>
 
                     {/* Status Indicator */}
-                    <div className="bg-slate-900 border border-slate-850 p-4 rounded-2xl flex flex-col justify-between h-[96px]">
+                    <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col justify-between h-[96px]">
                       <span className="text-[10px] font-mono text-slate-500 uppercase">System Status Indicator:</span>
                       
                       <div className="flex items-center gap-3 mt-1.5">
                         {simStatus === 'idle' && (
                           <>
-                            <div className="w-4 h-4 rounded-full bg-slate-750" />
+                            <div className="w-4 h-4 rounded-full bg-slate-700" />
                             <span className="text-sm font-semibold text-slate-400 font-sans">STANDBY</span>
                           </>
                         )}
@@ -581,7 +581,7 @@ END`}
                   </div>
 
                   {/* Quality criteria Scorecard (Evaluation Card) */}
-                  <div className="bg-slate-900 border border-slate-850 rounded-2xl p-4">
+                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4">
                     <div className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 flex items-center gap-1.5">
                       <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                       เกณฑ์การประเมินคุณภาพขั้นตอนวิธี (Evaluation Card):
@@ -589,8 +589,8 @@ END`}
 
                     <div className="space-y-2.5">
                       {Object.entries(scoreCard).map(([key, item]) => (
-                        <div key={key} className="flex justify-between items-center text-xs border-b border-slate-850/50 pb-2">
-                          <span className="text-slate-350">{item.label}</span>
+                        <div key={key} className="flex justify-between items-center text-xs border-b border-slate-800/50 pb-2">
+                          <span className="text-slate-300">{item.label}</span>
                           <div className="flex items-center gap-2 shrink-0">
                             <span className="text-[10px] text-zinc-500 hidden md:inline">{item.desc}</span>
                             {item.pass ? (

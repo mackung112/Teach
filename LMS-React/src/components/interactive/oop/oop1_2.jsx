@@ -345,9 +345,9 @@ export default function oop1_2() {
         >
           {/* ดีไซน์เปิดโปร่งโล่งแบบไร้กรอบ (Fluid Open-Air Layout) */}
           <div className="space-y-6 leading-relaxed mb-6">
-            <p className="text-[16px] md:text-[17px] font-normal text-zinc-650">
+            <p className="text-[16px] md:text-[17px] font-normal text-zinc-600">
               ในการเขียนโปรแกรมเชิงวัตถุ (OOP) เราหลีกเลี่ยงการเขียนโค้ดลงบนโปรแกรมพิมพ์ข้อความธรรมดาอย่าง Notepad เนื่องจากไม่มีกลไกช่วยเหลือ เช่น การจดจำคำสั่ง สีสันของโค้ด หรือการคอมไพล์งานด่วน 
-              ดังนั้น เราจึงต้องเลือกใช้ <span className="bg-orange-50/60 border border-orange-250/50 px-2.5 py-0.5 rounded-lg text-orange-700 font-semibold text-sm">Visual Studio Code (VS Code)</span> ซึ่งเป็นโปรแกรมแก้ไขโค้ดระดับแนวหน้าของโลกที่เบา รวดเร็ว และสามารถอัปเกรดติดตั้งตัวแปลภาษาเพิ่มเติมได้อิสระ
+              ดังนั้น เราจึงต้องเลือกใช้ <span className="bg-orange-50/60 border border-orange-200/50 px-2.5 py-0.5 rounded-lg text-orange-700 font-semibold text-sm">Visual Studio Code (VS Code)</span> ซึ่งเป็นโปรแกรมแก้ไขโค้ดระดับแนวหน้าของโลกที่เบา รวดเร็ว และสามารถอัปเกรดติดตั้งตัวแปลภาษาเพิ่มเติมได้อิสระ
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -382,8 +382,8 @@ export default function oop1_2() {
           accent="amber"
         >
           <div className="space-y-6 leading-relaxed mb-6">
-            <p className="text-[16px] md:text-[17px] font-normal text-zinc-650">
-              เมื่อเปิดหน้าเว็บดาวน์โหลดทางการของไมโครซอฟท์ <span className="bg-amber-50/60 border border-amber-250/50 px-2.5 py-0.5 rounded-lg text-amber-700 font-semibold text-sm">code.visualstudio.com</span>
+            <p className="text-[16px] md:text-[17px] font-normal text-zinc-600">
+              เมื่อเปิดหน้าเว็บดาวน์โหลดทางการของไมโครซอฟท์ <span className="bg-amber-50/60 border border-amber-200/50 px-2.5 py-0.5 rounded-lg text-amber-700 font-semibold text-sm">code.visualstudio.com</span>
               ระบบจะแสดงตัวเลือกการติดตั้งที่แตกต่างกันตามระดับสิทธิ์ความปลอดภัยในสถาบันการศึกษาหรือคอมพิวเตอร์เชิงอาชีพ โดยแบ่งขอบเขตหลักได้เป็น 2 ประเภทใหญ่ดังนี้:
             </p>
 
@@ -393,7 +393,7 @@ export default function oop1_2() {
                 <p className="text-[14px] text-slate-500 leading-relaxed font-sans mb-4">
                   ติดตั้งไฟล์หลักลงในโฟลเดอร์ส่วนตัวของ Account ปัจจุบัน (เช่น AppData\Local\Programs) **ไม่ต้องใช้สิทธิ์ระดับผู้ดูแลระบบ (Administrator Privilege)** มีความปลอดภัยสูงสุดในการเรียนในห้องปฏิบัติการคอมพิวเตอร์ของโรงเรียนที่ถูกล็อกรหัสแอดมินไว้
                 </p>
-                <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100 font-mono text-[12.5px] text-slate-650">
+                <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100 font-mono text-[12.5px] text-slate-600">
                   Path: AppData\Local\Programs\Microsoft VS Code
                 </div>
               </div>
@@ -403,7 +403,7 @@ export default function oop1_2() {
                 <p className="text-[14px] text-slate-500 leading-relaxed font-sans mb-4">
                   ติดตั้งลงในระบบส่วนกลางของคอมพิวเตอร์ (Program Files) **จำเป็นต้องป้อนรหัสสิทธิ์ Administrator** โปรแกรมจะสามารถเรียกใช้งานได้จากทุกๆ บัญชีผู้ใช้งานที่มีการสร้างขึ้นมาใช้งานร่วมกันในเครื่องนี้
                 </p>
-                <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100 font-mono text-[12.5px] text-slate-650">
+                <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100 font-mono text-[12.5px] text-slate-600">
                   Path: C:\Program Files\Microsoft VS Code
                 </div>
               </div>
@@ -420,7 +420,7 @@ export default function oop1_2() {
           accent="orange"
         >
           <div className="space-y-6 leading-relaxed mb-8">
-            <p className="text-[16px] md:text-[17px] font-normal text-zinc-650">
+            <p className="text-[16px] md:text-[17px] font-normal text-zinc-600">
               ในขั้นตอนติดตั้งโปรแกรม VS Code บนระบบปฏิบัติการ Windows หน้าต่างการเลือกตั้งค่าเสริมเพิ่มเติม (Select Additional Tasks) มีความสำคัญสูงสุดในการอำนวยความสะดวกในวิชาชีพโปรแกรมเมอร์ 
               นักศึกษาควรเช็คถูกที่ช่อง **Add "Open with Code"** เพื่อเปิดใช้สิทธิ์คลิกขวาที่ไดเรกทอรี และเช็คที่ช่อง **Add to PATH** เพื่อลงทะเบียนเส้นทางสำหรับเรียกใช้งานผ่านหน้าต่างคอมมานด์ไลน์
             </p>
@@ -443,7 +443,7 @@ export default function oop1_2() {
             iconColor="text-orange-600"
             icon={<Settings className="w-6 h-6 text-orange-600" />}
           >
-            <div className="max-w-2xl mx-auto bg-slate-150 border border-slate-200 rounded-2xl p-6 shadow-inner text-slate-800 relative">
+            <div className="max-w-2xl mx-auto bg-slate-100 border border-slate-200 rounded-2xl p-6 shadow-inner text-slate-800 relative">
               
               {/* Installer Top Header */}
               <div className="border-b border-slate-200 pb-3 mb-4 flex justify-between items-center select-none">
@@ -482,7 +482,7 @@ export default function oop1_2() {
                       </div>
                     </label>
 
-                    <label className="flex items-start gap-3.5 cursor-pointer text-xs font-semibold text-slate-750 select-none pl-2">
+                    <label className="flex items-start gap-3.5 cursor-pointer text-xs font-semibold text-slate-700 select-none pl-2">
                       <input 
                         type="checkbox"
                         checked={installerState.openMenu}
@@ -495,7 +495,7 @@ export default function oop1_2() {
                       </div>
                     </label>
 
-                    <label className="flex items-start gap-3.5 cursor-pointer text-xs font-semibold text-slate-750 select-none pl-2">
+                    <label className="flex items-start gap-3.5 cursor-pointer text-xs font-semibold text-slate-700 select-none pl-2">
                       <input 
                         type="checkbox"
                         checked={installerState.createDesktop}
@@ -565,7 +565,7 @@ export default function oop1_2() {
                     </button>
                     <button 
                       onClick={resetInstaller}
-                      className="px-4 py-2.5 border border-slate-350 text-slate-650 hover:bg-slate-50 rounded-xl text-xs font-bold cursor-pointer transition-all active:scale-95"
+                      className="px-4 py-2.5 border border-slate-300 text-slate-600 hover:bg-slate-50 rounded-xl text-xs font-bold cursor-pointer transition-all active:scale-95"
                     >
                       รีเซ็ตค่าติดตั้ง
                     </button>
@@ -589,7 +589,7 @@ export default function oop1_2() {
           </div>
           
           <div className="space-y-6 leading-relaxed">
-            <p className="text-[16px] md:text-[17px] font-normal text-zinc-650">
+            <p className="text-[16px] md:text-[17px] font-normal text-zinc-600">
               ในการบริหารคลังระบบการเรียนการสอนของผู้สอน นักเรียนทุกคนจำเป็นต้องจัดเก็บรหัสโค้ดงานอย่างเป็นระบบ ระเบียบ และตรวจสอบง่าย 
               โดยผู้สอนได้กำหนดมาตรฐานให้สร้างที่ตั้งโครงการในเครื่องดังนี้:
             </p>
@@ -601,19 +601,19 @@ export default function oop1_2() {
               <ul className="space-y-3.5 pl-2 mb-6">
                 <li className="flex items-start gap-3">
                   <ArrowRight className="w-4 h-4 text-amber-500 mt-1 shrink-0" />
-                  <span className="text-[15px] text-slate-650">
+                  <span className="text-[15px] text-slate-600">
                     <strong className="text-slate-800">ตำแหน่งไดรฟ์ (Drive Location):</strong> ต้องสร้างโฟลเดอร์ไว้ภายในไดรฟ์ <strong className="text-amber-700">D:\</strong> เสมอ เพื่อความปลอดภัยจากการถูกล้างค่าจากระบบรีสตาร์ทแช่แข็งไดรฟ์ C
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <ArrowRight className="w-4 h-4 text-amber-500 mt-1 shrink-0" />
-                  <span className="text-[15px] text-slate-650">
+                  <span className="text-[15px] text-slate-600">
                     <strong className="text-slate-800">รูปแบบการสะกดชื่อ (Naming Format):</strong> ใช้เครื่องหมายขีดล่าง (Underscore) คั่นระหว่างเลขลำดับเลขที่ในห้องเรียน และชื่อตัวภาษาอังกฤษอักษรเล็ก เช่น <strong className="text-amber-700 font-mono">D:\12_john</strong>
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <ArrowRight className="w-4 h-4 text-amber-500 mt-1 shrink-0" />
-                  <span className="text-[15px] text-slate-650">
+                  <span className="text-[15px] text-slate-600">
                     <strong className="text-slate-800">ข้อควรระวัง (Critical Warning):</strong> ห้ามมีภาษาไทย สระ หรือการเว้นวรรคช่องว่างในชื่อโฟลเดอร์เป็นอันขาด เพราะจะทำให้ตัวแปลภาษาไพธอนประมวลค่าผิดพลาดเนื่องจาก Encoding ของระบบต่างประเภทกัน
                   </span>
                 </li>
@@ -638,8 +638,8 @@ export default function oop1_2() {
           accent="rose"
         >
           <div className="space-y-6 leading-relaxed mb-8">
-            <p className="text-[16px] md:text-[17px] font-normal text-zinc-650">
-              เมื่อติดตั้งโปรแกรมและเตรียมโฟลเดอร์เสร็จแล้ว เราจะทำการเปิดสอบทานระบบด้วยการพิมพ์คำสั่งย่อผ่าน <span className="bg-rose-50/60 border border-rose-250/50 px-2.5 py-0.5 rounded-lg text-rose-700 font-semibold text-sm">Command Prompt</span> 
+            <p className="text-[16px] md:text-[17px] font-normal text-zinc-600">
+              เมื่อติดตั้งโปรแกรมและเตรียมโฟลเดอร์เสร็จแล้ว เราจะทำการเปิดสอบทานระบบด้วยการพิมพ์คำสั่งย่อผ่าน <span className="bg-rose-50/60 border border-rose-200/50 px-2.5 py-0.5 rounded-lg text-rose-700 font-semibold text-sm">Command Prompt</span> 
               โดยจำลองการนำทางไดเรกทอรีไปยังตำแหน่งโฟลเดอร์ D:\12_john และพิมพ์คำสั่งย่อที่ได้รับการลงทะเบียนในค่า PATH 
               นั่นคือคำสั่ง <code className="bg-slate-900 text-rose-300 px-2 py-0.5 rounded font-mono text-[13.5px]">code .</code> (หมายความว่า: ให้เอาโปรแกรม VS Code มาเปิดทำงานตรงตำแหน่งโฟลเดอร์ปัจจุบันนี้ทันที)
             </p>
@@ -665,7 +665,7 @@ export default function oop1_2() {
                     {/* Stage 1: Move to D */}
                     <button
                       onClick={() => handleShortcutClick('d:')}
-                      className="w-full text-left px-4 py-3 bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-rose-500/40 text-slate-200 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98] flex items-center justify-between"
+                      className="w-full text-left px-4 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-rose-500/40 text-slate-200 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98] flex items-center justify-between"
                     >
                       <span>1. ย้ายตำแหน่งไปไดรฟ์ D (พิมพ์ d:)</span>
                       <span className="text-[10px] bg-slate-700 px-2 py-0.5 rounded text-slate-400">Step 1</span>
@@ -674,7 +674,7 @@ export default function oop1_2() {
                     {/* Stage 2: Cd into 12_john */}
                     <button
                       onClick={() => handleShortcutClick('cd 12_john')}
-                      className="w-full text-left px-4 py-3 bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-rose-500/40 text-slate-200 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98] flex items-center justify-between"
+                      className="w-full text-left px-4 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-rose-500/40 text-slate-200 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98] flex items-center justify-between"
                     >
                       <span>2. นำทางเข้าโฟลเดอร์เลขที่ (cd 12_john)</span>
                       <span className="text-[10px] bg-slate-700 px-2 py-0.5 rounded text-slate-400">Step 2</span>
@@ -692,7 +692,7 @@ export default function oop1_2() {
                     {/* Stage 4: Check code version */}
                     <button
                       onClick={() => handleShortcutClick('code --version')}
-                      className="w-full text-left px-4 py-3 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-200 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98]"
+                      className="w-full text-left px-4 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 rounded-xl text-sm font-mono cursor-pointer transition-all duration-200 active:scale-[0.98]"
                     >
                       สอบทานเวอร์ชันความพร้อม (code --version)
                     </button>
@@ -709,7 +709,7 @@ export default function oop1_2() {
 
               {/* Right Windows Console Screen (7 cols) */}
               <div className="lg:col-span-7 flex flex-col">
-                <div className="bg-slate-950 rounded-2xl border border-white/10 p-5 shadow-2xl flex-1 flex flex-col justify-between min-h-[300px] relative font-mono text-[13.5px] leading-relaxed text-zinc-155">
+                <div className="bg-slate-950 rounded-2xl border border-white/10 p-5 shadow-2xl flex-1 flex flex-col justify-between min-h-[300px] relative font-mono text-[13.5px] leading-relaxed text-zinc-200">
                   <span className="text-[9px] font-mono text-slate-500 absolute top-3 left-3"># WINDOWS SYSTEM CONSOLE</span>
                   
                   <div className="mt-6 flex-1 overflow-y-auto max-h-[240px] no-scrollbar space-y-1 select-all text-zinc-300">
@@ -718,7 +718,7 @@ export default function oop1_2() {
                     ))}
                   </div>
 
-                  <div className="border-t border-slate-850 pt-2 text-[10px] text-slate-550 flex justify-between font-mono select-none">
+                  <div className="border-t border-slate-800 pt-2 text-[10px] text-slate-500 flex justify-between font-mono select-none">
                     <span>Active Path: D:\12_john</span>
                     <span>Registry: OK</span>
                   </div>
@@ -748,7 +748,7 @@ export default function oop1_2() {
           </div>
 
           <div className="space-y-6 leading-relaxed mb-6">
-            <p className="text-[16px] md:text-[17px] font-normal text-zinc-650">
+            <p className="text-[16px] md:text-[17px] font-normal text-zinc-600">
               เมื่อหน้าต่างโปรแกรมแก้ไขโค้ดถูกรันขึ้นมา หน้าตาการทำเลย์เอาต์จะประกอบด้วย 4 คอลัมน์พิกัดแกนสำหรับการแบ่งหน้าที่งานเขียนโค้ด 
               โปรดนำเมาส์คลิกสำรวจตำแหน่งในกระดานแผงด้านล่างเพื่อวิเคราะห์คุณประโยชน์ทางอาชีพของแต่ละแถบปุ่ม:
             </p>
@@ -767,7 +767,7 @@ export default function oop1_2() {
               <div className="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col justify-between shadow-2xl min-h-[400px]">
                 
                 {/* VS Code title bar */}
-                <div className="bg-slate-950 px-4 py-2.5 flex items-center justify-between text-xs text-slate-400 select-none border-b border-slate-850">
+                <div className="bg-slate-950 px-4 py-2.5 flex items-center justify-between text-xs text-slate-400 select-none border-b border-slate-800">
                   <div className="flex items-center gap-2.5">
                     <span className="w-3 h-3 rounded-full bg-rose-500"></span>
                     <span className="w-3 h-3 rounded-full bg-amber-500"></span>
@@ -783,7 +783,7 @@ export default function oop1_2() {
                   {/* Part 1: Activity Bar (Left icon list) */}
                   <div 
                     onClick={() => setVscodeActiveArea('activity')}
-                    className={`w-12 bg-slate-950 flex flex-col justify-between py-4 border-r border-slate-850 items-center cursor-pointer transition-colors duration-200
+                    className={`w-12 bg-slate-950 flex flex-col justify-between py-4 border-r border-slate-800 items-center cursor-pointer transition-colors duration-200
                       ${vscodeActiveArea === 'activity' ? 'bg-orange-500/10 border-r-2 border-r-orange-500' : 'hover:bg-slate-900/50'}`}
                   >
                     <div className="space-y-4 text-slate-400 flex flex-col items-center">
@@ -797,20 +797,20 @@ export default function oop1_2() {
                   {/* Part 2: Sidebar (File Explorer) */}
                   <div 
                     onClick={() => setVscodeActiveArea('sidebar')}
-                    className={`w-48 bg-slate-900/95 border-r border-slate-850 p-4 font-mono text-[11.5px] cursor-pointer transition-colors duration-200 flex flex-col justify-between
+                    className={`w-48 bg-slate-900/95 border-r border-slate-800 p-4 font-mono text-[11.5px] cursor-pointer transition-colors duration-200 flex flex-col justify-between
                       ${vscodeActiveArea === 'sidebar' ? 'bg-orange-500/5 border-r-2 border-r-orange-500' : 'hover:bg-slate-900/30'}`}
                   >
                     <div>
                       <div className="text-slate-400 font-bold uppercase tracking-wider text-[9.5px] mb-3 flex items-center gap-1.5">
                         <Database className="w-3.5 h-3.5 text-orange-500" /> EXPLORER: 12_JOHN
                       </div>
-                      <div className="space-y-2 text-slate-350">
+                      <div className="space-y-2 text-slate-300">
                         <div className="flex items-center gap-1 text-slate-500 font-bold font-sans">✓ ไดรฟ์ D:\12_john</div>
                         <div className="pl-3 font-semibold text-orange-400 flex items-center gap-1">🗎 1.1_hello.py</div>
                         <div className="pl-3 text-slate-500 flex items-center gap-1">🗎 1.2_variables.py</div>
                       </div>
                     </div>
-                    <div className="text-[10px] text-slate-650 font-bold tracking-wider">// workspace active</div>
+                    <div className="text-[10px] text-slate-600 font-bold tracking-wider">// workspace active</div>
                   </div>
 
                   {/* Part 3: Main Editor and Terminal vertical stack */}
@@ -819,14 +819,14 @@ export default function oop1_2() {
                     {/* Editor Space (Top) */}
                     <div 
                       onClick={() => setVscodeActiveArea('editor')}
-                      className={`flex-1 p-5 font-mono text-[13px] leading-relaxed cursor-pointer transition-colors duration-200 border-b border-slate-850 relative
+                      className={`flex-1 p-5 font-mono text-[13px] leading-relaxed cursor-pointer transition-colors duration-200 border-b border-slate-800 relative
                         ${vscodeActiveArea === 'editor' ? 'bg-orange-500/5' : 'hover:bg-slate-900/30'}`}
                     >
-                      <span className="text-[9px] font-mono text-slate-650 absolute top-2 right-4 font-bold tracking-widest">// editor group</span>
+                      <span className="text-[9px] font-mono text-slate-600 absolute top-2 right-4 font-bold tracking-widest">// editor group</span>
                       
                       {/* Active file tabs */}
-                      <div className="flex border-b border-slate-850 -mx-5 -mt-5 mb-4 bg-slate-950/60 select-none">
-                        <div className="px-4 py-1.5 bg-slate-900 border-r border-slate-850 text-orange-400 font-bold border-t-2 border-t-orange-500 flex items-center gap-1.5 text-xs">
+                      <div className="flex border-b border-slate-800 -mx-5 -mt-5 mb-4 bg-slate-950/60 select-none">
+                        <div className="px-4 py-1.5 bg-slate-900 border-r border-slate-800 text-orange-400 font-bold border-t-2 border-t-orange-500 flex items-center gap-1.5 text-xs">
                           1.1_hello.py
                         </div>
                         <div className="px-4 py-1.5 text-slate-500 text-xs">
@@ -836,11 +836,11 @@ export default function oop1_2() {
 
                       {/* Code line rows */}
                       <div className="space-y-1">
-                        <div><span className="text-slate-650 mr-4 select-none">1</span><span className="text-slate-500"># โครงงานเขียนโค้ดวิชา OOP เลขที่ 12</span></div>
-                        <div><span className="text-slate-650 mr-4 select-none">2</span><span className="text-orange-500">class</span> <span className="text-amber-300 font-bold">Workspace</span>:</div>
-                        <div><span className="text-slate-650 mr-4 select-none">3</span>&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-orange-500">pass</span></div>
-                        <div><span className="text-slate-650 mr-4 select-none">4</span></div>
-                        <div><span className="text-slate-650 mr-4 select-none">5</span><span className="text-orange-500">print</span>(<span className="text-emerald-400">"ยินดีต้อนรับสู่ห้องเรียนครูแม็ค (สลักพิกัดห้อง Workspace ไดรฟ์ D สำเร็จ!)"</span>)</div>
+                        <div><span className="text-slate-600 mr-4 select-none">1</span><span className="text-slate-500"># โครงงานเขียนโค้ดวิชา OOP เลขที่ 12</span></div>
+                        <div><span className="text-slate-600 mr-4 select-none">2</span><span className="text-orange-500">class</span> <span className="text-amber-300 font-bold">Workspace</span>:</div>
+                        <div><span className="text-slate-600 mr-4 select-none">3</span>&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-orange-500">pass</span></div>
+                        <div><span className="text-slate-600 mr-4 select-none">4</span></div>
+                        <div><span className="text-slate-600 mr-4 select-none">5</span><span className="text-orange-500">print</span>(<span className="text-emerald-400">"ยินดีต้อนรับสู่ห้องเรียนครูแม็ค (สลักพิกัดห้อง Workspace ไดรฟ์ D สำเร็จ!)"</span>)</div>
                       </div>
 
                       {/* Floating Run Button inside Editor */}
@@ -856,7 +856,7 @@ export default function oop1_2() {
                     {/* Integrated Terminal Panel (Bottom) */}
                     <div 
                       onClick={() => setVscodeActiveArea('terminal')}
-                      className={`h-40 bg-slate-950 border-t border-slate-850 p-4 font-mono text-[12.5px] leading-relaxed cursor-pointer transition-colors duration-200 flex flex-col justify-between
+                      className={`h-40 bg-slate-950 border-t border-slate-800 p-4 font-mono text-[12.5px] leading-relaxed cursor-pointer transition-colors duration-200 flex flex-col justify-between
                         ${vscodeActiveArea === 'terminal' ? 'bg-orange-500/5' : 'hover:bg-slate-950/50'}`}
                     >
                       <div className="flex justify-between items-center select-none pb-2 border-b border-slate-900">
@@ -880,7 +880,7 @@ export default function oop1_2() {
                 </div>
 
                 {/* VS Code status bar */}
-                <div className="bg-slate-950 px-4 py-1 flex justify-between text-[10px] text-slate-500 select-none border-t border-slate-850">
+                <div className="bg-slate-950 px-4 py-1 flex justify-between text-[10px] text-slate-500 select-none border-t border-slate-800">
                   <span className="text-orange-500 font-bold">✓ PATH: Active</span>
                   <span>UTF-8 &nbsp;&nbsp;&nbsp;&nbsp; Python 3.13</span>
                 </div>

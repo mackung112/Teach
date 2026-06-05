@@ -312,7 +312,7 @@ const ForLoopCard = () => {
               </span>
 
               <div className="flex justify-between items-center bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-6">
-                <span className="text-xs font-bold text-slate-650">รอบตัวแปร (i):</span>
+                <span className="text-xs font-bold text-slate-600">รอบตัวแปร (i):</span>
                 <span className="bg-cyan-50 text-cyan-600 font-mono font-bold text-sm px-3.5 py-1.5 rounded-xl border border-cyan-100">
                   i = {indexVal}
                 </span>
@@ -330,7 +330,7 @@ const ForLoopCard = () => {
                         isCurrent 
                           ? 'bg-cyan-500 text-white border-cyan-400 scale-110 shadow-lg shadow-cyan-500/20'
                           : isPassed 
-                            ? 'bg-cyan-150 text-cyan-700 border-cyan-200'
+                            ? 'bg-cyan-100 text-cyan-700 border-cyan-200'
                             : 'bg-white text-slate-400 border-slate-200'
                       }`}
                     >
@@ -392,7 +392,7 @@ const ForLoopCard = () => {
                           : 'border-l-4 border-transparent'
                       }`}
                     >
-                      <span className="w-5 text-[10px] text-slate-650 text-right select-none font-bold mr-4 mt-0.5">{idx + 1}</span>
+                      <span className="w-5 text-[10px] text-slate-600 text-right select-none font-bold mr-4 mt-0.5">{idx + 1}</span>
                       <span style={{ paddingLeft: `${line.indent * 20}px` }}>{line.code}</span>
                     </div>
                   );
@@ -492,11 +492,11 @@ const SentinelCard = () => {
       <div className="absolute top-0 right-0 w-48 h-48 bg-purple-50/50 rounded-bl-full z-0 pointer-events-none"></div>
 
       <div className="relative z-10">
-        <span className="bg-purple-50 text-purple-650 border border-purple-100 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1 mb-3">
+        <span className="bg-purple-50 text-purple-600 border border-purple-100 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1 mb-3">
           <ShieldAlert className="w-3.5 h-3.5" /> จุดสิ้นสุดและค่าเฝ้าระวัง
         </span>
         <h4 className="text-2xl md:text-3xl font-bold text-slate-800 mb-3 flex items-center gap-2">
-          <Scale className="w-7 h-7 text-purple-650" />
+          <Scale className="w-7 h-7 text-purple-600" />
           การกำหนดจุดสิ้นสุดลูปด้วย Sentinel Value
         </h4>
         <p className="text-slate-600 text-[15px] leading-relaxed mb-6">
@@ -533,7 +533,7 @@ const SentinelCard = () => {
 
               {/* Number bag visual */}
               <div className="mt-4">
-                <span className="block text-[10px] text-slate-450 font-bold uppercase mb-2">กล่องรายการสะสมปัจจุบัน:</span>
+                <span className="block text-[10px] text-slate-400 font-bold uppercase mb-2">กล่องรายการสะสมปัจจุบัน:</span>
                 <div className="flex flex-wrap gap-1.5 min-h-[40px] bg-white p-3 rounded-xl border border-slate-200/60">
                   {numList.length === 0 ? (
                     <span className="text-[10px] text-slate-400 italic">ว่างเปล่า</span>
@@ -566,7 +566,7 @@ const SentinelCard = () => {
                   </button>
                 </span>
                 <div className="font-mono text-sm leading-relaxed text-purple-400">
-                  <div className="text-xs text-slate-550">&gt; สแตนด์บายรับข้อมูล...</div>
+                  <div className="text-xs text-slate-500">&gt; สแตนด์บายรับข้อมูล...</div>
                   {numList.map((item, idx) => (
                     <div key={idx} className="text-xs text-slate-400">&gt; เพิ่มข้อมูลยอด: {item}</div>
                   ))}
@@ -600,7 +600,7 @@ const SentinelCard = () => {
                           : 'border-l-4 border-transparent'
                       }`}
                     >
-                      <span className="w-5 text-[10px] text-slate-655 text-right select-none font-bold mr-4 mt-0.5">{idx + 1}</span>
+                      <span className="w-5 text-[10px] text-slate-600 text-right select-none font-bold mr-4 mt-0.5">{idx + 1}</span>
                       <span style={{ paddingLeft: `${line.indent * 20}px` }}>{line.code}</span>
                     </div>
                   );
@@ -866,7 +866,7 @@ const RobotMinerSimulator = () => {
           <Cpu className="w-8 h-8 text-cyan-400" />
           หุ่นยนต์ขุดแร่และวงลูปพลังงาน (Robot Miner Simulator)
         </h3>
-        <p className="text-slate-450 max-w-xl mx-auto leading-relaxed text-sm">
+        <p className="text-slate-400 max-w-xl mx-auto leading-relaxed text-sm">
           ออกแบบภารกิจให้หุ่นยนต์เหมืองแร่ เปรียบเทียบประสิทธิภาพการเขียนระหว่าง WHILE loop และ FOR loop 
           พร้อมกลไกสั่งหลุดลูปฉุกเฉินเมื่อพลังงานดับหรือมีสัญญาณเตือนอันตราย
         </p>
@@ -876,7 +876,7 @@ const RobotMinerSimulator = () => {
         {/* Left Side: Inputs (Span 4) */}
         <div className="lg:col-span-4 flex flex-col justify-between space-y-6">
           <div className="bg-slate-900 rounded-3xl p-6 border border-slate-800 space-y-5 flex-1 flex flex-col justify-center">
-            <span className="block text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-slate-850 pb-2 mb-2">
+            <span className="block text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-slate-800 pb-2 mb-2">
               MINER MISSION CONTROLLER
             </span>
 
@@ -897,7 +897,7 @@ const RobotMinerSimulator = () => {
                     className={`py-2 rounded-xl font-mono font-bold text-xs transition-all active:scale-98 ${
                       loopType === type
                         ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/25'
-                        : 'bg-slate-850 text-slate-400 border border-slate-800 hover:bg-slate-800'
+                        : 'bg-slate-800 text-slate-400 border border-slate-800 hover:bg-slate-800'
                     }`}
                   >
                     {type} LOOP
@@ -907,9 +907,9 @@ const RobotMinerSimulator = () => {
             </div>
 
             {/* Initial Battery */}
-            <div className="bg-slate-950 p-4 rounded-xl border border-slate-850 space-y-2">
+            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
               <div className="flex justify-between items-center text-xs">
-                <span className="flex items-center gap-1 text-slate-350">
+                <span className="flex items-center gap-1 text-slate-300">
                   <Battery className="w-4 h-4 text-cyan-400" /> พลังงานตั้งต้น (Battery)
                 </span>
                 <span className="font-bold text-white font-mono">{initialBattery} รอบ</span>
@@ -929,7 +929,7 @@ const RobotMinerSimulator = () => {
             </div>
 
             {/* Hazard Sentinel Toggle */}
-            <div className="bg-slate-950 p-4 rounded-xl border border-slate-850 flex items-center justify-between">
+            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className={`p-2 rounded-lg ${hazard ? 'bg-rose-500/20 text-rose-400' : 'bg-slate-800 text-slate-500'}`}>
                   <Flame className="w-5 h-5" />
@@ -944,7 +944,7 @@ const RobotMinerSimulator = () => {
                 disabled={isPlaying}
                 onClick={() => setHazard(!hazard)}
                 className={`w-12 h-6 rounded-full transition-all relative ${
-                  hazard ? 'bg-rose-500' : 'bg-slate-850'
+                  hazard ? 'bg-rose-500' : 'bg-slate-800'
                 }`}
               >
                 <span className={`absolute top-0.5 left-0.5 bg-white w-5 h-5 rounded-full shadow transition-all ${
@@ -958,11 +958,11 @@ const RobotMinerSimulator = () => {
         {/* Middle column: Code Editor live display (Span 5) */}
         <div className="lg:col-span-5 bg-slate-900 rounded-3xl p-6 border border-slate-800 flex flex-col justify-between shadow-inner">
           <div>
-            <span className="block text-[10px] font-mono text-cyan-400 uppercase tracking-widest mb-4 border-b border-slate-850 pb-2 flex items-center gap-1.5">
+            <span className="block text-[10px] font-mono text-cyan-400 uppercase tracking-widest mb-4 border-b border-slate-800 pb-2 flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5" /> loop_mining.txt
             </span>
 
-            <div className="font-mono text-[10px] md:text-xs leading-loose text-slate-350 space-y-1">
+            <div className="font-mono text-[10px] md:text-xs leading-loose text-slate-300 space-y-1">
               {currentCodeSet.map((line, idx) => {
                 const isLineActive = activeLine === line.id;
                 return (
@@ -982,7 +982,7 @@ const RobotMinerSimulator = () => {
             </div>
           </div>
 
-          <div className="mt-4 p-3 bg-slate-950 border border-slate-850 rounded-xl text-[10px] text-slate-400 leading-relaxed flex gap-2">
+          <div className="mt-4 p-3 bg-slate-950 border border-slate-800 rounded-xl text-[10px] text-slate-400 leading-relaxed flex gap-2">
             <Info className="w-4 h-4 text-cyan-400 shrink-0" />
             <div>
               <strong className="block text-cyan-300 mb-0.5">เหตุการณ์จำลองสด:</strong>
@@ -992,14 +992,14 @@ const RobotMinerSimulator = () => {
         </div>
 
         {/* Right column: Physical Miner Rail track (Span 3) */}
-        <div className="lg:col-span-3 bg-slate-900 rounded-3xl p-5 border border-slate-850 flex flex-col justify-between shadow-inner relative overflow-hidden">
-          <span className="block text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-3 border-b border-slate-850 pb-2">
+        <div className="lg:col-span-3 bg-slate-900 rounded-3xl p-5 border border-slate-800 flex flex-col justify-between shadow-inner relative overflow-hidden">
+          <span className="block text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-3 border-b border-slate-800 pb-2">
             PHYSICAL MINE TRACK
           </span>
 
           <div className="flex-1 flex flex-col justify-between py-2">
             {/* SVG Track Graphic */}
-            <div className="bg-slate-950/80 rounded-2xl p-4 border border-slate-850 flex items-center justify-center min-h-[160px]">
+            <div className="bg-slate-950/80 rounded-2xl p-4 border border-slate-800 flex items-center justify-center min-h-[160px]">
               <svg viewBox="0 0 100 240" className="w-full max-w-[120px] h-auto">
                 {/* Rails Track */}
                 <line x1="35" y1="10" x2="35" y2="230" stroke="#475569" strokeWidth="2" strokeDasharray="3 3" />
@@ -1053,13 +1053,13 @@ const RobotMinerSimulator = () => {
 
             {/* Virtual Dashboard Counters */}
             <div className="mt-4 grid grid-cols-2 gap-2 text-center text-xs">
-              <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-850">
+              <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
                 <span className="text-[8px] text-slate-500 font-bold block uppercase mb-1">แร่ขุดได้:</span>
                 <span className="font-bold text-yellow-400 font-mono flex items-center justify-center gap-1">
                   <Coins className="w-3.5 h-3.5 shrink-0" /> {oresMined} ก้อน
                 </span>
               </div>
-              <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-850">
+              <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
                 <span className="text-[8px] text-slate-500 font-bold block uppercase mb-1">แบตเตอรี่:</span>
                 <span className="font-bold text-cyan-400 font-mono">
                   {batteryLeft} / {initialBattery}
@@ -1080,7 +1080,7 @@ const RobotMinerSimulator = () => {
             ) : (
               <button
                 onClick={resetAllSim}
-                className="flex-1 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-350 font-bold py-3 px-4 rounded-xl transition-all active:scale-95 text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                className="flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-bold py-3 px-4 rounded-xl transition-all active:scale-95 text-xs flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>รีเซ็ตขอบเขต</span>
@@ -1112,7 +1112,7 @@ export default function py2_6() {
 (คำชี้แนะ: พิจารณาเลือกใช้คำสั่งภาษาอังกฤษคีย์เวิร์ดตัวพิมพ์ใหญ่, BEGIN-END, เคาะย่อหน้าบล็อก และโครงสร้างการหยุดลูปฉุกเฉิน BREAK ให้ถูกต้องสมบูรณ์)`;
 
   return (
-    <div className="font-sans text-slate-850 pb-24 selection:bg-cyan-150 selection:text-cyan-900 relative">
+    <div className="font-sans text-slate-800 pb-24 selection:bg-cyan-100 selection:text-cyan-900 relative">
       {/* Ambient background blur layers */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-[10%] left-[-5%] w-[450px] h-[450px] rounded-full bg-cyan-500/10 blur-[130px] animate-pulse"></div>

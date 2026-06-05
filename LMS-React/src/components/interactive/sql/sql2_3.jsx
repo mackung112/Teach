@@ -439,7 +439,7 @@ export default function SQL2_3() {
             </h3>
           </div>
 
-          <div className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal space-y-8">
+          <div className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal space-y-8">
             <p>
               ในการสร้างหรือแก้ไขตารางด้วยคำสั่งภาษา DDL (<span className="font-mono bg-cyan-50/65 border border-cyan-200/50 text-cyan-900 px-1 py-0.5 rounded text-xs font-bold">CREATE TABLE</span> หรือ <span className="font-mono bg-cyan-50/65 border border-cyan-200/50 text-cyan-900 px-1 py-0.5 rounded text-xs font-bold">ALTER TABLE</span>) เราจำเป็นต้องกำหนดคุณสมบัติและข้อกำหนดควบคุมคอลัมน์ (Constraints) เพื่อป้องกันความซ้ำซ้อนและรักษาความถูกต้องสมบูรณ์ของโครงสร้างข้อมูล (Database Integrity)
             </p>
@@ -562,7 +562,7 @@ export default function SQL2_3() {
                     onClick={() => handleTabChange('alter')}
                     className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                       activeTab === 'alter'
-                        ? 'bg-blue-650 text-white shadow-md'
+                        ? 'bg-blue-600 text-white shadow-md'
                         : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
@@ -572,7 +572,7 @@ export default function SQL2_3() {
                     onClick={() => handleTabChange('drop')}
                     className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                       activeTab === 'drop'
-                        ? 'bg-rose-650 text-white shadow-md'
+                        ? 'bg-rose-600 text-white shadow-md'
                         : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
@@ -603,15 +603,15 @@ export default function SQL2_3() {
                               ? 'text-cyan-400 font-bold scale-[1.01]' 
                               : createStep > item.step 
                                 ? 'text-slate-500 line-through' 
-                                : 'text-slate-650'
+                                : 'text-slate-600'
                           }`}
                         >
                           <div className={`w-5 h-5 rounded-full flex items-center justify-center font-mono border shrink-0 text-[10px] mt-0.5 ${
                             createStep === item.step 
                               ? 'bg-cyan-500/20 border-cyan-400 text-cyan-400 animate-pulse' 
                               : createStep > item.step 
-                                ? 'bg-slate-850 border-slate-700 text-slate-500' 
-                                : 'bg-transparent border-slate-800 text-slate-650'
+                                ? 'bg-slate-800 border-slate-700 text-slate-500' 
+                                : 'bg-transparent border-slate-800 text-slate-600'
                           }`}>
                             {createStep > item.step ? '✓' : item.step}
                           </div>
@@ -638,15 +638,15 @@ export default function SQL2_3() {
                               ? 'text-blue-400 font-bold scale-[1.01]' 
                               : alterStep > item.step 
                                 ? 'text-slate-500 line-through' 
-                                : 'text-slate-650'
+                                : 'text-slate-600'
                           }`}
                         >
                           <div className={`w-5 h-5 rounded-full flex items-center justify-center font-mono border shrink-0 text-[10px] mt-0.5 ${
                             alterStep === item.step 
                               ? 'bg-blue-500/20 border-blue-400 text-blue-400 animate-pulse' 
                               : alterStep > item.step 
-                                ? 'bg-slate-850 border-slate-700 text-slate-500' 
-                                : 'bg-transparent border-slate-800 text-slate-650'
+                                ? 'bg-slate-800 border-slate-700 text-slate-500' 
+                                : 'bg-transparent border-slate-800 text-slate-600'
                           }`}>
                             {alterStep > item.step ? '✓' : item.step}
                           </div>
@@ -671,15 +671,15 @@ export default function SQL2_3() {
                               ? 'text-rose-400 font-bold scale-[1.01]' 
                               : dropStep > item.step 
                                 ? 'text-slate-500 line-through' 
-                                : 'text-slate-650'
+                                : 'text-slate-600'
                           }`}
                         >
                           <div className={`w-5 h-5 rounded-full flex items-center justify-center font-mono border shrink-0 text-[10px] mt-0.5 ${
                             dropStep === item.step 
                               ? 'bg-rose-500/20 border-rose-400 text-rose-400 animate-pulse' 
                               : dropStep > item.step 
-                                ? 'bg-slate-850 border-slate-700 text-slate-500' 
-                                : 'bg-transparent border-slate-800 text-slate-650'
+                                ? 'bg-slate-800 border-slate-700 text-slate-500' 
+                                : 'bg-transparent border-slate-800 text-slate-600'
                           }`}>
                             {dropStep > item.step ? '✓' : item.step}
                           </div>
@@ -692,7 +692,7 @@ export default function SQL2_3() {
               </div>
 
               {/* Tips footer */}
-              <div className="bg-slate-950/80 border border-slate-850 rounded-xl p-3.5 mt-6 text-xs text-slate-400 leading-normal space-y-1">
+              <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 mt-6 text-xs text-slate-400 leading-normal space-y-1">
                 <div className="font-bold text-amber-500 flex items-center gap-1">
                   <Sparkles className="w-3.5 h-3.5 text-amber-500" /> เทคนิคลัด Workbench:
                 </div>
@@ -720,7 +720,7 @@ export default function SQL2_3() {
               </div>
 
               {/* Workbench Menu Bar */}
-              <div className="bg-[#2a2a2e] px-3 py-2 border-b border-slate-950 flex items-center justify-between text-[11px] text-slate-350 font-sans">
+              <div className="bg-[#2a2a2e] px-3 py-2 border-b border-slate-950 flex items-center justify-between text-[11px] text-slate-300 font-sans">
                 <div className="flex items-center gap-3">
                   <span className="hover:text-white cursor-pointer transition-colors">File</span>
                   <span className="hover:text-white cursor-pointer transition-colors">Edit</span>
@@ -743,7 +743,7 @@ export default function SQL2_3() {
                 {/* 1. Navigator Panel (Left Sidebar) */}
                 <div className="w-48 bg-[#18181b] border-r border-slate-900 p-3 flex flex-col justify-between shrink-0 font-mono text-[11px]">
                   <div>
-                    <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-2 pb-1 border-b border-slate-850">
+                    <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-2 pb-1 border-b border-slate-800">
                       Navigator
                     </div>
                     
@@ -775,7 +775,7 @@ export default function SQL2_3() {
                               }`}
                             >
                               <div className="flex items-center gap-1.5 truncate">
-                                <Database className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-cyan-400' : 'text-slate-650'}`} />
+                                <Database className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-cyan-400' : 'text-slate-600'}`} />
                                 <span>{schemaName}</span>
                               </div>
                               <ChevronDown className={`w-3 h-3 text-slate-600 transform transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
@@ -783,13 +783,13 @@ export default function SQL2_3() {
 
                             {/* Database Elements */}
                             {isExpanded && (
-                              <div className="pl-4 space-y-1 border-l border-slate-850 ml-3.5 mt-0.5">
+                              <div className="pl-4 space-y-1 border-l border-slate-800 ml-3.5 mt-0.5">
                                 
                                 {/* 1. Tables Element */}
                                 <div className="space-y-0.5">
                                   <div 
                                     onContextMenu={(e) => handleTablesHeaderContext(e, schemaName)}
-                                    className={`flex items-center justify-between px-1.5 py-1 rounded hover:bg-slate-900/60 text-slate-500 hover:text-slate-350 cursor-pointer`}
+                                    className={`flex items-center justify-between px-1.5 py-1 rounded hover:bg-slate-900/60 text-slate-500 hover:text-slate-300 cursor-pointer`}
                                     onClick={(e) => {
                                       if (activeSchema === schemaName) {
                                         handleTablesHeaderContext(e, schemaName);
@@ -869,7 +869,7 @@ export default function SQL2_3() {
                   </div>
 
                   {/* Navigator Context Tips */}
-                  <div className="bg-slate-900 border border-slate-850 rounded-lg p-2.5 text-[9.5px] text-slate-550 leading-normal mb-1">
+                  <div className="bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-[9.5px] text-slate-500 leading-normal mb-1">
                     {activeTab === 'create' && createStep === 1 && (
                       <span className="text-cyan-400 font-bold flex items-start gap-1">
                         <MousePointer className="w-3 h-3 mt-0.5 shrink-0 animate-pulse" /> Double-click `data_std_bd` ในแถบด้านซ้ายเพื่อทดลองแอคทีฟ
@@ -920,17 +920,17 @@ export default function SQL2_3() {
                   </div>
 
                   {activeWorkspaceTab === 'table_editor' && editorMode ? (
-                    <div className="flex-1 flex flex-col justify-between bg-[#151515] rounded-xl p-3 animate-fade-in relative z-10 border border-slate-850 mt-2 overflow-y-auto">
+                    <div className="flex-1 flex flex-col justify-between bg-[#151515] rounded-xl p-3 animate-fade-in relative z-10 border border-slate-800 mt-2 overflow-y-auto">
                       
                       {/* Top editor parameters (Table name) */}
-                      <div className="flex items-center gap-3 border-b border-slate-850 pb-2 mb-2">
+                      <div className="flex items-center gap-3 border-b border-slate-800 pb-2 mb-2">
                         <label className="text-[10.5px] text-slate-400 font-mono font-bold">Table Name:</label>
                         <input
                           type="text"
                           value={editorTableName}
                           onChange={(e) => setEditorTableName(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))}
                           disabled={editorMode === 'alter' || createStep > 2}
-                          className="bg-slate-950 border border-slate-800 text-white rounded px-2 py-0.5 text-xs font-mono w-44 focus:border-cyan-500 focus:outline-none disabled:text-slate-650 disabled:bg-slate-900 disabled:border-slate-850"
+                          className="bg-slate-950 border border-slate-800 text-white rounded px-2 py-0.5 text-xs font-mono w-44 focus:border-cyan-500 focus:outline-none disabled:text-slate-600 disabled:bg-slate-900 disabled:border-slate-800"
                         />
                       </div>
 
@@ -951,9 +951,9 @@ export default function SQL2_3() {
                             )}
                           </div>
 
-                          <div className="border border-slate-850 rounded bg-slate-950 font-mono text-[10px]">
+                          <div className="border border-slate-800 rounded bg-slate-950 font-mono text-[10px]">
                             {/* Grid Headers */}
-                            <div className="grid grid-cols-12 bg-slate-900 py-1.5 px-2 border-b border-slate-850 text-slate-400 font-bold text-center">
+                            <div className="grid grid-cols-12 bg-slate-900 py-1.5 px-2 border-b border-slate-800 text-slate-400 font-bold text-center">
                               <span className="col-span-4 text-left">Column Name</span>
                               <span className="col-span-4 text-left">Datatype</span>
                               <span className="col-span-1">PK</span>
@@ -971,7 +971,7 @@ export default function SQL2_3() {
                                   className={`grid grid-cols-12 py-1 px-2 items-center border-b border-slate-900/60 cursor-pointer ${
                                     selectedColumnIndex === idx 
                                       ? 'bg-cyan-950/20 text-cyan-400 font-bold border-l-2 border-l-cyan-500' 
-                                      : 'hover:bg-slate-900/40 text-slate-350 hover:text-white'
+                                      : 'hover:bg-slate-900/40 text-slate-300 hover:text-white'
                                   }`}
                                 >
                                   {/* Col Name */}
@@ -986,15 +986,15 @@ export default function SQL2_3() {
                                   </div>
 
                                   {/* Datatype dropdown */}
-                                  <div className="col-span-4 pr-1 text-slate-450">
+                                  <div className="col-span-4 pr-1 text-slate-400">
                                     {editorMode === 'alter' && idx < 3 ? (
-                                      <span className="text-[9.5px] text-slate-550">{col.datatype}</span>
+                                      <span className="text-[9.5px] text-slate-500">{col.datatype}</span>
                                     ) : (
                                       <select
                                         value={col.datatype}
                                         onChange={(e) => handleColumnChange(idx, 'datatype', e.target.value)}
                                         disabled={selectedColumnIndex !== idx}
-                                        className="bg-slate-900 border border-slate-850 text-slate-200 text-[9px] rounded focus:outline-none w-full"
+                                        className="bg-slate-900 border border-slate-800 text-slate-200 text-[9px] rounded focus:outline-none w-full"
                                       >
                                         <option value="INT">INT</option>
                                         <option value="VARCHAR(45)">VARCHAR(45)</option>
@@ -1012,7 +1012,7 @@ export default function SQL2_3() {
                                   </div>
 
                                   {/* NN indicator */}
-                                  <div className="col-span-1 text-center font-bold text-[9px] text-blue-450">
+                                  <div className="col-span-1 text-center font-bold text-[9px] text-blue-400">
                                     {col.nn ? '✓' : '-'}
                                   </div>
 
@@ -1033,17 +1033,17 @@ export default function SQL2_3() {
 
                         {/* Lower: Detailed Attributes Panel (Exactly like image 3) */}
                         {activeCol && (
-                          <div className="bg-[#1b1b1e] border border-slate-850 rounded-lg p-3 space-y-2.5">
-                            <div className="flex items-center justify-between text-[9px] text-slate-500 font-mono font-bold tracking-wider uppercase border-b border-slate-850 pb-1.5">
+                          <div className="bg-[#1b1b1e] border border-slate-800 rounded-lg p-3 space-y-2.5">
+                            <div className="flex items-center justify-between text-[9px] text-slate-500 font-mono font-bold tracking-wider uppercase border-b border-slate-800 pb-1.5">
                               <span>Column Options Details: <span className="text-cyan-400 font-bold">{activeCol.name}</span></span>
-                              <span className="text-slate-650">MySQL Workbench Properties</span>
+                              <span className="text-slate-600">MySQL Workbench Properties</span>
                             </div>
 
                             {/* Data Type and Default Fields */}
                             <div className="grid grid-cols-2 gap-4 text-[10.5px]">
                               <div className="flex items-center gap-2">
                                 <label className="text-slate-400 font-mono font-bold">Data Type:</label>
-                                <span className="text-white font-mono bg-slate-950 px-2 py-0.5 rounded border border-slate-850 text-[10px]">
+                                <span className="text-white font-mono bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-[10px]">
                                   {activeCol.datatype}
                                 </span>
                               </div>
@@ -1055,13 +1055,13 @@ export default function SQL2_3() {
                                   onChange={(e) => handleColumnChange(selectedColumnIndex, 'defaultValue', e.target.value)}
                                   disabled={editorMode === 'alter' && selectedColumnIndex < 3}
                                   placeholder="NULL"
-                                  className="bg-slate-950 border border-slate-850 text-white font-mono text-[10px] rounded px-2 py-0.5 focus:border-cyan-500 focus:outline-none w-28 disabled:text-slate-600"
+                                  className="bg-slate-950 border border-slate-800 text-white font-mono text-[10px] rounded px-2 py-0.5 focus:border-cyan-500 focus:outline-none w-28 disabled:text-slate-600"
                                 />
                               </div>
                             </div>
 
                             {/* Checkbox columns attributes list (Exactly matched to image 3) */}
-                            <div className="grid grid-cols-3 gap-y-2 text-[10px] font-mono text-slate-350">
+                            <div className="grid grid-cols-3 gap-y-2 text-[10px] font-mono text-slate-300">
                               <label className="flex items-center gap-1.5 cursor-pointer">
                                 <input 
                                   type="checkbox"
@@ -1156,7 +1156,7 @@ export default function SQL2_3() {
                       </div>
 
                       {/* Editor Apply trigger buttons bar */}
-                      <div className="flex justify-end gap-3 pt-2.5 border-t border-slate-850 mt-3">
+                      <div className="flex justify-end gap-3 pt-2.5 border-t border-slate-800 mt-3">
                         <button
                           onClick={() => {
                             setEditorMode(null);
@@ -1164,7 +1164,7 @@ export default function SQL2_3() {
                             if (activeTab === 'create') setCreateStep(1);
                             if (activeTab === 'alter') setAlterStep(1);
                           }}
-                          className="px-3.5 py-1.5 bg-slate-900 border border-slate-800 text-slate-450 text-xs font-bold rounded-lg hover:text-white cursor-pointer transition-colors"
+                          className="px-3.5 py-1.5 bg-slate-900 border border-slate-800 text-slate-400 text-xs font-bold rounded-lg hover:text-white cursor-pointer transition-colors"
                         >
                           Revert
                         </button>
@@ -1184,7 +1184,7 @@ export default function SQL2_3() {
                       <div className="flex-1 bg-slate-950 rounded-xl p-3 border border-slate-900 text-xs font-mono min-h-[160px] relative overflow-y-auto">
                         
                         {/* Simulating SQL Query display */}
-                        <div className="absolute top-2 right-3 text-[9px] text-slate-650 tracking-wider">
+                        <div className="absolute top-2 right-3 text-[9px] text-slate-600 tracking-wider">
                           SQL QUERY EDITOR
                         </div>
                         
@@ -1208,7 +1208,7 @@ export default function SQL2_3() {
                                   <div key={idx} className="grid grid-cols-4 py-1 px-2 hover:bg-slate-900/30">
                                     <span className="pl-1 truncate">{row.student_id}</span>
                                     <span className="pl-1 truncate">{row.name}</span>
-                                    <span className="pl-1 truncate text-emerald-450">{row.email}</span>
+                                    <span className="pl-1 truncate text-emerald-400">{row.email}</span>
                                     <span className="pl-1 truncate text-cyan-400">{row.phone || 'NULL'}</span>
                                   </div>
                                 ))}
@@ -1247,13 +1247,13 @@ export default function SQL2_3() {
                         <>
                           <button 
                             onClick={handleMenuCreateTable}
-                            className="w-full text-left px-3 py-1.5 hover:bg-cyan-600 hover:text-white flex items-center justify-between text-cyan-405 font-bold cursor-pointer transition-colors"
+                            className="w-full text-left px-3 py-1.5 hover:bg-cyan-600 hover:text-white flex items-center justify-between text-cyan-400 font-bold cursor-pointer transition-colors"
                           >
                             <span>Create Table...</span>
                             <Plus className="w-3 h-3 text-cyan-400" />
                           </button>
-                          <button className="w-full text-left px-3 py-1 text-slate-550 cursor-not-allowed">Create Table Like...</button>
-                          <button className="w-full text-left px-3 py-1 text-slate-550 cursor-not-allowed">Search Table Data...</button>
+                          <button className="w-full text-left px-3 py-1 text-slate-500 cursor-not-allowed">Create Table Like...</button>
+                          <button className="w-full text-left px-3 py-1 text-slate-500 cursor-not-allowed">Search Table Data...</button>
                         </>
                       )}
 
@@ -1277,8 +1277,8 @@ export default function SQL2_3() {
                             disabled={contextMenuTarget !== 'students'}
                             className={`w-full text-left px-3 py-1.5 flex items-center justify-between font-bold ${
                               contextMenuTarget === 'students' 
-                                ? 'hover:bg-blue-600 hover:text-white text-blue-450 cursor-pointer' 
-                                : 'text-slate-650 cursor-not-allowed'
+                                ? 'hover:bg-blue-600 hover:text-white text-blue-400 cursor-pointer' 
+                                : 'text-slate-600 cursor-not-allowed'
                             }`}
                           >
                             <span>Alter Table...</span>
@@ -1290,8 +1290,8 @@ export default function SQL2_3() {
                             disabled={contextMenuTarget !== 'students'}
                             className={`w-full text-left px-3 py-1.5 flex items-center justify-between font-bold ${
                               contextMenuTarget === 'students' 
-                                ? 'hover:bg-rose-600 hover:text-white text-rose-450 cursor-pointer' 
-                                : 'text-slate-650 cursor-not-allowed'
+                                ? 'hover:bg-rose-600 hover:text-white text-rose-400 cursor-pointer' 
+                                : 'text-slate-600 cursor-not-allowed'
                             }`}
                           >
                             <span>Drop Table...</span>
@@ -1301,7 +1301,7 @@ export default function SQL2_3() {
                       )}
                       
                       <div className="border-t border-slate-800 my-1" />
-                      <button className="w-full text-left px-3 py-1 text-slate-550 cursor-not-allowed">Refresh All</button>
+                      <button className="w-full text-left px-3 py-1 text-slate-500 cursor-not-allowed">Refresh All</button>
                     </div>
                   )}
 
@@ -1313,17 +1313,17 @@ export default function SQL2_3() {
                 <div className="text-slate-500 text-[9px] uppercase tracking-wider mb-2 flex items-center gap-1.5">
                   <Terminal className="w-3.5 h-3.5 text-slate-500" /> Action Output Console Log:
                 </div>
-                <div className="space-y-1 text-slate-350">
+                <div className="space-y-1 text-slate-300">
                   {logMessages.map((msg, i) => (
                     <div key={i} className="flex gap-3 leading-relaxed">
-                      <span className="text-slate-550 select-none shrink-0">{msg.time}</span>
+                      <span className="text-slate-500 select-none shrink-0">{msg.time}</span>
                       <span className={
                         msg.status === 'success' 
-                          ? 'text-emerald-450 font-bold' 
+                          ? 'text-emerald-400 font-bold' 
                           : msg.status === 'error' 
                             ? 'text-rose-500 font-bold' 
                             : msg.status === 'warning' 
-                              ? 'text-amber-450' 
+                              ? 'text-amber-400' 
                               : 'text-cyan-400'
                       }>
                         {msg.status === 'success' ? '✓' : msg.status === 'error' ? '✗' : 'i'} {msg.message}
@@ -1339,7 +1339,7 @@ export default function SQL2_3() {
               {showApplyModal && (
                 <div className="absolute inset-0 bg-black/75 backdrop-blur-sm z-40 flex items-center justify-center p-6 animate-fade-in">
                   <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-5 flex flex-col justify-between shadow-2xl space-y-4">
-                    <div className="flex justify-between items-center border-b border-slate-850 pb-2">
+                    <div className="flex justify-between items-center border-b border-slate-800 pb-2">
                       <h5 className="text-sm font-bold text-white font-mono flex items-center gap-1.5">
                         <FileCode className="w-4 h-4 text-cyan-400" /> Review SQL Script to Apply
                       </h5>
@@ -1349,7 +1349,7 @@ export default function SQL2_3() {
                     </div>
 
                     <div className="space-y-2">
-                      <p className="text-xs text-slate-450 leading-normal">
+                      <p className="text-xs text-slate-400 leading-normal">
                         รันสคริปต์ DDL ที่โปรแกรมจำลองวิเคราะห์โค้ดเบื้องหลัง:
                       </p>
                       <pre className="bg-slate-950 p-4 rounded-xl border border-slate-950 text-xs font-mono text-cyan-400 leading-relaxed overflow-x-auto whitespace-pre">
@@ -1357,10 +1357,10 @@ export default function SQL2_3() {
                       </pre>
                     </div>
 
-                    <div className="flex justify-end gap-3 pt-3 border-t border-slate-850">
+                    <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
                       <button
                         onClick={() => { setShowApplyModal(false); if (activeTab === 'create') setCreateStep(2); else setAlterStep(2); }}
-                        className="px-4 py-2 bg-slate-950 border border-slate-800 text-slate-450 text-xs font-bold rounded-lg hover:text-white cursor-pointer transition-colors"
+                        className="px-4 py-2 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-lg hover:text-white cursor-pointer transition-colors"
                       >
                         Cancel
                       </button>
@@ -1407,9 +1407,9 @@ export default function SQL2_3() {
               {/* 3. DROP CONFIRMATION WARNING MODAL */}
               {showConfirmModal && (
                 <div className="absolute inset-0 bg-black/75 backdrop-blur-sm z-40 flex items-center justify-center p-6 animate-fade-in">
-                  <div className="bg-slate-900 border border-slate-850 rounded-2xl w-full max-w-md p-5 flex flex-col justify-between shadow-2xl space-y-4">
-                    <div className="flex justify-between items-center border-b border-slate-850 pb-2">
-                      <h5 className="text-sm font-bold text-rose-450 font-mono flex items-center gap-1.5">
+                  <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-5 flex flex-col justify-between shadow-2xl space-y-4">
+                    <div className="flex justify-between items-center border-b border-slate-800 pb-2">
+                      <h5 className="text-sm font-bold text-rose-400 font-mono flex items-center gap-1.5">
                         <AlertCircle className="w-4 h-4 text-rose-500 animate-pulse" /> Confirm Drop Table Action
                       </h5>
                       <button onClick={() => { setShowConfirmModal(false); setDropStep(1); }} className="text-slate-500 hover:text-white cursor-pointer">
@@ -1421,15 +1421,15 @@ export default function SQL2_3() {
                       <p className="text-xs text-slate-200 leading-relaxed font-bold">
                         คุณต้องการสั่งลบทำลายตาราง `students` ออกจากเซิร์ฟเวอร์แบบถาวรหรือไม่?
                       </p>
-                      <p className="text-[11px] text-slate-450 leading-relaxed">
-                        การรันคำสั่ง DDL: <span className="font-mono text-rose-450 bg-rose-950/20 px-1 py-0.5 rounded">DROP TABLE data_std_bd.students;</span> จะทำลายโครงสร้าง ฟิลด์ข้อมูล และข้อมูลแถวทิ้งทั้งหมดโดยไม่สามารถกู้คืนกลับมาได้
+                      <p className="text-[11px] text-slate-400 leading-relaxed">
+                        การรันคำสั่ง DDL: <span className="font-mono text-rose-400 bg-rose-950/20 px-1 py-0.5 rounded">DROP TABLE data_std_bd.students;</span> จะทำลายโครงสร้าง ฟิลด์ข้อมูล และข้อมูลแถวทิ้งทั้งหมดโดยไม่สามารถกู้คืนกลับมาได้
                       </p>
                     </div>
 
-                    <div className="flex justify-end gap-3 pt-3 border-t border-slate-850">
+                    <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
                       <button
                         onClick={() => { setShowConfirmModal(false); setDropStep(1); }}
-                        className="px-4 py-2 bg-slate-950 border border-slate-800 text-slate-450 text-xs font-bold rounded-lg hover:text-white cursor-pointer transition-colors"
+                        className="px-4 py-2 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-lg hover:text-white cursor-pointer transition-colors"
                       >
                         Cancel
                       </button>

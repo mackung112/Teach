@@ -131,11 +131,11 @@ export default function ComponentName() {
                 <span className="p-2 rounded-xl bg-indigo-50/80 text-indigo-700 font-mono font-bold text-xs inline-block transition-all duration-300 group-hover:scale-110 shadow-inner">24 บิตแรก (OUI)</span>
                 <h6 className="font-bold text-indigo-950 text-[15.5px] transition-colors group-hover:text-indigo-600">Organizationally Unique Identifier</h6>
                 <p className="text-[14px] text-zinc-500 leading-relaxed font-sans">
-                  รหัสเฉพาะประจำบริษัทค่ายผู้ผลิตอุปกรณ์อิเล็กทรอนิกส์ ได้รับการจดทะเบียนรับรองหลักสูตรโดยองค์กรสากล IEEE เช่น รหัส <code className="bg-indigo-50/80 border border-indigo-200/50 px-1 py-0.5 rounded text-xs text-indigo-750 font-mono">00-60-2F</code> ชี้เฉพาะแบรนด์ Cisco Systems
+                  รหัสเฉพาะประจำบริษัทค่ายผู้ผลิตอุปกรณ์อิเล็กทรอนิกส์ ได้รับการจดทะเบียนรับรองหลักสูตรโดยองค์กรสากล IEEE เช่น รหัส <code className="bg-indigo-50/80 border border-indigo-200/50 px-1 py-0.5 rounded text-xs text-indigo-700 font-mono">00-60-2F</code> ชี้เฉพาะแบรนด์ Cisco Systems
                 </p>
               </div>
               <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 hover:-translate-y-1 hover:shadow-2xl hover:border-cyan-500/30 transition-all duration-300 cursor-pointer space-y-2 group">
-                <span className="p-2 rounded-xl bg-cyan-50/80 text-cyan-755 font-mono font-bold text-xs inline-block transition-all duration-300 group-hover:scale-110 shadow-inner">24 บิตหลัง (NIC Specific)</span>
+                <span className="p-2 rounded-xl bg-cyan-50/80 text-cyan-800 font-mono font-bold text-xs inline-block transition-all duration-300 group-hover:scale-110 shadow-inner">24 บิตหลัง (NIC Specific)</span>
                 <h6 className="font-bold text-cyan-950 text-[15.5px] transition-colors group-hover:text-cyan-600">Device / Serial Number</h6>
                 <p className="text-[14px] text-zinc-500 leading-relaxed font-sans">
                   หมายเลขลำดับเฉพาะตัวประแผงชิปการ์ดเครือข่าย ถูกสร้างและบันทึกข้อมูล (Hard-coded) มาจากโรงงานการผลิต ไม่เปลี่ยนรูปข้าม OS เพื่อระบุความมีอยู่ของพอร์ตทางกายภาพ
@@ -424,7 +424,7 @@ function MacFrameBuilder() {
                 />
                 <button
                   onClick={handleCopy}
-                  className="absolute right-2 top-1.5 px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-[10px] font-bold rounded cursor-pointer text-slate-350 active:scale-95"
+                  className="absolute right-2 top-1.5 px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-[10px] font-bold rounded cursor-pointer text-slate-300 active:scale-95"
                 >
                   {copied ? 'คัดลอกแล้ว!' : 'คัดลอก'}
                 </button>
@@ -464,7 +464,7 @@ function MacFrameBuilder() {
           </div>
 
           {/* Decoded manufacturer banner */}
-          <div className="p-3 bg-slate-950 border border-slate-850 rounded-xl mt-4 flex items-start gap-2.5 leading-normal">
+          <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl mt-4 flex items-start gap-2.5 leading-normal">
             <span className="p-1 rounded bg-indigo-950/80 border border-indigo-900/50 text-indigo-400 shrink-0"><ShieldCheck className="w-4 h-4" /></span>
             <div className="text-[10.5px]">
               <span className="font-bold text-slate-200 block">ค่ายผู้ผลิตที่สืบค้นพิจารณา (OUI Match):</span>
@@ -855,7 +855,7 @@ function HubCollisionSimulator() {
                       ? 'text-rose-400 font-bold'
                       : log.startsWith('🚨') || log.startsWith('⏱️')
                       ? 'text-amber-300 font-bold' 
-                      : 'text-slate-350'
+                      : 'text-slate-300'
                   }`}>
                     {log}
                   </p>
@@ -1079,7 +1079,7 @@ function SwitchLearningSimulator() {
           <div className="flex flex-col gap-2">
             <button
               onClick={handleResetLab}
-              className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-850 text-slate-400 hover:text-white font-bold text-xs cursor-pointer border border-slate-800 active:scale-98 transition-all text-center"
+              className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white font-bold text-xs cursor-pointer border border-slate-800 active:scale-98 transition-all text-center"
             >
               รีเซ็ตตาราง Switch เป็นค่าว่าง (RESET)
             </button>
@@ -1348,7 +1348,7 @@ function RouterRoutingSimulator() {
             ) : (
               <button
                 onClick={handleReset}
-                className="w-full py-2.5 bg-slate-900 hover:bg-slate-850 text-slate-400 hover:text-white font-bold text-xs rounded-xl cursor-pointer border border-slate-800 active:scale-98 transition-all"
+                className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white font-bold text-xs rounded-xl cursor-pointer border border-slate-800 active:scale-98 transition-all"
               >
                 เคลียร์ข้อมูลจำลอง (RESET)
               </button>
@@ -1378,7 +1378,7 @@ function RouterRoutingSimulator() {
                   ? 'text-cyan-300 font-bold'
                   : log.startsWith('🗺️') || log.startsWith('🔍')
                   ? 'text-amber-300 font-bold' 
-                  : 'text-slate-350'
+                  : 'text-slate-300'
               }`}>
                 {log}
               </p>
@@ -1539,7 +1539,7 @@ function TripleNetworkLab() {
                         className={`py-1 px-2.5 rounded-lg text-[10.5px] cursor-pointer transition-all font-bold ${
                           obstacle === mat
                             ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-                            : 'bg-slate-900 border border-slate-800 text-slate-450 hover:text-white'
+                            : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
                         }`}
                       >
                         {mat === 'none' ? 'ไม่มีสิ่งกีดขวาง' :
@@ -1553,7 +1553,7 @@ function TripleNetworkLab() {
               </div>
 
               {/* Attenuation Warning */}
-              <div className="p-3 bg-slate-950 border border-slate-850 rounded-xl mt-4 text-[10.5px] leading-relaxed text-slate-400">
+              <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl mt-4 text-[10.5px] leading-relaxed text-slate-400">
                 📌 <strong>เกร็ดความรู้:</strong> ความถี่สูงอย่าง 5GHz มีพลังงานระดับบิตข้อมูลสูง ทว่ามีขีดจำกัดทางฟิสิกส์คลื่นสะท้อนต่ำกว่า ทำให้เกิดการลดทอนความสูงยอดคลื่น (High Attenuation) เมื่อกั้นด้วยแผ่นวัสดุหนาแน่น
               </div>
             </div>
@@ -1571,7 +1571,7 @@ function TripleNetworkLab() {
                   </div>
                   
                   {/* Gauge bar */}
-                  <div className="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden border border-slate-850">
+                  <div className="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden border border-slate-800">
                     <div className={`h-full transition-all duration-500 ${
                       finalSignal > 60 ? 'bg-emerald-500' :
                       finalSignal > 30 ? 'bg-amber-400' : 'bg-rose-500'
@@ -1697,7 +1697,7 @@ function TripleNetworkLab() {
                           ? 'text-emerald-400 font-bold' 
                           : log.startsWith('🚨') 
                           ? 'text-rose-400 font-bold'
-                          : 'text-slate-350'
+                          : 'text-slate-300'
                       }`}>
                         {log}
                       </p>
@@ -1746,7 +1746,7 @@ function TripleNetworkLab() {
                         className={`p-2.5 rounded-lg text-left cursor-pointer transition-all border ${
                           modulationType === mod.type
                             ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold'
-                            : 'bg-slate-900 border-slate-850 text-slate-450 hover:text-white'
+                            : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
                         }`}
                       >
                         <span className="text-xs block">{mod.label}</span>
@@ -1757,7 +1757,7 @@ function TripleNetworkLab() {
                 </div>
               </div>
 
-              <div className="text-[8.5px] text-slate-550 pt-2 font-mono leading-tight">
+              <div className="text-[8.5px] text-slate-500 pt-2 font-mono leading-tight">
                 * โมเด็มแปลงจาก สัญญาณดิจิทัล (0/1) ใน LAN ➔ สัญญาณอนาล็อก (Sine Wave) ในสายโทรศัพท์ภายนอก
               </div>
             </div>
@@ -1827,7 +1827,7 @@ function TripleNetworkLab() {
                   </svg>
                 </div>
 
-                <div className="flex justify-between text-[8px] text-slate-550">
+                <div className="flex justify-between text-[8px] text-slate-500">
                   <span>0 Hz (ขอบล่างบอร์ด)</span>
                   <span>ความถี่ที่ส่งสัญญาณ: {modulationType === 'FSK' ? '1200 / 2200 Baud' : '1200 Baud'}</span>
                   <span>100% Modulated (ขอบบนบอร์ด)</span>

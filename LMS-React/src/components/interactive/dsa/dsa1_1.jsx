@@ -319,7 +319,7 @@ export default function DSA1_1() {
                       className={`px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 cursor-pointer
                         ${activeFormulaPart === key
                           ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/25 border-emerald-500'
-                          : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-350 hover:bg-slate-50'
+                          : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
                         }`}
                     >
                       {key === 'all' && 'สูตรรวม (Mathematical Model)'}

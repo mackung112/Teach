@@ -280,7 +280,7 @@ export default function DSA1_2() {
               </div>
 
               {/* Interactive Word Selectors */}
-              <div className="space-y-3 pt-4 border-t border-zinc-150">
+              <div className="space-y-3 pt-4 border-t border-zinc-100">
                 <span className="text-xs font-bold text-slate-400 tracking-wider block uppercase">แชร์หน่วยความจำด้วย Trie (Prefix Tree) สำหรับเก็บคำศัพท์:</span>
                 <div className="flex flex-wrap gap-2">
                   {Object.keys(trieWords).map((word) => (

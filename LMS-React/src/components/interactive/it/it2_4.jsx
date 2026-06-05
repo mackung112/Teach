@@ -633,7 +633,7 @@ function BiosSimulator() {
                         className={`py-1 rounded text-xs font-bold transition-all cursor-pointer ${
                           fanProfile === prof
                             ? 'bg-indigo-600 text-white shadow'
-                            : 'bg-slate-800 text-slate-400 hover:bg-slate-750'
+                            : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
                         }`}
                       >
                         {prof}
@@ -668,7 +668,7 @@ function BiosSimulator() {
                     className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       xmpEnabled
                         ? 'bg-emerald-500 text-slate-950 font-bold'
-                        : 'bg-slate-800 text-slate-400 hover:bg-slate-750'
+                        : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
                     }`}
                   >
                     {xmpEnabled ? 'ENABLED (6000)' : 'DISABLED (4800)'}
@@ -709,7 +709,7 @@ function BiosSimulator() {
                   {bootOrder.map((device, idx) => (
                     <div
                       key={device}
-                      className="bg-slate-950 border border-slate-850 p-2.5 rounded-lg flex items-center justify-between text-xs"
+                      className="bg-slate-950 border border-slate-800 p-2.5 rounded-lg flex items-center justify-between text-xs"
                     >
                       <div className="flex items-center gap-1.5">
                         <span className="font-bold text-indigo-400 font-mono">#{idx + 1}</span>

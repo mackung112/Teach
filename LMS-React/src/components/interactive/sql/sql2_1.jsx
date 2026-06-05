@@ -196,7 +196,7 @@ export default function SQL2_1() {
             </h3>
           </div>
 
-          <div className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal space-y-8">
+          <div className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal space-y-8">
             <p>
               การเลือกชนิดข้อมูล (<span className="font-semibold text-zinc-800">Data Type</span>) ให้ตรงกับลักษณะข้อมูลที่จะนำมาจัดเก็บจริง ถือเป็นหัวใจหลักในการวิเคราะห์และออกแบบตาราง ชนิดข้อมูลจะควบคุมสิทธิ์ ขนาดพื้นที่ที่ใช้ในการจัดเก็บตัวแปร และความถูกต้องในการประมวลผลทางคณิตศาสตร์หรือตรรกะในระบบ RDBMS
             </p>
@@ -251,7 +251,7 @@ export default function SQL2_1() {
               {/* Type 5: BOOLEAN */}
               <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 border-l-[3px] border-l-violet-500 hover:-translate-y-0.5 hover:shadow-2xl transition-all duration-300">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="inline-flex bg-violet-50/50 border border-violet-200/50 text-violet-750 px-1 py-0.5 rounded text-[11px] font-bold font-mono">BOOLEAN</span>
+                  <span className="inline-flex bg-violet-50/50 border border-violet-200/50 text-violet-700 px-1 py-0.5 rounded text-[11px] font-bold font-mono">BOOLEAN</span>
                   <h4 className="text-[15px] font-bold text-slate-800">BOOLEAN</h4>
                 </div>
                 <p className="text-[13px] text-slate-500 leading-relaxed">
@@ -315,7 +315,7 @@ export default function SQL2_1() {
             </h3>
           </div>
 
-          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
             ทำภารกิจตรวจสอบชนิดข้อมูลตามบอร์ดนำทางด้านซ้ายให้สำเร็จ โดยป้อนฟิลด์ เลือกชนิดข้อมูล และลองทดสอบความถูกต้องที่บอร์ดวิเคราะห์ด้านขวา:
           </p>
 
@@ -358,15 +358,15 @@ export default function SQL2_1() {
                           ? 'text-cyan-400 font-bold scale-[1.01]' 
                           : questStep > q.step 
                             ? 'text-slate-500 line-through' 
-                            : 'text-slate-650'
+                            : 'text-slate-600'
                       }`}
                     >
                       <div className={`w-5 h-5 rounded-full flex items-center justify-center font-mono border shrink-0 text-[10px] mt-0.5 ${
                         questStep === q.step 
                           ? 'bg-cyan-500/20 border-cyan-400 text-cyan-400 animate-pulse' 
                           : questStep > q.step 
-                            ? 'bg-slate-850 border-slate-700 text-slate-500' 
-                            : 'bg-transparent border-slate-800 text-slate-650'
+                            ? 'bg-slate-800 border-slate-700 text-slate-500' 
+                            : 'bg-transparent border-slate-800 text-slate-600'
                       }`}>
                         {questStep > q.step ? '✓' : q.step}
                       </div>
@@ -395,7 +395,7 @@ export default function SQL2_1() {
               </div>
 
               {/* Guide Alert box */}
-              <div className="bg-slate-950/80 border border-slate-850 rounded-xl p-3.5 mt-6 text-xs text-slate-400 leading-normal space-y-1">
+              <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 mt-6 text-xs text-slate-400 leading-normal space-y-1">
                 <div className="font-bold text-amber-500 flex items-center gap-1">
                   <Info className="w-3.5 h-3.5 text-amber-500" /> หมายเหตุทางเทคนิค:
                 </div>
@@ -426,8 +426,8 @@ export default function SQL2_1() {
               <div className="flex-1 p-5 flex flex-col justify-between space-y-4">
                 
                 {/* 1. Control Panel Fields */}
-                <div className="bg-[#151518] border border-slate-850 rounded-xl p-4 space-y-4">
-                  <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider border-b border-slate-850 pb-2 flex items-center justify-between">
+                <div className="bg-[#151518] border border-slate-800 rounded-xl p-4 space-y-4">
+                  <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider border-b border-slate-800 pb-2 flex items-center justify-between">
                     <span>MySQL Column Parameter Inputs:</span>
                     <span className="text-cyan-400">DDL Engine V1.0</span>
                   </div>
@@ -498,8 +498,8 @@ export default function SQL2_1() {
                         <ShieldAlert className="w-5 h-5 animate-pulse" />
                       </div>
                       <div className="space-y-1">
-                        <h5 className="text-rose-450 text-xs font-bold font-mono">✗ TYPE MISMATCH / FORMAT ERROR</h5>
-                        <p className="text-[11px] text-slate-350 leading-normal font-mono">
+                        <h5 className="text-rose-400 text-xs font-bold font-mono">✗ TYPE MISMATCH / FORMAT ERROR</h5>
+                        <p className="text-[11px] text-slate-300 leading-normal font-mono">
                           {validationResult.reason}
                         </p>
                       </div>
@@ -524,18 +524,18 @@ export default function SQL2_1() {
                 <div className="text-slate-500 text-[9px] uppercase tracking-wider mb-2 flex items-center gap-1.5">
                   <Terminal className="w-3.5 h-3.5 text-slate-500" /> Action Output Console Log:
                 </div>
-                <div className="space-y-1 text-slate-350">
+                <div className="space-y-1 text-slate-300">
                   {logMessages.map((msg, i) => (
                     <div key={i} className="flex gap-3 leading-relaxed">
-                      <span className="text-slate-550 select-none shrink-0">{msg.time}</span>
+                      <span className="text-slate-500 select-none shrink-0">{msg.time}</span>
                       <span className={
                         msg.status === 'success' 
-                          ? 'text-emerald-450 font-bold' 
+                          ? 'text-emerald-400 font-bold' 
                           : msg.status === 'error' 
                             ? 'text-rose-500 font-bold' 
                             : msg.status === 'warning' 
-                              ? 'text-amber-450' 
-                              : 'text-cyan-405'
+                              ? 'text-amber-400' 
+                              : 'text-cyan-400'
                       }>
                         {msg.status === 'success' ? '✓' : msg.status === 'error' ? '✗' : 'i'} {msg.message}
                       </span>

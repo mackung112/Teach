@@ -451,7 +451,7 @@ function OsBridgeSimulator() {
                     className={`p-4 rounded-xl border text-left cursor-pointer transition-all duration-200 active:scale-98 flex items-start gap-3 group ${
                       activeRequest === key
                         ? 'border-indigo-500 bg-indigo-50/70 text-indigo-900 font-semibold'
-                        : 'border-slate-200 bg-white hover:border-slate-350 hover:bg-slate-50'
+                        : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
                     }`}
                   >
                     <div className="grow">
@@ -688,7 +688,7 @@ function ShellInterpreterSimulator() {
                       key={key}
                       onClick={() => handleCommand(key)}
                       disabled={isLoading}
-                      className="px-3 py-3 bg-slate-800 hover:bg-slate-700 active:scale-98 border border-slate-750 text-white rounded-xl text-xs font-bold text-center cursor-pointer transition-all leading-snug"
+                      className="px-3 py-3 bg-slate-800 hover:bg-slate-700 active:scale-98 border border-slate-700 text-white rounded-xl text-xs font-bold text-center cursor-pointer transition-all leading-snug"
                     >
                       <p className="text-[10px] text-slate-400 font-mono mb-0.5">{mode === 'cli' ? `$ ${item.cmd}` : 'GUI ACTION'}</p>
                       <p>{item.guiLabel.split(' ')[0]} {item.guiLabel.split(' ').slice(1).join(' ')}</p>
@@ -900,7 +900,7 @@ function ResourceManagementSimulator() {
                       key={i} 
                       className={`p-2 rounded-lg border text-center transition-all duration-300 text-[11px] ${
                         isEmpty 
-                          ? 'border-slate-100 bg-slate-50 text-slate-350'
+                          ? 'border-slate-100 bg-slate-50 text-slate-300'
                           : page === 'OS Kernel' || page === 'System UI'
                           ? 'border-indigo-100 bg-indigo-50/50 text-indigo-700 font-bold'
                           : 'border-cyan-200 bg-cyan-50/70 text-cyan-800 font-black shadow-sm'
@@ -1019,7 +1019,7 @@ function OsComparisonMatrix() {
                 className={`p-4 rounded-2xl border text-left cursor-pointer transition-all duration-200 active:scale-98 flex items-center justify-between ${
                   isSel
                     ? 'border-indigo-500 bg-indigo-50/70 text-indigo-900 shadow-sm font-bold'
-                    : 'border-slate-200 bg-white hover:border-slate-350 text-slate-600'
+                    : 'border-slate-200 bg-white hover:border-slate-300 text-slate-600'
                 }`}
               >
                 <div>

@@ -40,7 +40,7 @@ const CustomSelect = ({ value, options, onChange, placeholder = "เลือก
         className={`px-3 py-1 rounded-lg border font-mono font-bold text-xs transition-all active:scale-98 flex items-center gap-1 ${
           value 
             ? 'bg-purple-500/20 border-purple-400 text-purple-200 hover:bg-purple-500/35'
-            : 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-750'
+            : 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700'
         }`}
       >
         <span>{value || placeholder}</span>
@@ -121,7 +121,7 @@ const IntroCard = () => {
           <BookOpen className="w-7 h-7 text-indigo-600" />
           ความหมายและประโยชน์ของรหัสเทียม
         </h4>
-        <p className="text-slate-650 text-[15px] leading-relaxed mb-8">
+        <p className="text-slate-600 text-[15px] leading-relaxed mb-8">
           รหัสเทียม (Pseudocode) คือ "สะพานเชื่อมความคิด" ที่กระชับและยืดหยุ่น เพื่อออกแบบลอจิกโปรแกรมมิ่ง ลองคลิกเปรียบเทียบระดับความคิดด้านล่างนี้:
         </p>
 
@@ -136,7 +136,7 @@ const IntroCard = () => {
                 className={`p-6 rounded-2xl border-2 text-left transition-all duration-300 relative flex flex-col justify-between active:scale-98 ${
                   isActive
                     ? `bg-white ${stage.border} shadow-lg scale-105 z-10`
-                    : 'bg-slate-50/50 border-slate-200 hover:border-slate-350 opacity-80'
+                    : 'bg-slate-50/50 border-slate-200 hover:border-slate-300 opacity-80'
                 }`}
               >
                 <div>
@@ -165,7 +165,7 @@ const IntroCard = () => {
               <p className="text-slate-700 leading-relaxed text-[15px]">
                 {stages[activeStage].desc}
               </p>
-              <div className="bg-white/80 rounded-xl px-4 py-3 border border-slate-200/50 text-xs md:text-sm italic font-medium text-slate-650">
+              <div className="bg-white/80 rounded-xl px-4 py-3 border border-slate-200/50 text-xs md:text-sm italic font-medium text-slate-600">
                 {stages[activeStage].analog}
               </div>
             </div>
@@ -222,17 +222,17 @@ const IntroCard = () => {
             <div className="bg-white/70 p-4 rounded-xl border border-indigo-100/50 shadow-sm">
               <span className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm mb-3">✓</span>
               <strong className="block text-slate-800 text-[14px] mb-1">มุ่งเน้นไปที่การแก้ปัญหา (Logic)</strong>
-              <p className="text-slate-655 text-xs leading-relaxed">ช่วยดึงสมาธิมาคิดกระบวนการคิดของระบบได้ครบถ้วน โดยไม่ต้องพะวงกับการลืมเครื่องหมายเซมิโคลอนหรือวงเล็บ</p>
+              <p className="text-slate-600 text-xs leading-relaxed">ช่วยดึงสมาธิมาคิดกระบวนการคิดของระบบได้ครบถ้วน โดยไม่ต้องพะวงกับการลืมเครื่องหมายเซมิโคลอนหรือวงเล็บ</p>
             </div>
             <div className="bg-white/70 p-4 rounded-xl border border-indigo-100/50 shadow-sm">
               <span className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm mb-3">✓</span>
               <strong className="block text-slate-800 text-[14px] mb-1">ก้าวข้ามขอบเขตของภาษาโปรแกรม</strong>
-              <p className="text-slate-655 text-xs leading-relaxed">สร้างระบบที่เป็นกลาง ไม่ว่าทีมงานจะถนัดเขียน Python, Java, JavaScript หรือ C++ ทุกคนก็สามารถอ่านเข้าใจลоจิกเดียวกันได้</p>
+              <p className="text-slate-600 text-xs leading-relaxed">สร้างระบบที่เป็นกลาง ไม่ว่าทีมงานจะถนัดเขียน Python, Java, JavaScript หรือ C++ ทุกคนก็สามารถอ่านเข้าใจลоจิกเดียวกันได้</p>
             </div>
             <div className="bg-white/70 p-4 rounded-xl border border-indigo-100/50 shadow-sm">
               <span className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm mb-3">✓</span>
               <strong className="block text-slate-800 text-[14px] mb-1">นำไปแปรรูปเป็นรหัสโค้ดได้ง่ายดาย</strong>
-              <p className="text-slate-655 text-xs leading-relaxed">หากรหัสเทียมทำงานถูกต้อง การแปลงเป็นรหัสโค้ดจริงเพียงแค่พิมพ์คีย์เวิร์ดและสร้างตัวแปรให้ตรงตามรูปแบบภาษาคอมพิวเตอร์</p>
+              <p className="text-slate-600 text-xs leading-relaxed">หากรหัสเทียมทำงานถูกต้อง การแปลงเป็นรหัสโค้ดจริงเพียงแค่พิมพ์คีย์เวิร์ดและสร้างตัวแปรให้ตรงตามรูปแบบภาษาคอมพิวเตอร์</p>
             </div>
           </div>
         </div>
@@ -253,10 +253,10 @@ const PrinciplesCard = () => {
 
       <div className="relative z-10">
         <h4 className="text-2xl md:text-3xl font-bold text-slate-800 mb-4 flex items-center gap-2.5">
-          <Layers className="w-7 h-7 text-purple-650" />
+          <Layers className="w-7 h-7 text-purple-600" />
           หลักการเขียนรหัสเทียมเบื้องต้น
         </h4>
-        <p className="text-slate-650 text-[15px] leading-relaxed mb-8">
+        <p className="text-slate-600 text-[15px] leading-relaxed mb-8">
           แม้ว่ารหัสเทียมจะมีความเป็นกลาง แต่เพื่อให้อัลกอริทึมมีความเป็นระเบียบ จึงมีข้อปฏิบัติสากล 4 ประการที่ควรยึดถือ:
         </p>
 
@@ -294,7 +294,7 @@ const PrinciplesCard = () => {
                   {item.num}
                 </span>
                 <h5 className="font-bold text-slate-800 text-[15px] mb-2">{item.title}</h5>
-                <p className="text-slate-550 text-xs leading-relaxed">{item.desc}</p>
+                <p className="text-slate-500 text-xs leading-relaxed">{item.desc}</p>
               </div>
               <span className="mt-4 inline-block bg-white text-purple-600 border border-purple-100 font-mono text-[10px] px-2.5 py-1 rounded-lg self-start">
                 {item.badge}
@@ -318,7 +318,7 @@ const PrinciplesCard = () => {
                 </p>
               </div>
 
-              <div className="bg-slate-950 p-5 rounded-xl border border-slate-800 font-mono text-[13px] text-rose-350 leading-loose min-h-[170px]">
+              <div className="bg-slate-950 p-5 rounded-xl border border-slate-800 font-mono text-[13px] text-rose-300 leading-loose min-h-[170px]">
                 {!isFixed ? (
                   <div className="space-y-1 font-mono">
                     <div className="flex items-center gap-2"><span className="text-rose-500">✗</span> พิมพ์คำชี้แนะ "ใส่ยอดเงินฝาก: "</div>
@@ -629,7 +629,7 @@ const PseudocodeLabSimulator = () => {
           <Terminal className="w-8 h-8 text-purple-400" />
           ห้องปฏิบัติการรหัสเทียม (Pseudocode Lab & Simulator)
         </h3>
-        <p className="text-slate-450 max-w-xl mx-auto leading-relaxed text-sm md:text-[15px]">
+        <p className="text-slate-400 max-w-xl mx-auto leading-relaxed text-sm md:text-[15px]">
           สวมบทบาทนักเขียนสคริปต์ขั้นตอนประกอบคีย์เวิร์ดที่หายไปลงในช่องว่าง เพื่อสร้างอัลกอริทึมที่ถูกต้องและกดทดสอบการรันประมวลผลจริง!
         </p>
       </div>
@@ -644,7 +644,7 @@ const PseudocodeLabSimulator = () => {
             className={`px-5 py-3 rounded-2xl font-bold text-xs md:text-sm transition-all active:scale-98 flex items-center gap-2 ${
               level === lvl 
                 ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/30' 
-                : 'bg-slate-800 text-slate-400 hover:bg-slate-750'
+                : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
             }`}
           >
             <span>ด่าน {lvl}: {lvl === 1 ? "ระดับเบื้องต้น" : lvl === 2 ? "ระบบคำนวณ" : "วนลูปซ้ำ"}</span>
@@ -666,7 +666,7 @@ const PseudocodeLabSimulator = () => {
               <span className="text-purple-400">interactive ide v1.0</span>
             </div>
 
-            <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-850 font-mono text-sm leading-loose text-slate-300 min-h-[300px]">
+            <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 font-mono text-sm leading-loose text-slate-300 min-h-[300px]">
               {renderedLines.map((line, idx) => {
                 const isLineActive = activeLine === idx;
                 return (
@@ -754,7 +754,7 @@ const PseudocodeLabSimulator = () => {
         <div className="lg:col-span-5 flex flex-col gap-6 justify-between items-stretch">
           
           {/* Top Panel: Variable RAM Memory Inspector */}
-          <div className="bg-slate-900 rounded-3xl p-5 border border-slate-855 shadow-inner flex flex-col justify-between flex-1">
+          <div className="bg-slate-900 rounded-3xl p-5 border border-slate-800 shadow-inner flex flex-col justify-between flex-1">
             <div>
               <span className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-800 pb-2 flex items-center gap-1.5">
                 <Cpu className="w-4 h-4 text-purple-400 animate-pulse" /> ตรวจสอบหน่วยความจำ (Variable RAM)
@@ -763,7 +763,7 @@ const PseudocodeLabSimulator = () => {
               <div className="space-y-3 font-mono text-xs">
                 {level === 1 && (
                   <div className={`p-3 rounded-xl border transition-all ${
-                    activeRam.hasOwnProperty('score') ? 'bg-slate-950 border-purple-500 shadow-md text-purple-200' : 'bg-slate-950/40 border-slate-855 opacity-40 text-slate-500'
+                    activeRam.hasOwnProperty('score') ? 'bg-slate-950 border-purple-500 shadow-md text-purple-200' : 'bg-slate-950/40 border-slate-800 opacity-40 text-slate-500'
                   }`}>
                     <div className="text-[9px] uppercase font-bold tracking-wider">ตัวแปร: score</div>
                     <div className="font-bold text-sm mt-1">{activeRam.hasOwnProperty('score') ? activeRam.score : 'Null'}</div>
@@ -774,7 +774,7 @@ const PseudocodeLabSimulator = () => {
                 {level === 2 && (
                   <>
                     <div className={`p-3 rounded-xl border transition-all ${
-                      activeRam.hasOwnProperty('price') ? 'bg-slate-950 border-purple-500 shadow-md text-purple-200' : 'bg-slate-950/40 border-slate-855 opacity-40 text-slate-500'
+                      activeRam.hasOwnProperty('price') ? 'bg-slate-950 border-purple-500 shadow-md text-purple-200' : 'bg-slate-950/40 border-slate-800 opacity-40 text-slate-500'
                     }`}>
                       <div className="text-[9px] uppercase font-bold tracking-wider">ตัวแปร: price</div>
                       <div className="font-bold text-sm mt-1">{activeRam.hasOwnProperty('price') ? activeRam.price : 'Null'}</div>
@@ -782,7 +782,7 @@ const PseudocodeLabSimulator = () => {
                     </div>
                     
                     <div className={`p-3 rounded-xl border transition-all ${
-                      activeRam.hasOwnProperty('qty') ? 'bg-slate-950 border-purple-500 shadow-md text-purple-200' : 'bg-slate-950/40 border-slate-855 opacity-40 text-slate-500'
+                      activeRam.hasOwnProperty('qty') ? 'bg-slate-950 border-purple-500 shadow-md text-purple-200' : 'bg-slate-950/40 border-slate-800 opacity-40 text-slate-500'
                     }`}>
                       <div className="text-[9px] uppercase font-bold tracking-wider">ตัวแปร: qty</div>
                       <div className="font-bold text-sm mt-1">{activeRam.hasOwnProperty('qty') ? activeRam.qty : 'Null'}</div>
@@ -790,18 +790,18 @@ const PseudocodeLabSimulator = () => {
                     </div>
 
                     <div className={`p-3 rounded-xl border transition-all ${
-                      activeRam.hasOwnProperty('total') ? 'bg-slate-950 border-emerald-500 shadow-md text-emerald-250 scale-102' : 'bg-slate-950/40 border-slate-855 opacity-40 text-slate-500'
+                      activeRam.hasOwnProperty('total') ? 'bg-slate-950 border-emerald-500 shadow-md text-emerald-200 scale-102' : 'bg-slate-950/40 border-slate-800 opacity-40 text-slate-500'
                     }`}>
                       <div className="text-[9px] uppercase font-bold tracking-wider">ตัวแปร: total</div>
                       <div className="font-bold text-sm mt-1">{activeRam.hasOwnProperty('total') ? activeRam.total : 'Null'}</div>
-                      {activeRam.hasOwnProperty('total') && <div className="text-[8px] text-emerald-450 mt-0.5">ประเภท: PROCESS RESULT</div>}
+                      {activeRam.hasOwnProperty('total') && <div className="text-[8px] text-emerald-400 mt-0.5">ประเภท: PROCESS RESULT</div>}
                     </div>
                   </>
                 )}
 
                 {level === 3 && (
                   <div className={`p-3 rounded-xl border transition-all ${
-                    activeRam.hasOwnProperty('counter') ? 'bg-slate-950 border-purple-500 shadow-md text-purple-200' : 'bg-slate-950/40 border-slate-855 opacity-40 text-slate-500'
+                    activeRam.hasOwnProperty('counter') ? 'bg-slate-950 border-purple-500 shadow-md text-purple-200' : 'bg-slate-950/40 border-slate-800 opacity-40 text-slate-500'
                   }`}>
                     <div className="text-[9px] uppercase font-bold tracking-wider">ตัวแปรวนซ้ำ: counter</div>
                     <div className="font-bold text-sm mt-1">{activeRam.hasOwnProperty('counter') ? activeRam.counter : 'Null'}</div>
@@ -813,8 +813,8 @@ const PseudocodeLabSimulator = () => {
 
             <div className={`p-4 rounded-2xl border text-xs leading-relaxed mt-4 flex gap-2.5 transition-all ${
               currentErrorState
-                ? 'bg-rose-950/30 border-rose-800/80 text-rose-350 shadow-md'
-                : 'bg-slate-950/80 border-slate-800 text-slate-350'
+                ? 'bg-rose-950/30 border-rose-800/80 text-rose-300 shadow-md'
+                : 'bg-slate-950/80 border-slate-800 text-slate-300'
             }`}>
               {currentErrorState ? (
                 <AlertCircle className="w-5 h-5 shrink-0 text-rose-500 mt-0.5 animate-bounce" />
@@ -839,7 +839,7 @@ const PseudocodeLabSimulator = () => {
 
               <div className="font-mono text-sm leading-relaxed min-h-[60px] flex flex-col justify-center gap-1.5">
                 {activeConsole.length === 0 ? (
-                  <span className="text-slate-650 italic text-xs select-none text-center block w-full py-4">
+                  <span className="text-slate-600 italic text-xs select-none text-center block w-full py-4">
                     [ ไม่มีผลลัพธ์แสดงออกจอ ]
                   </span>
                 ) : (
@@ -872,7 +872,7 @@ const PseudocodeLabSimulator = () => {
               ) : (
                 <button
                   onClick={resetSimulation}
-                  className="flex-1 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-350 font-bold py-3 px-6 rounded-2xl transition-all active:scale-98 flex items-center justify-center gap-2 text-xs md:text-sm"
+                  className="flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-bold py-3 px-6 rounded-2xl transition-all active:scale-98 flex items-center justify-center gap-2 text-xs md:text-sm"
                 >
                   <RotateCcw className="w-4 h-4 shrink-0" />
                   <span>รีเซ็ตขอบเขต</span>
@@ -890,7 +890,7 @@ const PseudocodeLabSimulator = () => {
             <CheckCircle2 className="w-8 h-8 text-emerald-400 shrink-0" />
             <div>
               <h5 className="font-bold text-base text-white">ประมวลผลอัลกอริทึมระดับ {level} สำเร็จสมบูรณ์!</h5>
-              <p className="text-slate-450 text-xs mt-0.5">คีย์เวิร์ดโครงสร้างการเขียนรหัสเทียมและผลลัพธ์ผ่านเกณฑ์ความเข้ากันได้</p>
+              <p className="text-slate-400 text-xs mt-0.5">คีย์เวิร์ดโครงสร้างการเขียนรหัสเทียมและผลลัพธ์ผ่านเกณฑ์ความเข้ากันได้</p>
             </div>
           </div>
 
@@ -970,7 +970,7 @@ const PseudocodeFlowchartCompare = () => {
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
         
         {/* Left column: Pseudocode Block list (Span 5) */}
-        <div className="lg:col-span-5 bg-slate-950 p-6 rounded-3xl border border-slate-850 flex flex-col justify-between">
+        <div className="lg:col-span-5 bg-slate-950 p-6 rounded-3xl border border-slate-800 flex flex-col justify-between">
           <div>
             <span className="block text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-4 border-b border-slate-900 pb-2 flex items-center gap-1">
               <Code2 className="w-3.5 h-3.5 text-indigo-400" /> Standard Pseudocode
@@ -1011,7 +1011,7 @@ const PseudocodeFlowchartCompare = () => {
                 onMouseEnter={() => setHoveredId('print_yes')}
                 onMouseLeave={() => setHoveredId(null)}
                 className={`px-3 py-1.5 rounded-xl cursor-pointer transition-all pl-8 ${
-                  hoveredId === 'print_yes' ? 'bg-indigo-600/20 text-indigo-300 border-l-4 border-indigo-500 pl-7' : 'text-slate-450 hover:bg-slate-900'
+                  hoveredId === 'print_yes' ? 'bg-indigo-600/20 text-indigo-300 border-l-4 border-indigo-500 pl-7' : 'text-slate-400 hover:bg-slate-900'
                 }`}
               >
                 <span className="text-blue-400 font-bold">PRINT</span> "Take Umbrella"
@@ -1031,7 +1031,7 @@ const PseudocodeFlowchartCompare = () => {
                 onMouseEnter={() => setHoveredId('print_no')}
                 onMouseLeave={() => setHoveredId(null)}
                 className={`px-3 py-1.5 rounded-xl cursor-pointer transition-all pl-8 ${
-                  hoveredId === 'print_no' ? 'bg-indigo-600/20 text-indigo-300 border-l-4 border-indigo-500 pl-7' : 'text-slate-450 hover:bg-slate-900'
+                  hoveredId === 'print_no' ? 'bg-indigo-600/20 text-indigo-300 border-l-4 border-indigo-500 pl-7' : 'text-slate-400 hover:bg-slate-900'
                 }`}
               >
                 <span className="text-blue-400 font-bold">PRINT</span> "No Umbrella"
@@ -1060,7 +1060,7 @@ const PseudocodeFlowchartCompare = () => {
           </div>
 
           {/* Hover interactive description card */}
-          <div className="mt-8 bg-slate-900 border border-slate-800 p-4 rounded-2xl flex gap-3 text-xs leading-relaxed text-slate-350 min-h-[80px] items-center">
+          <div className="mt-8 bg-slate-900 border border-slate-800 p-4 rounded-2xl flex gap-3 text-xs leading-relaxed text-slate-300 min-h-[80px] items-center">
             <Info className="w-5 h-5 shrink-0 text-indigo-400" />
             <div>
               <strong className="block text-indigo-300 mb-0.5">คำอธิบายกล่องคำสั่ง:</strong>
@@ -1073,7 +1073,7 @@ const PseudocodeFlowchartCompare = () => {
         </div>
 
         {/* Right column: Interactive SVG Flowchart (Span 7) */}
-        <div className="lg:col-span-7 bg-slate-950 p-6 rounded-3xl border border-slate-850 flex items-center justify-center relative overflow-x-auto">
+        <div className="lg:col-span-7 bg-slate-950 p-6 rounded-3xl border border-slate-800 flex items-center justify-center relative overflow-x-auto">
           
           <svg 
             viewBox="0 0 360 450" 

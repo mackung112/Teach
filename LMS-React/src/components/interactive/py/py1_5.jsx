@@ -148,7 +148,7 @@ export default function py1_5() {
             </div>
 
             {/* Virtual Windows Python Installer Simulator */}
-            <div className="p-6 bg-slate-100 border border-slate-350 rounded-2xl shadow-2xl flex flex-col justify-between max-w-lg mx-auto w-full relative overflow-hidden">
+            <div className="p-6 bg-slate-100 border border-slate-300 rounded-2xl shadow-2xl flex flex-col justify-between max-w-lg mx-auto w-full relative overflow-hidden">
               <div className="flex items-center justify-between bg-slate-800 text-white px-4 py-2 rounded-t-xl -mx-6 -mt-6 mb-4">
                 <span className="text-[11px] font-mono font-bold flex items-center gap-1.5">
                   <Laptop className="w-3.5 h-3.5" /> Python 3.12.3 (64-bit) Setup
@@ -312,7 +312,7 @@ export default function py1_5() {
               </div>
 
               {/* Virtual VS Code Terminal */}
-              <div className="bg-slate-950 rounded-xl p-4 border border-slate-850 min-h-[110px] font-mono text-[12.5px] text-slate-400 relative">
+              <div className="bg-slate-950 rounded-xl p-4 border border-slate-800 min-h-[110px] font-mono text-[12.5px] text-slate-400 relative">
                 <div className="absolute top-2 right-4 text-[9px] text-zinc-600">// VS Code Output terminal</div>
                 
                 {extensionStatus === 'idle' && (

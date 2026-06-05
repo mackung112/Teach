@@ -156,7 +156,7 @@ export default function ComponentName() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-[14.5px] text-left">
                 <div className="bg-indigo-50/40 p-3.5 rounded-xl border border-indigo-100/60 leading-normal">
                   <span className="font-bold text-indigo-700 block mb-1">1. ชั้นแอปพลิเคชัน (Application)</span>
-                  ผู้ใช้กดสั่งบันทึกหรือปริ้นเอกสาร โปรแกรมประยุกต์ส่งคำร้องขอผ่านระบบ API Call เช่น <span className="font-mono text-xs bg-indigo-550/10 text-indigo-700 px-1 py-0.5 rounded">sys_print()</span>
+                  ผู้ใช้กดสั่งบันทึกหรือปริ้นเอกสาร โปรแกรมประยุกต์ส่งคำร้องขอผ่านระบบ API Call เช่น <span className="font-mono text-xs bg-indigo-500/10 text-indigo-700 px-1 py-0.5 rounded">sys_print()</span>
                 </div>
                 <div className="bg-emerald-50/40 p-3.5 rounded-xl border border-emerald-100/60 leading-normal">
                   <span className="font-bold text-emerald-700 block mb-1">2. ชั้นระบบปฏิบัติการ (OS Kernel)</span>
@@ -164,7 +164,7 @@ export default function ComponentName() {
                 </div>
                 <div className="bg-cyan-50/40 p-3.5 rounded-xl border border-cyan-100/60 leading-normal">
                   <span className="font-bold text-cyan-700 block mb-1">3. ชั้นไดรเวอร์และอุปกรณ์ (Driver & HW)</span>
-                  ไดรเวอร์แปลงเป็นสัญญาณเลขฐานสิบหก <span className="font-mono text-xs bg-cyan-550/10 text-cyan-700 px-1 py-0.5 rounded">0x7F 0x0A</span> สั่งฮาร์ดแวร์ทำงานสำเร็จ
+                  ไดรเวอร์แปลงเป็นสัญญาณเลขฐานสิบหก <span className="font-mono text-xs bg-cyan-500/10 text-cyan-700 px-1 py-0.5 rounded">0x7F 0x0A</span> สั่งฮาร์ดแวร์ทำงานสำเร็จ
                 </div>
               </div>
             </div>
@@ -271,21 +271,21 @@ export default function ComponentName() {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-4 text-left">
-              <div className="bg-gradient-to-br from-indigo-50/60 to-white p-5 rounded-2xl border border-indigo-150 shadow-sm space-y-2">
+              <div className="bg-gradient-to-br from-indigo-50/60 to-white p-5 rounded-2xl border border-indigo-100 shadow-sm space-y-2">
                 <span className="p-2 rounded-xl bg-indigo-100 text-indigo-700 inline-block"><RotateCcw className="w-5 h-5" /></span>
                 <h6 className="font-bold text-indigo-950 text-[15px]">1. Roll Back Driver (กู้คืนย้อนกลับ)</h6>
                 <p className="text-xs text-zinc-500 leading-relaxed font-sans">
                   ฟังก์ชันกู้คืนระบบเพื่อถอนติดตั้งไฟล์ไดรเวอร์เวอร์ชันล่าสุดที่เพิ่งลงและติดบั๊ก แล้วดึงเอาไฟล์ไดรเวอร์เวอร์ชันเสถียรก่อนหน้ากลับมารันแทนที่ทันทีอย่างมั่นคง
                 </p>
               </div>
-              <div className="bg-gradient-to-br from-emerald-50/60 to-white p-5 rounded-2xl border border-emerald-150 shadow-sm space-y-2">
+              <div className="bg-gradient-to-br from-emerald-50/60 to-white p-5 rounded-2xl border border-emerald-100 shadow-sm space-y-2">
                 <span className="p-2 rounded-xl bg-emerald-100 text-emerald-700 inline-block"><Settings className="w-5 h-5" /></span>
                 <h6 className="font-bold text-emerald-950 text-[15px]">2. Disable / Enable Device (รีเซตการทำงาน)</h6>
                 <p className="text-xs text-zinc-500 leading-relaxed font-sans">
                   การตัดสิทธิ์การจ่ายไฟและพักการทำงานชั่วคราว แล้วสั่งจ่ายสัญญาณใหม่อีกรอบ (Cycle power) เพื่อเคลียร์บัฟเฟอร์สัญญาณนาฬิกาและพอร์ตควบคุมโดยไม่ต้องปิดเครื่องบูตใหม่
                 </p>
               </div>
-              <div className="bg-gradient-to-br from-cyan-50/60 to-white p-5 rounded-2xl border border-cyan-150 shadow-sm space-y-2">
+              <div className="bg-gradient-to-br from-cyan-50/60 to-white p-5 rounded-2xl border border-cyan-100 shadow-sm space-y-2">
                 <span className="p-2 rounded-xl bg-cyan-100 text-cyan-700 inline-block"><Trash2 className="w-5 h-5" /></span>
                 <h6 className="font-bold text-cyan-950 text-[15px]">3. Uninstall Device (ถอนระบบทิ้ง)</h6>
                 <p className="text-xs text-zinc-500 leading-relaxed font-sans">
@@ -483,7 +483,7 @@ function DriverInterpreterSimulator() {
                     className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all duration-200 active:scale-98 flex justify-between items-center group ${
                       activeRequest === key
                         ? 'border-emerald-500 bg-emerald-50/70 text-emerald-950 font-bold'
-                        : 'border-slate-200 bg-white hover:border-slate-350 hover:bg-slate-50 text-slate-700'
+                        : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 text-slate-700'
                     }`}
                   >
                     <div className="grow text-left">
@@ -574,7 +574,7 @@ function DeviceManagerAuditSimulator({ deviceStatuses }) {
   };
 
   return (
-    <div className="bg-[#f3f4f6] rounded-2xl p-5 border border-slate-350 flex flex-col justify-between shadow-xl relative min-h-[420px] font-sans text-xs text-slate-800 text-left select-none">
+    <div className="bg-[#f3f4f6] rounded-2xl p-5 border border-slate-300 flex flex-col justify-between shadow-xl relative min-h-[420px] font-sans text-xs text-slate-800 text-left select-none">
       <span className="text-[9px] font-mono text-slate-400 absolute top-3 right-4 font-bold">DEVICE MANAGER AUDIT SCREEN</span>
       
       <div className="space-y-4">
@@ -658,7 +658,7 @@ function DeviceManagerAuditSimulator({ deviceStatuses }) {
 
       {/* Properties Modal Panel */}
       {isPropOpen && selectedNode && (
-        <div className="absolute inset-x-5 bottom-5 bg-white border border-slate-350 rounded-xl p-4 shadow-2xl animate-[slideUp_0.2s_ease-out] z-20">
+        <div className="absolute inset-x-5 bottom-5 bg-white border border-slate-300 rounded-xl p-4 shadow-2xl animate-[slideUp_0.2s_ease-out] z-20">
           <div className="flex justify-between items-center border-b border-slate-200 pb-2 mb-3">
             <span className="font-bold text-slate-800 text-[11px] font-mono">{devices[selectedNode].label} Properties</span>
             <button onClick={() => setIsPropOpen(false)} className="text-slate-400 hover:text-slate-600 font-bold cursor-pointer">✕</button>
@@ -708,7 +708,7 @@ function DeviceManagerAuditSimulator({ deviceStatuses }) {
           ) : (
             <div className="space-y-2 text-[10.5px] text-left">
               <span className="text-slate-400 block">Property Selector:</span>
-              <div className="w-full p-1.5 bg-slate-100 border border-slate-250 rounded font-semibold">
+              <div className="w-full p-1.5 bg-slate-100 border border-slate-200 rounded font-semibold">
                 Hardware IDs (รหัสเฉพาะชิปเซ็ต)
               </div>
               <div className="space-y-1.5 pt-1">
@@ -826,7 +826,7 @@ function DriverDownloadSimulator({ deviceStatuses, onResolve, onReset }) {
             filteredDrivers.map(drv => {
               const isResolved = deviceStatuses[drv.key] === 'active';
               return (
-                <div key={drv.key} className="p-3 bg-slate-950 border border-slate-850 rounded-xl flex justify-between items-center gap-3">
+                <div key={drv.key} className="p-3 bg-slate-950 border border-slate-800 rounded-xl flex justify-between items-center gap-3">
                   <div className="space-y-1 grow min-w-0">
                     <span className="font-bold text-white text-[11.5px] block truncate">{drv.title}</span>
                     <span className="font-mono text-[9px] text-slate-500 block truncate">ID Match: {drv.idString}</span>
@@ -868,7 +868,7 @@ function DriverDownloadSimulator({ deviceStatuses, onResolve, onReset }) {
       <div className="flex gap-2 border-t border-slate-900 pt-3.5">
         <button
           onClick={onReset}
-          className="w-full py-2.5 rounded-xl bg-slate-850 hover:bg-slate-800 text-slate-350 font-bold text-xs cursor-pointer active:scale-98 transition-all text-center"
+          className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-800 text-slate-300 font-bold text-xs cursor-pointer active:scale-98 transition-all text-center"
         >
           รีเซ็ตสถานะไดรเวอร์ทั้งหมด (RESET)
         </button>
@@ -973,7 +973,7 @@ function WindowsUpdateSimulator() {
             </div>
 
             {/* Current State Indicator Box */}
-            <div className="bg-slate-950 p-4 rounded-xl border border-slate-850 space-y-3">
+            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
               {stage === 'ready' && (
                 <div className="flex justify-between items-center">
                   <div>
@@ -1005,7 +1005,7 @@ function WindowsUpdateSimulator() {
                     <p className="text-[10px] text-slate-500">ตรวจพบแพตช์ความมั่นคงสำคัญที่ต้องลงทะเบียน</p>
                   </div>
 
-                  <div className="space-y-1.5 border-t border-slate-850 pt-2 text-[10.5px] text-slate-400">
+                  <div className="space-y-1.5 border-t border-slate-800 pt-2 text-[10.5px] text-slate-400">
                     <div className="flex justify-between">
                       <span>• KB5034123: Security Cumulative Patch</span>
                       <span className="text-amber-400">Ready</span>
@@ -1046,7 +1046,7 @@ function WindowsUpdateSimulator() {
                   </div>
                   <button
                     onClick={triggerReboot}
-                    className="py-1.5 px-3 bg-indigo-650 hover:bg-indigo-755 text-white font-bold text-[11px] rounded-lg cursor-pointer active:scale-98 shadow-md"
+                    className="py-1.5 px-3 bg-indigo-600 hover:bg-indigo-800 text-white font-bold text-[11px] rounded-lg cursor-pointer active:scale-98 shadow-md"
                   >
                     Restart Now
                   </button>
@@ -1068,7 +1068,7 @@ function WindowsUpdateSimulator() {
                   </div>
                   <button
                     onClick={handleReset}
-                    className="py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-350 font-bold rounded-lg cursor-pointer active:scale-98"
+                    className="py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-lg cursor-pointer active:scale-98"
                   >
                     Check again
                   </button>
@@ -1234,7 +1234,7 @@ function DriverTroubleshootingLab() {
                             : 'border-rose-500 bg-rose-50 text-rose-950'
                           : selectedKey !== null
                           ? 'border-slate-200 bg-slate-50/50 text-slate-400 cursor-not-allowed'
-                          : 'border-slate-250 bg-white hover:bg-slate-50 text-slate-700'
+                          : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
                       }`}
                     >
                       {opt.label}
@@ -1245,7 +1245,7 @@ function DriverTroubleshootingLab() {
             </div>
           ) : (
             <div className="text-center py-10 space-y-4">
-              <div className="w-16 h-16 bg-emerald-100 rounded-3xl flex items-center justify-center mx-auto text-emerald-600 border border-emerald-250 shadow-md">
+              <div className="w-16 h-16 bg-emerald-100 rounded-3xl flex items-center justify-center mx-auto text-emerald-600 border border-emerald-200 shadow-md">
                 <Award className="w-8 h-8" />
               </div>
               <div className="space-y-1">
@@ -1267,7 +1267,7 @@ function DriverTroubleshootingLab() {
           {!completed && selectedKey && (
             <button
               onClick={handleNext}
-              className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-750 text-white text-xs font-bold transition-all duration-200 cursor-pointer shadow-md flex items-center justify-center gap-1.5"
+              className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all duration-200 cursor-pointer shadow-md flex items-center justify-center gap-1.5"
             >
               ประเมินโจทย์เคสถัดไป
               <ArrowRight className="w-4 h-4" />

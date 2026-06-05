@@ -193,7 +193,7 @@ export default function SQL2_2() {
         {/* ─── Section 1: Theory Content (Fluid Open-Air Layout) ─── */}
         <section className="space-y-6">
           <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-indigo-650 tracking-wider uppercase flex items-center gap-1.5">
+            <span className="text-sm font-bold text-indigo-600 tracking-wider uppercase flex items-center gap-1.5">
               <BookOpen className="w-4 h-4 text-indigo-600" />
               ข้อกำหนดความถูกต้อง / Database Constraints
             </span>
@@ -202,7 +202,7 @@ export default function SQL2_2() {
             </h3>
           </div>
 
-          <div className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal space-y-8">
+          <div className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal space-y-8">
             <p>
               ข้อจำกัด (<span className="font-semibold text-zinc-800">Constraints</span>) คือ กฎเกณฑ์ที่กำหนดไว้สำหรับคอลัมน์ในตารางเพื่อควบคุมความถูกต้องและน่าเชื่อถือของข้อมูลในระบบฐานข้อมูล RDBMS ซึ่งจะป้องกันการป้อนข้อมูลที่ผิดพลาด หรือการสร้างข้อมูลขยะที่ขัดแย้งกับหลักโครงสร้างทางธุรกิจ
             </p>
@@ -279,8 +279,8 @@ export default function SQL2_2() {
 
             {/* Frosted Callout */}
             <div className="bg-indigo-50/60 backdrop-blur-md border border-indigo-200/60 rounded-2xl p-5 border-l-[3.5px] border-l-indigo-500 leading-relaxed text-[14.5px] text-indigo-900">
-              <span className="font-bold text-indigo-850 flex items-center gap-1.5 mb-1.5">
-                <Info className="w-4.5 h-4.5 text-indigo-650" /> ความสำคัญของคุณสมบัติ Referentials Integrity:
+              <span className="font-bold text-indigo-800 flex items-center gap-1.5 mb-1.5">
+                <Info className="w-4.5 h-4.5 text-indigo-600" /> ความสำคัญของคุณสมบัติ Referentials Integrity:
               </span>
               การนำข้อจำกัด <span className="font-mono bg-indigo-100 text-indigo-800 px-1 rounded text-[12px] font-bold">Foreign Key</span> มากำหนดเพื่อโยงตารางลูกเข้ากับตารางแม่ จะมีประโยชน์อย่างยิ่งในการป้องกันไม่ให้ระบบลบข้อมูลในตารางแม่ (เช่น ลบแผนกออก) ในขณะที่มีพนักงานอ้างอิงโยงกับรหัสแผนกนั้นอยู่ในตารางลูก ซึ่งช่วยรักษาความสัมพันธ์ข้อมูลให้ครบถ้วนเสมอ
             </div>
@@ -298,7 +298,7 @@ export default function SQL2_2() {
             </h3>
           </div>
 
-          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
             ทดลองปิด-เปิดสวิตช์ข้อจำกัดความถูกต้องด้านซ้ายมือ แล้วกรอกข้อมูลจำลองลงตาราง <code className="bg-slate-100 px-1 rounded text-sm font-bold text-indigo-600">students</code> สังเกตผลของพฤติกรรมและการวิเคราะห์ DDL SQL ทางด้านขวามือ:
           </p>
 
@@ -333,12 +333,12 @@ export default function SQL2_2() {
                       </div>
                       <div>
                         <span className="text-xs font-bold text-slate-200 block font-mono">PRIMARY KEY</span>
-                        <span className="text-[10px] text-slate-450">คีย์หลักห้ามซ้ำ ห้ามมีค่าว่าง</span>
+                        <span className="text-[10px] text-slate-400">คีย์หลักห้ามซ้ำ ห้ามมีค่าว่าง</span>
                       </div>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input type="checkbox" checked={pkEnabled} onChange={() => setPkEnabled(!pkEnabled)} className="sr-only peer" />
-                      <div className="w-9 h-5 bg-slate-850 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-500 font-bold"></div>
+                      <div className="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-500 font-bold"></div>
                     </label>
                   </div>
 
@@ -350,12 +350,12 @@ export default function SQL2_2() {
                       </div>
                       <div>
                         <span className="text-xs font-bold text-slate-200 block font-mono">AUTO_INCREMENT</span>
-                        <span className="text-[10px] text-slate-450">เพิ่มค่ารหัส ID ตัวเลขให้อัตโนมัติ</span>
+                        <span className="text-[10px] text-slate-400">เพิ่มค่ารหัส ID ตัวเลขให้อัตโนมัติ</span>
                       </div>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input type="checkbox" checked={aiEnabled} onChange={() => setAiEnabled(!aiEnabled)} className="sr-only peer" />
-                      <div className="w-9 h-5 bg-slate-850 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500 font-bold"></div>
+                      <div className="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500 font-bold"></div>
                     </label>
                   </div>
 
@@ -367,12 +367,12 @@ export default function SQL2_2() {
                       </div>
                       <div>
                         <span className="text-xs font-bold text-slate-200 block font-mono">NOT NULL</span>
-                        <span className="text-[10px] text-slate-450">บังคับกรอกข้อมูล ห้ามทิ้งว่างคอลัมน์ name</span>
+                        <span className="text-[10px] text-slate-400">บังคับกรอกข้อมูล ห้ามทิ้งว่างคอลัมน์ name</span>
                       </div>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input type="checkbox" checked={nnEnabled} onChange={() => setNnEnabled(!nnEnabled)} className="sr-only peer" />
-                      <div className="w-9 h-5 bg-slate-850 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-rose-500 font-bold"></div>
+                      <div className="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-rose-500 font-bold"></div>
                     </label>
                   </div>
 
@@ -384,12 +384,12 @@ export default function SQL2_2() {
                       </div>
                       <div>
                         <span className="text-xs font-bold text-slate-200 block font-mono">UNIQUE</span>
-                        <span className="text-[10px] text-slate-450">ห้ามกรอกค่าอีเมลซ้ำกับเรคคอร์ดอื่นๆ</span>
+                        <span className="text-[10px] text-slate-400">ห้ามกรอกค่าอีเมลซ้ำกับเรคคอร์ดอื่นๆ</span>
                       </div>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input type="checkbox" checked={uqEnabled} onChange={() => setUqEnabled(!uqEnabled)} className="sr-only peer" />
-                      <div className="w-9 h-5 bg-slate-850 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+                      <div className="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
                     </label>
                   </div>
 
@@ -401,25 +401,25 @@ export default function SQL2_2() {
                       </div>
                       <div>
                         <span className="text-xs font-bold text-slate-200 block font-mono">FOREIGN KEY</span>
-                        <span className="text-[10px] text-slate-450">เชื่อม class_id ไปตาราง departments</span>
+                        <span className="text-[10px] text-slate-400">เชื่อม class_id ไปตาราง departments</span>
                       </div>
                     </div>
                     <label className="relative inline-flex inline-flex items-center cursor-pointer">
                       <input type="checkbox" checked={fkEnabled} onChange={() => setFkEnabled(!fkEnabled)} className="sr-only peer" />
-                      <div className="w-9 h-5 bg-slate-850 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                      <div className="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
                     </label>
                   </div>
                 </div>
               </div>
 
               {/* Data Ingestion Insert Form */}
-              <form onSubmit={handleInsert} className="bg-slate-950/60 p-4 border border-slate-850 rounded-2xl space-y-3.5 mt-6">
+              <form onSubmit={handleInsert} className="bg-slate-950/60 p-4 border border-slate-800 rounded-2xl space-y-3.5 mt-6">
                 <div className="text-[10px] text-slate-400 font-mono font-bold tracking-wider uppercase">
                   INSERT ROW SIMULATOR
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="text-[11px] font-mono text-slate-450 block">ID (PK):</label>
+                    <label className="text-[11px] font-mono text-slate-400 block">ID (PK):</label>
                     <input 
                       type="text" 
                       value={inputId} 
@@ -430,7 +430,7 @@ export default function SQL2_2() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[11px] font-mono text-slate-450 block">ชื่อ (Name):</label>
+                    <label className="text-[11px] font-mono text-slate-400 block">ชื่อ (Name):</label>
                     <input 
                       type="text" 
                       value={inputName} 
@@ -443,7 +443,7 @@ export default function SQL2_2() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="text-[11px] font-mono text-slate-450 block">อีเมล (Email):</label>
+                    <label className="text-[11px] font-mono text-slate-400 block">อีเมล (Email):</label>
                     <input 
                       type="text" 
                       value={inputEmail} 
@@ -453,7 +453,7 @@ export default function SQL2_2() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[11px] font-mono text-slate-450 block">Class ID (FK):</label>
+                    <label className="text-[11px] font-mono text-slate-400 block">Class ID (FK):</label>
                     <select 
                       value={inputClassId} 
                       onChange={(e) => setInputClassId(e.target.value)}
@@ -468,7 +468,7 @@ export default function SQL2_2() {
 
                 <button 
                   type="submit"
-                  className="w-full flex items-center justify-center gap-2 h-9 bg-indigo-650 text-white font-semibold rounded-lg hover:bg-indigo-600 hover:scale-[1.01] active:scale-98 cursor-pointer transition-all text-xs"
+                  className="w-full flex items-center justify-center gap-2 h-9 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-600 hover:scale-[1.01] active:scale-98 cursor-pointer transition-all text-xs"
                 >
                   <Plus className="w-4 h-4 text-white" />
                   สั่งรัน INSERT INTO students VALUES (...)
@@ -532,9 +532,9 @@ export default function SQL2_2() {
                         </thead>
                         <tbody>
                           {departments.map((d) => (
-                            <tr key={d.id} className="border-b border-slate-850 hover:bg-white/5 transition-colors">
-                              <td className="py-1.5 text-emerald-450 font-bold">{d.id}</td>
-                              <td className="py-1.5 text-slate-350">{d.name}</td>
+                            <tr key={d.id} className="border-b border-slate-800 hover:bg-white/5 transition-colors">
+                              <td className="py-1.5 text-emerald-400 font-bold">{d.id}</td>
+                              <td className="py-1.5 text-slate-300">{d.name}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -568,11 +568,11 @@ export default function SQL2_2() {
                         </thead>
                         <tbody>
                           {students.map((s, index) => (
-                            <tr key={index} className="border-b border-slate-850 hover:bg-white/5 transition-colors">
+                            <tr key={index} className="border-b border-slate-800 hover:bg-white/5 transition-colors">
                               <td className="py-1.5 font-bold text-indigo-400">{s.id}</td>
                               <td className="py-1.5 text-slate-300">{s.name === null ? <span className="text-red-500/60 font-bold italic">NULL</span> : s.name}</td>
                               <td className="py-1.5 text-slate-400 max-w-[100px] truncate">{s.email === null ? <span className="text-red-500/60 font-bold italic">NULL</span> : s.email}</td>
-                              <td className={`py-1.5 font-bold ${fkEnabled ? 'text-emerald-450' : 'text-slate-500'}`}>{s.class_id}</td>
+                              <td className={`py-1.5 font-bold ${fkEnabled ? 'text-emerald-400' : 'text-slate-500'}`}>{s.class_id}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -599,13 +599,13 @@ export default function SQL2_2() {
                 <div className="text-slate-500 text-[9px] uppercase tracking-wider mb-2 flex items-center gap-1.5">
                   <Terminal className="w-3.5 h-3.5 text-slate-500" /> Action Output Logs:
                 </div>
-                <div className="space-y-1 text-slate-350">
+                <div className="space-y-1 text-slate-300">
                   {logMessages.map((msg, i) => (
                     <div key={i} className="flex gap-2.5 leading-relaxed">
                       <span className="text-slate-600 select-none shrink-0">{msg.time}</span>
                       <span className={
                         msg.status === 'success' 
-                          ? 'text-emerald-450 font-bold' 
+                          ? 'text-emerald-400 font-bold' 
                           : msg.status === 'error' 
                             ? 'text-rose-500 font-bold' 
                             : 'text-indigo-400'

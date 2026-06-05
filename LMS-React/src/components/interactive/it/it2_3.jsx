@@ -459,7 +459,7 @@ function AssemblySimulator() {
                   ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400'
                   : isNext
                     ? 'bg-indigo-500/20 border-indigo-400 text-white animate-pulse hover:bg-indigo-500/30'
-                    : 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-750 hover:border-slate-600'
+                    : 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700 hover:border-slate-600'
               }`}
             >
               <div className="text-2xl mb-1">{part.icon}</div>
@@ -532,7 +532,7 @@ function FrontPanelPinout() {
             className={`p-3 rounded-xl border text-left transition-all active:scale-95 cursor-pointer ${
               activePin === pin.id
                 ? 'bg-white/10 border-white/30 text-white'
-                : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-750 hover:border-slate-600'
+                : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 hover:border-slate-600'
             }`}
           >
             <div className="flex items-center gap-2 mb-1">
@@ -695,7 +695,7 @@ function PSUCableIdentifier() {
             className={`p-3 rounded-xl border transition-all active:scale-95 cursor-pointer text-left ${
               activeC === c.id
                 ? 'bg-white/10 border-white/30'
-                : 'bg-slate-800 border-slate-700 hover:bg-slate-750 hover:border-slate-600'
+                : 'bg-slate-800 border-slate-700 hover:bg-slate-700 hover:border-slate-600'
             }`}
           >
             <div className="flex items-center gap-2 mb-1">

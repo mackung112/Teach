@@ -266,10 +266,10 @@ export default function DSA1_5() {
                   </div>
 
                   {/* Dynamic Controls based on Active Step */}
-                  <div className="bg-slate-950/60 p-4 rounded-xl border border-slate-850 space-y-4">
+                  <div className="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-4">
                     
                     {activeStep === 'analysis' && (
-                      <div className="space-y-3 animate-fadeIn text-xs leading-relaxed text-slate-350">
+                      <div className="space-y-3 animate-fadeIn text-xs leading-relaxed text-slate-300">
                         <h4 className="text-[13px] font-bold text-white flex items-center gap-1.5">
                           <Sparkles className="w-4 h-4 text-emerald-400" />
                           การวิเคราะห์ความต้องการและเงื่อนไขโจทย์ (Problem Spec)
@@ -301,7 +301,7 @@ export default function DSA1_5() {
                     )}
 
                     {activeStep === 'design' && (
-                      <div className="space-y-3 animate-fadeIn text-xs text-slate-350 leading-relaxed">
+                      <div className="space-y-3 animate-fadeIn text-xs text-slate-300 leading-relaxed">
                         <h4 className="text-[13px] font-bold text-white flex items-center gap-1.5">
                           <Workflow className="w-4 h-4 text-emerald-400" />
                           ออกแบบแผนผังขั้นตอนการแลกเปลี่ยนค่า (Flowchart Design)
@@ -310,7 +310,7 @@ export default function DSA1_5() {
                           เลือกส่วนประกอบของผังงานให้ถูกต้องตามขั้นตอนวิธีเปรียบเทียบข้อมูลเพื่อสลับค่าตัวแปร:
                         </p>
 
-                        <div className="space-y-3 border-t border-slate-850 pt-2">
+                        <div className="space-y-3 border-t border-slate-800 pt-2">
                           <div className="flex items-center justify-between gap-3">
                             <span className="font-mono text-[10px]">บล็อกที่ 1 (จุดเริ่มและนำข้อมูลเข้า):</span>
                             <select
@@ -370,7 +370,7 @@ export default function DSA1_5() {
                     )}
 
                     {activeStep === 'coding' && (
-                      <div className="space-y-3 animate-fadeIn text-xs text-slate-350 leading-relaxed">
+                      <div className="space-y-3 animate-fadeIn text-xs text-slate-300 leading-relaxed">
                         <h4 className="text-[13px] font-bold text-white flex items-center gap-1.5">
                           <FileCode className="w-4 h-4 text-emerald-400" />
                           แปลงผังงานเป็นโค้ดสลับข้อมูล (Python Swapping Implementation)
@@ -435,7 +435,7 @@ export default function DSA1_5() {
                     )}
 
                     {activeStep === 'testing' && (
-                      <div className="space-y-3 animate-fadeIn text-xs text-slate-350 leading-relaxed">
+                      <div className="space-y-3 animate-fadeIn text-xs text-slate-300 leading-relaxed">
                         <h4 className="text-[13px] font-bold text-white flex items-center gap-1.5">
                           <Terminal className="w-4 h-4 text-emerald-400" />
                           ทดสอบความถูกต้องและขอบเขตข้อมูล (Test Matrix Simulator)
@@ -445,7 +445,7 @@ export default function DSA1_5() {
                         </p>
 
                         <div className="space-y-2 font-mono text-[10.5px]">
-                          <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-850 flex justify-between items-center">
+                          <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 flex justify-between items-center">
                             <div>
                               <span className="text-zinc-500 block">1. Normal (ข้อมูลทั่วไป):</span>
                               <span className="text-white font-bold">{testResults.normal.input}</span>
@@ -455,14 +455,14 @@ export default function DSA1_5() {
                               {testResults.normal.status === 'passed' ? (
                                 <span className="text-emerald-400 font-bold">✔ PASSED</span>
                               ) : testResults.normal.status === 'failed' ? (
-                                <span className="text-rose-450 font-bold">✘ FAILED</span>
+                                <span className="text-rose-400 font-bold">✘ FAILED</span>
                               ) : (
-                                <span className="text-slate-650">PENDING</span>
+                                <span className="text-slate-600">PENDING</span>
                               )}
                             </div>
                           </div>
 
-                          <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-850 flex justify-between items-center">
+                          <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 flex justify-between items-center">
                             <div>
                               <span className="text-zinc-500 block">2. Edge (จัดเรียงอยู่แล้ว):</span>
                               <span className="text-white font-bold">{testResults.edge.input}</span>
@@ -472,14 +472,14 @@ export default function DSA1_5() {
                               {testResults.edge.status === 'passed' ? (
                                 <span className="text-emerald-400 font-bold">✔ PASSED</span>
                               ) : testResults.edge.status === 'failed' ? (
-                                <span className="text-rose-450 font-bold">✘ FAILED</span>
+                                <span className="text-rose-400 font-bold">✘ FAILED</span>
                               ) : (
-                                <span className="text-slate-650">PENDING</span>
+                                <span className="text-slate-600">PENDING</span>
                               )}
                             </div>
                           </div>
 
-                          <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-850 flex justify-between items-center">
+                          <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 flex justify-between items-center">
                             <div>
                               <span className="text-zinc-500 block">3. Boundary (อาร์เรย์ว่างเปล่า):</span>
                               <span className="text-white font-bold">[]</span>
@@ -489,9 +489,9 @@ export default function DSA1_5() {
                               {testResults.boundary.status === 'passed' ? (
                                 <span className="text-emerald-400 font-bold">✔ PASSED</span>
                               ) : testResults.boundary.status === 'failed' ? (
-                                <span className="text-rose-450 font-bold">✘ CRASH/BUG</span>
+                                <span className="text-rose-400 font-bold">✘ CRASH/BUG</span>
                               ) : (
-                                <span className="text-slate-650">PENDING</span>
+                                <span className="text-slate-600">PENDING</span>
                               )}
                             </div>
                           </div>
@@ -517,7 +517,7 @@ export default function DSA1_5() {
                     )}
 
                     {activeStep === 'optimization' && (
-                      <div className="space-y-3 animate-fadeIn text-xs text-slate-350 leading-relaxed">
+                      <div className="space-y-3 animate-fadeIn text-xs text-slate-300 leading-relaxed">
                         <h4 className="text-[13px] font-bold text-white flex items-center gap-1.5">
                           <BarChart2 className="w-4 h-4 text-indigo-400" />
                           ค้นหาคอขวดและปรับประสิทธิภาพ (Optimization & Scaling)
@@ -526,10 +526,10 @@ export default function DSA1_5() {
                           อัลกอริทึมของคุณประมวลผลได้ถูกต้องครบถ้วนแล้ว! แต่เมื่อวิเคราะห์ Big O พบว่าใช้รูปแบบ Bubble Sort มีความซับซ้อนเวลา $O(N^2)$:
                         </p>
 
-                        <div className="bg-slate-900 border border-slate-850 p-3 rounded-lg space-y-1.5 font-mono text-[10.5px]">
+                        <div className="bg-slate-900 border border-slate-800 p-3 rounded-lg space-y-1.5 font-mono text-[10.5px]">
                           <div>
                             <span className="text-slate-500">รูปแบบตรรกะปัจจุบัน: </span>
-                            <span className="text-rose-450 font-bold">Bubble Sort O(N²)</span>
+                            <span className="text-rose-400 font-bold">Bubble Sort O(N²)</span>
                           </div>
                           <div>
                             <span className="text-slate-500">จำนวนขั้นตอนหาก N=50,000: </span>
@@ -537,7 +537,7 @@ export default function DSA1_5() {
                           </div>
                           <div>
                             <span className="text-slate-500">เวลาทำงานคาดการณ์: </span>
-                            <span className="text-rose-450 font-bold">~ 41 นาที (ซอฟต์แวร์ค้าง!)</span>
+                            <span className="text-rose-400 font-bold">~ 41 นาที (ซอฟต์แวร์ค้าง!)</span>
                           </div>
                         </div>
 
@@ -547,7 +547,7 @@ export default function DSA1_5() {
                               setIsOptimized(true);
                               setStatusMsg('[OPTIMIZED] 🟢 ปรับเปลี่ยนอัลกอริทึมจาก Bubble Sort เป็น Quick Sort (O(N log N)) ประสิทธิภาพประหยัดเวลา CPU ดีขึ้น 50,000 เท่า!');
                             }}
-                            className="w-full py-2.5 bg-indigo-650 hover:bg-indigo-550 text-white text-xs font-bold rounded-lg cursor-pointer transition-all"
+                            className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg cursor-pointer transition-all"
                           >
                             สั่งเปลี่ยนเป็น Quick Sort O(N log N)
                           </button>
@@ -573,7 +573,7 @@ export default function DSA1_5() {
                 </div>
 
                 {/* Status Bar */}
-                <div className="mt-4 pt-3 border-t border-slate-800 text-[11px] font-mono text-emerald-400 leading-relaxed bg-black/30 p-2.5 rounded-lg border border-slate-850">
+                <div className="mt-4 pt-3 border-t border-slate-800 text-[11px] font-mono text-emerald-400 leading-relaxed bg-black/30 p-2.5 rounded-lg border border-slate-800">
                   <span className="text-zinc-500 block text-[9px] uppercase tracking-wider mb-0.5">Terminal Log Output:</span>
                   {statusMsg}
                 </div>
@@ -637,7 +637,7 @@ export default function DSA1_5() {
                   {activeStep === 'coding' && (
                     <div className="w-full max-w-sm animate-fadeIn">
                       <span className="text-[10px] font-mono text-slate-500 uppercase block mb-1">RAM Instruction Outline:</span>
-                      <pre className="bg-slate-900/60 p-4 rounded-xl border border-slate-850 font-mono text-[11px] text-emerald-350 leading-relaxed overflow-x-auto">
+                      <pre className="bg-slate-900/60 p-4 rounded-xl border border-slate-800 font-mono text-[11px] text-emerald-300 leading-relaxed overflow-x-auto">
 {`def bubble_sort(cards):
     n = len(cards)
     for i in range(n):
@@ -678,7 +678,7 @@ export default function DSA1_5() {
                         ))}
                       </div>
 
-                      <div className="bg-slate-900 border border-slate-850 p-3 rounded-lg text-center text-[10.5px] font-mono w-full text-slate-400">
+                      <div className="bg-slate-900 border border-slate-800 p-3 rounded-lg text-center text-[10.5px] font-mono w-full text-slate-400">
                         {testStatus === 'running' ? (
                           <span className="text-amber-400 animate-pulse block">RUNNING INSTRUMENTATION TESTS...</span>
                         ) : testResults.normal.status === 'passed' ? (
@@ -696,10 +696,10 @@ export default function DSA1_5() {
                     <div className="w-full max-w-sm space-y-4 animate-fadeIn">
                       <span className="text-[10px] font-mono text-slate-500 uppercase block mb-1">Time Complexity Comparison Graph:</span>
                       
-                      <div className="border border-slate-850 bg-slate-900/60 p-4 rounded-xl relative overflow-hidden h-[180px] flex items-end gap-3 justify-center">
+                      <div className="border border-slate-800 bg-slate-900/60 p-4 rounded-xl relative overflow-hidden h-[180px] flex items-end gap-3 justify-center">
                         {/* Bubble Sort Graph Bar */}
                         <div className="flex flex-col items-center justify-end h-full w-1/3">
-                          <span className="text-[9px] font-mono text-rose-450 font-bold mb-1">41 min</span>
+                          <span className="text-[9px] font-mono text-rose-400 font-bold mb-1">41 min</span>
                           <div
                             className={`w-12 bg-rose-500/80 rounded-t-lg transition-all duration-700 ${
                               isOptimized ? 'h-32' : 'h-32'
@@ -724,7 +724,7 @@ export default function DSA1_5() {
                         </div>
                       </div>
 
-                      <div className="bg-slate-900 border border-slate-850 p-3 rounded-lg text-[10.5px] font-mono text-slate-400 space-y-1">
+                      <div className="bg-slate-900 border border-slate-800 p-3 rounded-lg text-[10.5px] font-mono text-slate-400 space-y-1">
                         <span className="text-white font-bold block">💡 สรุปการปรับปรุงโค้ด (Optimization SOT):</span>
                         <p>
                           การแก้ไขตรรกะในระดับออกแบบช่วยเพิ่มความเร็วในการแก้ปัญหาขอบเขตได้สูงถึง 50,000 เท่า โดยที่ความถูกต้องของข้อมูล (Correctness) ยังคงตัวเสถียร 100%
@@ -735,7 +735,7 @@ export default function DSA1_5() {
                 </div>
 
                 {/* Cycle Indicator Grid Status Panel */}
-                <div className="mt-4 bg-slate-900 border border-slate-850 rounded-xl p-3.5">
+                <div className="mt-4 bg-slate-900 border border-slate-800 rounded-xl p-3.5">
                   <span className="text-[10px] font-mono text-slate-500 uppercase block mb-2">Cycle Step Status Board:</span>
                   <div className="grid grid-cols-5 gap-2 text-center text-[9px] font-mono">
                     {[

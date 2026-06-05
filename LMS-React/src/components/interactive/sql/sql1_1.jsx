@@ -401,7 +401,7 @@ export default function SQL1_1() {
 
                 <button
                   onClick={() => setShowExplanation(!showExplanation)}
-                  className="px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-850 hover:bg-slate-800 text-slate-300 text-xs font-semibold flex items-center gap-2 cursor-pointer transition-all shrink-0 self-end md:self-auto"
+                  className="px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-800 text-slate-300 text-xs font-semibold flex items-center gap-2 cursor-pointer transition-all shrink-0 self-end md:self-auto"
                 >
                   <Info className="w-4 h-4 text-blue-400" />
                   {showExplanation ? 'ซ่อนคำอธิบายเชิงลึก' : 'แสดงคำอธิบายเชิงลึก'}

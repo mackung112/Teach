@@ -47,7 +47,7 @@ const CustomSelect = ({ value, options, onChange, placeholder = "เลือก
         className={`px-3 py-1 rounded-lg border font-mono font-bold text-xs transition-all active:scale-98 flex items-center gap-1 ${
           value 
             ? 'bg-indigo-500/20 border-indigo-400 text-indigo-200 hover:bg-indigo-500/35'
-            : 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-750'
+            : 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700'
         }`}
       >
         <span>{value || placeholder}</span>
@@ -389,7 +389,7 @@ const IfElseCard = () => {
               </div>
 
               <div className="bg-white/80 rounded-xl px-4 py-3 border border-slate-200/50 flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-650">ผลการซื้อล่วงหน้า:</span>
+                <span className="text-xs font-bold text-slate-600">ผลการซื้อล่วงหน้า:</span>
                 <span className={`text-xs font-bold px-3 py-1 rounded-full ${
                   balance >= price ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
                 }`}>
@@ -518,11 +518,11 @@ const IfElifElseCard = () => {
       <div className="absolute top-0 right-0 w-48 h-48 bg-purple-50/50 rounded-bl-full z-0 pointer-events-none"></div>
 
       <div className="relative z-10">
-        <span className="bg-purple-50 text-purple-650 border border-purple-100 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1 mb-3">
+        <span className="bg-purple-50 text-purple-600 border border-purple-100 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1 mb-3">
           <Sparkles className="w-3.5 h-3.5" /> โครงสร้างหลายทางเลือก
         </span>
         <h4 className="text-2xl md:text-3xl font-bold text-slate-800 mb-3 flex items-center gap-2">
-          <Scale className="w-7 h-7 text-purple-650" />
+          <Scale className="w-7 h-7 text-purple-600" />
           เงื่อนไขทางเลือกแบบ IF-ELIF-ELSE
         </h4>
         <p className="text-slate-600 text-[15px] leading-relaxed mb-6">
@@ -537,7 +537,7 @@ const IfElifElseCard = () => {
               <div>
                 <label className="flex justify-between items-center text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
                   <span>เลื่อนปรับคะแนนแบบเรียลไทม์ (score):</span>
-                  <span className="text-purple-650 text-sm font-bold font-mono">{score} คะแนน</span>
+                  <span className="text-purple-600 text-sm font-bold font-mono">{score} คะแนน</span>
                 </label>
                 <input 
                   type="range" 
@@ -651,7 +651,7 @@ const NestedIfCard = () => {
           <ShieldCheck className="w-3.5 h-3.5" /> โครงสร้างซ้อนเงื่อนไข
         </span>
         <h4 className="text-2xl md:text-3xl font-bold text-slate-800 mb-3 flex items-center gap-2">
-          <Network className="w-7 h-7 text-emerald-650" />
+          <Network className="w-7 h-7 text-emerald-600" />
           การเขียนเงื่อนไขซ้อนทับ NESTED IF
         </h4>
         <p className="text-slate-600 text-[15px] leading-relaxed mb-6">
@@ -670,19 +670,19 @@ const NestedIfCard = () => {
               {/* Input Switch 1 */}
               <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${isLoggedIn ? 'bg-emerald-100 text-emerald-650' : 'bg-slate-100 text-slate-500'}`}>
+                  <div className={`p-2 rounded-lg ${isLoggedIn ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-500'}`}>
                     {isLoggedIn ? <Unlock className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
                   </div>
                   <div>
                     <strong className="block text-xs text-slate-800">เข้าสู่ระบบ (is_logged_in)</strong>
-                    <span className="text-[10px] text-slate-450">{isLoggedIn ? 'สถานะ: ลงชื่อเข้าใช้แล้ว' : 'สถานะ: บุคคลภายนอก'}</span>
+                    <span className="text-[10px] text-slate-400">{isLoggedIn ? 'สถานะ: ลงชื่อเข้าใช้แล้ว' : 'สถานะ: บุคคลภายนอก'}</span>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsLoggedIn(!isLoggedIn)}
                   className={`w-12 h-6 rounded-full transition-all relative ${
-                    isLoggedIn ? 'bg-emerald-500' : 'bg-slate-350'
+                    isLoggedIn ? 'bg-emerald-500' : 'bg-slate-300'
                   }`}
                 >
                   <span className={`absolute top-0.5 left-0.5 bg-white w-5 h-5 rounded-full shadow transition-all ${
@@ -693,15 +693,15 @@ const NestedIfCard = () => {
 
               {/* Input Switch 2 */}
               <div className={`flex items-center justify-between p-4 rounded-xl border transition-all ${
-                isLoggedIn ? 'bg-white border-slate-200' : 'bg-slate-100/50 border-slate-150 opacity-50'
+                isLoggedIn ? 'bg-white border-slate-200' : 'bg-slate-100/50 border-slate-100 opacity-50'
               }`}>
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${isLoggedIn && isAdmin ? 'bg-purple-100 text-purple-650' : 'bg-slate-100 text-slate-500'}`}>
+                  <div className={`p-2 rounded-lg ${isLoggedIn && isAdmin ? 'bg-purple-100 text-purple-600' : 'bg-slate-100 text-slate-500'}`}>
                     <ShieldCheck className="w-5 h-5" />
                   </div>
                   <div>
                     <strong className="block text-xs text-slate-800">ผู้ดูแลระบบ (is_admin)</strong>
-                    <span className="text-[10px] text-slate-450">{isLoggedIn && isAdmin ? 'บัญชี: Admin' : 'บัญชี: สมาชิกทั่วไป'}</span>
+                    <span className="text-[10px] text-slate-400">{isLoggedIn && isAdmin ? 'บัญชี: Admin' : 'บัญชี: สมาชิกทั่วไป'}</span>
                   </div>
                 </div>
                 <button
@@ -709,7 +709,7 @@ const NestedIfCard = () => {
                   disabled={!isLoggedIn}
                   onClick={() => setIsAdmin(!isAdmin)}
                   className={`w-12 h-6 rounded-full transition-all relative ${
-                    isLoggedIn && isAdmin ? 'bg-purple-600' : 'bg-slate-350'
+                    isLoggedIn && isAdmin ? 'bg-purple-600' : 'bg-slate-300'
                   }`}
                 >
                   <span className={`absolute top-0.5 left-0.5 bg-white w-5 h-5 rounded-full shadow transition-all ${
@@ -727,7 +727,7 @@ const NestedIfCard = () => {
                   ? 'bg-rose-900/20 border-rose-800 text-rose-400 animate-pulse'
                   : isAdmin 
                     ? 'bg-purple-900/20 border-purple-800 text-purple-400'
-                    : 'bg-emerald-900/20 border-emerald-800 text-emerald-450'
+                    : 'bg-emerald-900/20 border-emerald-800 text-emerald-400'
               }`}>
                 <div className={`w-2 h-2 rounded-full ${
                   !isLoggedIn ? 'bg-rose-500' : isAdmin ? 'bg-purple-500' : 'bg-emerald-500'
@@ -758,11 +758,11 @@ const NestedIfCard = () => {
                       key={idx} 
                       className={`flex items-start rounded px-2.5 py-0.5 transition-all ${
                         isHighlighted 
-                          ? 'bg-emerald-500/20 border-l-4 border-emerald-500 pl-1.5 text-emerald-250 shadow-[0_0_15px_rgba(34,197,94,0.15)] font-bold'
+                          ? 'bg-emerald-500/20 border-l-4 border-emerald-500 pl-1.5 text-emerald-200 shadow-[0_0_15px_rgba(34,197,94,0.15)] font-bold'
                           : 'border-l-4 border-transparent opacity-45'
                       }`}
                     >
-                      <span className="w-5 text-[10px] text-slate-650 text-right select-none font-bold mr-4 mt-0.5">{idx + 1}</span>
+                      <span className="w-5 text-[10px] text-slate-600 text-right select-none font-bold mr-4 mt-0.5">{idx + 1}</span>
                       <span style={{ paddingLeft: `${line.indent * 20}px` }}>{line.code}</span>
                     </div>
                   );
@@ -770,7 +770,7 @@ const NestedIfCard = () => {
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-450 leading-relaxed bg-slate-950/50 p-4 rounded-xl">
+            <div className="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400 leading-relaxed bg-slate-950/50 p-4 rounded-xl">
               <span className="font-bold text-emerald-400 block mb-1">กลไกความปลอดภัย:</span>
               <span>หากไม่ลงชื่อเข้าใช้ ตัวแปลเงื่อนไขภายนอกจะตัดจบบล็อกไปที่เงื่อนไขเท็จด้านนอกทันทีเพื่อการประหยัดกระบวนการประมวลผล</span>
             </div>
@@ -881,12 +881,12 @@ const SmartHomeSimulator = () => {
         {/* Left column: Controls (Span 4) */}
         <div className="lg:col-span-4 flex flex-col justify-between space-y-6">
           <div className="bg-slate-900 rounded-3xl p-6 border border-slate-800 space-y-6 flex-1 flex flex-col justify-center">
-            <span className="block text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-slate-850 pb-2 mb-2">
+            <span className="block text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-slate-800 pb-2 mb-2">
               SENSOR INPUT PANELS
             </span>
 
             {/* Input 1: Motion Detector */}
-            <div className="bg-slate-950 p-4 rounded-2xl border border-slate-850 flex items-center justify-between">
+            <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className={`p-2.5 rounded-xl transition-all ${
                   motion ? 'bg-indigo-500/20 text-indigo-400' : 'bg-slate-800 text-slate-500'
@@ -912,9 +912,9 @@ const SmartHomeSimulator = () => {
             </div>
 
             {/* Input 2: Ambient Light Level */}
-            <div className="bg-slate-950 p-4 rounded-2xl border border-slate-850 space-y-3">
+            <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
               <div className="flex justify-between items-center text-xs">
-                <span className="flex items-center gap-1.5 text-slate-350">
+                <span className="flex items-center gap-1.5 text-slate-300">
                   <Sun className="w-4 h-4 text-amber-400" /> แสงแดดรอบนอก (Light)
                 </span>
                 <span className="font-bold text-white font-mono">{ambientLight}%</span>
@@ -927,7 +927,7 @@ const SmartHomeSimulator = () => {
                 onChange={(e) => setAmbientLight(parseInt(e.target.value))}
                 className="w-full accent-indigo-500"
               />
-              <div className="flex justify-between text-[8px] font-bold text-slate-550">
+              <div className="flex justify-between text-[8px] font-bold text-slate-500">
                 <span>0% (มืดสนิท)</span>
                 <span>30% (เริ่มค่ำ)</span>
                 <span>100% (จ้า)</span>
@@ -935,9 +935,9 @@ const SmartHomeSimulator = () => {
             </div>
 
             {/* Input 3: Room Temperature */}
-            <div className="bg-slate-950 p-4 rounded-2xl border border-slate-850 space-y-3">
+            <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
               <div className="flex justify-between items-center text-xs">
-                <span className="flex items-center gap-1.5 text-slate-350">
+                <span className="flex items-center gap-1.5 text-slate-300">
                   <Thermometer className="w-4 h-4 text-cyan-400" /> อุณหภูมิห้อง (Temp)
                 </span>
                 <span className="font-bold text-white font-mono">{temp}°C</span>
@@ -950,7 +950,7 @@ const SmartHomeSimulator = () => {
                 onChange={(e) => setTemp(parseInt(e.target.value))}
                 className="w-full accent-cyan-500"
               />
-              <div className="flex justify-between text-[8px] font-bold text-slate-550">
+              <div className="flex justify-between text-[8px] font-bold text-slate-500">
                 <span>10°C (หนาวมาก)</span>
                 <span>28°C (อบอุ่น)</span>
                 <span>40°C (ร้อนจัด)</span>
@@ -962,7 +962,7 @@ const SmartHomeSimulator = () => {
         {/* Middle column: Code Editor live display (Span 5) */}
         <div className="lg:col-span-5 bg-slate-900 rounded-3xl p-6 border border-slate-800 flex flex-col justify-between shadow-inner">
           <div>
-            <span className="block text-[10px] font-mono text-indigo-400 uppercase tracking-widest mb-4 border-b border-slate-850 pb-2 flex items-center gap-1.5">
+            <span className="block text-[10px] font-mono text-indigo-400 uppercase tracking-widest mb-4 border-b border-slate-800 pb-2 flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5" /> smart_control.py (รหัสเทียม)
             </span>
 
@@ -997,8 +997,8 @@ const SmartHomeSimulator = () => {
         </div>
 
         {/* Right column: Beautiful hardware virtualization screen (Span 4) */}
-        <div className="lg:col-span-4 bg-slate-900 rounded-3xl p-6 border border-slate-850 flex flex-col justify-between shadow-inner relative overflow-hidden">
-          <span className="block text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-3 border-b border-slate-850 pb-2">
+        <div className="lg:col-span-4 bg-slate-900 rounded-3xl p-6 border border-slate-800 flex flex-col justify-between shadow-inner relative overflow-hidden">
+          <span className="block text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-3 border-b border-slate-800 pb-2">
             PHYSICAL LIVING ROOM
           </span>
 
@@ -1040,15 +1040,15 @@ const SmartHomeSimulator = () => {
 
             {/* Climate system displays */}
             <div className="w-full mt-6 grid grid-cols-2 gap-3">
-              <div className="bg-slate-950/80 p-3 rounded-2xl border border-slate-850 text-center">
+              <div className="bg-slate-950/80 p-3 rounded-2xl border border-slate-800 text-center">
                 <span className="text-[9px] text-slate-500 font-bold uppercase block mb-1">แอร์ (AC):</span>
-                <span className={`text-[11px] font-extrabold ${isACActive ? 'text-cyan-400' : 'text-slate-650'}`}>
+                <span className={`text-[11px] font-extrabold ${isACActive ? 'text-cyan-400' : 'text-slate-600'}`}>
                   {isACActive ? 'ทำงาน (COOLING)' : 'ปิดใช้งาน'}
                 </span>
               </div>
-              <div className="bg-slate-950/80 p-3 rounded-2xl border border-slate-850 text-center">
+              <div className="bg-slate-950/80 p-3 rounded-2xl border border-slate-800 text-center">
                 <span className="text-[9px] text-slate-500 font-bold uppercase block mb-1">ฮีตเตอร์:</span>
-                <span className={`text-[11px] font-extrabold ${isHeaterActive ? 'text-rose-400' : 'text-slate-650'}`}>
+                <span className={`text-[11px] font-extrabold ${isHeaterActive ? 'text-rose-400' : 'text-slate-600'}`}>
                   {isHeaterActive ? 'ทำงาน (HEATING)' : 'ปิดใช้งาน'}
                 </span>
               </div>
@@ -1057,7 +1057,7 @@ const SmartHomeSimulator = () => {
 
           <div className={`mt-4 p-3 rounded-xl border text-[10px] leading-relaxed text-center font-semibold tracking-wide transition-all ${
             !motion 
-              ? 'bg-slate-950/40 border-slate-850 text-slate-500' 
+              ? 'bg-slate-950/40 border-slate-800 text-slate-500' 
               : isACActive 
                 ? 'bg-cyan-950/30 border-cyan-800/80 text-cyan-300'
                 : isHeaterActive 
@@ -1093,7 +1093,7 @@ export default function py2_5() {
 (คำชี้แนะ: พิจารณาเลือกใช้คำสั่งภาษาอังกฤษพิมพ์ใหญ่,BEGIN-END, ย่อหน้าเยื้องอย่างชัดเจน และโครงสร้างเงื่อนไขซ้อนทับ NESTED IF ให้ถูกต้องสมบูรณ์)`;
 
   return (
-    <div className="font-sans text-slate-850 pb-24 selection:bg-indigo-150 selection:text-indigo-900 relative">
+    <div className="font-sans text-slate-800 pb-24 selection:bg-indigo-100 selection:text-indigo-900 relative">
       {/* Ambient background glow layers */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-[10%] left-[-5%] w-[450px] h-[450px] rounded-full bg-indigo-500/10 blur-[130px] animate-pulse"></div>

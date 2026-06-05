@@ -37,8 +37,8 @@ const CustomDropdown = ({ value, options, onChange, placeholder = "?", disabled 
         onClick={() => setIsOpen(!isOpen)}
         className={`w-10 h-10 rounded-xl border-2 font-mono font-bold text-sm transition-all active:scale-95 flex items-center justify-center ${
           value 
-            ? 'bg-rose-500/20 border-rose-455 text-rose-300 hover:bg-rose-500/30'
-            : 'bg-slate-800 border-slate-700 text-slate-500 hover:bg-slate-750'
+            ? 'bg-rose-500/20 border-rose-500 text-rose-300 hover:bg-rose-500/30'
+            : 'bg-slate-800 border-slate-700 text-slate-500 hover:bg-slate-700'
         }`}
       >
         {value || placeholder}
@@ -57,7 +57,7 @@ const CustomDropdown = ({ value, options, onChange, placeholder = "?", disabled 
                   setIsOpen(false);
                 }}
                 className={`w-full text-center py-2 rounded-lg text-sm font-bold hover:bg-rose-600 hover:text-white transition-colors block ${
-                  value === opt ? 'text-rose-400 font-bold bg-rose-500/10' : 'text-slate-350'
+                  value === opt ? 'text-rose-400 font-bold bg-rose-500/10' : 'text-slate-300'
                 }`}
               >
                 {opt}
@@ -75,16 +75,16 @@ const CustomDropdown = ({ value, options, onChange, placeholder = "?", disabled 
 // ============================================================================
 const OperatorsOverview = () => {
   const basicOps = [
-    { symbol: "+", name: "บวก (Addition)", desc: "นำตัวเลขสองตัวมารวมกัน", ex: "5 + 2", res: "7", color: "bg-blue-50/70 border-blue-200 text-blue-705" },
-    { symbol: "-", name: "ลบ (Subtraction)", desc: "หักล้างตัวเลขตัวหลังออกจากตัวแรก", ex: "5 - 2", res: "3", color: "bg-indigo-50/70 border-indigo-200 text-indigo-705" },
-    { symbol: "*", name: "คูณ (Multiplication)", desc: "เพิ่มจำนวนของตัวเลขขึ้นตามตัวคูณ", ex: "5 * 2", res: "10", color: "bg-violet-50/70 border-violet-200 text-violet-705" },
-    { symbol: "/", name: "หารปกติ (Division)", desc: "หารจำนวน ได้ผลลัพธ์เป็นทศนิยมเสมอ", ex: "5 / 2", res: "2.5", color: "bg-fuchsia-50/70 border-fuchsia-200 text-fuchsia-705", notice: "ได้ผลลัพธ์เป็นทศนิยม (Float) เสมอ" }
+    { symbol: "+", name: "บวก (Addition)", desc: "นำตัวเลขสองตัวมารวมกัน", ex: "5 + 2", res: "7", color: "bg-blue-50/70 border-blue-200 text-blue-700" },
+    { symbol: "-", name: "ลบ (Subtraction)", desc: "หักล้างตัวเลขตัวหลังออกจากตัวแรก", ex: "5 - 2", res: "3", color: "bg-indigo-50/70 border-indigo-200 text-indigo-700" },
+    { symbol: "*", name: "คูณ (Multiplication)", desc: "เพิ่มจำนวนของตัวเลขขึ้นตามตัวคูณ", ex: "5 * 2", res: "10", color: "bg-violet-50/70 border-violet-200 text-violet-700" },
+    { symbol: "/", name: "หารปกติ (Division)", desc: "หารจำนวน ได้ผลลัพธ์เป็นทศนิยมเสมอ", ex: "5 / 2", res: "2.5", color: "bg-fuchsia-50/70 border-fuchsia-200 text-fuchsia-700", notice: "ได้ผลลัพธ์เป็นทศนิยม (Float) เสมอ" }
   ];
 
   const advancedOps = [
-    { symbol: "//", name: "หารปัดเศษทิ้ง (Floor Division)", desc: "หารปกติ แต่ตัดเศษทศนิยมออกทั้งหมด เหลือเฉพาะส่วนจำนวนเต็ม", ex: "5 // 2", res: "2", color: "bg-rose-50/70 border-rose-200 text-rose-705", tip: "มีประโยชน์มากในการแบ่งกลุ่มจำนวนเต็มหรือตัดรอบเวลา" },
-    { symbol: "%", name: "หารเอาเศษ (Modulo)", desc: "หาเศษที่เหลือจากการแบ่งกลุ่มจำนวนเต็มจนหมด", ex: "5 % 2", res: "1", color: "bg-pink-50/70 border-pink-200 text-pink-705", tip: "ใช้ตรวจสอบเลขคู่/เลขคี่ หรือตรวจสอบการหารลงตัว" },
-    { symbol: "**", name: "ยกกำลัง (Exponentiation)", desc: "คูณตัวเลขตัวแรกซ้ำตามจำนวนครั้งของเลขชี้กำลัง", ex: "5 ** 2", res: "25", color: "bg-orange-50/70 border-orange-200 text-orange-705", tip: "เขียนสั้นและเร็วกว่าการเรียกใช้งานโมดูลคณิตศาสตร์" }
+    { symbol: "//", name: "หารปัดเศษทิ้ง (Floor Division)", desc: "หารปกติ แต่ตัดเศษทศนิยมออกทั้งหมด เหลือเฉพาะส่วนจำนวนเต็ม", ex: "5 // 2", res: "2", color: "bg-rose-50/70 border-rose-200 text-rose-700", tip: "มีประโยชน์มากในการแบ่งกลุ่มจำนวนเต็มหรือตัดรอบเวลา" },
+    { symbol: "%", name: "หารเอาเศษ (Modulo)", desc: "หาเศษที่เหลือจากการแบ่งกลุ่มจำนวนเต็มจนหมด", ex: "5 % 2", res: "1", color: "bg-pink-50/70 border-pink-200 text-pink-700", tip: "ใช้ตรวจสอบเลขคู่/เลขคี่ หรือตรวจสอบการหารลงตัว" },
+    { symbol: "**", name: "ยกกำลัง (Exponentiation)", desc: "คูณตัวเลขตัวแรกซ้ำตามจำนวนครั้งของเลขชี้กำลัง", ex: "5 ** 2", res: "25", color: "bg-orange-50/70 border-orange-200 text-orange-700", tip: "เขียนสั้นและเร็วกว่าการเรียกใช้งานโมดูลคณิตศาสตร์" }
   ];
 
   return (
@@ -115,7 +115,7 @@ const OperatorsOverview = () => {
                     </span>
                     <div>
                       <strong className="block text-slate-800 text-sm">{op.name}</strong>
-                      <span className="text-slate-555 text-xs leading-relaxed block">{op.desc}</span>
+                      <span className="text-slate-600 text-xs leading-relaxed block">{op.desc}</span>
                     </div>
                   </div>
                   <div className="text-right shrink-0">
@@ -123,7 +123,7 @@ const OperatorsOverview = () => {
                       {op.ex} &rarr; {op.res}
                     </code>
                     {op.notice && (
-                      <span className="text-[9px] font-bold text-rose-550 mt-1 block">
+                      <span className="text-[9px] font-bold text-rose-500 mt-1 block">
                         *{op.notice}
                       </span>
                     )}
@@ -148,7 +148,7 @@ const OperatorsOverview = () => {
                       </span>
                       <div>
                         <strong className="block text-slate-800 text-sm">{op.name}</strong>
-                        <span className="text-slate-555 text-xs leading-relaxed block">{op.desc}</span>
+                        <span className="text-slate-600 text-xs leading-relaxed block">{op.desc}</span>
                       </div>
                     </div>
                     <code className="bg-white border border-slate-200/70 px-2.5 py-1 rounded-lg text-xs font-mono font-bold text-slate-700 shrink-0 shadow-2xs">
@@ -250,7 +250,7 @@ const MathPlayground = () => {
 
         <div className="flex flex-wrap gap-4 items-start justify-center bg-slate-950/60 p-4 rounded-2xl border border-slate-800 shadow-inner">
           {Array.from({ length: fullGroups }).map((_, gIdx) => (
-            <div key={gIdx} className="bg-indigo-500/10 border-2 border-dashed border-indigo-550/40 rounded-xl p-2.5 flex flex-col items-center gap-1.5 transition-all hover:scale-105">
+            <div key={gIdx} className="bg-indigo-500/10 border-2 border-dashed border-indigo-500/40 rounded-xl p-2.5 flex flex-col items-center gap-1.5 transition-all hover:scale-105">
               <span className="text-[8px] font-bold uppercase tracking-wider text-indigo-400">กลุ่มที่ {gIdx + 1}</span>
               <div className="flex gap-1">
                 {Array.from({ length: b }).map((_, cIdx) => (
@@ -261,7 +261,7 @@ const MathPlayground = () => {
           ))}
 
           {remainder > 0 && (
-            <div className="bg-rose-500/10 border-2 border-dashed border-rose-550/40 rounded-xl p-2.5 flex flex-col items-center gap-1.5 transition-all hover:scale-105">
+            <div className="bg-rose-500/10 border-2 border-dashed border-rose-500/40 rounded-xl p-2.5 flex flex-col items-center gap-1.5 transition-all hover:scale-105">
               <span className="text-[8px] font-bold uppercase tracking-wider text-rose-400">เศษค้างเหลือ (%)</span>
               <div className="flex gap-1">
                 {Array.from({ length: remainder }).map((_, cIdx) => (
@@ -275,11 +275,11 @@ const MathPlayground = () => {
         <div className="text-[12px] leading-relaxed text-slate-300 bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
           <p className="flex items-center gap-1.5 mb-1.5">
             <CheckCircle2 className="w-4.5 h-4.5 text-emerald-400 shrink-0" />
-            <span className="font-semibold text-slate-205">ยอดรวมของทั้งหมด {a} ชิ้น แบ่งกลุ่มละ {b} ชิ้น:</span>
+            <span className="font-semibold text-slate-200">ยอดรวมของทั้งหมด {a} ชิ้น แบ่งกลุ่มละ {b} ชิ้น:</span>
           </p>
           <ul className="pl-6 space-y-1 list-disc text-slate-400">
             <li>แบ่งได้เต็มๆ จำนวน: <strong className="text-indigo-300 font-mono">{fullGroups} กลุ่ม</strong> (ผลลัพธ์ของคีย์คำสั่ง <code className="text-white bg-slate-950 px-1.5 py-0.5 rounded font-mono font-bold text-xs">{a} // {b}</code>)</li>
-            <li>จำนวนเศษค้างที่แบ่งต่อไม่ได้: <strong className="text-rose-350 font-mono">{remainder} ชิ้น</strong> (ผลเศษเหลือของคีย์คำสั่ง <code className="text-white bg-slate-950 px-1.5 py-0.5 rounded font-mono font-bold text-xs">{a} % {b}</code>)</li>
+            <li>จำนวนเศษค้างที่แบ่งต่อไม่ได้: <strong className="text-rose-300 font-mono">{remainder} ชิ้น</strong> (ผลเศษเหลือของคีย์คำสั่ง <code className="text-white bg-slate-950 px-1.5 py-0.5 rounded font-mono font-bold text-xs">{a} % {b}</code>)</li>
           </ul>
         </div>
       </div>
@@ -301,7 +301,7 @@ const MathPlayground = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           {/* Controls Box */}
-          <div className="lg:col-span-6 bg-slate-50 border border-slate-205 p-6 rounded-[2rem] flex flex-col justify-between gap-6">
+          <div className="lg:col-span-6 bg-slate-50 border border-slate-200 p-6 rounded-[2rem] flex flex-col justify-between gap-6">
             <div className="space-y-6">
               <div className="flex items-center gap-4 justify-center">
                 <div className="flex flex-col items-center gap-1.5">
@@ -310,7 +310,7 @@ const MathPlayground = () => {
                     type="number" 
                     value={num1}
                     onChange={(e) => setNum1(e.target.value)}
-                    className="w-24 h-14 text-center text-xl font-bold font-mono bg-white border border-slate-300 rounded-2xl focus:border-emerald-555 focus:ring-3 focus:ring-emerald-100 transition-all focus:outline-none"
+                    className="w-24 h-14 text-center text-xl font-bold font-mono bg-white border border-slate-300 rounded-2xl focus:border-emerald-600 focus:ring-3 focus:ring-emerald-100 transition-all focus:outline-none"
                   />
                 </div>
                 
@@ -324,7 +324,7 @@ const MathPlayground = () => {
                     type="number" 
                     value={num2}
                     onChange={(e) => setNum2(e.target.value)}
-                    className="w-24 h-14 text-center text-xl font-bold font-mono bg-white border border-slate-300 rounded-2xl focus:border-emerald-555 focus:ring-3 focus:ring-emerald-100 transition-all focus:outline-none"
+                    className="w-24 h-14 text-center text-xl font-bold font-mono bg-white border border-slate-300 rounded-2xl focus:border-emerald-600 focus:ring-3 focus:ring-emerald-100 transition-all focus:outline-none"
                   />
                 </div>
               </div>
@@ -337,7 +337,7 @@ const MathPlayground = () => {
                     className={`h-11 rounded-xl font-mono text-sm font-bold border-2 transition-all active:scale-95 flex flex-col items-center justify-center gap-0.5 ${
                       operator === op.symbol
                         ? `${op.bg.split(' ')[0]} ${op.bg.split(' ')[2]} border-emerald-400 shadow-md scale-105`
-                        : 'bg-white text-slate-655 border-slate-200 hover:border-slate-300 hover:bg-slate-100'
+                        : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-100'
                     }`}
                   >
                     <span>{op.symbol}</span>
@@ -346,7 +346,7 @@ const MathPlayground = () => {
               </div>
             </div>
 
-            <div className="bg-emerald-50/50 border border-emerald-100 p-4 rounded-2xl text-emerald-805 text-xs leading-relaxed flex gap-2.5">
+            <div className="bg-emerald-50/50 border border-emerald-100 p-4 rounded-2xl text-emerald-800 text-xs leading-relaxed flex gap-2.5">
               <Lightbulb className="w-5 h-5 shrink-0 text-emerald-600 mt-0.5" />
               <div>
                 <strong className="block text-emerald-900 text-xs mb-0.5 font-bold">{operators.find(o => o.symbol === operator)?.name}</strong>
@@ -360,7 +360,7 @@ const MathPlayground = () => {
             <div>
               <div className="flex justify-between items-center text-slate-500 text-[10px] font-mono border-b border-slate-800 pb-2.5 mb-4">
                 <span># python variables & output</span>
-                <span className="text-emerald-450 font-bold">online console</span>
+                <span className="text-emerald-400 font-bold">online console</span>
               </div>
 
               <div className="font-mono text-sm leading-loose text-slate-300">
@@ -537,7 +537,7 @@ const OperatorPrecedenceCard = () => {
               </div>
               
               {[
-                { rank: "1", op: "( )", name: "วงเล็บ (Parentheses) - สูงสุด", color: "text-rose-405 bg-rose-500/5" },
+                { rank: "1", op: "( )", name: "วงเล็บ (Parentheses) - สูงสุด", color: "text-rose-400 bg-rose-500/5" },
                 { rank: "2", op: "**", name: "ยกกำลัง (Exponentiation)", color: "text-orange-400" },
                 { rank: "3", op: "* , / , // , %", name: "คูณ, หาร, หารปัดเศษ, หารเอาเศษ", color: "text-amber-400" },
                 { rank: "4", op: "+ , -", name: "บวก และ ลบ - ต่ำสุด", color: "text-blue-400" }
@@ -545,7 +545,7 @@ const OperatorPrecedenceCard = () => {
                 <div key={idx} className={`grid grid-cols-12 px-4 py-3 border-b border-slate-800/40 text-xs font-mono items-center ${item.color.includes('bg') ? item.color : ''}`}>
                   <span className="col-span-2 text-center font-bold text-slate-500">{item.rank}</span>
                   <span className={`col-span-4 pl-2 font-bold ${item.color.split(' ')[0]}`}>{item.op}</span>
-                  <span className="col-span-6 pl-2 text-slate-350 font-sans font-medium">{item.name}</span>
+                  <span className="col-span-6 pl-2 text-slate-300 font-sans font-medium">{item.name}</span>
                 </div>
               ))}
             </div>
@@ -576,7 +576,7 @@ const OperatorPrecedenceCard = () => {
                   className={`flex-1 py-2 px-3 rounded-xl font-bold text-xs transition-all active:scale-95 ${
                     preset === num 
                       ? 'bg-rose-600 text-white shadow-md shadow-rose-900/35'
-                      : 'bg-slate-900 text-slate-450 hover:bg-slate-850 hover:text-slate-205'
+                      : 'bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
                   }`}
                 >
                   สมการ {num}: {presetsConfig[num].formula}
@@ -614,20 +614,20 @@ const OperatorPrecedenceCard = () => {
                 <button
                   onClick={() => setStep(prev => Math.max(0, prev - 1))}
                   disabled={isPlaying || step === 0}
-                  className="flex-1 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 font-bold py-3 px-4 rounded-2xl transition-all active:scale-98 flex items-center justify-center gap-1.5 disabled:opacity-30 text-xs md:text-sm"
+                  className="flex-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 font-bold py-3 px-4 rounded-2xl transition-all active:scale-98 flex items-center justify-center gap-1.5 disabled:opacity-30 text-xs md:text-sm"
                 >
                   ย้อนกลับ
                 </button>
                 <button
                   onClick={() => setStep(prev => Math.min(currentSteps.length - 1, prev + 1))}
                   disabled={isPlaying || step === currentSteps.length - 1}
-                  className="flex-1 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 font-bold py-3 px-4 rounded-2xl transition-all active:scale-98 flex items-center justify-center gap-1.5 disabled:opacity-30 text-xs md:text-sm"
+                  className="flex-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 font-bold py-3 px-4 rounded-2xl transition-all active:scale-98 flex items-center justify-center gap-1.5 disabled:opacity-30 text-xs md:text-sm"
                 >
                   ถัดไป
                 </button>
                 <button
                   onClick={handleSelectPreset.bind(null, preset)}
-                  className="bg-slate-805 hover:bg-slate-750 text-slate-300 p-3.5 rounded-2xl transition-all active:scale-98 flex items-center justify-center shrink-0 border border-slate-750"
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 p-3.5 rounded-2xl transition-all active:scale-98 flex items-center justify-center shrink-0 border border-slate-700"
                   title="เริ่มจำลองใหม่"
                 >
                   <RotateCcw className="w-4.5 h-4.5" />
@@ -739,7 +739,7 @@ const MathEquationWizard = () => {
 
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
         {/* Game Area */}
-        <div className="bg-slate-800/80 backdrop-blur rounded-3xl p-6 md:p-8 border border-slate-705 flex flex-col justify-between gap-6">
+        <div className="bg-slate-800/80 backdrop-blur rounded-3xl p-6 md:p-8 border border-slate-700 flex flex-col justify-between gap-6">
           <div>
             <div className="flex justify-between items-center mb-4">
               <span className="text-xs font-bold text-rose-400 uppercase tracking-widest">ด่านประลองที่ {level} / 3</span>
@@ -756,7 +756,7 @@ const MathEquationWizard = () => {
             </div>
 
             <h4 className="text-xl font-bold text-white mb-2">{currentLevel.title}</h4>
-            <p className="text-slate-350 text-xs md:text-sm leading-relaxed mb-6">{currentLevel.desc}</p>
+            <p className="text-slate-300 text-xs md:text-sm leading-relaxed mb-6">{currentLevel.desc}</p>
 
             <div className="mb-6 bg-slate-950 rounded-2xl p-5 border border-slate-900 text-center font-mono text-lg md:text-xl text-white flex items-center justify-center gap-3">
               {level === 1 && (
@@ -796,7 +796,7 @@ const MathEquationWizard = () => {
                 <div className={`px-4 py-2 border rounded-xl font-mono text-base font-bold shadow-inner ${
                   evaluatedResult === currentLevel.target 
                     ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 animate-pulse'
-                    : 'bg-slate-950 border-slate-900 text-slate-350'
+                    : 'bg-slate-950 border-slate-900 text-slate-300'
                 }`}>
                   {evaluatedResult}
                 </div>
@@ -804,7 +804,7 @@ const MathEquationWizard = () => {
 
               <div>
                 <span className="block text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1">เป้าหมายปลายทาง:</span>
-                <div className="bg-slate-955 border border-rose-500/30 px-5 py-2 rounded-xl font-mono text-rose-400 text-lg font-bold shadow-inner">
+                <div className="bg-slate-950 border border-rose-500/30 px-5 py-2 rounded-xl font-mono text-rose-400 text-lg font-bold shadow-inner">
                   {currentLevel.target}
                 </div>
               </div>
@@ -844,7 +844,7 @@ const MathEquationWizard = () => {
               // Verification Control
             </span>
             
-            <p className="text-slate-350 text-xs leading-relaxed max-w-xs mx-auto">
+            <p className="text-slate-300 text-xs leading-relaxed max-w-xs mx-auto">
               เมื่อกำหนดและเลือกเครื่องหมายในกล่อง Dropdown [ ? ] ครบทั้งสองกล่องแล้ว ให้คลิกปุ่มด้านล่างเพื่อประเมินความสอดคล้อง
             </p>
 
@@ -875,7 +875,7 @@ const MathEquationWizard = () => {
                 </div>
                 <button
                   onClick={resetGame}
-                  className="w-full bg-rose-600 hover:bg-rose-550 text-white px-6 py-3.5 rounded-2xl font-bold transition-all text-xs md:text-sm shadow-md"
+                  className="w-full bg-rose-600 hover:bg-rose-500 text-white px-6 py-3.5 rounded-2xl font-bold transition-all text-xs md:text-sm shadow-md"
                 >
                   <RefreshCw className="w-4 h-4 inline mr-1.5" /> เล่นทบทวนใหม่อีกครั้ง
                 </button>
@@ -885,7 +885,7 @@ const MathEquationWizard = () => {
             {gameStatus === 'fail' && (
               <button
                 onClick={() => { setGameStatus('playing'); setAnswers({ slot1: null, slot2: null }); setEvaluatedResult('?'); }}
-                className="w-full bg-slate-800 hover:bg-slate-750 text-white px-6 py-4 rounded-2xl font-bold transition-all text-xs md:text-sm border border-slate-700"
+                className="w-full bg-slate-800 hover:bg-slate-700 text-white px-6 py-4 rounded-2xl font-bold transition-all text-xs md:text-sm border border-slate-700"
               >
                 ลองคำนวณใหม่อีกครั้ง
               </button>
@@ -970,7 +970,7 @@ export default function py4_3() {
 ตัวอย่างการพิมพ์แสดง: "4000 วินาที แปลงค่าได้: 1 ชั่วโมง 6 นาที 40 วินาที"`;
 
   return (
-    <div className="font-sans text-slate-800 pb-24 selection:bg-rose-250 selection:text-rose-900 relative">
+    <div className="font-sans text-slate-800 pb-24 selection:bg-rose-200 selection:text-rose-900 relative">
       {/* Layer 1: Ambient Background Glow Layers */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-[10%] left-[-5%] w-[450px] h-[450px] rounded-full bg-rose-100/40 blur-[130px] animate-pulse"></div>

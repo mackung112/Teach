@@ -34,7 +34,7 @@ export default function SQL1_3() {
       <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-6 space-y-12 md:space-y-16 relative z-10">
         
         {/* Intro Section */}
-        <p className="text-[16px] md:text-[17px] text-zinc-655 leading-relaxed font-normal">
+        <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
           การเลือกใช้ระบบจัดการฐานข้อมูล (Database Management System หรือ DBMS) ที่เหมาะสมถือเป็นทางแยกและจุดตัดสินใจที่สำคัญอย่างยิ่ง
           เนื่องจากการบริหารจัดการข้อมูลของแต่ละระบบมีความต้องการที่แตกต่างกันออกไป ซอฟต์แวร์ DBMS แต่ละตัวได้รับการวิศวกรรมขึ้นมาเพื่อรับใช้จุดเด่น
           และยอมแลกกับข้อจำกัดที่ต่างกัน ดังนั้น การพิจารณาเลือก DBMS จึงต้องประเมินผ่านปัจจัยเชิงลึกทั้ง 7 มิติต่อไปนี้
@@ -163,7 +163,7 @@ export default function SQL1_3() {
             </h3>
           </div>
 
-          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
             เพื่อสร้างความรู้ความสามารถในการจัดการฐานข้อมูลเชิงสัมพันธ์ที่เป็นไปตามมาตรฐานสากลและสามารถนำไปประยุกต์ใช้ในการประกอบวิชาชีพได้จริง 
             รายวิชานี้จึงตัดสินใจเลือกใช้ซอฟต์แวร์ MySQL ควบคู่กับ MySQL Workbench ด้วยเหตุผลสำคัญ 4 ประการ:
           </p>

@@ -523,7 +523,7 @@ export default function IT2_2() {
                         }}
                       />
                     ))}
-                    {!rubbing && <div className="w-full h-0.5 border-t border-dashed border-slate-850" />}
+                    {!rubbing && <div className="w-full h-0.5 border-t border-dashed border-slate-800" />}
                   </div>
 
                   {/* Negative Node */}
@@ -725,7 +725,7 @@ export default function IT2_2() {
                 <Flame className="w-5 h-5" />
                 <h4 className="text-[16px] font-bold">ความล้มเหลวเฉียบพลัน (Catastrophic Failure)</h4>
               </div>
-              <p className="text-[14px] text-slate-655 text-slate-600 leading-relaxed">
+              <p className="text-[14px] text-slate-600 text-slate-600 leading-relaxed">
                 เกิดการไหม้ขาดหรือทะลุของสายสลักเชื่อมโยงสัญญาณภายในชิปทันทีหลังจากโดนสปาร์กไฟฟ้าสถิต ส่งผลให้อุปกรณ์ไม่ทำงานโดยสิ้นเชิง เมนบอร์ดหรือแรมเปิดไม่ติด ช่างสามารถใช้เครื่องมือเช็คอาการเสียได้ทันทีเนื่องจากอุปกรณ์มีสถานะเสียชีวิตตายคาที่
               </p>
             </div>

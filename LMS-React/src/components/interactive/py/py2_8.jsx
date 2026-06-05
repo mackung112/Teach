@@ -338,7 +338,7 @@ export default function pyUnit2_8_FlowchartSymbols() {
             <h2 className="text-3xl md:text-5xl font-bold leading-normal tracking-tight">
               สัญลักษณ์ผังงาน (Flowchart Symbols)
             </h2>
-            <p className="text-slate-350 leading-relaxed text-sm md:text-base">
+            <p className="text-slate-300 leading-relaxed text-sm md:text-base">
               เครื่องมืออันทรงพลังที่จะแปลงขั้นตอนวิธี (Algorithm) แบบตัวอักษรให้อยู่ในรูปของสัญญลักษณ์ภาพที่เป็นสากล 
               สถาบันมาตรฐานแห่งชาติของสหรัฐอเมริกา (ANSI) และสถาบันมาตรฐานสากล (ISO) ได้ร่วมกันขัดเกลาชุดรูปทรงมาตรฐานขึ้นมา 
               ทำให้วิศวกรซอฟต์แวร์ทุกคนบนโลกสามารถทำความเข้าใจอัลกอริทึมได้ผ่านสัญลักษณ์สากลเหล่านี้
@@ -348,7 +348,7 @@ export default function pyUnit2_8_FlowchartSymbols() {
 
         {/* 2.8.1 สัญลักษณ์มาตรฐานสากล (ANSI) */}
         <div className="space-y-8">
-          <div className="border-l-4 border-indigo-650 pl-4 space-y-1">
+          <div className="border-l-4 border-indigo-600 pl-4 space-y-1">
             <h3 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
               สัญลักษณ์มาตรฐานสากล (ANSI)
             </h3>
@@ -507,7 +507,7 @@ export default function pyUnit2_8_FlowchartSymbols() {
                       {shapeDatabase[selectedShape].name}
                     </h4>
                   </div>
-                  <span className="text-2xs bg-indigo-550 text-white font-mono px-3 py-1 rounded-full shrink-0 font-bold align-self-start sm:align-self-center">
+                  <span className="text-2xs bg-indigo-500 text-white font-mono px-3 py-1 rounded-full shrink-0 font-bold align-self-start sm:align-self-center">
                     {shapeDatabase[selectedShape].english}
                   </span>
                 </div>
@@ -527,13 +527,13 @@ export default function pyUnit2_8_FlowchartSymbols() {
                     <button
                       onClick={() => runSampleCode(selectedShape)}
                       disabled={isRunningCode}
-                      className="bg-emerald-600 hover:bg-emerald-550 active:scale-95 disabled:bg-slate-700 text-white font-bold py-1.5 px-3 rounded-lg text-2xs transition-all shadow-md shadow-emerald-600/20 flex items-center gap-1 cursor-pointer"
+                      className="bg-emerald-600 hover:bg-emerald-500 active:scale-95 disabled:bg-slate-700 text-white font-bold py-1.5 px-3 rounded-lg text-2xs transition-all shadow-md shadow-emerald-600/20 flex items-center gap-1 cursor-pointer"
                     >
                       <Play className="w-3.5 h-3.5" /> ทดลองรันโค้ด
                     </button>
                   </div>
 
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-850 relative">
+                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 relative">
                     <pre className="font-mono text-xs text-emerald-400 overflow-x-auto leading-relaxed max-h-40">
                       {shapeDatabase[selectedShape].code}
                     </pre>
@@ -542,13 +542,13 @@ export default function pyUnit2_8_FlowchartSymbols() {
 
                 {/* Simulated Terminal Output Console */}
                 <div className="space-y-2 text-left">
-                  <span className="text-xs text-slate-450 font-bold flex items-center gap-1.5"><TerminalIcon className="w-4 h-4 text-indigo-400" /> ผลการทำงานจำลอง (Simulated Terminal Output):</span>
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-850 h-28 font-mono text-xs text-slate-300 overflow-y-auto leading-relaxed relative">
+                  <span className="text-xs text-slate-400 font-bold flex items-center gap-1.5"><TerminalIcon className="w-4 h-4 text-indigo-400" /> ผลการทำงานจำลอง (Simulated Terminal Output):</span>
+                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 h-28 font-mono text-xs text-slate-300 overflow-y-auto leading-relaxed relative">
                     <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-indigo-500 animate-ping"></div>
                     {terminalLog ? (
                       <div className="whitespace-pre-wrap">{terminalLog}</div>
                     ) : (
-                      <span className="text-slate-650">กดปุ่ม 'ทดลองรันโค้ด' ด้านบน เพื่อวิเคราะห์เอาต์พุตจำลอง</span>
+                      <span className="text-slate-600">กดปุ่ม 'ทดลองรันโค้ด' ด้านบน เพื่อวิเคราะห์เอาต์พุตจำลอง</span>
                     )}
                   </div>
                 </div>
@@ -585,10 +585,10 @@ export default function pyUnit2_8_FlowchartSymbols() {
             </div>
 
             {/* Scoreboard and Control Row */}
-            <div className="bg-slate-950 border border-slate-805 rounded-2xl p-4 mb-6 flex items-center justify-between flex-wrap gap-4 relative z-10">
+            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-4 mb-6 flex items-center justify-between flex-wrap gap-4 relative z-10">
               <div className="flex items-center gap-4 text-xs">
                 <span>ความก้าวหน้าการประกอบ: <strong className="text-indigo-400 font-mono text-sm">{gameNodes.filter(n => n.currentShape !== null).length} / {gameNodes.length}</strong></span>
-                <div className="w-32 bg-slate-850 h-2 rounded-full overflow-hidden flex">
+                <div className="w-32 bg-slate-800 h-2 rounded-full overflow-hidden flex">
                   <div 
                     className="h-full bg-indigo-500 transition-all duration-500" 
                     style={{ width: `${(gameNodes.filter(n => n.currentShape !== null).length / gameNodes.length) * 100}%` }}
@@ -605,7 +605,7 @@ export default function pyUnit2_8_FlowchartSymbols() {
                 )}
                 <button
                   onClick={handleResetGame}
-                  className="bg-slate-800 hover:bg-slate-750 text-slate-200 font-bold px-4 py-2 rounded-lg text-2xs transition-all active:scale-95 cursor-pointer border border-slate-700 flex items-center gap-1"
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-4 py-2 rounded-lg text-2xs transition-all active:scale-95 cursor-pointer border border-slate-700 flex items-center gap-1"
                 >
                   <RotateCcw className="w-3.5 h-3.5" /> เริ่มใหม่
                 </button>
@@ -647,7 +647,7 @@ export default function pyUnit2_8_FlowchartSymbols() {
                                 ? isCorrect 
                                   ? 'border-emerald-500 bg-emerald-950/10' 
                                   : 'border-rose-500 bg-rose-950/10'
-                                : 'border-slate-800 bg-slate-900/60 hover:bg-slate-850 hover:border-slate-750'
+                                : 'border-slate-800 bg-slate-900/60 hover:bg-slate-800 hover:border-slate-700'
                           } ${simStep === index ? 'ring-4 ring-indigo-500/40 bg-indigo-500/10 scale-[1.03] shadow-[0_0_20px_rgba(99,102,241,0.4)]' : ''}`}
                         >
                           <div className="space-y-0.5">
@@ -683,18 +683,18 @@ export default function pyUnit2_8_FlowchartSymbols() {
               <div className="lg:col-span-5 flex flex-col justify-between">
                 
                 {/* Node Shape Palette */}
-                <div className="bg-slate-950/80 border border-slate-850 rounded-3xl p-6 flex-1 flex flex-col justify-center min-h-[300px]">
+                <div className="bg-slate-950/80 border border-slate-800 rounded-3xl p-6 flex-1 flex flex-col justify-center min-h-[300px]">
                   
                   {selectedGameNode !== null ? (
                     <div className="space-y-5 text-left">
-                      <div className="border-b border-slate-850 pb-3 flex items-center justify-between">
+                      <div className="border-b border-slate-800 pb-3 flex items-center justify-between">
                         <span className="text-xs text-indigo-400 font-bold uppercase tracking-wider block">CHOOSE MATCHING ANSI SHAPE</span>
                         <span className="text-[10px] text-slate-500 font-bold">ขั้นตอนที่ {selectedGameNode}</span>
                       </div>
                       
-                      <div className="space-y-1.5 p-3.5 bg-slate-900/80 rounded-xl border border-slate-850">
+                      <div className="space-y-1.5 p-3.5 bg-slate-900/80 rounded-xl border border-slate-800">
                         <span className="text-[10px] text-indigo-300 font-bold block flex items-center gap-1"><Info className="w-3.5 h-3.5" /> คำใบ้คำอธิบายงาน:</span>
-                        <p className="text-xs text-slate-355 leading-relaxed font-medium">
+                        <p className="text-xs text-slate-300 leading-relaxed font-medium">
                           {gameNodes.find(n => n.id === selectedGameNode)?.hint}
                         </p>
                       </div>
@@ -750,7 +750,7 @@ export default function pyUnit2_8_FlowchartSymbols() {
                             <button
                               onClick={handleStartSimulation}
                               disabled={simRunning}
-                              className="w-full bg-indigo-600 hover:bg-indigo-550 disabled:bg-slate-800 disabled:text-slate-500 text-white font-bold py-2.5 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-650/20 text-xs flex items-center justify-center gap-1.5 hover:scale-[1.02] cursor-pointer"
+                              className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 disabled:text-slate-500 text-white font-bold py-2.5 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-600/20 text-xs flex items-center justify-center gap-1.5 hover:scale-[1.02] cursor-pointer"
                             >
                               <Play className="w-4 h-4" /> เริ่มต้นคำนวณรันโปรแกรม
                             </button>
@@ -758,12 +758,12 @@ export default function pyUnit2_8_FlowchartSymbols() {
                         </div>
                       ) : (
                         <div className="space-y-4">
-                          <div className="w-14 h-14 bg-slate-900 border border-slate-850 rounded-full flex items-center justify-center mx-auto text-slate-650">
+                          <div className="w-14 h-14 bg-slate-900 border border-slate-800 rounded-full flex items-center justify-center mx-auto text-slate-600">
                             <HelpCircle className="w-7 h-7" />
                           </div>
                           
                           <div className="space-y-1">
-                            <h5 className="text-sm font-bold text-slate-350">หน้าต่างควบคุมประกอบชิ้นงาน</h5>
+                            <h5 className="text-sm font-bold text-slate-300">หน้าต่างควบคุมประกอบชิ้นงาน</h5>
                             <p className="text-xs text-slate-500 max-w-xs mx-auto leading-relaxed">
                               กรุณาคลิกเลือกบล็อกการทำงาน (Node) ทางด้านซ้าย 
                               จากนั้นเลือกรูปทรง ANSI ที่ถูกต้องจากรายการที่จะปรากฏขึ้น
@@ -779,7 +779,7 @@ export default function pyUnit2_8_FlowchartSymbols() {
 
                 {/* Simulation Output Logger */}
                 {simLog.length > 0 && (
-                  <div className="mt-4 p-4 rounded-2xl bg-slate-950 border border-slate-850 text-left font-mono text-2xs text-slate-300 h-32 overflow-y-auto leading-relaxed relative">
+                  <div className="mt-4 p-4 rounded-2xl bg-slate-950 border border-slate-800 text-left font-mono text-2xs text-slate-300 h-32 overflow-y-auto leading-relaxed relative">
                     <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-indigo-500 animate-ping"></div>
                     <span className="text-[10px] text-indigo-400 font-bold block mb-1 font-sans">CONSOLE LOGGER OUTPUT:</span>
                     {simLog.map((log, idx) => (
@@ -813,7 +813,7 @@ export default function pyUnit2_8_FlowchartSymbols() {
             {/* Left: draw.io introduction text */}
             <div className="xl:w-2/5 space-y-6 flex flex-col justify-between">
               <div className="space-y-4">
-                <p className="text-slate-650 leading-relaxed text-sm md:text-base">
+                <p className="text-slate-600 leading-relaxed text-sm md:text-base">
                   ในโลกการพัฒนาซอฟต์แวร์ระดับอาชีพ การเขียนผังงานจะเขียนผ่านเว็บบราวเซอร์ระดับโลกอย่าง **draw.io (หรือ app.diagrams.net)** 
                   ซึ่งเป็นโปรแกรมเวกเตอร์ฟรีที่มีไลบรารีสัญญลักษณ์ ANSI มาตรฐานครบถ้วน 
                   มีระบบลูกศรอัจฉริยะ (Smart Connector) ที่จะลากเชื่อมต่อได้ลื่นไหล ไม่หลุดจากขอบทรงแม้จะเคลื่อนย้ายวัตถุ
@@ -843,27 +843,27 @@ export default function pyUnit2_8_FlowchartSymbols() {
                 href="https://app.diagrams.net"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-550 hover:to-indigo-550 active:scale-[0.98] text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-cyan-600/20 text-sm w-full cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 active:scale-[0.98] text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-cyan-600/20 text-sm w-full cursor-pointer"
               >
                 เข้าสู่เว็บไซต์หลัก draw.io <ExternalLink className="w-4.5 h-4.5" />
               </a>
             </div>
 
             {/* Right: draw.io Sandbox drag-and-drop builder */}
-            <div className="xl:w-3/5 bg-slate-950 rounded-3xl p-6 border border-slate-850 shadow-inner text-white flex flex-col justify-between min-h-[420px] relative overflow-hidden">
+            <div className="xl:w-3/5 bg-slate-950 rounded-3xl p-6 border border-slate-800 shadow-inner text-white flex flex-col justify-between min-h-[420px] relative overflow-hidden">
               
-              <div className="flex items-center justify-between border-b border-slate-850 pb-4 mb-4">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
                 <div>
                   <h5 className="text-sm font-bold text-white flex items-center gap-2">
                     <Monitor className="w-4.5 h-4.5 text-cyan-400" />
                      draw.io Sandbox Simulator (จำลองการทำงาน)
                   </h5>
-                  <p className="text-2xs text-slate-550 mt-0.5">ลากรูปทรงจาก แผงด้านซ้าย มาวางที่ บอร์ดทางขวา เพื่อจัดรูปแบบ</p>
+                  <p className="text-2xs text-slate-500 mt-0.5">ลากรูปทรงจาก แผงด้านซ้าย มาวางที่ บอร์ดทางขวา เพื่อจัดรูปแบบ</p>
                 </div>
                 
                 <button
                   onClick={clearDrawio}
-                  className="bg-slate-900 hover:bg-slate-800 text-slate-350 border border-slate-800 font-bold px-3 py-1.5 rounded-lg text-2xs transition-all cursor-pointer"
+                  className="bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 font-bold px-3 py-1.5 rounded-lg text-2xs transition-all cursor-pointer"
                 >
                   เคลียร์บอร์ด
                 </button>
@@ -872,7 +872,7 @@ export default function pyUnit2_8_FlowchartSymbols() {
               <div className="flex flex-1 gap-4 items-stretch min-h-[280px]">
                 
                 {/* Left side: shapes panel list */}
-                <div className="w-1/4 bg-slate-900 border border-slate-850 rounded-2xl p-3 flex flex-col gap-3 justify-center select-none shrink-0 overflow-y-auto">
+                <div className="w-1/4 bg-slate-900 border border-slate-800 rounded-2xl p-3 flex flex-col gap-3 justify-center select-none shrink-0 overflow-y-auto">
                   <span className="text-[9px] text-slate-500 font-bold text-center block uppercase tracking-wider">Shapes Palette</span>
                   
                   {Object.keys(shapeDatabase).map(key => (
@@ -880,7 +880,7 @@ export default function pyUnit2_8_FlowchartSymbols() {
                       key={key}
                       draggable
                       onDragStart={() => handleDragStart(key)}
-                      className="bg-slate-950 hover:bg-slate-850 border border-slate-800 rounded-xl p-2 text-center cursor-grab active:cursor-grabbing hover:border-cyan-500 transition-colors shrink-0"
+                      className="bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl p-2 text-center cursor-grab active:cursor-grabbing hover:border-cyan-500 transition-colors shrink-0"
                     >
                       <span className="text-[9px] font-bold font-mono text-cyan-400 block tracking-wide truncate">{key.toUpperCase()}</span>
                     </div>
@@ -927,7 +927,7 @@ export default function pyUnit2_8_FlowchartSymbols() {
               </div>
 
               {/* Status bar */}
-              <div className="mt-4 p-3 bg-slate-950 border border-slate-850 rounded-xl text-left text-2xs text-slate-400 font-mono flex items-center gap-2">
+              <div className="mt-4 p-3 bg-slate-950 border border-slate-800 rounded-xl text-left text-2xs text-slate-400 font-mono flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 shrink-0"></span>
                 <span>{drawioLog}</span>
               </div>

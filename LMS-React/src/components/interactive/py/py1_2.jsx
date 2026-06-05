@@ -615,7 +615,7 @@ export default function py1_2() {
                 </div>
               </div>
 
-              <div className="w-full bg-slate-950 border border-slate-850 p-3 rounded-xl min-h-[60px] font-mono text-[12px] text-slate-400 text-center flex items-center justify-center">
+              <div className="w-full bg-slate-950 border border-slate-800 p-3 rounded-xl min-h-[60px] font-mono text-[12px] text-slate-400 text-center flex items-center justify-center">
                 {c4ActiveNode === 'n1' && 'ตรรกะใบหน้าผ่าน: Inference Engine ตรวจสอบความถูกต้องภาพถ่ายสำเร็จ'}
                 {c4ActiveNode === 'n2' && 'ตรรกะเสียงผ่าน: ระบบแปลคลื่นความถี่คล้ายความหมายของมนุษย์สำเร็จ'}
                 {!c4ActiveNode && '[ คลิกเลือก Input Node ด้านซ้ายเพื่อวิเคราะห์การไหล ]'}

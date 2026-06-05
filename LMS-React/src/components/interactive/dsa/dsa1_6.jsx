@@ -157,7 +157,7 @@ export default function DSA1_6() {
                   <Clock className="w-4 h-4 text-violet-600 animate-pulse" />
                   ความซับซ้อนทางเวลา (Time Complexity)
                 </h4>
-                <p className="text-[13.5px] text-slate-650 leading-relaxed">
+                <p className="text-[13.5px] text-slate-600 leading-relaxed">
                   สัดส่วนและอัตราจำนวนรอบการทำงานคอมพิวเตอร์พื้นฐาน (Primitive Operations) ที่ซีพียูต้องประมวลผล 
                   โดยจะเพิ่มขึ้นหรือลดลงแปรผันตามขนาดของข้อมูลอินพุต ($n$) เสมอ
                 </p>
@@ -168,7 +168,7 @@ export default function DSA1_6() {
                   <Database className="w-4 h-4 text-cyan-600 animate-pulse" />
                   ความซับซ้อนทางพื้นที่ (Space Complexity)
                 </h4>
-                <p className="text-[13.5px] text-slate-650 leading-relaxed">
+                <p className="text-[13.5px] text-slate-600 leading-relaxed">
                   สัดส่วนพื้นที่หน่วยความจำชั่วคราว (RAM Memory) ที่อัลกอริทึมต้องการเพิ่มขึ้นมาในระหว่างการรันโค้ด 
                   ไม่นับรวมพื้นที่ขนาดของอาเรย์หรือข้อมูลนำเข้าเริ่มแรกของระบบ
                 </p>
@@ -293,7 +293,7 @@ export default function DSA1_6() {
                       onChange={e => handleSliderChange(parseInt(e.target.value))}
                       className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-violet-500"
                     />
-                    <div className="flex justify-between items-center text-xs font-mono font-bold text-white bg-slate-950 p-2.5 rounded-lg border border-slate-850">
+                    <div className="flex justify-between items-center text-xs font-mono font-bold text-white bg-slate-950 p-2.5 rounded-lg border border-slate-800">
                       <span className="text-slate-400">ขนาดข้อมูล N (Data Size):</span>
                       <span className="text-violet-400 text-sm tracking-wider">{dataSize.toLocaleString()}</span>
                     </div>
@@ -309,7 +309,7 @@ export default function DSA1_6() {
                         { id: 'o1', label: '🟢 O(1) - Constant', color: 'border-emerald-500 text-emerald-400' },
                         { id: 'ologn', label: '🔵 O(log n) - Logarithmic', color: 'border-cyan-500 text-cyan-400' },
                         { id: 'on', label: '🟡 O(n) - Linear', color: 'border-amber-500 text-amber-400' },
-                        { id: 'on2', label: '🟠 O(n²) - Quadratic', color: 'border-rose-500 text-rose-450' }
+                        { id: 'on2', label: '🟠 O(n²) - Quadratic', color: 'border-rose-500 text-rose-400' }
                       ].map(line => (
                         <button
                           key={line.id}
@@ -317,7 +317,7 @@ export default function DSA1_6() {
                           className={`p-2.5 rounded-xl border text-[11px] font-bold transition-all text-left cursor-pointer ${
                             enabledLines[line.id]
                               ? `bg-slate-800/80 ${line.color} shadow shadow-slate-900`
-                              : 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-350'
+                              : 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300'
                           }`}
                         >
                           {line.label}
@@ -327,7 +327,7 @@ export default function DSA1_6() {
                   </div>
 
                   {/* Dynamic Code Viewer Selector */}
-                  <div className="space-y-2 pt-1 border-t border-slate-850">
+                  <div className="space-y-2 pt-1 border-t border-slate-800">
                     <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block">
                       3. ดูรหัสคำสั่งขั้นตอนวิธีเปรียบเทียบ (Code Outline):
                     </span>
@@ -338,7 +338,7 @@ export default function DSA1_6() {
                           onClick={() => setActiveCodeView(opt)}
                           className={`px-2.5 py-1 rounded text-[10px] font-bold font-mono transition-all uppercase cursor-pointer ${
                             activeCodeView === opt
-                              ? 'bg-violet-600 text-white shadow shadow-violet-650/40'
+                              ? 'bg-violet-600 text-white shadow shadow-violet-600/40'
                               : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
                           }`}
                         >
@@ -348,7 +348,7 @@ export default function DSA1_6() {
                     </div>
 
                     {/* pre element */}
-                    <div className="bg-slate-950 p-3 rounded-lg border border-slate-850 text-[11px] text-emerald-350 font-mono overflow-x-auto min-h-[96px]">
+                    <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-[11px] text-emerald-300 font-mono overflow-x-auto min-h-[96px]">
                       {activeCodeView === 'o1' && (
                         <pre>{`# O(1) Constant (เข้าถึงทันที)
 def get_element(arr, index):
@@ -378,7 +378,7 @@ def print_pairs(arr):
                 </div>
 
                 {/* Status Bar */}
-                <div className="mt-4 pt-3 border-t border-slate-850 text-[10.5px] font-mono text-emerald-400 bg-black/30 p-2 rounded-lg border border-slate-850">
+                <div className="mt-4 pt-3 border-t border-slate-800 text-[10.5px] font-mono text-emerald-400 bg-black/30 p-2 rounded-lg border border-slate-800">
                   <span className="text-zinc-500 block text-[8px] uppercase tracking-wider mb-0.5">Terminal Log Output:</span>
                   {statusMsg}
                 </div>
@@ -392,7 +392,7 @@ def print_pairs(arr):
 
                 <div className="grow flex flex-col justify-center items-center mt-6">
                   {/* Graph Canvas SVG */}
-                  <div className="w-full max-w-sm h-[220px] bg-slate-900/40 border border-slate-850 rounded-xl relative overflow-hidden flex items-center justify-center p-3 shadow-inner">
+                  <div className="w-full max-w-sm h-[220px] bg-slate-900/40 border border-slate-800 rounded-xl relative overflow-hidden flex items-center justify-center p-3 shadow-inner">
                     <svg className="w-full h-full" viewBox="0 0 380 240">
                       {/* Grid lines */}
                       <g stroke="#1e293b" strokeWidth="1">
@@ -460,7 +460,7 @@ def print_pairs(arr):
                 </div>
 
                 {/* Micro-Time Estimation Table */}
-                <div className="mt-4 bg-slate-900 border border-slate-850 p-4 rounded-xl">
+                <div className="mt-4 bg-slate-900 border border-slate-800 p-4 rounded-xl">
                   <div className="text-[10px] font-mono text-slate-500 uppercase block mb-2">
                     ตารางคาดการณ์ระยะเวลาคำนวณจริง (Estimated Time @ 1µs per step):
                   </div>
@@ -468,7 +468,7 @@ def print_pairs(arr):
                   <div className="space-y-2.5 font-mono text-xs">
                     {/* O1 Row */}
                     {enabledLines.o1 && (
-                      <div className="flex justify-between items-center border-b border-slate-850 pb-2">
+                      <div className="flex justify-between items-center border-b border-slate-800 pb-2">
                         <span className="text-emerald-400 font-bold shrink-0">O(1) Constant:</span>
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] text-slate-500 hidden md:inline">1 ขั้นตอนเสถียร</span>
@@ -479,7 +479,7 @@ def print_pairs(arr):
 
                     {/* Ologn Row */}
                     {enabledLines.ologn && (
-                      <div className="flex justify-between items-center border-b border-slate-850 pb-2">
+                      <div className="flex justify-between items-center border-b border-slate-800 pb-2">
                         <span className="text-cyan-400 font-bold shrink-0">O(log n) Logarithmic:</span>
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] text-slate-500 hidden md:inline">{getOLognSteps(dataSize)} ขั้นตอน</span>
@@ -490,7 +490,7 @@ def print_pairs(arr):
 
                     {/* On Row */}
                     {enabledLines.on && (
-                      <div className="flex justify-between items-center border-b border-slate-850 pb-2">
+                      <div className="flex justify-between items-center border-b border-slate-800 pb-2">
                         <span className="text-amber-400 font-bold shrink-0">O(n) Linear:</span>
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] text-slate-500 hidden md:inline">{dataSize.toLocaleString()} ขั้นตอน</span>

@@ -301,7 +301,7 @@ export default function py1_3() {
                     className={`p-3 rounded-lg border leading-relaxed transition-all relative overflow-hidden
                       ${interActiveLine === idx 
                         ? 'bg-emerald-950/40 border-emerald-500 text-emerald-300 scale-[1.01]' 
-                        : 'bg-slate-800/40 border-slate-750 text-slate-400 opacity-60'
+                        : 'bg-slate-800/40 border-slate-700 text-slate-400 opacity-60'
                       }`}
                   >
                     {/* Laser scanning line effect overlay */}
@@ -334,7 +334,7 @@ export default function py1_3() {
               </div>
 
               {/* Terminal Logs Output */}
-              <div className="mt-4 p-3 bg-slate-950 border border-slate-850 rounded-xl min-h-[90px] font-mono text-[12px] text-slate-400">
+              <div className="mt-4 p-3 bg-slate-950 border border-slate-800 rounded-xl min-h-[90px] font-mono text-[12px] text-slate-400">
                 <div className="text-zinc-600 mb-1.5 flex justify-between items-center">
                   <span>// Python Console Output Screen:</span>
                   {interActiveLine === pythonLines.length - 1 && (
@@ -428,7 +428,7 @@ export default function py1_3() {
               </div>
 
               {/* Output log console */}
-              <div className="bg-slate-950 rounded-xl p-4 border border-slate-850 min-h-[100px] font-mono text-[12px]">
+              <div className="bg-slate-950 rounded-xl p-4 border border-slate-800 min-h-[100px] font-mono text-[12px]">
                 <div className="text-zinc-600 mb-2">// GCC compiler trace logs:</div>
                 {compileLogs.length === 0 && <p className="text-zinc-600 italic">สเตตัสบอร์ด: Ready to Compile.</p>}
                 

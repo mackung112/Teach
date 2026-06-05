@@ -133,7 +133,7 @@ export default function DSA1_7() {
             </h3>
           </div>
 
-          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
             ภาษา Python โดดเด่นด้านความเรียบง่ายและยืดหยุ่นในการเขียนคำสั่ง แต่ในมุมมองของโครงสร้างข้อมูล 
             เราต้องเข้าใจพฤติกรรมในหน่วยความจำระดับลึก เช่น กลไกการอ้างอิงวัตถุ (Reference) ของตัวแปร 
             และโครงสร้างควบคุมที่ส่งผลโดยตรงต่อการเขียนโปรแกรมเชิงวัตถุ (OOP) เพื่อปูพื้นฐานสู่การสร้างโครงสร้างแบบเชื่อมโยง
@@ -144,7 +144,7 @@ export default function DSA1_7() {
         <section className="space-y-10">
           
           {/* Subtopic 1 */}
-          <div className="bg-white/50 backdrop-blur-md border border-slate-250/60 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all">
+          <div className="bg-white/50 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all">
             <h4 className="text-xl font-bold text-slate-900 flex items-center gap-3">
               <span className="w-8 h-8 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-sm">
                 A
@@ -179,7 +179,7 @@ export default function DSA1_7() {
           </div>
 
           {/* Subtopic 2 */}
-          <div className="bg-white/50 backdrop-blur-md border border-slate-250/60 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all">
+          <div className="bg-white/50 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all">
             <h4 className="text-xl font-bold text-slate-900 flex items-center gap-3">
               <span className="w-8 h-8 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-sm">
                 B
@@ -196,9 +196,9 @@ export default function DSA1_7() {
                 ซึ่งส่งผลอย่างลึกซึ้งต่อการปรับปรุงโครงสร้างข้อมูล:
               </p>
 
-              <div className="bg-amber-50/60 backdrop-blur-md border border-amber-250/60 rounded-2xl p-5 border-l-[4px] border-l-amber-500 leading-relaxed">
+              <div className="bg-amber-50/60 backdrop-blur-md border border-amber-200/60 rounded-2xl p-5 border-l-[4px] border-l-amber-500 leading-relaxed">
                 <h5 className="font-bold text-amber-900 text-sm mb-1">Mutable vs Immutable Behavior</h5>
-                <p className="text-[13px] text-amber-850">
+                <p className="text-[13px] text-amber-800">
                   วัตถุที่แก้ไขข้อมูลภายในไม่ได้ (Immutable) เช่น Integer, Tuple, String จะทำการก๊อปปี้แอดเดรสสร้างใหม่ทันทีเมื่อเกิดการคำนวณใหม่ 
                   ในทางกลับกัน วัตถุที่แก้ไขได้ (Mutable) เช่น List และ Dictionary จะอัปเดตสมาชิกภายในจุดเดิม ทำให้ทุกตัวแปรที่ชี้ไปที่เดียวกันเห็นการเปลี่ยนแปลงร่วมกันทันที
                 </p>
@@ -213,7 +213,7 @@ export default function DSA1_7() {
           </div>
 
           {/* Subtopic 3 */}
-          <div className="bg-white/50 backdrop-blur-md border border-slate-250/60 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all">
+          <div className="bg-white/50 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all">
             <h4 className="text-xl font-bold text-slate-900 flex items-center gap-3">
               <span className="w-8 h-8 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-sm">
                 C
@@ -262,7 +262,7 @@ export default function DSA1_7() {
             </h3>
           </div>
 
-          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
             เลือกด่านจำลองเหตุการณ์ในกล่องควบคุมด้านล่าง เพื่อเปิดใช้งานตัวถอดรหัสทีละบรรทัด (Step-by-step Execution Engine) 
             และสังเกตความแตกต่างเมื่อตัวแปรชี้วัตถุในแรม Stack vs Heap พร้อมลูกศรอ้างอิงที่วิ่งเข้าแกนกึ่งกลางอย่างเป็นระบบ:
           </p>
@@ -292,7 +292,7 @@ export default function DSA1_7() {
                     <div className="flex flex-col gap-2">
                       {[
                         { id: 'case1', label: '🔗 Variable References & Mutability', accent: 'border-orange-500/80 text-orange-400' },
-                        { id: 'case2', label: '⚠️ try-except Exception Handling', accent: 'border-rose-500/80 text-rose-450' },
+                        { id: 'case2', label: '⚠️ try-except Exception Handling', accent: 'border-rose-500/80 text-rose-400' },
                         { id: 'case3', label: '📦 OOP Node & Reference Linking', accent: 'border-indigo-500/80 text-indigo-400' }
                       ].map(item => (
                         <button
@@ -301,7 +301,7 @@ export default function DSA1_7() {
                           className={`p-2.5 rounded-xl border text-[11.5px] font-bold transition-all text-left cursor-pointer ${
                             activeCase === item.id
                               ? `bg-slate-800/90 ${item.accent} shadow shadow-slate-950`
-                              : 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-350'
+                              : 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300'
                           }`}
                         >
                           {item.label}
@@ -311,13 +311,13 @@ export default function DSA1_7() {
                   </div>
 
                   {/* Case description */}
-                  <div className="bg-slate-950/80 p-3.5 rounded-xl border border-slate-850 text-xs text-slate-400 leading-relaxed font-sans">
+                  <div className="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 text-xs text-slate-400 leading-relaxed font-sans">
                     <span className="text-[10px] font-mono font-bold text-slate-500 block mb-1 uppercase">เป้าหมายจำลอง:</span>
                     {currentCaseData.description}
                   </div>
 
                   {/* Execution Stepper Controls */}
-                  <div className="space-y-3.5 pt-1.5 border-t border-slate-850">
+                  <div className="space-y-3.5 pt-1.5 border-t border-slate-800">
                     <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block">
                       2. สเต็ปและเครื่องมือควบคุมประมวลผล:
                     </span>
@@ -328,7 +328,7 @@ export default function DSA1_7() {
                         disabled={currentStep >= currentCaseData.maxSteps}
                         className={`grow flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                           currentStep >= currentCaseData.maxSteps
-                            ? 'bg-slate-800 text-slate-500 border border-slate-850 cursor-not-allowed'
+                            ? 'bg-slate-800 text-slate-500 border border-slate-800 cursor-not-allowed'
                             : 'bg-orange-500 hover:bg-orange-600 text-white shadow shadow-orange-950/40'
                         }`}
                       >
@@ -345,7 +345,7 @@ export default function DSA1_7() {
                       </button>
                     </div>
 
-                    <div className="flex justify-between items-center text-xs font-mono font-bold text-white bg-slate-950 px-3 py-2 rounded-lg border border-slate-850">
+                    <div className="flex justify-between items-center text-xs font-mono font-bold text-white bg-slate-950 px-3 py-2 rounded-lg border border-slate-800">
                       <span className="text-slate-500">สเต็ปปัจจุบัน (Current Step):</span>
                       <span className="text-orange-400 tracking-wider">
                         {currentStep} / {currentCaseData.maxSteps}
@@ -354,17 +354,17 @@ export default function DSA1_7() {
                   </div>
 
                   {/* Code Line Highlight window */}
-                  <div className="space-y-2 pt-1 border-t border-slate-850">
+                  <div className="space-y-2 pt-1 border-t border-slate-800">
                     <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block">
                       3. ติดตามรหัสคำสั่งขั้นตอนการประมวลผล (Step Trace):
                     </span>
-                    <div className="bg-slate-950 p-3 rounded-xl border border-slate-850 text-xs font-mono overflow-x-auto min-h-[110px] space-y-1">
+                    <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs font-mono overflow-x-auto min-h-[110px] space-y-1">
                       {currentCaseData.stepsCode.map((line, idx) => (
                         <div
                           key={idx}
                           className={`px-2 py-0.5 rounded transition-all leading-normal ${
                             currentStep === idx
-                              ? 'bg-orange-550/20 border-l-[3px] border-l-orange-500 text-white font-bold'
+                              ? 'bg-orange-500/20 border-l-[3px] border-l-orange-500 text-white font-bold'
                               : 'text-zinc-500 opacity-60'
                           }`}
                         >
@@ -380,7 +380,7 @@ export default function DSA1_7() {
                 </div>
 
                 {/* Explanation text box */}
-                <div className="mt-4 pt-3 border-t border-slate-850 text-[11.5px] leading-relaxed text-emerald-450 bg-black/45 p-3 rounded-xl border border-slate-850 font-sans min-h-[75px]">
+                <div className="mt-4 pt-3 border-t border-slate-800 text-[11.5px] leading-relaxed text-emerald-400 bg-black/45 p-3 rounded-xl border border-slate-800 font-sans min-h-[75px]">
                   <span className="text-zinc-500 block text-[9px] font-mono uppercase tracking-wider mb-1 flex items-center gap-1.5">
                     <Terminal className="w-3 h-3 text-slate-500" />
                     การอธิบายเหตุการณ์ในคอมพิวเตอร์:
@@ -400,7 +400,7 @@ export default function DSA1_7() {
 
                 {/* Main Memory SVG canvas */}
                 <div className="grow flex items-center justify-center mt-6">
-                  <div className="w-full h-[320px] bg-slate-900/40 border border-slate-850 rounded-xl relative overflow-hidden flex items-center justify-center p-2 shadow-inner">
+                  <div className="w-full h-[320px] bg-slate-900/40 border border-slate-800 rounded-xl relative overflow-hidden flex items-center justify-center p-2 shadow-inner">
                     
                     <svg className="w-full h-full" viewBox="0 0 600 320">
                       
@@ -729,7 +729,7 @@ export default function DSA1_7() {
                 </div>
 
                 {/* Legend bar */}
-                <div className="mt-3 bg-slate-900 border border-slate-850 p-2.5 rounded-xl flex justify-around text-[10px] font-mono text-slate-500">
+                <div className="mt-3 bg-slate-900 border border-slate-800 p-2.5 rounded-xl flex justify-around text-[10px] font-mono text-slate-500">
                   <div className="flex items-center gap-1.5">
                     <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 block"></span>
                     <span>Stack References (ตัวแปร)</span>

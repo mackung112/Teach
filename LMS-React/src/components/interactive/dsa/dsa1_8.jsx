@@ -29,7 +29,7 @@ import {
 export default function DSA1_8() {
   // ─── Layer 1: Ambient Background Blobs (Indigo & Emerald Theme) ───────────
   const DSA1_8_BLOBS = [
-    { color: 'bg-emerald-250', size: 'w-[450px] h-[450px]', position: '-top-32 -left-32',   opacity: 'opacity-40' },
+    { color: 'bg-emerald-200', size: 'w-[450px] h-[450px]', position: '-top-32 -left-32',   opacity: 'opacity-40' },
     { color: 'bg-indigo-200',  size: 'w-[400px] h-[400px]', position: 'top-1/3 -right-32',  opacity: 'opacity-35' },
     { color: 'bg-cyan-200',    size: 'w-[380px] h-[380px]', position: '-bottom-32 left-1/4', opacity: 'opacity-30' },
     { color: 'bg-slate-200',   size: 'w-[300px] h-[300px]', position: 'top-1/2 left-2/3',    opacity: 'opacity-25' }
@@ -186,7 +186,7 @@ export default function DSA1_8() {
         {/* ─── Section 1: Introduction ─── */}
         <section className="space-y-6">
           <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-emerald-650 tracking-wider uppercase">
+            <span className="text-sm font-bold text-emerald-600 tracking-wider uppercase">
               โครงสร้างข้อมูลสำเร็จรูป / Python C-Level Types SOT
             </span>
             <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
@@ -194,7 +194,7 @@ export default function DSA1_8() {
             </h3>
           </div>
 
-          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
             ภาษา Python มาพร้อมกับโครงสร้างข้อมูลสำเร็จรูปที่ผ่านการปรับแต่งความเร็วสูงสุดในระดับภาษา C 
             การศึกษาความต่างของพฤติกรรมในหน่วยความจำ และความซับซ้อนของขั้นตอนวิธีเบื้องหลังตัวเก็บข้อมูลทั้ง 4 ตัว 
             (List, Tuple, Dictionary, Set) จะช่วยให้การพัฒนาซอฟต์แวร์ประมวลผลได้อย่างรวดเร็วและใช้แรมอย่างเหมาะสม
@@ -205,7 +205,7 @@ export default function DSA1_8() {
         <section className="space-y-10">
 
           {/* Subtopic 1 */}
-          <div className="bg-white/50 backdrop-blur-md border border-slate-250/60 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all">
+          <div className="bg-white/50 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all">
             <h4 className="text-xl font-bold text-slate-900 flex items-center gap-3">
               <span className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-sm">
                 A
@@ -247,7 +247,7 @@ export default function DSA1_8() {
           </div>
 
           {/* Subtopic 2 */}
-          <div className="bg-white/50 backdrop-blur-md border border-slate-250/60 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all">
+          <div className="bg-white/50 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all">
             <h4 className="text-xl font-bold text-slate-900 flex items-center gap-3">
               <span className="w-8 h-8 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-sm">
                 B
@@ -267,9 +267,9 @@ export default function DSA1_8() {
 
               <div className="bg-indigo-50/50 backdrop-blur-md border border-indigo-200/60 rounded-2xl p-5 border-l-[4px] border-l-indigo-500 leading-relaxed text-xs">
                 <h5 className="font-bold text-indigo-900 text-sm mb-1.5 flex items-center gap-2">
-                  <span className="px-1.5 py-0.5 rounded bg-indigo-150 text-[10px] uppercase font-mono font-extrabold text-indigo-700 border border-indigo-200">ข้อจำกัดและขีดความสามารถทางแรม</span>
+                  <span className="px-1.5 py-0.5 rounded bg-indigo-100 text-[10px] uppercase font-mono font-extrabold text-indigo-700 border border-indigo-200">ข้อจำกัดและขีดความสามารถทางแรม</span>
                 </h5>
-                <p className="text-[13px] text-slate-650 mb-2 leading-relaxed">
+                <p className="text-[13px] text-slate-600 mb-2 leading-relaxed">
                   เนื่องจาก Tuple ห้ามแทรก เพิ่ม หรือลบข้อมูลใดๆ สถาปัตยกรรม Python จึงจัดสรรแรมให้เท่ากับขนาดที่ต้องการพอดีโดยปราศจาก "หน่วยความจำเผื่อขยายขนาด (No Memory Allocation Overhead)" ส่งผลให้ Tuple ใช้ทรัพยากรแรมน้อยกว่า List และทำงานในลูปประมวลผลได้รวดเร็วกว่า
                 </p>
                 <p className="text-[12.5px] text-slate-500 italic">
@@ -280,7 +280,7 @@ export default function DSA1_8() {
           </div>
 
           {/* Subtopic 3 */}
-          <div className="bg-white/50 backdrop-blur-md border border-slate-250/60 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all">
+          <div className="bg-white/50 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all">
             <h4 className="text-xl font-bold text-slate-900 flex items-center gap-3">
               <span className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-sm">
                 C
@@ -317,7 +317,7 @@ export default function DSA1_8() {
           </div>
 
           {/* Subtopic 4 */}
-          <div className="bg-white/50 backdrop-blur-md border border-slate-250/60 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all">
+          <div className="bg-white/50 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all">
             <h4 className="text-xl font-bold text-slate-900 flex items-center gap-3">
               <span className="w-8 h-8 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-sm">
                 D
@@ -325,9 +325,9 @@ export default function DSA1_8() {
               Set และทฤษฎีเซต (Set and Set Theory)
             </h4>
 
-            <div className="space-y-3.5 text-zinc-650 text-[15px] leading-relaxed">
+            <div className="space-y-3.5 text-zinc-600 text-[15px] leading-relaxed">
               <p>
-                <code className="text-indigo-750">Set</code> เป็นโครงสร้างข้อมูลที่ไม่สนใจอันดับก่อนหลัง (Unordered) 
+                <code className="text-indigo-700">Set</code> เป็นโครงสร้างข้อมูลที่ไม่สนใจอันดับก่อนหลัง (Unordered) 
                 และมีกฎเหล็กที่สำคัญคือ **"ห้ามมีสมาชิกข้อมูลซ้ำกันเด็ดขาด (Unique Elements Only)"** 
                 เบื้องหลังการทำงานอาศัยกลไก Hash Table เช่นเดียวกับ Dictionary ส่งผลให้สามารถระบุคีย์ตรวจสอบค่าได้ทันที
               </p>
@@ -357,7 +357,7 @@ export default function DSA1_8() {
         {/* ─── Section 3: PyDataTypes-Sim (Interactive Simulation Sandbox) ─── */}
         <section className="space-y-6">
           <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-emerald-650 tracking-wider uppercase">
+            <span className="text-sm font-bold text-emerald-600 tracking-wider uppercase">
               เปรียบเทียบกลไกประสิทธิภาพเชิงประจักษ์ / PyDataTypes-Sim
             </span>
             <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
@@ -365,7 +365,7 @@ export default function DSA1_8() {
             </h3>
           </div>
 
-          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
             ทดลองสลับโหมดการจำลองระหว่าง **การจัดเรียงแรม (Memory Layout)** เพื่อวิเคราะห์สายท่อ Hashing 
             และ **การวิเคราะห์การค้นหาความเร็วสูง (Speed Sandbox)** เพื่อประจักษ์ความต่างของอัลกอริทึมเวลาบิ๊กโอในภาษา Python:
           </p>
@@ -373,9 +373,9 @@ export default function DSA1_8() {
           <SimulatorShell
             dark
             title="Python Built-in Types Architecture Sandbox"
-            icon={<Network className="w-8 h-8 text-emerald-450 animate-pulse" />}
+            icon={<Network className="w-8 h-8 text-emerald-400 animate-pulse" />}
             glowColors="from-slate-800/40 to-slate-950/15"
-            iconColor="text-emerald-450"
+            iconColor="text-emerald-400"
           >
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mt-4">
               
@@ -398,7 +398,7 @@ export default function DSA1_8() {
                         className={`py-2 rounded-xl border text-[11px] font-mono font-bold transition-all cursor-pointer text-center ${
                           simMode === 'memory'
                             ? 'bg-slate-800 text-emerald-400 border-emerald-500/80 shadow'
-                            : 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-350'
+                            : 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300'
                         }`}
                       >
                         Memory & Hashing (แรม)
@@ -408,7 +408,7 @@ export default function DSA1_8() {
                         className={`py-2 rounded-xl border text-[11px] font-mono font-bold transition-all cursor-pointer text-center ${
                           simMode === 'speed'
                             ? 'bg-slate-800 text-cyan-400 border-cyan-500/80 shadow'
-                            : 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-350'
+                            : 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300'
                         }`}
                       >
                         Speed Competition (ความเร็ว)
@@ -436,8 +436,8 @@ export default function DSA1_8() {
                               onClick={() => { setSelectedType(t.id); setErrorFeedback(''); setHashFlow(null); setIsDuplicateSet(false); }}
                               className={`py-1.5 rounded-lg border font-bold transition-all cursor-pointer text-center ${
                                 selectedType === t.id
-                                  ? 'bg-slate-800 text-emerald-450 border-emerald-500/70 shadow'
-                                  : 'bg-slate-950 border-slate-900 text-slate-500 hover:text-slate-350'
+                                  ? 'bg-slate-800 text-emerald-400 border-emerald-500/70 shadow'
+                                  : 'bg-slate-950 border-slate-900 text-slate-500 hover:text-slate-300'
                               }`}
                             >
                               {t.label}
@@ -447,7 +447,7 @@ export default function DSA1_8() {
                       </div>
 
                       {/* Insertion Panel */}
-                      <form onSubmit={handleInsert} className="space-y-3 pt-2 border-t border-slate-850">
+                      <form onSubmit={handleInsert} className="space-y-3 pt-2 border-t border-slate-800">
                         <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block">
                           3. ป้อนและจำลองข้อมูลเข้า (Insert Simulation):
                         </span>
@@ -458,7 +458,7 @@ export default function DSA1_8() {
                             placeholder={selectedType === 'dict' ? 'กรอก Key (เช่น Name)' : 'กรอกข้อความทั่วไป'}
                             value={dataInput}
                             onChange={e => setDataInput(e.target.value)}
-                            className="grow bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-emerald-500"
+                            className="grow bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-emerald-500"
                           />
 
                           {selectedType === 'dict' && (
@@ -467,7 +467,7 @@ export default function DSA1_8() {
                               placeholder="Value"
                               value={dictValueInput}
                               onChange={e => setDictValueInput(e.target.value)}
-                              className="w-1/3 bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-emerald-500"
+                              className="w-1/3 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-emerald-500"
                             />
                           )}
 
@@ -482,7 +482,7 @@ export default function DSA1_8() {
 
                         {errorFeedback && (
                           <div className="p-2.5 rounded-xl bg-rose-950/40 border border-rose-900/60 text-xs font-sans text-rose-400 flex items-center gap-2">
-                            <AlertTriangle className="w-4 h-4 shrink-0 text-rose-450 animate-pulse" />
+                            <AlertTriangle className="w-4 h-4 shrink-0 text-rose-400 animate-pulse" />
                             <span>{errorFeedback}</span>
                           </div>
                         )}
@@ -491,7 +491,7 @@ export default function DSA1_8() {
                           <button
                             type="button"
                             onClick={handleResetData}
-                            className="text-[10px] font-mono text-slate-500 hover:text-slate-350 cursor-pointer flex items-center gap-1"
+                            className="text-[10px] font-mono text-slate-500 hover:text-slate-300 cursor-pointer flex items-center gap-1"
                           >
                             <RotateCcw className="w-3 h-3" />
                             รีเซ็ตหน่วยความจำจำลอง
@@ -519,11 +519,11 @@ export default function DSA1_8() {
                           />
                         </div>
 
-                        <div className="space-y-2 pt-2 border-t border-slate-850">
+                        <div className="space-y-2 pt-2 border-t border-slate-800">
                           <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block">
                             3. ค้นหาคำศัพท์ท้ายข้อมูลระบบ:
                           </span>
-                          <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-850 font-mono text-xs space-y-2">
+                          <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 font-mono text-xs space-y-2">
                             <div className="flex justify-between items-center text-zinc-500">
                               <span>เป้าหมายการค้นหา:</span>
                               <span className="text-white font-bold">"{searchTarget}"</span>
@@ -539,7 +539,7 @@ export default function DSA1_8() {
                           disabled={runCompetition}
                           className={`w-full py-2.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
                             runCompetition
-                              ? 'bg-slate-800 text-slate-500 border border-slate-850 cursor-not-allowed'
+                              ? 'bg-slate-800 text-slate-500 border border-slate-800 cursor-not-allowed'
                               : 'bg-cyan-500 hover:bg-cyan-600 text-cyan-950 shadow shadow-cyan-950/40'
                           }`}
                         >
@@ -552,7 +552,7 @@ export default function DSA1_8() {
                 </div>
 
                 {/* Live Feedback Log */}
-                <div className="mt-4 pt-3 border-t border-slate-850 text-[11.5px] leading-relaxed text-emerald-450 bg-black/45 p-3 rounded-xl border border-slate-850 font-sans min-h-[75px]">
+                <div className="mt-4 pt-3 border-t border-slate-800 text-[11.5px] leading-relaxed text-emerald-400 bg-black/45 p-3 rounded-xl border border-slate-800 font-sans min-h-[75px]">
                   <span className="text-zinc-500 block text-[9px] font-mono uppercase tracking-wider mb-1 flex items-center gap-1.5">
                     <Terminal className="w-3 h-3 text-slate-500" />
                     Terminal Log Output:
@@ -572,7 +572,7 @@ export default function DSA1_8() {
 
                 {/* Visual rendering canvas area */}
                 <div className="grow flex items-center justify-center mt-6">
-                  <div className="w-full h-[320px] bg-slate-900/40 border border-slate-850 rounded-xl relative overflow-hidden flex items-center justify-center p-2 shadow-inner">
+                  <div className="w-full h-[320px] bg-slate-900/40 border border-slate-800 rounded-xl relative overflow-hidden flex items-center justify-center p-2 shadow-inner">
                     
                     {simMode === 'memory' ? (
                       <svg className="w-full h-full" viewBox="0 0 600 320">
@@ -785,7 +785,7 @@ export default function DSA1_8() {
                             { id: 'dict', label: '🔵 Dict - O(1)', time: times.dict, color: 'bg-emerald-500 text-emerald-100', textCol: 'text-emerald-400' },
                             { id: 'set', label: '🟢 Set - O(1)', time: times.set, color: 'bg-emerald-600 text-emerald-100', textCol: 'text-emerald-400' },
                             { id: 'tuple', label: '🟠 Tuple - O(n)', time: times.tuple, color: 'bg-amber-500 text-amber-950', textCol: 'text-amber-400' },
-                            { id: 'list', label: '🔴 List - O(n)', time: times.list, color: 'bg-rose-500 text-rose-100', textCol: 'text-rose-450' }
+                            { id: 'list', label: '🔴 List - O(n)', time: times.list, color: 'bg-rose-500 text-rose-100', textCol: 'text-rose-400' }
                           ].map(bar => {
                             // Calculate percentage width for visual chart
                             // Dict/Set are very small. List at max N (100,000) is the max width.
@@ -803,7 +803,7 @@ export default function DSA1_8() {
                                   </span>
                                 </div>
                                 
-                                <div className="w-full h-6 bg-slate-900 border border-slate-850 rounded-lg overflow-hidden flex items-center relative">
+                                <div className="w-full h-6 bg-slate-900 border border-slate-800 rounded-lg overflow-hidden flex items-center relative">
                                   {/* Color filled bar */}
                                   <div
                                     style={{ width: `${percentageWidth}%` }}
@@ -823,11 +823,11 @@ export default function DSA1_8() {
                         </div>
 
                         {/* Benchmark Summary callout */}
-                        <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-850 text-xs text-slate-400 font-sans leading-relaxed">
+                        <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 text-xs text-slate-400 font-sans leading-relaxed">
                           <span className="text-[9px] font-mono text-zinc-500 block mb-0.5 uppercase">วิจารณ์ผลเชิงประจักษ์:</span>
                           {times.list > 0 ? (
                             <span>
-                              เมื่อ N ขยายสู่ระดับ {dataScale.toLocaleString()} สัญกรณ์ความคงที่ $O(1)$ ของ Dictionary และ Set รักษาระดับเวลาไม่ถึง <strong className="text-emerald-400">0.002 µs</strong> ขณะที่ List และ Tuple ที่เป็น $O(n)$ จะต้องลูปเทียบค่าไล่ลำดับทำให้เวลารวมพุ่งขึ้นไปถึง <strong className="text-rose-450">{(times.list).toFixed(2)} µs</strong> พิสูจน์ขีดความสามารถการทำ Hashing 100%
+                              เมื่อ N ขยายสู่ระดับ {dataScale.toLocaleString()} สัญกรณ์ความคงที่ $O(1)$ ของ Dictionary และ Set รักษาระดับเวลาไม่ถึง <strong className="text-emerald-400">0.002 µs</strong> ขณะที่ List และ Tuple ที่เป็น $O(n)$ จะต้องลูปเทียบค่าไล่ลำดับทำให้เวลารวมพุ่งขึ้นไปถึง <strong className="text-rose-400">{(times.list).toFixed(2)} µs</strong> พิสูจน์ขีดความสามารถการทำ Hashing 100%
                             </span>
                           ) : (
                             'กดปุ่มสีฟ้าด้านซ้ายเพื่อสตรีมการประเมินความเร็วประมวลผลจริง'
@@ -841,7 +841,7 @@ export default function DSA1_8() {
                 </div>
 
                 {/* Legend bar */}
-                <div className="mt-3 bg-slate-900 border border-slate-850 p-2.5 rounded-xl flex justify-around text-[10px] font-mono text-slate-500">
+                <div className="mt-3 bg-slate-900 border border-slate-800 p-2.5 rounded-xl flex justify-around text-[10px] font-mono text-slate-500">
                   <div className="flex items-center gap-1.5">
                     <span className="w-2.5 h-2.5 rounded bg-emerald-500 block"></span>
                     <span>Constant O(1) Speed</span>
