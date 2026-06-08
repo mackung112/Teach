@@ -18,14 +18,14 @@
 ## 📝 3. โน้ตส่งมอบงานและบันทึกประวัติ (Handoff Logs)
 *(เมื่อแต่ละงาน in Active Checklist ด้านบนทำสำเร็จลุล่วงแล้ว ให้ย้ายเนื้อหามาเขียนสรุปผลไว้ตรงนี้ และนำงานนั้นออกจาก Active Checklist ทันที และลบ Handoff Logs เดิมทิ้งไป เก็บไว้ 2 งานล่าสุด) (เก็บข้อความนี้ไว้ในทุกๆ ครั้งที่มีการส่งมอบงาน)*
 
-- **พัฒนาหน้าบทเรียน 2.1 รู้จักชิ้นส่วนหลัก (it2_1.jsx)** [เสร็จสิ้น - 07/06/2026]
-    - **การจัดทำบทเรียนใหม่**: ปรับปรุงหน้า 2.1 ครอบคลุมเนื้อหารายวิชาวิทยาการฮาร์ดแวร์และการประกอบคอมพิวเตอร์อย่างละเอียดระดับ Massive Scale โดยใช้ศัพท์ตำราเรียนสากลภาษาไทย อธิบายชิ้นส่วนหลัก 6 ประเภท
-    - **ระบบจำลองโต้ตอบ**: จัดทำ Interactive PC Builder Simulator เพื่อเลือกซื้อสเปก ชิ้นส่วนเคลื่อนที่เสียบลงสล็อต SVG/CSS แบบ Absolute Center, วิเคราะห์ข้อขัดแย้งของฮาร์ดแวร์ (Socket mismatch, RAM type mismatch, PSU Overload) และจำลองแอนิเมชันเปิดเครื่องผ่าน BIOS/POST สำเร็จเสร็จสิ้น
-    - **ความประณีตและการควบคุมคุณภาพ**: ปรับแต่งสีและเลย์เอาต์ตามมาตรฐาน Immersive Full-Page และ Fluid Open-Air, ขจัดสี gradient ที่เป็น AI tells ผ่านเกณฑ์ `npx impeccable detect` (0 warnings) และคอมไพล์ผ่าน 100%
+- **พัฒนาหน้าบทเรียนบทที่ 6 ฟังก์ชัน (py6_1.jsx, py6_2.jsx, py6_3.jsx, py6_4.jsx)** [เสร็จสิ้น - 08/06/2026]
+    - **การจัดทำบทเรียนใหม่**: จัดทำเนื้อหาหน่วยที่ 6 เรื่องฟังก์ชัน (Built-in, Custom parameters, Return & Scope, Testing & Debugging) ครบถ้วน 4 บทเรียน ละเอียดระดับ Massive Scale ด้วยศัพท์วิชาการตำราเรียนสากล
+    - **ระบบจำลองโต้ตอบ**: พัฒนา Built-in Function Memory Scanner, Call Stack Trace Line-by-Line Animator, Local/Global Scope Memory Space Sandbox (Return flying value animation), และ Interactive Code Debugging & Repair Lab (ประยุกต์ใช้ Morphing dynamic logic code)
+    - **ความประณีตและการควบคุมคุณภาพ**: กำจัดจุดบกพร่องตามการสแกนด้วย `npx impeccable detect` ผ่านเกณฑ์ไร้การแจ้งเตือน (0 warnings found) และบิลด์โครงสร้างของระบบผ่าน 100%
 
-- **พัฒนาหน้าบทเรียน 5.3 การตั้งค่า IP และ Subnetting เบื้องต้น (it5_3.jsx)** [เสร็จสิ้น - 05/06/2026]
-    - **การจัดทำบทเรียนใหม่**: จัดดีไซน์หน้า 5.3 ครอบคลุมเนื้อหา Static/Dynamic IP, DHCP DORA Process, และ Subnetting Mathematics อย่างลึกซึ้งระดับ Massive Scale โดยใช้ศัพท์วิชาการสากล
-    - **ระบบจำลองโต้ตอบ**: จัดสร้าง DHCP DORA animated flow simulator แสดงขั้นตอน Discover, Offer, Request, Acknowledge และจำลองอุปกรณ์ Client ได้รับจัดสรรไอพีแอดเดรสจริง พร้อมจัดสร้าง Interactive Subnet Carver แสดงส่วนแบ่งการหั่นวงเครือข่าย/24 ออกเป็น 1, 2, 4, 8 วงย่อยพร้อมรายละเอียด Network Address, Usable Range, Broadcast Address ทันทีที่คลิกเลือก
-    - **ความประณีตและการควบคุมคุณภาพ**: กำจัดข้อบกพร่องสะสมและโครงสี AI tells ออกทั้งหมด ผ่านเกณฑ์ตรวจสอบสไตล์ `npx impeccable detect` (0 warnings found) และคอมไพล์บิลด์โครงสร้าง Vite 100% ผ่านฉลุย
+- **พัฒนาหน้าบทเรียนบทที่ 5 การจัดการข้อมูลแบบชุด (py5_1.jsx, py5_2.jsx, py5_3.jsx)** [เสร็จสิ้น - 08/06/2026]
+    - **การจัดทำบทเรียนใหม่**: จัดทําและปรับปรุงเนื้อหาโครงสร้างข้อมูลแบบชุดในภาษา Python ครบทั้ง 3 บทเรียน (List, Tuple, Dictionary, Set, Slicing) ละเอียดลึกซึ้งระดับ Massive Scale ตามหลักสูตร
+    - **ระบบจำลองโต้ตอบ**: พัฒนาเครื่องมือ Interactive List Simulator แสดง visual array memory, Interactive Tuple vs Dictionary Simulator แสดงกลไกความปลอดภัย (TypeError/Immutability) และ Venn Diagram SVG Simulator สำหรับทำโจทย์เปรียบเทียบเซตโต้ตอบ
+    - **ความประณีตและการควบคุมคุณภาพ**: ตรวจสอบและขจัด UI anti-patterns ทุกจุด ผ่านเกณฑ์ `npx impeccable detect` (0 warnings) และคอมไพล์บิลด์โครงสร้างแอปพลิเคชันผ่าน 100%
 
 

@@ -117,7 +117,7 @@ const WhileSimulator = () => {
       {/* Code Editor Panel */}
       <div className="bg-slate-900 w-full lg:w-1/2 p-8 flex flex-col relative z-10 text-slate-300 font-mono text-lg leading-relaxed border-r border-slate-800">
         <h4 className="font-sans font-bold text-indigo-400 mb-6 flex items-center gap-2 border-b border-slate-800 pb-4">
-          <TerminalSquare className="w-5 h-5" /> 4.13.2 จำลองการควบคุมลูป (Break & Continue)
+          <TerminalSquare className="w-5 h-5" /> จำลองการควบคุมลูป (Break & Continue)
         </h4>
         
         <p className="font-sans text-slate-400 text-sm mb-6">
@@ -128,14 +128,14 @@ const WhileSimulator = () => {
           {!sim.isRunning ? (
             <button 
               onClick={toggleRun}
-              className="bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-2 px-6 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 text-sm shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+              className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-6 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 text-sm shadow-md"
             >
               <Play className="w-5 h-5" /> Run Loop
             </button>
           ) : (
             <button 
               onClick={toggleRun}
-              className="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-2 px-6 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 text-sm shadow-[0_0_15px_rgba(245,158,11,0.3)]"
+              className="bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 px-6 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 text-sm shadow-md"
             >
               <Pause className="w-5 h-5" /> Pause
             </button>
@@ -226,7 +226,7 @@ export default function pyUnit4_13_WhileLoop() {
 4. เปลี่ยนคำสั่ง \`break\` เป็น \`continue\` (อย่าลืมจัดการตัวนับให้ดีระวังรันไม่รู้จบ) แล้วดูว่าเกิดอะไรขึ้นที่บรรทัดของรอบที่ 5`;
 
   return (
-    <div className="font-sans text-slate-800 pb-24 selection:bg-indigo-200 selection:text-indigo-900">
+    <div className="font-sans text-slate-900 pb-24">
       
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-[10%] left-[5%] w-[600px] h-[600px] rounded-full bg-indigo-100/60 blur-[120px]"></div>
@@ -237,8 +237,8 @@ export default function pyUnit4_13_WhileLoop() {
         {/* Theory Section */}
         <div className="bg-white p-8 md:p-12 rounded-[2.5rem] border border-slate-200 shadow-xl mb-12 flex flex-col gap-12">
             <div className="max-w-3xl">
-               <h3 className="text-4xl font-black text-indigo-600 mb-4 tracking-tight leading-normal pb-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center gap-4">
-                 <RefreshCw className="w-10 h-10 text-indigo-500" /> ลูปทำงานซ้ำ while
+               <h3 className="text-4xl font-black text-slate-900 mb-4 tracking-tight leading-normal pb-2 flex items-center gap-4">
+                 <RefreshCw className="w-10 h-10 text-teal-600" /> ลูปทำงานซ้ำ while
                </h3>
                <p className="text-slate-600 leading-relaxed text-lg mb-6">
                  การเขียนโปรแกรมบางครั้งเราต้องทำงานเดิมซ้ำๆ การก๊อปปี้โค้ดวางต่อกันไม่ใช่ทางออกที่ดี คำสั่ง <code className="bg-indigo-50 text-indigo-700 px-2 py-1 rounded">while</code> ถูกสร้างมาเพื่อสร้าง <strong>ลูป (Loop)</strong> หลักการจำง่ายๆ คือ <strong>"ตราบใดที่เงื่อนไขยังเป็นจริง ก็จงทำต่อไป"</strong>
@@ -247,25 +247,25 @@ export default function pyUnit4_13_WhileLoop() {
             
             {/* 4.13.1 */}
             <div>
-              <h4 className="text-2xl font-bold text-slate-800 mb-6 border-l-4 border-indigo-500 pl-4">4.13.1 โครงสร้างคำสั่ง while loop</h4>
+              <h4 className="text-2xl font-bold text-slate-900 mb-6 border-l-[3px] border-indigo-500 pl-4">โครงสร้างคำสั่ง while loop</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-100 relative overflow-hidden">
                    <div className="absolute top-4 right-4 text-indigo-200"><RefreshCw className="w-16 h-16" /></div>
-                   <h5 className="text-lg font-bold text-indigo-800 mb-2 relative z-10">1. จุดเริ่มต้น (Init)</h5>
+                   <h5 className="text-lg font-bold text-indigo-800 mb-2 relative z-10">จุดเริ่มต้น (Init)</h5>
                    <p className="text-indigo-700/80 text-sm relative z-10">
                      ต้องมีตัวแปรเพื่อใช้นับรอบ หรือเช็คเงื่อนไขก่อนเริ่มลูป เช่น <code>count = 0</code>
                    </p>
                 </div>
                 <div className="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-100 relative overflow-hidden">
                    <div className="absolute top-4 right-4 text-indigo-200"><Zap className="w-16 h-16" /></div>
-                   <h5 className="text-lg font-bold text-indigo-800 mb-2 relative z-10">2. เงื่อนไขรันลูป (Condition)</h5>
+                   <h5 className="text-lg font-bold text-indigo-800 mb-2 relative z-10">เงื่อนไขรันลูป (Condition)</h5>
                    <p className="text-indigo-700/80 text-sm relative z-10">
                      กำหนดสิ่งที่ทำให้ลูปทำงานต่อ เช่น <code>while count &lt; 5:</code> ถ้าเท็จจะหลุดลูป
                    </p>
                 </div>
                 <div className="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-100 relative overflow-hidden">
                    <div className="absolute top-4 right-4 text-indigo-200"><RotateCcw className="w-16 h-16" /></div>
-                   <h5 className="text-lg font-bold text-indigo-800 mb-2 relative z-10">3. จุดอัปเดตค่า (Update)</h5>
+                   <h5 className="text-lg font-bold text-indigo-800 mb-2 relative z-10">จุดอัปเดตค่า (Update)</h5>
                    <p className="text-indigo-700/80 text-sm relative z-10 font-bold text-rose-500">
                      สำคัญ! ต้องอัปเดตค่าตัวแปรในลูป ไม่งั้นจะเกิด Infinite Loop (ลูปค้าง)
                    </p>
@@ -275,21 +275,43 @@ export default function pyUnit4_13_WhileLoop() {
 
             {/* 4.13.2 */}
             <div className="mt-8">
-              <h4 className="text-2xl font-bold text-slate-800 mb-6 border-l-4 border-indigo-500 pl-4">4.13.2 การควบคุมลูปด้วย break และ continue</h4>
+              <h4 className="text-2xl font-bold text-slate-900 mb-6 border-l-[3px] border-indigo-500 pl-4">การควบคุมลูปด้วย break และ continue</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                 <div className="bg-rose-50 border border-rose-200 p-8 rounded-3xl flex flex-col justify-center">
-                    <LogOut className="w-12 h-12 text-rose-500 mb-4" />
-                    <h5 className="text-2xl font-black text-rose-700 mb-2">คำสั่ง break</h5>
-                    <p className="text-rose-600/80 mb-4">
-                      ใช้เมื่อต้องการ <strong>"พังประตูออกจากลูปทันที"</strong> ไม่ว่าลูปนั้นจะเหลือการทำงานอีกกี่รอบก็ตาม (มักใช้คู่กับ if เพื่อเช็คเงื่อนไขฉุกเฉิน)
-                    </p>
+                 <div className="bg-rose-50 border border-rose-200 p-8 rounded-3xl flex flex-col justify-between">
+                    <div>
+                      <LogOut className="w-12 h-12 text-rose-500 mb-4" />
+                      <h5 className="text-2xl font-black text-rose-700 mb-2">คำสั่ง break</h5>
+                      <p className="text-rose-600/80 mb-4">
+                        ใช้เมื่อต้องการ <strong>"พังประตูออกจากลูปทันที"</strong> ไม่ว่าลูปนั้นจะเหลือการทำงานอีกกี่รอบก็ตาม (มักใช้คู่กับ if เพื่อเช็คเงื่อนไขฉุกเฉิน)
+                      </p>
+                    </div>
+                    <div className="mt-4 bg-slate-900 rounded-xl p-4 font-mono text-sm text-slate-300 border border-slate-800 text-left">
+                      <div className="text-slate-500 mb-1"># ตัวอย่างการใช้ break</div>
+                      <div>count = <span className="text-amber-400">1</span></div>
+                      <div><span className="text-pink-500">while</span> count &lt;= <span className="text-amber-400">5</span>:</div>
+                      <div className="pl-4"><span className="text-pink-500">if</span> count == <span className="text-amber-400">3</span>:</div>
+                      <div className="pl-8"><span className="text-rose-400 font-bold">break</span>  <span className="text-slate-500"># หลุดลูปทันที</span></div>
+                      <div className="pl-4"><span className="text-yellow-200">print</span>(count)</div>
+                      <div className="pl-4">count += <span className="text-amber-400">1</span></div>
+                    </div>
                  </div>
-                 <div className="bg-sky-50 border border-sky-200 p-8 rounded-3xl flex flex-col justify-center">
-                    <FastForward className="w-12 h-12 text-sky-500 mb-4" />
-                    <h5 className="text-2xl font-black text-sky-700 mb-2">คำสั่ง continue</h5>
-                    <p className="text-sky-600/80 mb-4">
-                      ใช้เมื่อต้องการ <strong>"ข้ามการทำงานที่เหลือของรอบนี้"</strong> และกระโดดกลับไปเช็คเงื่อนไขที่หัวลูปเพื่อเริ่มรอบใหม่ทันที
-                    </p>
+                 <div className="bg-sky-50 border border-sky-200 p-8 rounded-3xl flex flex-col justify-between">
+                    <div>
+                      <FastForward className="w-12 h-12 text-sky-500 mb-4" />
+                      <h5 className="text-2xl font-black text-sky-700 mb-2">คำสั่ง continue</h5>
+                      <p className="text-sky-600/80 mb-4">
+                        ใช้เมื่อต้องการ <strong>"ข้ามการทำงานที่เหลือของรอบนี้"</strong> และกระโดดกลับไปเช็คเงื่อนไขที่หัวลูปเพื่อเริ่มรอบใหม่ทันที
+                      </p>
+                    </div>
+                    <div className="mt-4 bg-slate-900 rounded-xl p-4 font-mono text-sm text-slate-300 border border-slate-800 text-left">
+                      <div className="text-slate-500 mb-1"># ตัวอย่างการใช้ continue</div>
+                      <div>count = <span className="text-amber-400">0</span></div>
+                      <div><span className="text-pink-500">while</span> count &lt; <span className="text-amber-400">5</span>:</div>
+                      <div className="pl-4">count += <span className="text-amber-400">1</span></div>
+                      <div className="pl-4"><span className="text-pink-500">if</span> count == <span className="text-amber-400">3</span>:</div>
+                      <div className="pl-8"><span className="text-sky-400 font-bold">continue</span>  <span className="text-slate-500"># ข้ามรอบนี้</span></div>
+                      <div className="pl-4"><span className="text-yellow-200">print</span>(count)</div>
+                    </div>
                  </div>
               </div>
             </div>
