@@ -1,536 +1,856 @@
-import React, { useState, useEffect } from 'react';
-import TeacherTask from '../../ui/TeacherTask';
-import {
-  SimulatorShell,
-  ConceptCard,
-  SectionBlock,
-  AmbientBackdrop
-} from '../shared';
-import {
-  Layers,
-  Database,
-  ArrowRight,
-  Sparkles,
-  Cpu,
-  Activity,
-  HelpCircle,
-  TrendingUp,
-  BarChart2,
-  Clock,
+import React, { useState } from 'react';
+import { 
+  Layers, 
+  Database, 
+  HelpCircle, 
+  Play, 
+  RotateCcw, 
+  ArrowRight, 
+  Cpu, 
+  Shield, 
+  Sparkles, 
+  Sliders, 
   Code,
-  Zap,
-  Info
+  Terminal,
+  Activity,
+  Plus,
+  Minus,
+  Eye
 } from 'lucide-react';
+import TeacherTask from '../../ui/TeacherTask';
+import { 
+  SimulatorShell, 
+  ConceptCard, 
+  AmbientBackdrop,
+  ConsoleScreen,
+  QuizEngine
+} from '../shared';
+
+// Custom CSS animation keyframes
+const CustomStyles = () => (
+  <style dangerouslySetInnerHTML={{__html: `
+    @keyframes float-subtle {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+      100% { transform: translateY(0px); }
+    }
+    @keyframes flow-line-dsa {
+      to {
+        stroke-dashoffset: -40;
+      }
+    }
+    @keyframes pulse-teal-glow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; filter: drop-shadow(0 0 10px rgba(20, 184, 166, 0.7)); }
+    }
+    @keyframes pulse-indigo-glow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; filter: drop-shadow(0 0 12px rgba(79, 70, 229, 0.8)); }
+    }
+    .animate-float-subtle { animation: float-subtle 4s ease-in-out infinite; }
+    .animate-flow-line-dsa { animation: flow-line-dsa 1.2s linear infinite; }
+    .animate-pulse-teal-glow { animation: pulse-teal-glow 1.5s ease-in-out infinite; }
+    .animate-pulse-indigo-glow { animation: pulse-indigo-glow 1.2s ease-in-out infinite; }
+  `}} />
+);
 
 export default function DSA1_6() {
-  // ─── Layer 1: Ambient Background Blobs ─────────────────────────────────────
-  const DSA1_6_BLOBS = [
-    { color: 'bg-violet-200',  size: 'w-[450px] h-[450px]', position: '-top-32 -left-32',   opacity: 'opacity-40' },
-    { color: 'bg-indigo-200',  size: 'w-[400px] h-[400px]', position: 'top-1/3 -right-32',  opacity: 'opacity-35' },
-    { color: 'bg-cyan-200',    size: 'w-[380px] h-[380px]', position: '-bottom-32 left-1/4', opacity: 'opacity-30' },
-    { color: 'bg-slate-200',   size: 'w-[300px] h-[300px]', position: 'top-1/2 left-2/3',    opacity: 'opacity-25' }
+  // ─── Layer 1: Ambient Background Blobs (Teal/Indigo/Sky/Purple) ───
+  const blobs = [
+    { color: 'bg-emerald-200', size: 'w-[450px] h-[450px]', position: '-top-32 -left-32', opacity: 'opacity-30' },
+    { color: 'bg-teal-100',    size: 'w-[400px] h-[400px]', position: 'top-1/3 -right-32', opacity: 'opacity-25' },
+    { color: 'bg-sky-200',     size: 'w-[380px] h-[380px]', position: '-bottom-32 left-1/4', opacity: 'opacity-25' },
+    { color: 'bg-indigo-150',  size: 'w-[300px] h-[300px]', position: 'top-1/2 left-2/3', opacity: 'opacity-20' }
   ];
 
-  // ─── Playground State ──────────────────────────────────────────────────────
-  const [dataSize, setDataSize] = useState(1000); // N value slider (10 to 50000)
-  const [enabledLines, setEnabledLines] = useState({
-    o1: true,
-    ologn: true,
-    on: true,
-    on2: true
-  });
-  const [statusMsg, setStatusMsg] = useState('กำหนดค่า N = 1,000. ระบบพล็อตเส้นกราฟ Big O แบบสดลื่นไหล');
-  const [activeCodeView, setActiveCodeView] = useState('o1'); // o1 | ologn | on | on2
+  // ─── State for ADT Simulator ───
+  const [adtType, setAdtType] = useState('Stack'); // Stack | Queue
+  const [implementation, setImplementation] = useState('Array'); // Array | LinkedList
+  const [items, setItems] = useState(['A', 'B']);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [activeStep, setActiveStep] = useState(-1); // -1: idle, 0: Interface API, 1: Implementation logic, 2: Physical RAM write, 3: Completed
+  const [terminalLogs, setTerminalLogs] = useState(['[ADT READY] แพลตฟอร์มจำลอง Abstract Data Type เริ่มต้นทำงานแล้ว']);
+  const [peekedValue, setPeekedValue] = useState(null);
 
-  // ─── Computational Logic ───
-  // Calculate execution steps for graph height normalization
-  // We assume X axis is 0 to dataSize, Y axis steps count
-  const getO1Steps = () => 1;
-  const getOLognSteps = (n) => Math.max(1, Math.round(Math.log2(n)));
-  const getONSteps = (n) => n;
-  const getON2Steps = (n) => n * n;
-
-  // Convert Slider Value to rounded friendly benchmarks
-  const handleSliderChange = (val) => {
-    setDataSize(val);
-    setStatusMsg(`[SLIDER UPDATE] ปรับสเกลขนาดข้อมูล N = ${val.toLocaleString()} รายการ. อัตราความต่างของบิ๊กโอเวลากำลังสอง (O(n²)) จะพุ่งดิ่งชันขัดเจนขึ้น`);
-  };
-
-  const toggleLine = (line) => {
-    setEnabledLines(prev => {
-      const next = { ...prev, [line]: !prev[line] };
-      setStatusMsg(`[GRAPH TOGGLE] สลับการแสดงเส้นกราฟ ${line.toUpperCase()} -> ${next[line] ? 'เปิด' : 'ปิด'}`);
-      return next;
-    });
-  };
-
-  // Convert N size to estimated time assuming 1 step = 1 microsecond (1µs)
-  const formatEstimateTime = (steps) => {
-    const totalMicroseconds = steps; // 1 step = 1 microsecond
-    if (totalMicroseconds < 1000) {
-      return `${totalMicroseconds.toFixed(2)} µs (ไมโครวินาที)`;
-    } else if (totalMicroseconds < 1000000) {
-      return `${(totalMicroseconds / 1000).toFixed(2)} ms (มิลลิวินาที)`;
-    } else if (totalMicroseconds < 60000000) {
-      return `${(totalMicroseconds / 1000000).toFixed(2)} วินาที`;
-    } else {
-      return `${(totalMicroseconds / 60000000).toFixed(2)} นาที`;
+  const handlePush = (val) => {
+    if (isProcessing) return;
+    if (items.length >= 5) {
+      setTerminalLogs(prev => [
+        ...prev, 
+        `[⚠️ OVERFLOW] การประมวลผลล้มเหลว: โครงสร้างข้อมูลเต็มขีดจำกัดจำลอง (ความยาวสูงสุด: 5)`
+      ]);
+      return;
     }
-  };
+    
+    setIsProcessing(true);
+    setPeekedValue(null);
+    setActiveStep(0);
+    
+    const opName = adtType === 'Stack' ? 'push' : 'enqueue';
+    setTerminalLogs([
+      `[STEP 1 - INTERFACE API] เรียกใช้ API เชิงนามธรรม: adt.${opName}('${val}')`,
+      `[STEP 1 - INTERFACE API] อินเตอร์เฟซได้รับค่าอินพุต โดยไม่คำนึงถึงโครงสร้างแรมเบื้องหลัง`
+    ]);
 
-  // Math helper to generate SVG Polyline paths nicely
-  const getSvgPath = (type) => {
-    if (!enabledLines[type]) return '';
-
-    const width = 380;
-    const height = 240;
-    const padding = 15;
-    const graphWidth = width - padding * 2;
-    const graphHeight = height - padding * 2;
-
-    const points = [];
-    const segments = 25;
-
-    for (let i = 0; i <= segments; i++) {
-      // ratio along X axis
-      const ratioX = i / segments;
-      const currentN = Math.max(10, ratioX * dataSize);
-
-      // coordinate X
-      const x = padding + ratioX * graphWidth;
-
-      // Coordinate Y (inverted since SVG 0 is at top)
-      let valY = 0;
-      if (type === 'o1') {
-        valY = 1;
-      } else if (type === 'ologn') {
-        valY = Math.log2(currentN) * 12; // Amplify to make it visible
-      } else if (type === 'on') {
-        // scale linearly. At max N, let it reach 75% height of graph
-        valY = (currentN / dataSize) * (graphHeight * 0.7);
-      } else if (type === 'on2') {
-        // scale quadratically. At max N, let it reach 100% height of graph
-        const quadraticRatio = (currentN * currentN) / (dataSize * dataSize);
-        valY = quadraticRatio * graphHeight;
+    // Step 1: Implementation Logic
+    setTimeout(() => {
+      setActiveStep(1);
+      if (implementation === 'Array') {
+        setTerminalLogs(prev => [
+          ...prev,
+          `[STEP 2 - ARRAY LOGIC] ค้นหาดัชนีทางกายภาพสำหรับวางข้อมูลสินค้า`,
+          adtType === 'Stack'
+            ? `[STEP 2 - ARRAY LOGIC] โหมด Stack: แทรกข้อมูลเพิ่มที่ท้ายอาร์เรย์ (ดัชนี: ${items.length})`
+            : `[STEP 2 - ARRAY LOGIC] โหมด Queue: แทรกข้อมูลเพิ่มที่ท้ายอาร์เรย์ (ดัชนี: ${items.length})`
+        ]);
+      } else {
+        setTerminalLogs(prev => [
+          ...prev,
+          `[STEP 2 - LINKED LIST LOGIC] สร้างอ็อบเจกต์โนดใหม่ในหน่วยความจำ (Node Object Created)`,
+          adtType === 'Stack'
+            ? `[STEP 2 - LINKED LIST LOGIC] โหมด Stack: ปรับลิงก์ newNode.next = head; head = newNode`
+            : `[STEP 2 - LINKED LIST LOGIC] โหมด Queue: ปรับลิงก์ tail.next = newNode; tail = newNode`
+        ]);
       }
+    }, 1200);
 
-      // invert and clamp to screen bounds
-      const y = height - padding - Math.min(graphHeight + 5, valY);
-      points.push(`${x},${y}`);
+    // Step 2: Physical RAM Write
+    setTimeout(() => {
+      setActiveStep(2);
+      
+      setItems(prev => {
+        if (adtType === 'Stack') {
+          // Stack: push adds to the end (top) or beginning (if linked list simulation, let's keep array representation)
+          return [...prev, val];
+        } else {
+          // Queue: enqueue adds to the end (back)
+          return [...prev, val];
+        }
+      });
+
+      setTerminalLogs(prev => [
+        ...prev,
+        `[STEP 3 - PHYSICAL WRITE] ทำการเขียนบันทึกค่าลงพิกัดหน่วยความจำ RAM`,
+        implementation === 'Array'
+          ? `[STEP 3 - PHYSICAL WRITE] อาร์เรย์อัปเดตช่องหน่วยความจำคงที่สำเร็จ`
+          : `[STEP 3 - PHYSICAL WRITE] ผูกพอยน์เตอร์เชื่อมความสัมพันธ์และจองสตอเรจสำเร็จ`
+      ]);
+    }, 2400);
+
+    // Step 3: Completed
+    setTimeout(() => {
+      setActiveStep(3);
+      setTerminalLogs(prev => [
+        ...prev,
+        `[STEP 4 - DONE] การทำงาน API เสร็จสิ้น ผลลัพธ์ใน ADT สอดคล้องตามพฤติกรรมของ ${adtType}`
+      ]);
+      setIsProcessing(false);
+    }, 3600);
+  };
+
+  const handlePop = () => {
+    if (isProcessing) return;
+    if (items.length === 0) {
+      setTerminalLogs(prev => [
+        ...prev, 
+        `[⚠️ UNDERFLOW] การประมวลผลล้มเหลว: โครงสร้างข้อมูลว่างเปล่า ไม่สามารถลบข้อมูลได้`
+      ]);
+      return;
     }
 
-    return points.join(' ');
+    setIsProcessing(true);
+    setPeekedValue(null);
+    setActiveStep(0);
+    
+    const opName = adtType === 'Stack' ? 'pop' : 'dequeue';
+    setTerminalLogs([
+      `[STEP 1 - INTERFACE API] เรียกใช้ API เชิงนามธรรม: adt.${opName}()`,
+      `[STEP 1 - INTERFACE API] เตรียมนำข้อมูลออกตามกฎเกณฑ์พฤติกรรมเชิงนามธรรม`
+    ]);
+
+    // Step 1: Implementation logic
+    setTimeout(() => {
+      setActiveStep(1);
+      if (adtType === 'Stack') {
+        const poppedVal = items[items.length - 1];
+        setTerminalLogs(prev => [
+          ...prev,
+          `[STEP 2 - STACK BEHAVIOR] โหมด Stack (LIFO): นำข้อมูลตัวล่าสุดออกจากส่วนบนสุด (ค่าที่นำออก: ${poppedVal})`,
+          implementation === 'Array' 
+            ? `[STEP 2 - ARRAY] ลดขนาดดัชนีชี้ตำแหน่งตัวบนสุด (top = top - 1)`
+            : `[STEP 2 - LINKED LIST] เลื่อนพอยน์เตอร์เฮด (head = head.next)`
+        ]);
+      } else {
+        const poppedVal = items[0];
+        setTerminalLogs(prev => [
+          ...prev,
+          `[STEP 2 - QUEUE BEHAVIOR] โหมด Queue (FIFO): นำข้อมูลตัวแรกสุดออกจากหัวแถว (ค่าที่นำออก: ${poppedVal})`,
+          implementation === 'Array' 
+            ? `[STEP 2 - ARRAY] ดึงค่าช่องแรกสุด และจำเป็นต้องเลื่อนสไลด์ข้อมูลตัวถัดไปมาข้างหน้า O(n)`
+            : `[STEP 2 - LINKED LIST] ปรับลิงก์หัวคิวไปยังโหนดถัดไปในระบบ O(1)`
+        ]);
+      }
+    }, 1200);
+
+    // Step 2: Physical RAM Write
+    setTimeout(() => {
+      setActiveStep(2);
+      
+      setItems(prev => {
+        if (adtType === 'Stack') {
+          // Remove last element (top of stack)
+          return prev.slice(0, -1);
+        } else {
+          // Remove first element (front of queue)
+          return prev.slice(1);
+        }
+      });
+
+      setTerminalLogs(prev => [
+        ...prev,
+        `[STEP 3 - PHYSICAL WRITE] ดำเนินการปลดระบายหน่วยความจำ RAM พิกัดดังกล่าวเสร็จสิ้น`
+      ]);
+    }, 2400);
+
+    // Step 3: Done
+    setTimeout(() => {
+      setActiveStep(3);
+      setTerminalLogs(prev => [
+        ...prev,
+        `[STEP 4 - DONE] การลบข้อมูลเสร็จสมบูรณ์เรียบร้อยแล้ว`
+      ]);
+      setIsProcessing(false);
+    }, 3600);
   };
+
+  const handlePeek = () => {
+    if (items.length === 0) {
+      setTerminalLogs(prev => [...prev, `[PEEK FAILED] โครงสร้างข้อมูลไม่มีสมาชิก`]);
+      return;
+    }
+    const target = adtType === 'Stack' ? items[items.length - 1] : items[0];
+    setPeekedValue(target);
+    setTerminalLogs(prev => [
+      ...prev,
+      `[PEEK CALL] ตรวจสอบค่าตัว${adtType === 'Stack' ? 'บนสุด' : 'หน้าสุด'} (โดยไม่นำออก) ได้รับผลลัพธ์: '${target}'`
+    ]);
+  };
+
+  const handleResetSimulator = () => {
+    setItems(['A', 'B']);
+    setActiveStep(-1);
+    setPeekedValue(null);
+    setTerminalLogs(['[SYSTEM RESET] รีเซ็ตค่าสต็อกข้อมูลและโครงสร้างข้อมูล ADT สู่สภาวะเริ่มต้น']);
+    setIsProcessing(false);
+  };
+
+  // ─── Quiz Engine Configurations ───
+  const quizLevels = [
+    {
+      title: "แนวคิดพื้นฐานของ Abstract Data Type (ADT)",
+      desc: "ข้อใดอธิบายความหมายของ Abstract Data Type (ADT) ได้ถูกต้องที่สุดตามทฤษฎีวิทยาการคอมพิวเตอร์",
+      options: [
+        { key: "A", text: "โมเดลเชิงคณิตศาสตร์ที่กำหนดเมธอดและพฤติกรรมการกระทำกับข้อมูล โดยไม่ผูกมัดกับวิธีการพัฒนาเบื้องหลัง", isCorrect: true },
+        { key: "B", text: "โครงสร้างข้อมูลระดับล่างสุดที่บันทึกพิกัดเลขฐานสิบหกในระบบ RAM ของคอมพิวเตอร์", isCorrect: false },
+        { key: "C", text: "การสืบทอดคลาสของอ็อบเจกต์ (Class Inheritance) ในภาษาเชิงวัตถุเพื่อเขียนคำสั่งแบบมีโครงสร้าง", isCorrect: false },
+        { key: "D", text: "ชนิดข้อมูลที่ระบบปฏิบัติการ Linux จัดสรรให้หน่วยประมวลผล CPU โหลดข้อมูลได้เร็วขึ้น", isCorrect: false }
+      ],
+      tip: "คำว่า Abstract (นามธรรม) หมายถึง การโฟกัสเฉพาะว่า 'ทำอะไรได้บ้าง (What)' แทนการสนใจเรื่อง 'ทำอย่างไร (How)'"
+    },
+    {
+      title: "ความแตกต่างระหว่าง ADT และ Data Structure",
+      desc: "ข้อความใดแสดงให้เห็นความสัมพันธ์ระหว่าง Stack ADT และโครงสร้างข้อมูล (Data Structure) เชิงกายภาพอย่างชัดเจน",
+      options: [
+        { key: "A", text: "Stack ADT คือแนวคิดนามธรรมที่สามารถสร้างขึ้นจริงได้โดยประยุกต์ใช้โครงสร้างข้อมูลแบบ List หรือ Linked List ก็ได้", isCorrect: true },
+        { key: "B", text: "Stack ADT ต้องทำจาก Array เท่านั้น ส่วน Queue ADT ต้องทำจาก Linked List", isCorrect: false },
+        { key: "C", text: "ไม่มีความแตกต่างใดๆ ทั้งสองคำสามารถใช้เรียกแทนกันได้ทุกกรณี", isCorrect: false },
+        { key: "D", text: "Stack ADT ทำงานช้ากว่าโครงสร้างข้อมูลเชิงกายภาพเสมอ", isCorrect: false }
+      ],
+      tip: "ADT เปรียบเสมือน 'พิมพ์เขียว / ขอบเขตความสามารถ' ส่วนโครงสร้างข้อมูล (เช่น List, Linked List) คือ 'วัสดุจริง' ที่นำมาประกอบร่าง"
+    },
+    {
+      title: "ข้อดีของการประยุกต์ใช้ ADT",
+      desc: "ข้อใดถือเป็นประโยชน์สูงสุดในการเขียนโปรแกรมซอฟต์แวร์ขนาดใหญ่ด้วยแนวคิด ADT และการห่อหุ้มข้อมูล (Encapsulation)",
+      options: [
+        { key: "A", text: "สามารถปรับเปลี่ยนโค้ดหรือฐานข้อมูลภายในคลาสได้ตลอดเวลาโดยไม่ต้องแก้ไขโค้ดภายนอกที่เรียกใช้ API เดิม", isCorrect: true },
+        { key: "B", text: "ทำให้การประมวลผลคำนวณกราฟิก 3D ทำงานได้ลื่นไหลขึ้นเป็นเท่าตัว", isCorrect: false },
+        { key: "C", text: "ช่วยประหยัดไฟให้กับเซิร์ฟเวอร์เนื่องจากการทำงานใช้ RAM น้อยลง", isCorrect: false },
+        { key: "D", text: "ระบบปฏิบัติการสามารถจดจำคำสั่งและแปลงภาษาแอปพลิเคชันเป็นไบนารีอัตโนมัติ", isCorrect: false }
+      ],
+      tip: "การแยกแยะอินเตอร์เฟซออกจากรายละเอียดการเขียนโค้ดเบื้องหลัง ช่วยลดการผูกมัดเหนี่ยวรั้งระหว่างโมดูล (Decoupling)"
+    },
+    {
+      title: "การปกป้องข้อมูลระดับแอตทริบิวต์ใน Python",
+      desc: "ในภาษา Python ข้อใดเป็นโครงสร้างในการประกาศแอตทริบิวต์เพื่อซ่อนข้อมูลไม่ให้ภารภายนอกเข้าถึงได้โดยตรง (Private Attributes)",
+      options: [
+        { key: "A", text: "ประกาศตัวแปรสมาชิกโดยใส่เครื่องหมายขีดล่างสองตัว __ (Double Underscore) นำหน้าชื่อ", isCorrect: true },
+        { key: "B", text: "ระบุคีย์เวิร์ด private นำหน้าประกาศเช่นเดียวกับภาษา Java หรือ C++", isCorrect: false },
+        { key: "C", text: "ใส่สัญลักษณ์เครื่องหมายคำถาม ? ท้ายตัวแปรสมาชิก", isCorrect: false },
+        { key: "D", text: "เขียนฟังก์ชันและห่อหุ้มแอตทริบิวต์ทั้งหมดไว้ในรูปของทิวเพิล (Tuple) คงที่", isCorrect: false }
+      ],
+      tip: "Python ใช้กลไกจำกัดระดับการเข้าถึง (Name Mangling) ด้วยเครื่องหมายขีดล่างสองตัว เช่น `self.__data`"
+    }
+  ];
+
+  const pythonCode = `class StackADT:
+    def __init__(self):
+        # 1. ซ่อนโครงสร้างข้อมูลทางกายภาพเบื้องหลัง (Encapsulation)
+        # ใช้เครื่องหมาย __ เพื่อกำหนดให้เป็น Private Attribute
+        self.__data = []  # การเก็บข้อมูลเบื้องหลังด้วย Python List
+        
+    def push(self, item: any) -> None:
+        """อินเตอร์เฟซหลัก: เพิ่มข้อมูลเข้าสู่ระดับบนสุดของ Stack (LIFO)"""
+        self.__data.append(item)
+        
+    def pop(self) -> any:
+        """อินเตอร์เฟซหลัก: นำข้อมูลตัวบนสุดออกจาก Stack"""
+        if self.is_empty():
+            raise IndexError("สแตกว่างเปล่า (Stack Underflow)")
+        return self.__data.pop()
+        
+    def peek(self) -> any:
+        """อินเตอร์เฟซหลัก: ดูข้อมูลตัวบนสุดโดยไม่ลบค่าออกจากโครงสร้าง"""
+        if self.is_empty():
+            return None
+        return self.__data[-1]
+        
+    def is_empty(self) -> bool:
+        """ตรวจสอบสถานะว่างเปล่าของโครงสร้าง"""
+        return len(self.__data) == 0
+        
+    def size(self) -> int:
+        """คืนค่าขนาดยอดสมาชิกในโครงสร้างข้อมูล"""
+        return len(self.__data)`;
 
   return (
     <div className="font-sans text-slate-800 pb-24 relative">
-      
-      {/* ─── Layer 1: Ambient Backdrop ─── */}
-      <AmbientBackdrop blobs={DSA1_6_BLOBS} />
+      <CustomStyles />
 
-      {/* ─── Layer 3: Main Page Content ─── */}
+      {/* Layer 1: Ambient Background Blobs */}
+      <AmbientBackdrop blobs={blobs} />
+
+      {/* Layer 3: Main Page Content */}
       <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-6 space-y-12 md:space-y-16 relative z-10">
 
-        {/* ─── Section 1: Complexity Introduction ─── */}
+        {/* Section 1: Intro to ADT */}
         <section className="space-y-6">
           <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-violet-600 tracking-wider uppercase">
-              การประเมินประสิทธิภาพในทางคอมพิวเตอร์ / Growth Rate SOT
+            <span className="text-sm font-bold text-teal-600 tracking-wider uppercase">
+              วิทยาการคอมพิวเตอร์และแนวคิดเชิงคำนวณ
             </span>
             <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              Time Complexity และ Space Complexity
+              โครงสร้างข้อมูลแบบนามธรรม (Abstract Data Type: ADT) คืออะไร
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            {/* Left Description Block */}
-            <div className="lg:col-span-7 space-y-4">
-              <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
-                ในการประเมินความสามารถของขั้นตอนวิธีคอมพิวเตอร์ เราจะไม่จับเวลาเป็นหน่วย "วินาที" หรือวัดพื้นที่เก็บไฟล์เป็น "กิโลไบต์" 
-                เพราะคอมพิวเตอร์แต่ละเครื่องมีประสิทธิภาพฮาร์ดแวร์ที่ไม่เท่ากัน แต่ในทางสากล เราจะวัดจาก 
-                <span className="bg-violet-50/50 border border-violet-200/50 text-violet-700 px-1.5 py-0.5 rounded text-sm font-mono font-bold">อัตราการเติบโตในการใช้ทรัพยากร (Growth Rate)</span> 
-                เมื่อปริมาณข้อมูลเข้า ($n$) ขยายตัวเพิ่มขึ้นอย่างมหาศาล โดยแบ่งออกเป็น 2 มิติหลัก:
-              </p>
-
-              <div className="bg-violet-50/50 backdrop-blur-md border border-violet-200/60 rounded-2xl p-5 border-l-[3px] border-l-violet-500 leading-relaxed">
-                <h4 className="font-semibold text-violet-900 text-[15px] mb-1 flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-violet-600 animate-pulse" />
-                  ความซับซ้อนทางเวลา (Time Complexity)
-                </h4>
-                <p className="text-[13.5px] text-slate-600 leading-relaxed">
-                  สัดส่วนและอัตราจำนวนรอบการทำงานคอมพิวเตอร์พื้นฐาน (Primitive Operations) ที่ซีพียูต้องประมวลผล 
-                  โดยจะเพิ่มขึ้นหรือลดลงแปรผันตามขนาดของข้อมูลอินพุต ($n$) เสมอ
-                </p>
-              </div>
-
-              <div className="bg-cyan-50/50 backdrop-blur-md border border-cyan-200/60 rounded-2xl p-5 border-l-[3px] border-l-cyan-500 leading-relaxed">
-                <h4 className="font-semibold text-cyan-900 text-[15px] mb-1 flex items-center gap-2">
-                  <Database className="w-4 h-4 text-cyan-600 animate-pulse" />
-                  ความซับซ้อนทางพื้นที่ (Space Complexity)
-                </h4>
-                <p className="text-[13.5px] text-slate-600 leading-relaxed">
-                  สัดส่วนพื้นที่หน่วยความจำชั่วคราว (RAM Memory) ที่อัลกอริทึมต้องการเพิ่มขึ้นมาในระหว่างการรันโค้ด 
-                  ไม่นับรวมพื้นที่ขนาดของอาเรย์หรือข้อมูลนำเข้าเริ่มแรกของระบบ
-                </p>
-              </div>
-            </div>
-
-            {/* Right Flowchart Info board */}
-            <div className="lg:col-span-5 bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-6 flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-wider block mb-2">
-                  วิเคราะห์สภาพแวดล้อมกรณีประมวลผล (Execution Scenarios)
-                </span>
-                <h4 className="text-[16px] font-bold text-slate-800 mb-3">สภาวะกรณีการทดสอบความเร็ว</h4>
-                
-                <div className="space-y-3 font-sans text-xs">
-                  <div className="border-b border-slate-100 pb-2">
-                    <span className="font-bold text-slate-700 block">Worst-case Scenario (กรณีเลวร้ายที่สุด):</span>
-                    <p className="text-slate-500 leading-relaxed mt-0.5">
-                      ขอบเขตการทำงานสูงสุดที่แย่ที่สุดที่โปรแกรมจะใช้ มักถูกวิเคราะห์ผ่านสัญกรณ์ Big O เพื่อรับประกันว่าซอฟต์แวร์จะไม่ช้าไปกว่าขีดนี้
-                    </p>
-                  </div>
-                  <div className="border-b border-slate-100 pb-2">
-                    <span className="font-bold text-slate-700 block">Best-case Scenario (กรณีดีที่สุด):</span>
-                    <p className="text-slate-500 leading-relaxed mt-0.5">
-                      กรณีที่ชุดข้อมูลเอื้ออำนวยให้ทำงานเสร็จทันที เช่น การทำ Linear Search หาตัวเลขแล้วตัวเลขนั้นดันอยู่ที่ index 0 ทันที
-                    </p>
-                  </div>
-                  <div>
-                    <span className="font-bold text-slate-700 block">Average-case Scenario (กรณีทั่วไป):</span>
-                    <p className="text-slate-500 leading-relaxed mt-0.5">
-                      ค่าเฉลี่ยสถิติของปริมาณข้อมูลทั่วไปทั้งหมด มักมีค่ายากแก่การคำนวณและวิเคราะห์อย่างแม่นยำ
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ─── Section 2: Big O Notation Cards Grid ─── */}
-        <section className="space-y-6">
-          <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-violet-600 tracking-wider uppercase">
-              สัญกรณ์คณิตศาสตร์คอมพิวเตอร์ / Big O Classes
-            </span>
-            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              สัญกรณ์บิ๊กโอพื้นฐาน (Big O Notation)
-            </h3>
-          </div>
-
-          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
-            สัญกรณ์บิ๊กโอเป็นสัญลักษณ์สำหรับบอกความซับซ้อนทางเวลาขอบเขตบนสุด (Upper Bound) ในกรณี Worst-case 
-            ที่วิศวกรยอมรับในอุตสาหกรรม โดยมีระดับประสิทธิภาพที่ใช้บ่อยดังนี้:
+          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+            ในการพัฒนาซอฟต์แวร์ <span className="mx-1 px-1.5 py-0.5 rounded bg-teal-50 border border-teal-200/50 text-teal-700 font-mono text-[14px]">Abstract Data Type (ADT)</span> 
+            หรือประเภทข้อมูลนามธรรม คือการระบุข้อตกลงและชุดการปฏิบัติการ (API/Operations) ที่ข้อมูลนั้นสามารถทำได้ 
+            โดยจะไม่ระบุวิธีการจัดเก็บจริงในฮาร์ดแวร์หรือแรม (Implementation) แนวคิดนี้ช่วยให้นักพัฒนาสามารถแยกแยะ
+            <strong>"พฤติกรรมที่ยอมรับ (What)"</strong> ออกจาก <strong>"วิธีการพัฒนาจริงด้านหลัง (How)"</strong> ได้อย่างเด็ดขาด:
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { symbol: 'O(1)', title: 'เวลาคงที่ (Constant)', desc: 'เวลาคงเดิมเสมอไม่ว่าจะเพิ่มข้อมูลเท่าใด เช่น ดึงข้อมูลผ่าน Index หรือเช็ค Hash Table', code: 'first_element = data[0]', result: 'ดีเลิศ (Best)', accent: 'emerald' },
-              { symbol: 'O(log n)', title: 'เวลาลอการิทึม (Logarithmic)', desc: 'ความเร็วเพิ่มขึ้นช้ามากเมื่อข้อมูลเพิ่มมหาศาล เพราะตัดข้อมูลทิ้งทีละครึ่งในทุกสเต็ป เช่น Binary Search', code: 'high = mid - 1', result: 'ดีเยี่ยม (Excellent)', accent: 'cyan' },
-              { symbol: 'O(n)', title: 'เวลาเชิงเส้น (Linear)', desc: 'เวลาเติบโตเป็นสัดส่วนตรงกับขนาดข้อมูล เช่น การค้นหาตามลำดับแบบตัวต่อตัวตั้งแต่ต้นจนจบ', code: 'for item in data:', result: 'ปานกลาง (Good)', accent: 'amber' },
-              { symbol: 'O(n log n)', title: 'เวลากึ่งเส้นตรง (Linearithmic)', desc: 'พบบ่อยในอัลกอริทึมการจัดเรียงชุดตัวเลขที่มีประสิทธิภาพสูงระดับสากล เช่น Merge & Quick Sort', code: 'merge_sort(left_half)', result: 'ยอมรับได้ (Fair)', accent: 'indigo' },
-              { symbol: 'O(n²)', title: 'เวลากำลังสอง (Quadratic)', desc: 'ประสิทธิภาพต่ำ โปรแกรมช้าลงพุ่งชัน มักเกิดขึ้นจากลูปซ้อนลูป (Nested loops) ในโค้ด', code: 'for x in data: for y in data:', result: 'ประสิทธิภาพต่ำ (Poor)', accent: 'orange' },
-              { symbol: 'O(2ⁿ)', title: 'กำลังเอกซ์โพเนนเชียล (Exponential)', desc: 'เวลาเพิ่มขึ้น 2 เท่าทุกชิ้นข้อมูลที่ป้อนเข้า มักพบในโค้ด Fibonacci แบบ recursive ดั้งเดิม', code: 'return fib(n-1) + fib(n-2)', result: 'วิกฤต (Worst)', accent: 'rose' }
-            ].map((card, idx) => (
-              <ConceptCard
-                key={idx}
-                symbol={card.symbol}
-                title={card.title}
-                description={card.desc}
-                code={card.code}
-                result={card.result}
-                accent={card.accent}
-                resultColor="indigo"
-              />
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <ConceptCard
+              symbol="Interface"
+              title="สเปก/พฤติกรรมเชิงนามธรรม"
+              description="ระบุความสามารถหลัก เช่น สแตกรองรับเมธอด push และ pop โดยไม่เจาะจงชนิดโครงสร้างข้อมูลด้านหลัง"
+              accent="teal"
+            />
+            <ConceptCard
+              symbol="How"
+              title="การประยุกต์เชิงกายภาพ"
+              description="คือวิธีการที่ใช้เขียนรหัสโครงสร้างข้อมูลจริง เช่น นำอาร์เรย์ (List) หรือ รายการเชื่อมโยง (Linked List) มาพัฒนา"
+              accent="indigo"
+            />
+            <ConceptCard
+              symbol="Hiding"
+              title="การซ่อนรายละเอียดภายใน"
+              description="ควบคุมข้อมูลผ่าน API ที่เปิดเผยเท่านั้น ป้องกันไม่ให้ส่วนอื่นของซอฟต์แวร์เข้ามายุ่งเกี่ยวกับ RAM โดยตรง"
+              accent="amber"
+            />
+            <ConceptCard
+              symbol="Change"
+              title="ความยืดหยุ่นระดับพัฒนา"
+              description="ช่วยให้ผู้พัฒนาสามารถปรับปรุงหรือเปลี่ยนสถาปัตยกรรมเก็บข้อมูลภายในได้โดยไม่มีผลกระทบต่อภายนอก"
+              accent="rose"
+            />
           </div>
         </section>
 
-        {/* ─── Section 3: Interactive Simulator (BigO-Grapher) ─── */}
+        {/* Section 2: Pros & Cons of ADT */}
         <section className="space-y-6">
           <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-violet-600 tracking-wider uppercase">
-              ตัวเปรียบเทียบสเกลเวลาสด / BigO-Grapher
+            <span className="text-sm font-bold text-teal-600 tracking-wider uppercase">
+              การวิเคราะห์เชิงวิศวกรรม
             </span>
             <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              แผนภาพวิเคราะห์ความซับซ้อนบิ๊กโอ (Big O Complexity Dynamic Grapher)
+              การเปรียบเทียบข้อดีและข้อเสียของการออกแบบด้วย ADT
             </h3>
           </div>
 
-          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
-            ปรับแถบเลื่อนขนาดข้อมูลป้อนเข้า N ด้านล่างเพื่อสังเกตการพล็อตวิถีกราฟเส้นสดของ Big O แต่ละแบบ 
-            และศึกษาตัวแปรประมาณเวลาประมวลผลสมมติในตารางสรุปผลอย่างเรียลไทม์:
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Pros card */}
+            <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-6 border-l-[3.5px] border-l-emerald-500/80">
+              <span className="text-sm font-mono font-bold text-emerald-600 uppercase tracking-widest block mb-2">🟢 ADVANTAGES / ข้อดี</span>
+              <ul className="space-y-3">
+                {[
+                  "การแยกแยะอินเตอร์เฟซ (Decoupling) ช่วยลดการผูกติดกันของซอฟต์แวร์ ทำให้บำรุงรักษาง่าย",
+                  "การป้องกันการเข้าถึงข้อมูลโดยตรง (Encapsulation) ช่วยเพิ่มความมั่นคงและปลอดภัยของระบบข้อมูล",
+                  "สามารถแก้ไขข้อบกพร่องภายในคลาสได้ง่าย โดยไม่มีผลกระทบและไม่ต้องตามไปแก้ไขคำสั่งในโมดูลอื่น",
+                  "นักพัฒนาสามารถออกแบบและจำลองระบบเสมือนเพื่อเริ่มเขียนโค้ดทีมอื่นล่วงหน้าได้ทันที"
+                ].map((item, idx) => (
+                  <li key={idx} className="text-[14px] md:text-[15px] text-slate-700 leading-relaxed flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-emerald-500 shrink-0 mt-1" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Cons card */}
+            <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-6 border-l-[3.5px] border-l-rose-500/80">
+              <span className="text-sm font-mono font-bold text-rose-600 uppercase tracking-widest block mb-2">🔴 DISADVANTAGES / ข้อเสีย</span>
+              <ul className="space-y-3">
+                {[
+                  "มีความซับซ้อนเชิงสถาปัตยกรรมเพิ่มขึ้น (Overhead) จากการเพิ่มโครงสร้างการเรียกฟังก์ชันภายนอก",
+                  "อาจส่งผลกระทบต่อประสิทธิภาพความเร็วและหน่วยความจำเล็กน้อย เนื่องจากการประมวลผลถูกครอบผ่านเลเยอร์ตัวกลาง",
+                  "ต้องใช้เวลาและทักษะการออกแบบในการวางแบบแปลน API ที่เหมาะสมตั้งแต่เริ่มต้นโครงงาน",
+                  "ยากต่อการสืบค้นและทำความเข้าใจลำดับการส่งผ่านข้อมูลสำหรับนักพัฒนาหน้าใหม่"
+                ].map((item, idx) => (
+                  <li key={idx} className="text-[14px] md:text-[15px] text-slate-700 leading-relaxed flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-rose-500 shrink-0 mt-1" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 3: Interactive ADT Simulator */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-teal-600 tracking-wider uppercase">
+              ตัวจำลองตรรกะเชิงลึก
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              บอร์ดทดสอบคุณสมบัติประเภทข้อมูลนามธรรม (ADT Interface vs Physical Layout)
+            </h3>
+          </div>
+
+          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+            ทดลองจำลองการทำธุรกรรมด้วยประเภทข้อมูลนามธรรม โดยคุณสามารถสลับอินเตอร์เฟซระหว่าง <strong>"Stack (LIFO)"</strong> หรือ <strong>"Queue (FIFO)"</strong> 
+            และจับคู่การจำลองบันทึกข้อมูลเบื้องหลังด้วยโครงสร้างทางกายภาพที่แตกต่างกัน เพื่อสังเกตขั้นตอนความแตกต่างทางหน่วยความจำ:
           </p>
 
           <SimulatorShell
             dark
-            title="Big O Complexity Grapher"
-            icon={<BarChart2 className="w-8 h-8 text-violet-400 animate-pulse" />}
-            glowColors="from-slate-800/35 to-slate-950/10"
-            iconColor="text-violet-400"
+            title="ADT Behavior & Memory Pipeline Simulator"
+            icon={<Sliders className="w-8 h-8 text-teal-400" />}
+            glowColors="from-teal-950/20 to-indigo-950/15"
+            iconColor="text-teal-400"
           >
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mt-4">
               
-              {/* Left control sandbox panel */}
-              <div className="lg:col-span-5 bg-slate-900/90 backdrop-blur-xl rounded-2xl p-5 border border-white/10 shadow-2xl relative flex flex-col justify-between min-h-[460px]">
-                <span className="text-[9px] font-mono text-slate-500 absolute top-3 right-4 font-bold tracking-widest">
-                  SANDBOX CONTROLLER
-                </span>
+              {/* Left Panel: Control panel */}
+              <div className="lg:col-span-5 bg-slate-900/90 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-2xl relative flex flex-col justify-between min-h-[480px]">
+                <div className="text-[9px] font-mono text-slate-500 absolute top-3 right-4 font-bold tracking-widest">
+                  ADT CONSOLE
+                </div>
 
-                <div className="space-y-6">
-                  {/* Slider size N */}
+                <div className="space-y-5">
+                  {/* Select ADT Type */}
                   <div className="space-y-2">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block">
-                      1. ปรับขนาดข้อมูลนำเข้า N:
-                    </span>
-                    <input
-                      type="range"
-                      min="10"
-                      max="50000"
-                      step="10"
-                      value={dataSize}
-                      onChange={e => handleSliderChange(parseInt(e.target.value))}
-                      className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-violet-500"
-                    />
-                    <div className="flex justify-between items-center text-xs font-mono font-bold text-white bg-slate-950 p-2.5 rounded-lg border border-slate-800">
-                      <span className="text-slate-400">ขนาดข้อมูล N (Data Size):</span>
-                      <span className="text-violet-400 text-sm tracking-wider">{dataSize.toLocaleString()}</span>
-                    </div>
-                  </div>
-
-                  {/* Toggle Lines Switcher */}
-                  <div className="space-y-2">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block">
-                      2. เลือกแสดงผลเส้นกราฟบิ๊กโอ (Toggle Lines):
-                    </span>
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block">1. เลือกประเภทข้อมูลนามธรรม (ADT API):</span>
                     <div className="grid grid-cols-2 gap-2">
-                      {[
-                        { id: 'o1', label: '🟢 O(1) - Constant', color: 'border-emerald-500 text-emerald-400' },
-                        { id: 'ologn', label: '🔵 O(log n) - Logarithmic', color: 'border-cyan-500 text-cyan-400' },
-                        { id: 'on', label: '🟡 O(n) - Linear', color: 'border-amber-500 text-amber-400' },
-                        { id: 'on2', label: '🟠 O(n²) - Quadratic', color: 'border-rose-500 text-rose-400' }
-                      ].map(line => (
-                        <button
-                          key={line.id}
-                          onClick={() => toggleLine(line.id)}
-                          className={`p-2.5 rounded-xl border text-[11px] font-bold transition-all text-left cursor-pointer ${
-                            enabledLines[line.id]
-                              ? `bg-slate-800/80 ${line.color} shadow shadow-slate-900`
-                              : 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300'
+                      <button
+                        onClick={() => { if(!isProcessing) setAdtType('Stack'); }}
+                        disabled={isProcessing}
+                        className={`py-2 rounded-xl border text-center font-bold text-xs cursor-pointer transition-all
+                          ${adtType === 'Stack'
+                            ? 'border-teal-500 bg-teal-950/40 text-teal-300'
+                            : 'border-slate-800 bg-slate-950/30 text-slate-400 hover:border-slate-700'
                           }`}
-                        >
-                          {line.label}
-                        </button>
-                      ))}
+                      >
+                        Stack ADT (LIFO)
+                      </button>
+                      <button
+                        onClick={() => { if(!isProcessing) setAdtType('Queue'); }}
+                        disabled={isProcessing}
+                        className={`py-2 rounded-xl border text-center font-bold text-xs cursor-pointer transition-all
+                          ${adtType === 'Queue'
+                            ? 'border-indigo-500 bg-indigo-950/40 text-indigo-300'
+                            : 'border-slate-800 bg-slate-950/30 text-slate-400 hover:border-slate-700'
+                          }`}
+                      >
+                        Queue ADT (FIFO)
+                      </button>
                     </div>
                   </div>
 
-                  {/* Dynamic Code Viewer Selector */}
-                  <div className="space-y-2 pt-1 border-t border-slate-800">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block">
-                      3. ดูรหัสคำสั่งขั้นตอนวิธีเปรียบเทียบ (Code Outline):
-                    </span>
-                    <div className="flex gap-2">
-                      {['o1', 'ologn', 'on', 'on2'].map(opt => (
-                        <button
-                          key={opt}
-                          onClick={() => setActiveCodeView(opt)}
-                          className={`px-2.5 py-1 rounded text-[10px] font-bold font-mono transition-all uppercase cursor-pointer ${
-                            activeCodeView === opt
-                              ? 'bg-violet-600 text-white shadow shadow-violet-600/40'
-                              : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                  {/* Select physical implementation */}
+                  <div className="space-y-2">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block">2. เลือกโครงสร้างข้อมูลจัดเก็บจริง (Implementation):</span>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => { if(!isProcessing) setImplementation('Array'); }}
+                        disabled={isProcessing}
+                        className={`py-2 rounded-xl border text-center font-bold text-xs cursor-pointer transition-all
+                          ${implementation === 'Array'
+                            ? 'border-teal-500 bg-teal-950/40 text-teal-300'
+                            : 'border-slate-800 bg-slate-950/30 text-slate-400 hover:border-slate-700'
                           }`}
-                        >
-                          {opt}
-                        </button>
-                      ))}
+                      >
+                        Array (List)
+                      </button>
+                      <button
+                        onClick={() => { if(!isProcessing) setImplementation('LinkedList'); }}
+                        disabled={isProcessing}
+                        className={`py-2 rounded-xl border text-center font-bold text-xs cursor-pointer transition-all
+                          ${implementation === 'LinkedList'
+                            ? 'border-indigo-500 bg-indigo-950/40 text-indigo-300'
+                            : 'border-slate-800 bg-slate-950/30 text-slate-400 hover:border-slate-700'
+                          }`}
+                      >
+                        Linked List
+                      </button>
                     </div>
+                  </div>
 
-                    {/* pre element */}
-                    <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-[11px] text-emerald-300 font-mono overflow-x-auto min-h-[96px]">
-                      {activeCodeView === 'o1' && (
-                        <pre>{`# O(1) Constant (เข้าถึงทันที)
-def get_element(arr, index):
-    return arr[index] # 1 Step`}</pre>
-                      )}
-                      {activeCodeView === 'ologn' && (
-                        <pre>{`# O(log N) Logarithmic (ค้นหาทวิภาค)
-def binary_search(arr, val):
-    # ตัดข้อมูลทิ้งครึ่งนึงในทุกรอบ
-    # Max steps: log2(N)`}</pre>
-                      )}
-                      {activeCodeView === 'on' && (
-                        <pre>{`# O(N) Linear (ค้นหาแบบเชิงเส้น)
-def find_item(arr, val):
-    for x in arr:
-        if x == val: return True`}</pre>
-                      )}
-                      {activeCodeView === 'on2' && (
-                        <pre>{`# O(N²) Quadratic (วนลูปสองชั้น)
-def print_pairs(arr):
-    for x in arr:
-        for y in arr:
-            print(x, y)`}</pre>
-                      )}
+                  {/* Operation Buttons */}
+                  <div className="space-y-2">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block">3. ดำเนินการปฏิบัติการเชิงคำสั่ง:</span>
+                    <div className="grid grid-cols-3 gap-2">
+                      <button
+                        onClick={() => {
+                          const nextVal = String.fromCharCode(65 + items.length); // A, B, C, D...
+                          handlePush(nextVal);
+                        }}
+                        disabled={isProcessing || items.length >= 5}
+                        className="py-2.5 bg-slate-800 border border-slate-700 hover:border-teal-500 text-teal-400 rounded-xl text-xs font-bold flex items-center justify-center gap-1 cursor-pointer disabled:opacity-40"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        {adtType === 'Stack' ? 'Push()' : 'Enqueue()'}
+                      </button>
+                      <button
+                        onClick={handlePop}
+                        disabled={isProcessing || items.length === 0}
+                        className="py-2.5 bg-slate-800 border border-slate-700 hover:border-rose-500 text-rose-400 rounded-xl text-xs font-bold flex items-center justify-center gap-1 cursor-pointer disabled:opacity-40"
+                      >
+                        <Minus className="w-3.5 h-3.5" />
+                        {adtType === 'Stack' ? 'Pop()' : 'Dequeue()'}
+                      </button>
+                      <button
+                        onClick={handlePeek}
+                        disabled={isProcessing || items.length === 0}
+                        className="py-2.5 bg-slate-800 border border-slate-700 hover:border-amber-500 text-amber-400 rounded-xl text-xs font-bold flex items-center justify-center gap-1 cursor-pointer disabled:opacity-40"
+                      >
+                        <Eye className="w-3.5 h-3.5" /> Peek()
+                      </button>
                     </div>
                   </div>
                 </div>
 
-                {/* Status Bar */}
-                <div className="mt-4 pt-3 border-t border-slate-800 text-[10.5px] font-mono text-emerald-400 bg-black/30 p-2 rounded-lg border border-slate-800">
-                  <span className="text-zinc-500 block text-[8px] uppercase tracking-wider mb-0.5">Terminal Log Output:</span>
-                  {statusMsg}
+                {/* Reset and Logs */}
+                <div className="space-y-4 pt-4 border-t border-slate-800">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleResetSimulator}
+                      disabled={isProcessing}
+                      className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" /> รีเซ็ตการทำงาน
+                    </button>
+                  </div>
+
+                  {/* Tiny Output Shell */}
+                  <div className="bg-black/80 p-3 rounded-xl border border-slate-950 font-mono text-[11px] leading-relaxed text-teal-400 overflow-y-auto max-h-[110px] min-h-[90px]">
+                    <div className="text-slate-500 border-b border-slate-900 pb-1 mb-1.5 uppercase tracking-wide text-[8.5px] font-bold">ADT Runtime Trace:</div>
+                    {terminalLogs.map((log, i) => (
+                      <div key={i} className="animate-fadeIn">
+                        <span className="text-slate-650">&gt; </span>
+                        <span>{log}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Right display graph board */}
-              <div className="lg:col-span-7 bg-slate-950/95 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-2xl relative flex flex-col justify-between min-h-[460px]">
-                <span className="text-[9px] font-mono text-slate-500 absolute top-3 left-3">
-                  COMPLEXITY GRAPH & MICRO-TIME SCALING
-                </span>
+              {/* Right Panel: Visual representation of memory */}
+              <div className="lg:col-span-7 bg-slate-950/95 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-2xl relative flex flex-col justify-between min-h-[480px]">
+                <div className="text-[9px] font-mono text-slate-500 absolute top-3 left-3 font-bold tracking-widest">
+                  ADT LAYERING GRAPH & MEMORY VIEW
+                </div>
 
-                <div className="grow flex flex-col justify-center items-center mt-6">
-                  {/* Graph Canvas SVG */}
-                  <div className="w-full max-w-sm h-[220px] bg-slate-900/40 border border-slate-800 rounded-xl relative overflow-hidden flex items-center justify-center p-3 shadow-inner">
-                    <svg className="w-full h-full" viewBox="0 0 380 240">
-                      {/* Grid lines */}
-                      <g stroke="#1e293b" strokeWidth="1">
-                        <line x1="15" y1="20" x2="365" y2="20" />
-                        <line x1="15" y1="75" x2="365" y2="75" />
-                        <line x1="15" y1="130" x2="365" y2="130" />
-                        <line x1="15" y1="185" x2="365" y2="185" />
-                        <line x1="15" y1="225" x2="365" y2="225" />
-                        <line x1="15" y1="20" x2="15" y2="225" />
-                        <line x1="102.5" y1="20" x2="102.5" y2="225" />
-                        <line x1="190" y1="20" x2="190" y2="225" />
-                        <line x1="277.5" y1="20" x2="277.5" y2="225" />
-                        <line x1="365" y1="20" x2="365" y2="225" />
+                <div className="space-y-6 mt-6 flex-1 flex flex-col justify-between">
+                  {/* SVG Concurrency Flow */}
+                  <div className="relative bg-slate-900/40 rounded-xl border border-slate-900/60 p-4 grow flex items-center justify-center min-h-[220px]">
+                    <svg viewBox="0 0 560 220" className="w-full h-full" id="adt-concurrency-svg">
+                      <defs>
+                        <marker id="arrow-gray-adt" viewBox="0 0 10 10" refX="28" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                          <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569" />
+                        </marker>
+                        <marker id="arrow-teal-adt" viewBox="0 0 10 10" refX="28" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                          <path d="M 0 1 L 10 5 L 0 9 z" fill="#14b8a6" />
+                        </marker>
+                        <marker id="arrow-indigo-adt" viewBox="0 0 10 10" refX="28" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                          <path d="M 0 1 L 10 5 L 0 9 z" fill="#6366f1" />
+                        </marker>
+                      </defs>
+
+                      {/* Connection paths between centers: */}
+                      {/* API to Array: M 280,50 L 160,50 L 160,120 */}
+                      <path 
+                        d="M 280,50 L 160,50 L 160,120" 
+                        fill="none" 
+                        stroke={activeStep >= 0 && implementation === 'Array' ? "#14b8a6" : "#334155"} 
+                        strokeWidth="3"
+                        strokeDasharray={activeStep === 0 && implementation === 'Array' ? "6,4" : "none"}
+                        className={activeStep === 0 && implementation === 'Array' ? "animate-flow-line-dsa" : ""}
+                        markerEnd={activeStep >= 1 && implementation === 'Array' ? "url(#arrow-teal-adt)" : "url(#arrow-gray-adt)"}
+                      />
+
+                      {/* API to Linked List: M 280,50 L 400,50 L 400,120 */}
+                      <path 
+                        d="M 280,50 L 400,50 L 400,120" 
+                        fill="none" 
+                        stroke={activeStep >= 0 && implementation === 'LinkedList' ? "#6366f1" : "#334155"} 
+                        strokeWidth="3"
+                        strokeDasharray={activeStep === 0 && implementation === 'LinkedList' ? "6,4" : "none"}
+                        className={activeStep === 0 && implementation === 'LinkedList' ? "animate-flow-line-dsa" : ""}
+                        markerEnd={activeStep >= 1 && implementation === 'LinkedList' ? "url(#arrow-indigo-adt)" : "url(#arrow-gray-adt)"}
+                      />
+
+                      {/* Array to RAM: M 160,120 L 160,190 L 280,190 */}
+                      <path 
+                        d="M 160,120 L 160,190 L 280,190" 
+                        fill="none" 
+                        stroke={activeStep >= 1 && implementation === 'Array' ? "#14b8a6" : "#334155"} 
+                        strokeWidth="2.5"
+                        strokeDasharray={activeStep === 1 && implementation === 'Array' ? "6,4" : "none"}
+                        className={activeStep === 1 && implementation === 'Array' ? "animate-flow-line-dsa" : ""}
+                        markerEnd={activeStep >= 2 && implementation === 'Array' ? "url(#arrow-teal-adt)" : "url(#arrow-gray-adt)"}
+                      />
+
+                      {/* Linked List to RAM: M 400,120 L 400,190 L 280,190 */}
+                      <path 
+                        d="M 400,120 L 400,190 L 280,190" 
+                        fill="none" 
+                        stroke={activeStep >= 1 && implementation === 'LinkedList' ? "#6366f1" : "#334155"} 
+                        strokeWidth="2.5"
+                        strokeDasharray={activeStep === 1 && implementation === 'LinkedList' ? "6,4" : "none"}
+                        className={activeStep === 1 && implementation === 'LinkedList' ? "animate-flow-line-dsa" : ""}
+                        markerEnd={activeStep >= 2 && implementation === 'LinkedList' ? "url(#arrow-indigo-adt)" : "url(#arrow-gray-adt)"}
+                      />
+
+                      {/* Traveling dots */}
+                      {isProcessing && activeStep === 0 && (
+                        <circle r="5" fill={implementation === 'Array' ? "#14b8a6" : "#6366f1"} className="animate-pulse">
+                          <animateMotion dur="1s" repeatCount="indefinite" path={implementation === 'Array' ? "M 280,50 L 160,50 L 160,120" : "M 280,50 L 400,50 L 400,120"} />
+                        </circle>
+                      )}
+
+                      {/* Node 1: Public ADT API */}
+                      <g transform="translate(280, 50)">
+                        <circle r="26" fill="#1e293b" stroke={activeStep === 0 ? "#14b8a6" : "#475569"} strokeWidth="2.5" />
+                        <g transform="translate(-10, -10)">
+                          <Layers className={`w-5 h-5 ${activeStep === 0 ? 'text-teal-400' : 'text-slate-400'}`} />
+                        </g>
+                        <text x="0" y="-32" textAnchor="middle" className="fill-teal-400 font-sans text-[9px] font-bold uppercase tracking-wider">Public ADT API Interface</text>
+                        <text x="0" y="42" textAnchor="middle" className="fill-slate-400 font-sans text-[8.5px] font-bold">{adtType} ADT ({adtType === 'Stack' ? 'push/pop' : 'enq/deq'})</text>
                       </g>
 
-                      {/* Axis Labels */}
-                      <text x="190" y="237" fill="#64748b" textAnchor="middle" className="text-[8.5px] font-bold font-mono">ขนาดข้อมูลนำเข้า N →</text>
-                      <text x="8" y="120" fill="#64748b" textAnchor="middle" transform="rotate(-90 8 120)" className="text-[8.5px] font-bold font-mono">ขั้นตอนประมวลผล (Steps) →</text>
+                      {/* Node 2: Array-Based Implementation */}
+                      <g transform="translate(160, 120)">
+                        <circle r="24" fill="#1e293b" stroke={activeStep === 1 && implementation === 'Array' ? "#14b8a6" : "#475569"} strokeWidth="2.5" />
+                        <g transform="translate(-9, -9)">
+                          <Sliders className={`w-4.5 h-4.5 ${activeStep === 1 && implementation === 'Array' ? 'text-teal-400' : 'text-slate-400'}`} />
+                        </g>
+                        <text x="-32" y="4" textAnchor="end" className="fill-slate-450 font-sans text-[8.5px] font-bold">Array Implementation</text>
+                      </g>
 
-                      {/* O(1) Constant (Emerald line) */}
-                      {enabledLines.o1 && (
-                        <polyline
-                          fill="none"
-                          stroke="#10b981"
-                          strokeWidth="2.5"
-                          points={getSvgPath('o1')}
-                          className="transition-all duration-300"
-                        />
-                      )}
+                      {/* Node 3: Linked-List-Based Implementation */}
+                      <g transform="translate(400, 120)">
+                        <circle r="24" fill="#1e293b" stroke={activeStep === 1 && implementation === 'LinkedList' ? "#6366f1" : "#475569"} strokeWidth="2.5" />
+                        <g transform="translate(-9, -9)">
+                          <Activity className={`w-4.5 h-4.5 ${activeStep === 1 && implementation === 'LinkedList' ? 'text-indigo-400' : 'text-slate-400'}`} />
+                        </g>
+                        <text x="32" y="4" textAnchor="start" className="fill-slate-450 font-sans text-[8.5px] font-bold">Linked List Implementation</text>
+                      </g>
 
-                      {/* O(log n) Logarithmic (Cyan line) */}
-                      {enabledLines.ologn && (
-                        <polyline
-                          fill="none"
-                          stroke="#06b6d4"
-                          strokeWidth="2.5"
-                          points={getSvgPath('ologn')}
-                          className="transition-all duration-300"
-                        />
-                      )}
-
-                      {/* O(n) Linear (Amber line) */}
-                      {enabledLines.on && (
-                        <polyline
-                          fill="none"
-                          stroke="#f59e0b"
-                          strokeWidth="2.5"
-                          points={getSvgPath('on')}
-                          className="transition-all duration-300"
-                        />
-                      )}
-
-                      {/* O(n^2) Quadratic (Rose/Red line) */}
-                      {enabledLines.on2 && (
-                        <polyline
-                          fill="none"
-                          stroke="#f43f5e"
-                          strokeWidth="2.5"
-                          points={getSvgPath('on2')}
-                          className="transition-all duration-300"
-                        />
-                      )}
+                      {/* Node 4: Physical RAM Node */}
+                      <g transform="translate(280, 190)">
+                        <circle r="20" fill={activeStep >= 2 ? "#064e3b" : "#111827"} stroke={activeStep >= 2 ? "#10b981" : "#374151"} strokeWidth="2" className={activeStep === 2 ? "animate-pulse" : ""} />
+                        <g transform="translate(-8, -8)">
+                          <Database className={`w-4 h-4 ${activeStep >= 2 ? "text-emerald-400" : "text-slate-600"}`} />
+                        </g>
+                        <text x="0" y="30" textAnchor="middle" className="fill-slate-400 font-sans text-[8.5px] font-bold uppercase">Physical Memory (RAM)</text>
+                      </g>
                     </svg>
                   </div>
-                </div>
 
-                {/* Micro-Time Estimation Table */}
-                <div className="mt-4 bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                  <div className="text-[10px] font-mono text-slate-500 uppercase block mb-2">
-                    ตารางคาดการณ์ระยะเวลาคำนวณจริง (Estimated Time @ 1µs per step):
-                  </div>
+                  {/* Physical RAM visualizer */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] text-slate-400 font-mono block uppercase">โครงสร้างหน่วยความจำจำลอง (Physical Layout in RAM):</span>
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border
+                        ${implementation === 'Array' 
+                          ? 'bg-teal-950/80 text-teal-400 border-teal-900' 
+                          : 'bg-indigo-950/80 text-indigo-400 border-indigo-900'
+                        }`}
+                      >
+                        {implementation === 'Array' ? '📊 ARRAY CONTIGUOUS MEMORY' : '🔗 LINKED LIST DYNAMIC NODES'}
+                      </span>
+                    </div>
 
-                  <div className="space-y-2.5 font-mono text-xs">
-                    {/* O1 Row */}
-                    {enabledLines.o1 && (
-                      <div className="flex justify-between items-center border-b border-slate-800 pb-2">
-                        <span className="text-emerald-400 font-bold shrink-0">O(1) Constant:</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-slate-500 hidden md:inline">1 ขั้นตอนเสถียร</span>
-                          <span className="text-white font-bold">{formatEstimateTime(getO1Steps())}</span>
+                    <div className="bg-slate-950/60 p-4 rounded-lg border border-slate-900 min-h-[90px] flex flex-col justify-center items-center">
+                      {items.length === 0 ? (
+                        <span className="text-slate-600 italic text-sm">ไม่มีข้อมูลในหน่วยความจำ (ADT is Empty)</span>
+                      ) : (
+                        <div className="w-full">
+                          {implementation === 'Array' ? (
+                            /* Array representation: contiguous boxes */
+                            <div className="flex gap-1 justify-center max-w-md mx-auto">
+                              {items.map((item, idx) => {
+                                const isTop = adtType === 'Stack' && idx === items.length - 1;
+                                const isFront = adtType === 'Queue' && idx === 0;
+                                return (
+                                  <div key={idx} className="flex flex-col items-center">
+                                    <div className={`w-12 h-12 rounded-lg border flex items-center justify-center font-bold text-sm text-slate-200 transition-all duration-300
+                                      ${isTop || isFront ? 'bg-teal-950 border-teal-500 shadow-teal-950/40 ring-1 ring-teal-500' : 'bg-slate-900 border-slate-800'}`}>
+                                      {item}
+                                    </div>
+                                    <span className="text-[9px] text-slate-500 mt-1 font-mono">[{idx}]</span>
+                                    {(isTop || isFront) && (
+                                      <span className="text-[8.5px] font-bold text-teal-400 font-mono mt-0.5">{isTop ? 'TOP' : 'FRONT'}</span>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                              {/* Empty slots representation */}
+                              {Array.from({ length: 5 - items.length }).map((_, i) => (
+                                <div key={i} className="flex flex-col items-center opacity-30">
+                                  <div className="w-12 h-12 rounded-lg border border-dashed border-slate-800 bg-transparent flex items-center justify-center text-slate-700 text-xs">-</div>
+                                  <span className="text-[9px] text-slate-650 mt-1 font-mono">[{items.length + i}]</span>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            /* Linked List representation: boxes with arrow pointers */
+                            <div className="flex items-center justify-center gap-2 flex-wrap">
+                              {items.map((item, idx) => {
+                                const isTop = adtType === 'Stack' && idx === items.length - 1;
+                                const isFront = adtType === 'Queue' && idx === 0;
+                                return (
+                                  <React.Fragment key={idx}>
+                                    <div className="flex flex-col items-center">
+                                      <div className={`w-12 h-12 rounded-xl border flex items-center justify-center font-bold text-sm text-slate-200 transition-all duration-300
+                                        ${isTop || isFront ? 'bg-indigo-950 border-indigo-500 shadow-indigo-950/40 ring-1 ring-indigo-500' : 'bg-slate-900 border-slate-800'}`}>
+                                        {item}
+                                      </div>
+                                      <span className="text-[9px] text-slate-500 mt-1 font-mono">Node</span>
+                                      {(isTop || isFront) && (
+                                        <span className="text-[8.5px] font-bold text-indigo-400 font-mono mt-0.5">{isTop ? 'TOP/HEAD' : 'FRONT/HEAD'}</span>
+                                      )}
+                                    </div>
+                                    {idx < items.length - 1 && (
+                                      <ArrowRight className="w-4 h-4 text-indigo-500/80 animate-pulse" />
+                                    )}
+                                    {idx === items.length - 1 && (
+                                      <>
+                                        <ArrowRight className="w-4 h-4 text-slate-700" />
+                                        <span className="text-[10px] font-mono text-slate-600">NULL</span>
+                                      </>
+                                    )}
+                                  </React.Fragment>
+                                );
+                              })}
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    )}
-
-                    {/* Ologn Row */}
-                    {enabledLines.ologn && (
-                      <div className="flex justify-between items-center border-b border-slate-800 pb-2">
-                        <span className="text-cyan-400 font-bold shrink-0">O(log n) Logarithmic:</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-slate-500 hidden md:inline">{getOLognSteps(dataSize)} ขั้นตอน</span>
-                          <span className="text-white font-bold">{formatEstimateTime(getOLognSteps(dataSize))}</span>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* On Row */}
-                    {enabledLines.on && (
-                      <div className="flex justify-between items-center border-b border-slate-800 pb-2">
-                        <span className="text-amber-400 font-bold shrink-0">O(n) Linear:</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-slate-500 hidden md:inline">{dataSize.toLocaleString()} ขั้นตอน</span>
-                          <span className="text-white font-bold">{formatEstimateTime(getONSteps(dataSize))}</span>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* On2 Row */}
-                    {enabledLines.on2 && (
-                      <div className="flex justify-between items-center pb-0.5">
-                        <span className="text-rose-400 font-bold shrink-0">O(n²) Quadratic:</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-slate-500 hidden md:inline">{(dataSize * dataSize).toLocaleString()} ขั้นตอน</span>
-                          <span className="text-rose-400 font-bold">
-                            {formatEstimateTime(getON2Steps(dataSize))}
-                          </span>
-                        </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
+
             </div>
           </SimulatorShell>
         </section>
 
-        {/* ─── Layer 4: Standardized TeacherTask Footer ─── */}
-        <TeacherTask
-          title="วิเคราะห์และเปรียบเทียบสเกลเวลาบิ๊กโอจากการประมวลผลเชิงพิกัด"
-          taskText={`คำชี้แจง: ให้นักเรียนสั่งวิเคราะห์ทดลองและลากปรับตัวเลื่อนขนาดข้อมูล N ในตัวจำลอง BigO-Grapher ด้านบน สังเกตพฤติกรรมความชันของเส้นกราฟที่เกิดการเปลี่ยนรูป และตอบคำถามทางวิชาการต่อไปนี้ลงในระบบการส่งการบ้าน:
+        {/* Section 4: Python Code Visualizer showing backend design rules */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-teal-600 tracking-wider uppercase">
+              ตัวอย่างโค้ดโปรแกรม
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              การสร้างประเภทข้อมูลนามธรรมใน Python (Encapsulated Stack Class)
+            </h3>
+          </div>
 
-1. จากผลการจำลองเหตุใดสัญกรณ์บิ๊กโอเวลากำลังสอง O(n²) จึงจัดเป็นระดับประสิทธิภาพ "ต่ำ" ที่ไม่แนะนำให้นำมาประยุกต์ใช้กับโครงงานที่มีปริมาณข้อมูล N ขนาดใหญ่
-   - อธิบายอิงจากอัตราความชันของกราฟ และระยะเวลาคาดการณ์ในตารางสรุปผลเมื่อ N ปรับตัวสูงขึ้นสู่ระดับ 50,000 รายการ
-2. เหตุใดขั้นตอนวิธีประเภทลอการิทึม O(log n) จึงมีอัตราการประหยัดพลังงานซีพียูที่ยอดเยี่ยมกว่าแบบ O(n) เชิงเส้นอย่างทวีคูณ
-   - อ้างอิงกลไกการค้นหาแบบทวิภาค (Binary Search) และลักษณะการตัดปริมาณความยาวข้อมูลในหน่วยประมวลผล
-3. จงเขียนตัวอย่างตรรกะโค้ดจำลอง (Pseudocode) หรือโค้ดจริงภาษาคอมพิวเตอร์ ที่มีระดับ Time Complexity แตกต่างกันดังนี้:
-   - ตรรกะแบบเวลาคงที่ O(1) จำนวน 1 ตัวอย่าง
-   - ตรรกะแบบเวลาเชิงเส้น O(n) จำนวน 1 ตัวอย่าง`}
+          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+            ในภาษา <span className="mx-1 px-1.5 py-0.5 rounded bg-teal-50 border border-teal-200/50 text-teal-700 font-mono text-[14px]">Python</span> 
+            เราสามารถนิยามโครงสร้างคลาสเพื่อทำหน้าที่เป็น ADT โดยซ่อนตัวแปรจัดเก็บข้อมูลจริงไว้เบื้องหลัง (Information Hiding) 
+            ทำให้ภายนอกเรียกใช้งานผ่านอินเตอร์เฟซ API ที่ผ่านการควบคุมดูแลความถูกต้องเรียบร้อยแล้วเท่านั้น:
+          </p>
+
+          <div className="grid grid-cols-1 gap-6 max-w-5xl mx-auto">
+            <ConsoleScreen
+              label="# python/stack_adt.py"
+              accentLabel="adt class interface"
+              accentColor="text-teal-400"
+              codeBlock={
+                <pre className="text-[13.5px] font-mono text-zinc-350 leading-relaxed overflow-x-auto">
+                  {pythonCode}
+                </pre>
+              }
+              output="สแตกรองรับการกระทำพื้นฐานผ่าน API โดยซ่อนโครงสร้าง __data (Private) ป้องกันบักการสืบค้นข้อมูลปนเปื้อนภายนอก"
+              outputColor="text-teal-400"
+              multiline={true}
+            />
+          </div>
+        </section>
+
+        {/* Section 5: Quiz Challenge */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-teal-600 tracking-wider uppercase">
+              ประเมินความเข้าใจวิชาการ
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              แบบจำลองทดสอบแนวคิดโครงสร้างข้อมูลนามธรรม (ADT Concept Challenge)
+            </h3>
+          </div>
+
+          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+            ทดสอบความรู้ความเข้าใจเกี่ยวกับสถาปัตยกรรมประเภทข้อมูลนามธรรมและประโยชน์ในการพัฒนาโครงสร้างซอฟต์แวร์สากล:
+          </p>
+
+          <div className="max-w-4xl mx-auto">
+            <QuizEngine
+              title="มินิเกม: ไขรหัสประเภทข้อมูลนามธรรม ADT"
+              description="ตอบคำถามความเข้าใจความแตกต่างของแนวคิดนามธรรมเชิงพฤติกรรมและการจัดเรียงหน่วยความจำจริง"
+              levels={quizLevels}
+              accentColor="from-teal-600/20 to-indigo-500/10"
+              icon={<Shield className="w-6 h-6 text-teal-400" />}
+            />
+          </div>
+        </section>
+
+        {/* Layer 4: Standardized TeacherTask Footer */}
+        <TeacherTask
+          title="ภารกิจออกแบบประเภทข้อมูลนามธรรมและเขียนโค้ดภาษา Python"
+          taskText={`[โจทย์ปฏิบัติการออกแบบประเภทข้อมูลนามธรรม (Abstract Data Type)]
+
+ให้นักศึกษาออกแบบประเภทข้อมูลนามธรรม (ADT) สำหรับโครงสร้างข้อมูล "คิวแบบสองทิศทาง (Double-Ended Queue: Deque ADT)" ซึ่งเป็นคิวที่สามารถนำข้อมูลเข้าและออกได้ทั้งจากทางด้านหน้า (Front) และด้านหลัง (Rear) โดยปฏิบัติการดังนี้:
+
+1. นิยามอินเตอร์เฟซหรือพฤติกรรมที่จำเป็นของ Deque ADT ในลักษณะคำอธิบาย เช่น add_front(), add_rear(), remove_front(), remove_rear(), is_empty(), size()
+2. เขียนคลาสภาษา Python ชื่อ "DequeADT" เพื่อจำลองข้อมูลนามธรรมนี้ โดยการซ่อนตัวแปรจัดเก็บข้อมูลภายในแบบ Private (__data) 
+3. อธิบายข้อดีของการใช้แนวคิด ADT เมื่อต้องปรับเปลี่ยนระบบเก็บข้อมูลด้านหลังจากอาร์เรย์ (Python List) ไปเป็นรายการเชื่อมโยงคู่ (Doubly Linked List)`}
         />
+
       </main>
     </div>
   );

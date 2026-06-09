@@ -1,171 +1,151 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import TeacherTask from '../../ui/TeacherTask';
 import {
   SimulatorShell,
   ConceptCard,
-  SectionBlock,
   AmbientBackdrop
 } from '../shared';
 import {
-  Cpu,
-  Layers,
   Database,
   ArrowRight,
   Play,
   RotateCcw,
-  AlertTriangle,
-  Zap,
+  Cpu,
+  Layers,
+  CheckCircle2,
   Info,
-  Network,
-  Activity,
-  Sliders,
-  Sparkles,
+  AlertCircle,
   RefreshCw,
+  ChevronRight,
   Plus,
   Trash2,
-  FileCode,
-  SquareDot,
-  CheckCircle2,
-  XCircle,
+  Sliders,
   HelpCircle
 } from 'lucide-react';
 
 export default function DSA1_4() {
   // ─── 1. Blobs for Layer 1 Background ──────────────────────────────────────
   const DSA1_4_BLOBS = [
-    { color: 'bg-emerald-200', size: 'w-[450px] h-[450px]', position: '-top-32 -left-32', opacity: 'opacity-40' },
-    { color: 'bg-teal-200',    size: 'w-[400px] h-[400px]', position: 'top-1/3 -right-32', opacity: 'opacity-35' },
-    { color: 'bg-cyan-200',    size: 'w-[380px] h-[380px]', position: '-bottom-32 left-1/4', opacity: 'opacity-30' },
-    { color: 'bg-emerald-100', size: 'w-[300px] h-[300px]', position: 'top-1/2 left-2/3', opacity: 'opacity-25' }
+    { color: 'bg-indigo-200', size: 'w-[450px] h-[450px]', position: '-top-32 -left-32', opacity: 'opacity-40' },
+    { color: 'bg-cyan-200',    size: 'w-[400px] h-[400px]', position: 'top-1/3 -right-32', opacity: 'opacity-35' },
+    { color: 'bg-blue-200',    size: 'w-[380px] h-[380px]', position: '-bottom-32 left-1/4', opacity: 'opacity-30' },
+    { color: 'bg-violet-200', size: 'w-[300px] h-[300px]', position: 'top-1/2 left-2/3', opacity: 'opacity-25' }
   ];
 
-  // ─── State for Topic 1: Algorithm representation (Tabs) ───────────────────
-  const [representationTab, setRepresentationTab] = useState('natural');
-  const [hoveredNode, setHoveredNode] = useState(null);
+  // ─── 2. Hash Table Data Definition ─────────────────────────────────────────
+  const PRESET_KEYS = [
+    { key: "gpa", val: "3.8", asciiSum: 312, hashIdx: 0, desc: "ดัชนี = 312 % 8 = 0" },
+    { key: "name", val: "Mac", asciiSum: 282, hashIdx: 2, desc: "ดัชนี = 282 % 8 = 2" },
+    { key: "age", val: "25", asciiSum: 301, hashIdx: 5, desc: "ดัชนี = 301 % 8 = 5" },
+    { key: "tag", val: "staff", asciiSum: 316, hashIdx: 4, desc: "ดัชนี = 316 % 8 = 4 (ตำแหน่งปกติ)" },
+    { key: "gat", val: "test", asciiSum: 316, hashIdx: 4, desc: "ดัชนี = 316 % 8 = 4 (ชนกับ tag! ต้องชนเลื่อนหาช่องว่าง)" }
+  ];
 
-  const flowchartNodes = {
-    start: { title: 'Start Node', desc: 'จุดเริ่มต้นการสั่งวิเคราะห์อัลกอริทึม' },
-    input: { title: 'Input N', desc: 'รับค่าอินพุตตัวเลข N จากผู้ใช้งาน (เช่น 10,000)' },
-    init: { title: 'Initialize Variables', desc: 'ประกาศตัวแปรสะสม sum = 0 และ i = 1 ในหน่วยความจำ' },
-    decision: { title: 'Loop Decision (i <= N)', desc: 'ตรวจสอบว่ารอบตัวนับ i เกินขนาดตัวเลข N หรือไม่' },
-    action: { title: 'Accumulate & Increment', desc: 'สะสมค่า sum += i และเพิ่มรอบตัวนับ i++ ในลูป' },
-    output: { title: 'Output Result', desc: 'แสดงผลรวมสุทธิ sum ออกทางหน้าจอสำเร็จ' },
-    end: { title: 'End Node', desc: 'สิ้นสุดการประมวลผลขั้นตอนวิธีอย่างสมบูรณ์' }
-  };
-
-  // ─── State for AlgoQuality-Sim Simulator ─────────────────────────────────
-  const [selectedAlgo, setSelectedAlgo] = useState('good'); // good | bad | broken
-  const [inputN, setInputN] = useState(10000);
-  const [isRunning, setIsRunning] = useState(false);
-  const [iterations, setIterations] = useState(0);
-  const [simStatus, setSimStatus] = useState('idle'); // idle | processing | completed | crash
-  const [simResult, setSimResult] = useState(null);
-  const [simTime, setSimTime] = useState(null);
+  // ─── 3. Hash Table Simulator States ────────────────────────────────────────
+  const [buckets, setBuckets] = useState(Array(8).fill(null)); // { key, val, asciiSum, probeCount }
+  const [selectedPresetIdx, setSelectedPresetIdx] = useState(0);
   
-  const timerRef = useRef(null);
+  // Animation states
+  const [currentStep, setCurrentStep] = useState('idle'); // idle | math | check | collision | done
+  const [inspectingIdx, setInspectingIdx] = useState(-1);
+  const [simLog, setSimLog] = useState(['ระบบเตรียมพร้อมทดสอบแฮชตาราง']);
+  const [isSimulating, setIsSimulating] = useState(false);
 
-  // Simulation execution loop
-  const startSimulation = () => {
-    if (isRunning) return;
-    setIsRunning(true);
-    setIterations(0);
-    setSimResult(null);
-    setSimTime(null);
-    setSimStatus('processing');
+  const runInsertSimulation = () => {
+    if (isSimulating) return;
+    setIsSimulating(false); // We control dynamically
+    
+    const item = PRESET_KEYS[selectedPresetIdx];
+    
+    // Check if key already exists
+    const exists = buckets.find(b => b && b.key === item.key);
+    if (exists) {
+      setSimLog([`[เกิดข้อผิดพลาด] คีย์ "${item.key}" มีอยู่ใน Dictionary แล้ว คีย์ห้ามซ้ำซ้อนกัน!`]);
+      return;
+    }
 
-    const startTime = performance.now();
+    setIsSimulating(true);
+    let logs = [`[เริ่มบันทึกคีย์] ทำการแฮชและบันทึกคีย์ "${item.key}" : "${item.val}"`];
+    setSimLog([...logs]);
 
-    if (selectedAlgo === 'good') {
-      // Good O(1) Algorithm: Calculates immediately using Math Formula N*(N+1)/2
+    // Step 1: Calculate ASCII sum
+    setCurrentStep('math');
+    logs.push(`1. คำนวณผลรวมรหัส ASCII ของอักขระ: ${item.key.split('').map(c => `${c}(${c.charCodeAt(0)})`).join(' + ')} = ${item.asciiSum}`);
+    setSimLog([...logs]);
+
+    setTimeout(() => {
+      // Step 2: Modulo size (8)
+      const idealIdx = item.hashIdx;
+      logs.push(`2. คำนวณตำแหน่ง Ideal Index: ${item.asciiSum} % 8 = ${idealIdx}`);
+      setSimLog([...logs]);
+      setInspectingIdx(idealIdx);
+      setCurrentStep('check');
+
       setTimeout(() => {
-        const res = (inputN * (inputN + 1)) / 2;
-        setIterations(1);
-        setSimResult(res);
-        setSimStatus('completed');
-        setIsRunning(false);
-        setSimTime((performance.now() - startTime).toFixed(3));
-      }, 500);
-    } else if (selectedAlgo === 'bad') {
-      // Bad O(N) Algorithm: Simulates loops
-      let count = 0;
-      const stepSize = Math.max(1, Math.ceil(inputN / 40));
+        // Step 3: Inspect bucket
+        inspectBucketStep(idealIdx, idealIdx, item, 0, logs);
+      }, 1500);
+
+    }, 1500);
+  };
+
+  const inspectBucketStep = (idealIdx, currentIdx, item, probeCount, currentLogs) => {
+    let logs = [...currentLogs];
+    setInspectingIdx(currentIdx);
+
+    const bucketVal = buckets[currentIdx];
+    
+    if (bucketVal === null) {
+      // Slot is empty! Save here
+      logs.push(`3. ตรวจสอบดัชนี ${currentIdx} -> ว่างเปล่า! จัดเก็บข้อมูลลงช่องนี้สำเร็จ`);
+      if (probeCount > 0) {
+        logs.push(`[แก้ไขสำเร็จ] ลำเลียงตัวแปรหลีกชนด้วยกรรมวิธี Linear Probing (ชนย้ายไป ${probeCount} ครั้ง)`);
+      }
+      setSimLog(logs);
       
-      timerRef.current = setInterval(() => {
-        count += stepSize;
-        if (count >= inputN) {
-          clearInterval(timerRef.current);
-          const res = (inputN * (inputN + 1)) / 2;
-          setIterations(inputN);
-          setSimResult(res);
-          setSimStatus('completed');
-          setIsRunning(false);
-          setSimTime((performance.now() - startTime).toFixed(2));
-        } else {
-          setIterations(count);
-        }
-      }, 30);
+      setBuckets(prev => {
+        const next = [...prev];
+        next[currentIdx] = {
+          key: item.key,
+          val: item.val,
+          asciiSum: item.asciiSum,
+          probeCount: probeCount
+        };
+        return next;
+      });
+
+      setCurrentStep('done');
+      setIsSimulating(false);
+      setInspectingIdx(-1);
     } else {
-      // Broken Algorithm: Infinite loop simulation
-      let count = 0;
-      timerRef.current = setInterval(() => {
-        count += 35000;
-        setIterations(count);
-        if (count >= 1000000) {
-          setSimStatus('crash');
-        }
-      }, 30);
+      // Collision!
+      logs.push(`3. ตรวจสอบดัชนี ${currentIdx} -> ตรวจพบข้อมูลเดิม "${bucketVal.key}" (ชนกัน! Hash Collision)`);
+      setCurrentStep('collision');
+      setSimLog([...logs]);
+
+      setTimeout(() => {
+        // Probe next bucket
+        const nextIdx = (currentIdx + 1) % 8;
+        logs.push(`[เลื่อนหาช่อง] ขยับตรวจสอบช่องหน่วยความจำถัดไป: (${currentIdx} + 1) % 8 = ${nextIdx}`);
+        setSimLog([...logs]);
+        setCurrentStep('check');
+
+        setTimeout(() => {
+          inspectBucketStep(idealIdx, nextIdx, item, probeCount + 1, logs);
+        }, 1500);
+
+      }, 1500);
     }
   };
 
-  const stopSimulation = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    setIsRunning(false);
-    if (simStatus === 'processing') setSimStatus('idle');
+  const handleClearTable = () => {
+    if (isSimulating) return;
+    setBuckets(Array(8).fill(null));
+    setSelectedPresetIdx(0);
+    setCurrentStep('idle');
+    setInspectingIdx(-1);
+    setSimLog(['ระบบทำการล้างตารางแฮช สแตนด์บายตารางเปล่า']);
   };
-
-  const resetSimulation = () => {
-    stopSimulation();
-    setIterations(0);
-    setSimResult(null);
-    setSimTime(null);
-    setSimStatus('idle');
-  };
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, []);
-
-  // Scorecard evaluation mapping for the active algorithm
-  const getScorecard = () => {
-    const scores = {
-      correctness: { label: 'มีความถูกต้องแม่นยำ (Correctness)', pass: false, desc: 'รันแล้วต้องได้คำตอบที่ถูกต้องทุกเคส' },
-      definiteness: { label: 'มีความชัดเจนไม่คลุมเครือ (Definiteness)', pass: true, desc: 'คำสั่งแจ่มแจ้ง ตีความได้ประเด็นเดียว' },
-      finiteness: { label: 'มีจุดสิ้นสุดการทำงาน (Finiteness)', pass: false, desc: 'ต้องทำงานเสร็จสิ้นภายในขีดจำกัดสเตป' },
-      efficiency: { label: 'มีประสิทธิภาพสูง (Efficiency)', pass: false, desc: 'ประหยัดเวลา CPU และแรมหน่วยความจำ' },
-      feasibility: { label: 'ทำงานได้จริงมีความเป็นไปได้ (Feasibility)', pass: true, desc: 'เขียนโปรแกรมรันได้ภายใต้ฮาร์ดแวร์จริง' }
-    };
-
-    if (selectedAlgo === 'good') {
-      scores.correctness.pass = true;
-      scores.finiteness.pass = true;
-      scores.efficiency.pass = true;
-    } else if (selectedAlgo === 'bad') {
-      scores.correctness.pass = true;
-      scores.finiteness.pass = true;
-      scores.efficiency.pass = false; // Fails efficiency because of slow O(N) linear loop
-    } else {
-      // Broken infinite
-      scores.correctness.pass = false; // Never finishes, so incorrect
-      scores.finiteness.pass = false; // Fails finiteness (Infinite loop)
-      scores.efficiency.pass = false; // Infinite loop ruins efficiency
-    }
-
-    return scores;
-  };
-
-  const scoreCard = getScorecard();
 
   return (
     <div className="font-sans text-slate-800 pb-24 relative">
@@ -176,452 +156,376 @@ export default function DSA1_4() {
       {/* ─── Layer 3: Main Page Content ─── */}
       <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-6 space-y-12 md:space-y-16 relative z-10">
 
-        {/* ─── Section 1: Definition of Algorithm ─── */}
+        {/* ─── Section 1: What is a Dictionary ─── */}
         <section className="space-y-6">
           <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-emerald-600 tracking-wider uppercase">
-              ขั้นตอนวิธี / นิยามความหมาย
+            <span className="text-sm font-bold text-indigo-600 tracking-wider uppercase">
+              โครงสร้างคู่กุญแจและค่า
             </span>
             <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              นิยามและความหมายของอัลกอริทึม
+              โครงสร้างข้อมูลแบบ Dictionary คืออะไร
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            {/* Left text description (Fluid Open-Air style) */}
-            <div className="lg:col-span-7 space-y-6 flex flex-col justify-between">
-              <div className="space-y-4">
-                <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
-                  <strong className="text-zinc-950 font-semibold">อัลกอริทึม (Algorithm) หรือ ขั้นตอนวิธี</strong> คือ 
-                  ชุดคำสั่งหรือกระบวนการทำงานที่ถูกกำหนดขึ้นอย่างเป็นลำดับขั้นตอน มีความชัดเจนและไม่คลุมเครือ 
-                  ใช้เพื่อแก้ไขปัญหา (Problem Solving) หรือประมวลผลข้อมูลให้ออกมาเป็นผลลัพธ์ (Output) ที่ถูกต้อง 
-                  ผ่านการสั่งงานระดับทรานซิสเตอร์ในระบบฮาร์ดแวร์คอมพิวเตอร์
-                </p>
+          <div className="space-y-6">
+            <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
+              ในทางวิทยาการคอมพิวเตอร์ <strong className="mx-1 px-1.5 py-0.5 rounded bg-indigo-50 border border-indigo-200 text-indigo-700 font-mono text-[14px]">Dictionary</strong> 
+              (หรือ Hash Map ในภาษาอื่น) คือโครงสร้างข้อมูลแบบนามธรรมที่จับคู่ระหว่าง **กุญแจ (Key)** กับ **ค่าข้อมูล (Value)** 
+              โดยเป้าหมายหลักคือต้องการค้นหาข้อมูลได้รวดเร็วทันทีโดยไม่ต้องวนลูปไล่หาทีละตัวเหมือน Array หรือ List
+            </p>
 
-                <div className="bg-emerald-50/60 backdrop-blur-md border border-emerald-200/60 rounded-2xl p-5 border-l-[3px] border-l-emerald-500 leading-relaxed">
-                  <h4 className="font-semibold text-emerald-900 text-[15px] mb-1 flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-emerald-600 animate-pulse" />
-                    การป้อนเข้าและส่งออก
-                  </h4>
-                  <p className="text-[13.5px] text-slate-600 leading-relaxed">
-                    ขั้นตอนวิธีที่ดีจะรับข้อมูลเข้า (Input) เข้าสู่สมการคำนวณหรือลูปวนรอบที่กำหนด 
-                    และนำส่งผลลัพธ์ (Output) ที่ถูกต้องกลับออกไปให้ผู้ใช้งานทุกกรณีอย่างไร้ข้อผิดพลาด
-                  </p>
+            {/* Dictionary Properties */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <ConceptCard
+                symbol="Key-Value"
+                title="คู่กุญแจและค่า"
+                description="จัดเก็บข้อมูลเป็นคู่เสมอ เช่น คีย์คือรหัสนักเรียน คู่กับค่าข้อมูลคือชื่อนักเรียน"
+                accent="indigo"
+              />
+              <ConceptCard
+                symbol="Unique Keys"
+                title="คีย์ห้ามซ้ำซ้อน"
+                description="คีย์ในหนึ่ง Dictionary ห้ามมีค่าซ้ำกันเด็ดขาด แต่ค่าข้อมูล (Values) สามารถซ้ำกันได้"
+                accent="cyan"
+              />
+              <ConceptCard
+                symbol="Hashable"
+                title="คีย์ต้องไม่เปลี่ยนรูป"
+                description="คีย์ต้องเป็นข้อมูลชนิดที่ไม่สามารถเปลี่ยนรูปได้ (Immutable/Hashable) เช่น String หรือ Number"
+                accent="emerald"
+              />
+              <ConceptCard
+                symbol="Fast Lookups"
+                title="สืบค้นฉับไว O(1)"
+                description="ระบบใช้แฮชฟังก์ชันคำนวณระบุตำแหน่งจัดเก็บได้โดยตรงในแรมโดยไม่ต้องวนรอบค้นหา"
+                accent="violet"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* ─── Section 2: Pros & Cons ─── */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-indigo-600 tracking-wider uppercase">
+              การประเมินประสิทธิภาพ
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              ข้อดีและข้อเสียของ Dictionary
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+            {/* Pros card */}
+            <div className="bg-emerald-50/60 backdrop-blur-md border border-emerald-200/60 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-sm">
+              <div>
+                <h4 className="text-[20px] font-bold text-emerald-950 mb-4 flex items-center gap-2">
+                  <CheckCircle2 className="w-6 h-6 text-emerald-600" />
+                  ข้อดีเด่นของ Dictionary
+                </h4>
+                <div className="space-y-4 text-[14.5px] text-slate-700 leading-relaxed font-sans">
+                  <div className="flex items-start gap-2.5">
+                    <ArrowRight className="w-4.5 h-4.5 text-emerald-600 shrink-0 mt-1" />
+                    <p>
+                      <strong>ความเร็วสืบค้นสม่ำเสมอ $O(1)$ (Constant Time):</strong> ค้นหา เพิ่ม และลบข้อมูลได้ด้วยความเร็วคงที่ทันที ไม่ว่าปริมาณข้อมูลจะสเกลใหญ่ระดับล้านโหนดก็ตาม
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <ArrowRight className="w-4.5 h-4.5 text-emerald-600 shrink-0 mt-1" />
+                    <p>
+                      <strong>โครงสร้างแบบกึ่งโครงสร้าง (Semi-structured):</strong> เก็บข้อมูลอธิบายลักษณะเฉพาะแบบจับกลุ่มได้ยืดหยุ่นกว่า Array ลำดับตัวเลข
+                    </p>
+                  </div>
                 </div>
               </div>
-
-              {/* Tab switching buttons */}
-              <div className="space-y-3 pt-4">
-                <span className="text-xs font-bold text-slate-400 tracking-wider block uppercase">เลือกรูปแบบการแสดงออกของอัลกอริทึม (Representation):</span>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    { id: 'natural', label: 'ภาษาธรรมชาติ (Natural)' },
-                    { id: 'pseudocode', label: 'รหัสจำลอง (Pseudocode)' },
-                    { id: 'flowchart', label: 'ผังงาน (Flowchart)' }
-                  ].map((tab) => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setRepresentationTab(tab.id)}
-                      className={`px-4 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 cursor-pointer
-                        ${representationTab === tab.id
-                          ? 'bg-emerald-600 text-white shadow shadow-emerald-600/25 border-emerald-500'
-                          : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
-                        }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
+              <div className="mt-6 pt-4 border-t border-emerald-100 text-xs font-semibold text-emerald-800 font-mono">
+                RECOMMENDED FOR: INSTANT LOOKUPS & ID-VALUE ASSOCIATIONS
               </div>
             </div>
 
-            {/* Right Display Board for representations */}
-            <div className="lg:col-span-5 bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-2xl flex flex-col justify-between min-h-[380px]">
-              <div className="h-full flex flex-col justify-between">
-                <div className="flex justify-between items-center text-[10px] font-mono text-zinc-500 border-b border-slate-800 pb-2 mb-3">
-                  <span># ALGORITHM REPRESENTATION ENGINE</span>
-                  <span className="text-emerald-400">interactive view</span>
+            {/* Cons card */}
+            <div className="bg-rose-50/60 backdrop-blur-md border border-rose-200/60 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-sm">
+              <div>
+                <h4 className="text-[20px] font-bold text-rose-950 mb-4 flex items-center gap-2">
+                  <AlertCircle className="w-6 h-6 text-rose-500" />
+                  ข้อเสียและข้อจำกัดของ Dictionary
+                </h4>
+                <div className="space-y-4 text-[14.5px] text-slate-700 leading-relaxed font-sans">
+                  <div className="flex items-start gap-2.5">
+                    <ArrowRight className="w-4.5 h-4.5 text-rose-500 shrink-0 mt-1" />
+                    <p>
+                      <strong>การสูญเสียพื้นที่แรมสำรอง (Memory Overhead):</strong> ตารางแฮชต้องจองพื้นที่แรมให้กว้างกว่าขนาดข้อมูลจริงค่อนข้างมาก เพื่อลดปัญหาแฮชชนกัน
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <ArrowRight className="w-4.5 h-4.5 text-rose-500 shrink-0 mt-1" />
+                    <p>
+                      <strong>ปัญหาแฮชชนกัน (Hash Collision):</strong> หากคำนวณตำแหน่งแล้วได้พิกัดช่องแรมเดียวกัน ระบบต้องมีกระบวนการแก้ไขที่ส่งผลให้ประสิทธิภาพความเร็วลดลงเหลือ $O(n)$ ชั่วคราว
+                    </p>
+                  </div>
                 </div>
-
-                {representationTab === 'natural' && (
-                  <div className="space-y-4 py-2 grow flex flex-col justify-center animate-fadeIn">
-                    <h4 className="text-[15px] font-bold text-white flex items-center gap-1.5 font-sans">
-                      <SquareDot className="w-4 h-4 text-emerald-400" />
-                      ภาษาธรรมชาติ (Natural Language)
-                    </h4>
-                    <p className="text-[13px] text-zinc-400 leading-relaxed font-sans">
-                      การอธิบายขั้นตอนการทำงานด้วยภาษาพูดทั่วไปของมนุษย์ เพื่อให้อ่านเข้าใจได้ในเบื้องต้น เช่น:
-                    </p>
-                    <div className="bg-black/40 border border-slate-800 p-4 rounded-xl font-sans text-xs text-zinc-300 space-y-2">
-                      <p>1. เริ่มต้น: รับค่าตัวเลขหลัก $N$ จากผู้ใช้งาน</p>
-                      <p>2. ตั้งค่าตัวแปรผลรวมสะสมเริ่มต้นเป็น 0 และตัวนับรอบเริ่มที่ 1</p>
-                      <p>3. ตราบใดที่ตัวนับรอบน้อยกว่าหรือเท่ากับ $N$ ให้บวกตัวนับรอบเข้ากับผลรวมสะสม แล้วบวกตัวนับเพิ่มขึ้นทีละ 1 จากนั้นทำซ้ำ</p>
-                      <p>4. พิมพ์ผลรวมสะสมสุทธิออกทางหน้าจอ และจบการทำงาน</p>
-                    </div>
-                  </div>
-                )}
-
-                {representationTab === 'pseudocode' && (
-                  <div className="space-y-3 py-2 grow flex flex-col justify-center animate-fadeIn">
-                    <h4 className="text-[15px] font-bold text-white flex items-center gap-1.5 font-sans">
-                      <FileCode className="w-4 h-4 text-emerald-400" />
-                      รหัสจำลอง (Pseudocode)
-                    </h4>
-                    <p className="text-[13px] text-zinc-400 leading-relaxed font-sans">
-                      การเขียนรหัสลอจิกจำลองที่ลอกเลียนไวยากรณ์ภาษาคอมพิวเตอร์อย่างเป็นระเบียบ แต่ยังอ่านเข้าใจง่าย:
-                    </p>
-                    <pre className="bg-black/50 p-4 rounded-xl border border-slate-800 font-mono text-[12.5px] text-emerald-300 leading-relaxed overflow-x-auto">
-{`ALGORITHM CalculateSum(N)
-  INPUT: Integer N
-  OUTPUT: Integer sum of 1 to N
-  
-  sum = 0
-  i = 1
-  WHILE i <= N DO
-    sum = sum + i
-    i = i + 1
-  ENDWHILE
-  
-  RETURN sum
-END`}
-                    </pre>
-                  </div>
-                )}
-
-                {representationTab === 'flowchart' && (
-                  <div className="grow flex flex-col justify-between items-stretch animate-fadeIn">
-                    <div className="flex gap-4 items-stretch h-[280px]">
-                      {/* Flowchart Diagram SVG (Absolute Center Connection concept) */}
-                      <div className="w-[180px] bg-black/40 border border-slate-800 rounded-xl overflow-hidden relative shadow-inner shrink-0">
-                        <svg className="absolute inset-0 w-full h-full">
-                          {/* Flow lines */}
-                          <g stroke="#334155" strokeWidth="2">
-                            <line x1="90" y1="35" x2="90" y2="70" />
-                            <line x1="90" y1="100" x2="90" y2="135" />
-                            <line x1="90" y1="165" x2="90" y2="195" />
-                            <line x1="90" y1="235" x2="90" y2="265" />
-                            <line x1="90" y1="295" x2="90" y2="330" />
-                            {/* Loop right horizontal line */}
-                            <line x1="125" y1="215" x2="155" y2="215" />
-                            {/* Loop back vertical line */}
-                            <line x1="155" y1="215" x2="155" y2="150" />
-                            <line x1="155" y1="150" x2="90" y2="150" />
-                          </g>
-
-                          {/* Nodes circles/rects */}
-                          {/* Start */}
-                          <rect x="65" y="15" width="50" height="20" rx="10" fill="#1e293b" stroke="#475569" strokeWidth="1.5" onMouseEnter={() => setHoveredNode('start')} onMouseLeave={() => setHoveredNode(null)} />
-                          <text x="90" y="29" fill="#f8fafc" textAnchor="middle" className="text-[9px] font-bold font-mono cursor-default">START</text>
-
-                          {/* Input N */}
-                          <polygon points="70,70 120,70 110,100 60,100" fill="#1e293b" stroke="#475569" strokeWidth="1.5" onMouseEnter={() => setHoveredNode('input')} onMouseLeave={() => setHoveredNode(null)} />
-                          <text x="90" y="89" fill="#f8fafc" textAnchor="middle" className="text-[9px] font-bold font-mono cursor-default">INPUT N</text>
-
-                          {/* Init */}
-                          <rect x="50" y="135" width="80" height="30" rx="3" fill="#1e293b" stroke="#475569" strokeWidth="1.5" onMouseEnter={() => setHoveredNode('init')} onMouseLeave={() => setHoveredNode(null)} />
-                          <text x="90" y="153" fill="#f8fafc" textAnchor="middle" className="text-[8px] font-bold font-mono cursor-default">sum = 0, i = 1</text>
-
-                          {/* Decision i <= N */}
-                          <polygon points="90,195 125,215 90,235 55,215" fill="#1e293b" stroke="#475569" strokeWidth="1.5" onMouseEnter={() => setHoveredNode('decision')} onMouseLeave={() => setHoveredNode(null)} />
-                          <text x="90" y="218" fill="#f8fafc" textAnchor="middle" className="text-[8px] font-bold font-mono cursor-default">i &lt;= N ?</text>
-
-                          {/* Loop action */}
-                          <rect x="125" y="195" width="5" height="5" opacity="0" onMouseEnter={() => setHoveredNode('action')} onMouseLeave={() => setHoveredNode(null)} />
-
-                          {/* Output */}
-                          <polygon points="65,265 115,265 105,295 55,295" fill="#1e293b" stroke="#475569" strokeWidth="1.5" onMouseEnter={() => setHoveredNode('output')} onMouseLeave={() => setHoveredNode(null)} />
-                          <text x="85" y="284" fill="#f8fafc" textAnchor="middle" className="text-[9px] font-bold font-mono cursor-default">PRINT sum</text>
-
-                          {/* End */}
-                          <rect x="65" y="330" width="50" height="20" rx="10" fill="#1e293b" stroke="#475569" strokeWidth="1.5" onMouseEnter={() => setHoveredNode('end')} onMouseLeave={() => setHoveredNode(null)} />
-                          <text x="90" y="344" fill="#f8fafc" textAnchor="middle" className="text-[9px] font-bold font-mono cursor-default">END</text>
-                        </svg>
-                      </div>
-
-                      {/* Hover details explanation panel */}
-                      <div className="grow bg-slate-950/45 p-4 rounded-xl border border-slate-800 flex flex-col justify-center">
-                        {hoveredNode ? (
-                          <div className="space-y-2 animate-fadeIn">
-                            <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase tracking-wider">
-                              {flowchartNodes[hoveredNode].title}
-                            </span>
-                            <p className="text-xs text-zinc-300 leading-relaxed font-sans">
-                              {flowchartNodes[hoveredNode].desc}
-                            </p>
-                          </div>
-                        ) : (
-                          <span className="text-xs text-zinc-500 italic text-center block">
-                            นำเมาส์ไปชี้วางบนสัญลักษณ์ผังงานด้านซ้าย เพื่อดูคำอธิบายตรรกะรายขั้นตอน...
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
+              </div>
+              <div className="mt-6 pt-4 border-t border-rose-100 text-xs font-semibold text-rose-800 font-mono">
+                LIMITATION: MEMORY OVERHEAD & HASH COLLISION RESOLUTION
               </div>
             </div>
           </div>
         </section>
 
-        {/* ─── Section 2: Characteristics of a Good Algorithm ─── */}
+        {/* ─── Section 3: Interactive Hash Lab Simulator ─── */}
         <section className="space-y-6">
           <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-emerald-600 tracking-wider uppercase">
-              มาตรฐานอุตสาหกรรม / คุณสมบัติที่ยอมรับ
+            <span className="text-sm font-bold text-indigo-600 tracking-wider uppercase">
+              ตัวจำลองตารางแฮช
             </span>
             <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              คุณสมบัติของอัลกอริทึมที่ดี
+              ห้องทดลองวิเคราะห์กลไกแฮชและการชนกันของคีย์ (Hash Collision)
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            {[
-              { id: 1, title: 'มีความถูกต้องแม่นยำ (Correctness)', desc: 'ต้องให้ผลลัพธ์ที่ถูกต้องแม่นยำในทุกชุดข้อมูลนำเข้า (Inputs) ไม่ใช่ถูกต้องแค่บางกรณีเท่านั้น' },
-              { id: 2, title: 'มีความชัดเจนไม่คลุมเครือ (Definiteness)', desc: 'ขั้นตอนวิธีมีลำดับชัดเจน ตีความได้ความหมายเดียว คอมพิวเตอร์เข้าใจตรรกะได้ตรงจุด' },
-              { id: 3, title: 'มีจุดสิ้นสุดการทำงาน (Finiteness)', desc: 'ทำงานเสร็จภายในเวลาและจำนวนสเตปที่จำกัด ห้ามตกเข้าสู่ลูปอนันต์ (Infinite Loop) ถาวร' },
-              { id: 4, title: 'มีประสิทธิภาพสูง (Efficiency)', desc: 'ต้องแก้ปัญหาโดยประหยัดทรัพยากร ทั้งประหยัดเวลา CPU และลดภาระหน่วยความจำ RAM' },
-              { id: 5, title: 'ทำงานได้จริงเป็นไปได้ (Feasibility)', desc: 'สามารถแปลงมาเขียนเป็นโปรแกรมรันได้ภายใต้เทคโนโลยี และข้อจำกัดแรม/ซีพียูในโลกจริง' }
-            ].map((prop) => (
-              <div
-                key={prop.id}
-                className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 hover:-translate-y-1 hover:shadow-2xl hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between min-h-[190px]"
-              >
-                <div>
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-xs font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">0{prop.id}</span>
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
+            ทดลองเพิ่มกุญแจข้อมูลลงในตารางแฮชขนาด 8 ช่องเสมือน โดยทดลองสั่งเพิ่มคีย์ปกติ และลองสั่งเพิ่มคีย์ที่แฮชได้ผลลัพธ์ดัชนีชนกัน 
+            (เช่น <strong>"tag"</strong> กับ <strong>"gat"</strong>) เพื่อสังเกตขั้นตอนคำนวณและการตรวจสอบช่องแรมว่าง (Probing) แบบเป็นขั้นตอน:
+          </p>
+
+          <SimulatorShell
+            dark
+            title="Python Dictionary Hash Table & Probing Tracer"
+            icon={<Cpu className="w-8 h-8 text-teal-400" />}
+            glowColors="from-zinc-900/30 to-zinc-950/10"
+            iconColor="text-teal-400"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mt-4">
+              
+              {/* Controller Panel (Left) */}
+              <div className="lg:col-span-5 bg-slate-900/90 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-2xl relative flex flex-col justify-between min-h-[460px]">
+                <div className="text-[9px] font-mono text-slate-500 absolute top-3 right-4 font-bold tracking-widest">
+                  CONTROLLER
+                </div>
+
+                <div className="space-y-6">
+                  {/* Preset key selector */}
+                  <div className="space-y-2.5">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block">1. เลือกคีย์ข้อมูลที่จะแฮชลงหน่วยความจำ:</span>
+                    <div className="flex flex-col gap-2">
+                      {PRESET_KEYS.map((item, idx) => {
+                        const isAdded = buckets.some(b => b && b.key === item.key);
+                        return (
+                          <button
+                            key={idx}
+                            onClick={() => {
+                              if (!isSimulating) {
+                                setSelectedPresetIdx(idx);
+                                setCurrentStep('idle');
+                              }
+                            }}
+                            disabled={isSimulating}
+                            className={`p-3 rounded-xl border text-left cursor-pointer transition-all duration-200 flex justify-between items-center text-xs font-semibold
+                              ${selectedPresetIdx === idx
+                                ? 'bg-indigo-650 border-indigo-500 text-white shadow shadow-indigo-500/20'
+                                : 'bg-slate-800/40 border-slate-700/60 text-slate-400 hover:text-white'
+                              }`}
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono font-bold">"{item.key}" : "{item.val}"</span>
+                              {isAdded && <span className="text-[10px] bg-emerald-950 text-emerald-400 px-1.5 py-0.5 rounded font-mono font-bold">ADDED</span>}
+                            </div>
+                            <span className="text-[10px] opacity-75 font-mono text-teal-400">{item.desc}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                  <h4 className="text-[14.5px] font-bold text-zinc-900 mb-1 leading-snug">{prop.title}</h4>
-                  <p className="text-[12.5px] text-slate-500 leading-relaxed font-sans">{prop.desc}</p>
+                </div>
+
+                {/* Simulation Control Buttons */}
+                <div className="mt-8 pt-4 border-t border-slate-800 space-y-4">
+                  <div className="flex gap-3">
+                    <button
+                      onClick={runInsertSimulation}
+                      disabled={isSimulating}
+                      className="grow bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs py-3 px-4 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-[0.98] transition-all disabled:opacity-45"
+                    >
+                      {isSimulating ? (
+                        <>
+                          <RefreshCw className="w-4 h-4 animate-spin" /> กำลังตรวจสอบระบบ...
+                        </>
+                      ) : (
+                        <>
+                          <Play className="w-4 h-4" /> สั่งจำลองการแฮชบันทึก
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      onClick={handleClearTable}
+                      disabled={isSimulating}
+                      className="px-4 py-3 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold flex items-center gap-2 cursor-pointer transition-all active:scale-95 disabled:opacity-40"
+                    >
+                      <RotateCcw className="w-4 h-4" /> ล้างตาราง
+                    </button>
+                  </div>
+
+                  {/* Terminal Console Logs */}
+                  <div className="bg-black/60 p-3.5 rounded-xl border border-slate-950 min-h-[120px] font-mono text-[11.5px] leading-relaxed text-teal-400 select-all overflow-y-auto max-h-[170px]">
+                    <div className="text-zinc-500 border-b border-slate-900 pb-1 mb-2 uppercase tracking-wide text-[9px] font-bold">Hash Trace Output console:</div>
+                    {simLog.map((line, idx) => (
+                      <div key={idx} className="animate-fadeIn">
+                        <span className="text-zinc-500">&gt; </span>
+                        <span>{line}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Hash Table Visual Grid Display (Right) */}
+              <div className="lg:col-span-7 bg-slate-950/95 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-2xl relative flex flex-col justify-between min-h-[460px]">
+                <div className="text-[9px] font-mono text-slate-500 absolute top-3 left-3 font-bold tracking-widest">
+                  HASH BUCKETS TABLE VIEW
+                </div>
+
+                <div className="space-y-4 mt-6 grow flex flex-col justify-between">
+                  
+                  {/* Dynamic Slots */}
+                  <div className="space-y-3">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block">ตารางความจุหน่วยความจำ (Hash buckets [0-7]):</span>
+                    
+                    <div className="flex flex-col gap-2 bg-slate-900/40 border border-slate-900 p-4 rounded-xl">
+                      {buckets.map((b, idx) => {
+                        const isInspecting = idx === inspectingIdx;
+                        const hasVal = b !== null;
+                        
+                        let cellClass = 'border-slate-800 bg-slate-950/20 text-slate-600 border-dashed';
+                        if (hasVal) {
+                          cellClass = 'border-indigo-650 bg-indigo-950/40 text-white';
+                        }
+                        if (isInspecting) {
+                          if (currentStep === 'collision') {
+                            cellClass = 'border-rose-500 bg-rose-950/60 text-rose-300 scale-[1.01] shadow-[0_0_10px_rgba(239,68,68,0.3)]';
+                          } else {
+                            cellClass = 'border-teal-500 bg-teal-950/60 text-teal-300 scale-[1.01] shadow-[0_0_12px_rgba(20,184,166,0.3)]';
+                          }
+                        }
+
+                        return (
+                          <div
+                            key={idx}
+                            className={`border rounded-xl p-2.5 flex items-center justify-between text-xs font-mono transition-all duration-300
+                              ${cellClass}`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className="font-bold text-slate-500">[{idx}]</span>
+                              {hasVal ? (
+                                <div className="flex items-center gap-2">
+                                  <span className="text-teal-400 font-bold">"{b.key}"</span>
+                                  <span className="text-slate-400 font-sans">➔</span>
+                                  <span className="text-indigo-200">"{b.val}"</span>
+                                </div>
+                              ) : (
+                                <span className="text-slate-600 font-sans italic">-- ว่างเปล่า --</span>
+                              )}
+                            </div>
+
+                            {hasVal && (
+                              <div className="flex items-center gap-2 text-[10px] opacity-60">
+                                <span>ASCII: {b.asciiSum}</span>
+                                {b.probeCount > 0 && <span className="text-amber-400 font-bold bg-amber-950/60 px-1 rounded">PROBED +{b.probeCount}</span>}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Math Formula Bar */}
+                  <div className="p-3 bg-slate-900 border border-slate-800 rounded-xl font-mono text-[11px] leading-relaxed text-slate-400">
+                    <span className="text-teal-400 font-bold block mb-1">คณิตศาสตร์การแฮช (Mathematical formula bar):</span>
+                    {currentStep === 'idle' ? (
+                      'สแตนด์บายคำนวณ: เลือก preset คีย์แล้วกดปุ่มสั่งประมวลผลแฮชบันทึก'
+                    ) : (
+                      <div>
+                        <span>Hash function: </span>
+                        <code className="text-white">index = (sum of ASCII codes of key) % table_size</code>
+                      </div>
+                    )}
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </SimulatorShell>
+        </section>
+
+        {/* ─── Section 4: Python Dictionary Syntax & Usage ─── */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-indigo-600 tracking-wider uppercase">
+              คู่มือเขียนรหัสโปรแกรม
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              วิธีการใช้งานโครงสร้าง Dictionary ในภาษา Python
+            </h3>
+          </div>
+
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
+            การประกาศและใช้คู่กุญแจและค่าข้อมูลมีรูปแบบที่เข้าใจง่าย พร้อมเมธอดมาตรฐานในการเข้าถึงออบเจกต์ภายในดังนี้:
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                title: "1. การประกาศและดึงข้อมูล (Init & Read)",
+                desc: "ใช้ปีกกา {} ประกาศคู่ข้อมูล และดึงค่าผ่านคีย์ตรงๆ",
+                code: `# สร้าง Dictionary\nuser = {"name": "Mac", "age": 25}\n\n# ดึงข้อมูลผ่านคีย์ตรงๆ O(1)\nprint(user["name"])  # ได้ค่า "Mac"`,
+                accent: "indigo"
+              },
+              {
+                title: "2. การเพิ่มและแก้ไขข้อมูล (Insert & Update)",
+                desc: "อ้างอิงคีย์เพื่อกำหนดค่าใหม่ หากคีย์นั้นยังไม่มีระบบจะเพิ่มเข้าให้ทันที",
+                code: `# แก้ไขข้อมูล O(1)\nuser["age"] = 26\n\n# เพิ่มคีย์-ค่าใหม่ O(1)\nuser["gpa"] = 3.8`,
+                accent: "cyan"
+              },
+              {
+                title: "3. เมธอดสืบค้นข้อมูล (Iterate dict)",
+                desc: "ดึงคีย์ทั้งหมด ดึงค่าทั้งหมด หรือดึงค่าแบบทีละคู่เพื่อวนลูปใช้งาน",
+                code: `# ดึงคีย์ทั้งหมด\nkeys = user.keys()\n\n# วนลูปจับคู่\nfor k, v in user.items():\n    print(f"Key: {k}, Val: {v}")`,
+                accent: "emerald"
+              }
+            ].map((card, idx) => (
+              <div key={idx} className="bg-white/60 backdrop-blur-xl border border-slate-200/50 shadow-sm rounded-2xl p-5 hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between min-h-[220px]">
+                <div>
+                  <h4 className="font-bold text-slate-800 text-[15px] leading-tight mb-1">{card.title}</h4>
+                  <p className="text-[12.5px] text-slate-500 leading-relaxed mb-4">{card.desc}</p>
+                </div>
+                <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl font-mono text-[11.5px] text-slate-700 leading-normal whitespace-pre">
+                  <code>{card.code}</code>
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* ─── Section 3: Interactive Simulator (AlgoQuality-Sim) ─── */}
-        <section className="space-y-6">
-          <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-emerald-600 tracking-wider uppercase">
-              ตัวจำลองประสิทธิภาพซอฟต์แวร์ / AlgoQuality-Sim
-            </span>
-            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              ห้องจำลองวัดคุณสมบัติความสิ้นสุดและประสิทธิภาพ
-            </h3>
-          </div>
-
-          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
-            ทดลองสลับรันขั้นตอนวิธี 3 รูปแบบที่รับมือปัญหาบวกเลข 1 ถึง N เดียวกัน 
-            เพื่อสังเกตข้อบกพร่องเรื่องลูปอนันต์ (Finiteness) และประสิทธิภาพความเร็วแบบเรียลไทม์:
-          </p>
-
-          <SimulatorShell
-            dark
-            title="Algorithm Quality & Finiteness Analyzer"
-            icon={<Activity className="w-8 h-8 text-emerald-400" />}
-            glowColors="from-emerald-600/20 to-teal-500/10"
-            iconColor="text-emerald-400"
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mt-4">
-              
-              {/* Left Control Sandbox */}
-              <div className="lg:col-span-5 bg-slate-900/90 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-2xl relative flex flex-col justify-between min-h-[460px]">
-                <div className="text-[9px] font-mono text-slate-500 absolute top-3 right-4 font-bold tracking-widest">
-                  ALGORITHM SELECTOR
-                </div>
-
-                <div className="space-y-6">
-                  {/* Select Algorithm Mode */}
-                  <div className="space-y-2">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wide">1. เลือกรูปแบบขั้นตอนวิธี (Algorithm):</span>
-                    <div className="flex flex-col gap-2">
-                      {[
-                        { id: 'good', label: 'สูตรคณิตศาสตร์คงที่ (Good - O(1))', desc: 'หาคำตอบตรงๆ ด้วยสมการ N * (N + 1) / 2', accent: 'border-emerald-500 text-emerald-400 bg-emerald-950/25' },
-                        { id: 'bad', label: 'วนลูปบวกเพิ่มทีละ 1 (Bad - O(N))', desc: 'บวกวนไปเรื่อยๆ จนกว่าตัวนับรอบจะถึง N', accent: 'border-amber-500 text-amber-400 bg-amber-950/25' },
-                        { id: 'broken', label: 'ลูปอนันต์ไม่มีเบรก (Broken - Infinite)', desc: 'จำลองสภาวะ while True: ขาดจุดสิ้นสุด', accent: 'border-rose-500 text-rose-400 bg-rose-950/25' }
-                      ].map((item) => (
-                        <label
-                          key={item.id}
-                          className={`flex flex-col p-3 rounded-xl border text-xs cursor-pointer transition-all duration-200
-                            ${selectedAlgo === item.id
-                              ? item.accent
-                              : 'bg-slate-800/40 border-slate-700/60 text-slate-400 hover:text-white hover:bg-slate-800/85'
-                            } ${isRunning ? 'opacity-40 cursor-not-allowed' : ''}`}
-                        >
-                          <div className="flex items-center gap-2 font-bold">
-                            <input
-                              type="radio"
-                              name="algoSelect"
-                              value={item.id}
-                              checked={selectedAlgo === item.id}
-                              onChange={() => setSelectedAlgo(item.id)}
-                              disabled={isRunning}
-                              className="accent-emerald-500 cursor-pointer"
-                            />
-                            <span>{item.label}</span>
-                          </div>
-                          <span className="text-[10px] opacity-70 mt-1 font-sans font-normal">{item.desc}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Input Number N */}
-                  <div className="space-y-2">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wide">2. ขนาดตัวเลขอินพุต N:</span>
-                    <div className="flex gap-2">
-                      <input
-                        type="number"
-                        min={10}
-                        max={10000000}
-                        value={inputN}
-                        onChange={(e) => setInputN(Math.min(10000000, Math.max(10, parseInt(e.target.value) || 0)))}
-                        disabled={isRunning}
-                        className="bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 text-xs rounded-xl px-3.5 py-2 text-white grow font-mono font-bold"
-                      />
-                      <div className="flex gap-1.5">
-                        {[10000, 100000, 1000000].map((val) => (
-                          <button
-                            key={val}
-                            onClick={() => setInputN(val)}
-                            disabled={isRunning}
-                            className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] font-bold px-2 rounded-lg cursor-pointer transition-all disabled:opacity-40"
-                          >
-                            {val.toLocaleString()}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Trigger simulation controls */}
-                <div className="mt-8 pt-4 border-t border-slate-800 flex gap-3">
-                  {isRunning ? (
-                    <button
-                      onClick={stopSimulation}
-                      className="grow bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs py-3 px-4 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-95 transition-all"
-                    >
-                      <XCircle className="w-4 h-4" /> สั่งกู้ระบบและหยุด (STOP)
-                    </button>
-                  ) : (
-                    <button
-                      onClick={startTimeSimulation => startSimulation()}
-                      disabled={inputN <= 0}
-                      className="grow bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3 px-4 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-950/40 active:scale-95 transition-all disabled:opacity-40"
-                    >
-                      <Play className="w-4 h-4" /> สั่งวิเคราะห์ตรรกะ (RUN)
-                    </button>
-                  )}
-
-                  <button
-                    onClick={resetSimulation}
-                    disabled={isRunning}
-                    className="px-4 py-3 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold flex items-center gap-2 cursor-pointer transition-all active:scale-95 disabled:opacity-40"
-                  >
-                    <RotateCcw className="w-4 h-4" /> รีเซ็ต
-                  </button>
-                </div>
-              </div>
-
-              {/* Right Visual Analyzer Dashboard */}
-              <div className="lg:col-span-7 bg-slate-950/95 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-2xl relative flex flex-col justify-between min-h-[460px]">
-                <div className="text-[9px] font-mono text-slate-500 absolute top-3 left-3 font-bold tracking-widest">
-                  ANALYSIS VISUAL MONITOR
-                </div>
-
-                <div className="space-y-6 mt-4 grow flex flex-col justify-between">
-                  {/* Step counter and status indicator lights */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Step counter monitor */}
-                    <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col justify-between h-[96px] relative overflow-hidden">
-                      <span className="text-[10px] font-mono text-slate-500 uppercase">Iteration Loop Step Counter:</span>
-                      <span className="text-2xl font-bold font-mono text-white tracking-widest mt-1">
-                        {iterations.toLocaleString()}
-                      </span>
-                      <span className="text-[9.5px] text-zinc-500 font-mono">
-                        {selectedAlgo === 'good' ? 'O(1) Step constant' : selectedAlgo === 'bad' ? 'O(N) Loops step' : 'Infinite Loop steps...'}
-                      </span>
-                    </div>
-
-                    {/* Status Indicator */}
-                    <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col justify-between h-[96px]">
-                      <span className="text-[10px] font-mono text-slate-500 uppercase">System Status Indicator:</span>
-                      
-                      <div className="flex items-center gap-3 mt-1.5">
-                        {simStatus === 'idle' && (
-                          <>
-                            <div className="w-4 h-4 rounded-full bg-slate-700" />
-                            <span className="text-sm font-semibold text-slate-400 font-sans">STANDBY</span>
-                          </>
-                        )}
-                        {simStatus === 'processing' && (
-                          <>
-                            <div className="w-4 h-4 rounded-full bg-amber-500 animate-ping" />
-                            <span className="text-sm font-semibold text-amber-400 font-sans">PROCESSING...</span>
-                          </>
-                        )}
-                        {simStatus === 'completed' && (
-                          <>
-                            <div className="w-4 h-4 rounded-full bg-emerald-500 shadow-md shadow-emerald-500/40" />
-                            <span className="text-sm font-semibold text-emerald-400 font-sans">🟢 COMPLETED ({simTime} ms)</span>
-                          </>
-                        )}
-                        {simStatus === 'crash' && (
-                          <>
-                            <div className="w-4 h-4 rounded-full bg-red-500 animate-ping" />
-                            <span className="text-sm font-semibold text-red-500 font-sans">🔴 INFINITE LOOP WARNING</span>
-                          </>
-                        )}
-                      </div>
-                      
-                      <span className="text-[9.5px] text-zinc-500 font-mono">
-                        {simResult !== null ? `Result sum: ${simResult.toLocaleString()}` : simStatus === 'crash' ? 'MEMORY EXHAUSTED IN Heap' : 'Waiting for calculation...'}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Quality criteria Scorecard (Evaluation Card) */}
-                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4">
-                    <div className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 flex items-center gap-1.5">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                      เกณฑ์การประเมินคุณภาพขั้นตอนวิธี (Evaluation Card):
-                    </div>
-
-                    <div className="space-y-2.5">
-                      {Object.entries(scoreCard).map(([key, item]) => (
-                        <div key={key} className="flex justify-between items-center text-xs border-b border-slate-800/50 pb-2">
-                          <span className="text-slate-300">{item.label}</span>
-                          <div className="flex items-center gap-2 shrink-0">
-                            <span className="text-[10px] text-zinc-500 hidden md:inline">{item.desc}</span>
-                            {item.pass ? (
-                              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                            ) : (
-                              <XCircle className="w-4 h-4 text-rose-500 animate-pulse" />
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </SimulatorShell>
-        </section>
-
         {/* ─── Layer 4: Standardized TeacherTask Footer ─── */}
         <TeacherTask
-          title="วิเคราะห์การออกแบบขั้นตอนวิธีและความสิ้นสุดของการทำงาน"
-          taskText={`คำชี้แจง: ให้นักเรียนสั่งวิเคราะห์จำลองและสลับทดสอบปุ่ม RUN อัลกอริทึมแต่ละโหมดใน AlgoQuality-Sim ด้านบน จากนั้นประเมินและเขียนตอบคำถามวิชาการต่อไปนี้ลงในระบบการศึกษา:
+          title="ภารกิจท้ายบทเรียน: สร้างสคริปต์ตรวจจับพจนานุกรมและความความซับซ้อนเชิงสืบค้น"
+          taskText={`[โจทย์ปฏิบัติประจำวิชาโครงสร้างข้อมูลและอัลกอริทึม]
 
-1. จากผลการจำลองเหตุใด "สูตรคณิตศาสตร์คงที่ (Algorithm 1)" จึงมีประสิทธิภาพด้านเวลาที่โดดเด่นกว่า "ลูปวนรอบสะสม (Algorithm 2)" อย่างเห็นได้ชัดเมื่อ N มีขนาด 1,000,000 แถว
-   - อธิบายในแง่ของจำนวนขั้นตอนการวนลูปประมวลผล (Iteration steps)
-2. เมื่อทดลองเลือกประเภท "ลูปอนันต์ไม่มีเบรก (Algorithm 3)" เกิดผลกระทบใดต่อระบบจำลอง
-   - อ้างอิงผลลัพธ์ของ Step Counter และความสิ้นสุด (Finiteness)
-   - อธิบายผลวิกฤตที่จะเกิดขึ้นจริงบนฮาร์ดแวร์หากอัลกอริทึมไม่มี Finiteness
-3. จงเขียนรหัสจำลอง (Pseudocode) อัลกอริทึมเพื่อแก้ปัญหาการหาค่าสูงสุดจากชุดข้อมูลแบบอาร์เรย์ตัวเลข [A₁, A₂, ..., Aₙ] พร้อมประเมินตามคุณสมบัติ 5 ประการ`}
+ให้นักเรียนสร้างระบบจำลองฐานข้อมูลประวัตินักเรียนขนาดมินิด้วยภาษา Python โดยปฏิบัติภารกิจต่อไปนี้:
+
+1. ประกาศตัวแปรประเภท Dictionary เพื่อจัดเก็บคีย์เป็น รหัสนักเรียน (Student ID - เช่น "S001") จับคู่กับออบเจกต์ประวัตินักเรียน (ประกอบด้วย ชื่อ-นามสกุล, คะแนนสอบ)
+2. เขียนฟังก์ชัน search_student_details(database, target_id) ค้นหาประวัติของนักเรียนตามรหัสที่กำหนด
+3. ดักจับข้อผิดพลาด (Exception Handling / KeyCheck) หากไม่พบรหัสนักเรียนในพจนานุกรม ให้พิมพ์แจ้งเตือนเป็นข้อความ "ไม่พบรหัสประจำตัวที่ระบุ" โดยมีตัวจับทางความปลอดภัย
+4. เขียนคำอธิบายเปรียบเทียบในเชิงความเร็ววิเคราะห์ Big O Notation ในการค้นหาผ่านรหัส Student ID ด้วย Dictionary เปรียบเทียบกับการสืบค้นแบบเชิงเส้นผ่านรายชื่อนักเรียนด้วย List ธรรมดาในกรณี Worst Case
+
+ส่งงานโดยนำชุดคำสั่งรหัสโปรแกรมทั้งหมดนำมาเขียนอธิบายสรุปตรรกะร่วมกันในชั้นเรียน`}
         />
+
       </main>
+
     </div>
   );
 }

@@ -1,25 +1,22 @@
 # วิเคราะห์และออกแบบระบบเชิงวัตถุ (31910-2003)
 
-## Unit 1: ความเข้าใจพื้นฐานและความต้องการผู้ใช้ (Requirements Engineering)
-- 1.1 ความรู้เบื้องต้นเกี่ยวกับการพัฒนาระบบ
-  - 1.1.1 วงจรการพัฒนาระบบ (System Development Life Cycle: SDLC)
-  - 1.1.2 โมเดลการพัฒนาระบบ (Waterfall, Agile, Scrum)
-  - 1.1.3 สาเหตุที่โครงการซอฟต์แวร์ประสบความสำเร็จและล้มเหลว
-- 1.2 ความสำคัญของการวิเคราะห์ความต้องการ
-  - 1.2.1 User Requirements กับ System Requirements
-- 1.3 ประเภทของความต้องการ
-  - 1.3.1 ความต้องการเชิงฟังก์ชัน (Functional Requirements: FR)
-  - 1.3.2 ความต้องการที่ไม่ใช่เชิงฟังก์ชัน (Non-Functional Requirements: NFR) (เช่น ประสิทธิภาพ, ความปลอดภัย, ความน่าเชื่อถือ)
-  - 1.3.3 กฎเกณฑ์ทางธุรกิจ (Business Rules)
-- 1.4 เทคนิคการรวบรวมข้อมูลและความต้องการ (Fact-Finding Techniques)
-  - 1.4.1 การสัมภาษณ์ (Interviewing)
-  - 1.4.2 การใช้แบบสอบถาม (Questionnaires)
-  - 1.4.3 การสังเกตการณ์ (Observation)
-  - 1.4.4 การวิเคราะห์เอกสาร (Document Analysis)
-  - 1.4.5 การจัดประชุมเชิงปฏิบัติการ (JAD - Joint Application Design)
-- 1.5 การบริหารจัดการความต้องการ (Requirements Management)
+## Unit 1: การจัดทำเอกสาร SRS
+
+- 1.1 องค์ประกอบของ SRS
+- 1.2 โครงสร้างมาตรฐานของ SRS
+  - 1.2.1 บทนำ (Introduction)
+  - 1.2.2 คำอธิบายโดยรวม (Overall Description)
+  - 1.2.3 ข้อกำหนดเชิงฟังก์ชัน (Functional Requirements)
+  - 1.2.4 ข้อกำหนดที่ไม่ใช่เชิงฟังก์ชัน (Non-Functional Requirements)
+  - 1.2.5 เงื่อนไข/ข้อจำกัด & สมมติฐาน (Constraints & Assumptions)
+  - 1.2.6 เกณฑ์การยอมรับ (Acceptance Criteria)
+  - 1.2.7 ภาคผนวก (Appendix)
+- 1.3 ตัวอย่าง SRS งานระบบจัดการข้อมูลนักศึกษา (Project 1)
+- 1.4 ตัวอย่าง SRS งานระบบจัดการข้อมูลสินค้าคงคลัง (Project 2)
+- 1.5 ตัวอย่าง SRS งานระบบจัดการข้อมูลการจอง (Project 3)
 
 ## Unit 2: บรรยายสารสนเทศและกระบวนการธุรกิจ (Business Process Modeling)
+
 - 2.1 ตรรกะธุรกิจ (Business Logic)
   - 2.1.1 การทำความเข้าใจโดเมนของปัญหา (Problem Domain)
 - 2.2 แนวคิดกระบวนการทำงานแบบ BPR (Business Process Reengineering)
@@ -34,6 +31,7 @@
 - 2.5 การกำหนดขอบเขตของระบบ (System Boundary และ Scope)
 
 ## Unit 3: การจัดทำเอกสารข้อกำหนดความต้องการ (SRS Document)
+
 - 3.1 บทบาทและความสำคัญของเอกสาร SRS (Software Requirements Specification)
 - 3.2 มาตรฐานของเอกสาร SRS (เช่น IEEE 830 หรือมาตรฐาน ISO ที่เกี่ยวข้อง)
 - 3.3 โครงสร้างหลักของเอกสาร SRS
@@ -44,6 +42,7 @@
 - 3.5 การสอบทานและการอนุมัติเอกสาร (Requirements Validation & Sign-off)
 
 ## Unit 4: แผนภาพยูสเคส (Use Case Diagram และ Use Case Specification)
+
 - 4.1 ทำความรู้จักกับ UML (Unified Modeling Language)
   - 4.1.1 ประวัติและวิวัฒนาการของ UML
 - 4.2 ประเภทของแผนภาพ UML
@@ -64,6 +63,7 @@
   - 4.5.3 Alternate Flow และ Exception Flow
 
 ## Unit 5: พื้นฐานการคิดเชิงวัตถุ (Object-Oriented Concepts)
+
 - 5.1 แนวคิดเชิงวัตถุ (Object-Oriented Paradigm)
 - 5.2 ความแตกต่างและความสัมพันธ์ระหว่าง Class กับ Object (Instance)
 - 5.3 องค์ประกอบของคลาส
@@ -80,6 +80,7 @@
   - 5.5.2 หาเมธอดจากคำกริยา (Verbs)
 
 ## Unit 6: กระบวนการวิเคราะห์และออกแบบเชิงวัตถุ (OOAD Process)
+
 - 6.1 ความแตกต่างระหว่าง Object-Oriented Analysis (OOA) และ Object-Oriented Design (OOD)
 - 6.2 การวิเคราะห์คลาสด้วยเครื่องมือ CRC Cards (Class-Responsibility-Collaborator)
   - 6.2.1 Class (การระบุคลาส)
@@ -91,6 +92,7 @@
 - 6.4 การเชื่อมโยง Use Case สู่ CRC Cards และ Class Model
 
 ## Unit 7: แผนภาพคลาส (Class Diagram)
+
 - 7.1 สัญลักษณ์และการวาด Class Diagram
   - 7.1.1 กล่องสี่เหลี่ยม 3 ส่วน (Name, Attributes, Operations)
 - 7.2 สัญลักษณ์การเข้าถึงข้อมูล (Visibility Modifiers)
@@ -100,7 +102,7 @@
   - 7.2.4 (~) Package (เบื้องต้น)
 - 7.3 การกำหนดชนิดข้อมูล (Data Types) และค่าเริ่มต้น (Initial Value)
 - 7.4 ความสัมพันธ์ระหว่างคลาส (Relationships)
-  - 7.4.1 Association (รวมถึง Multiplicity / Cardinality: 1..1, 1..*, 0..*)
+  - 7.4.1 Association (รวมถึง Multiplicity / Cardinality: 1..1, 1.._, 0.._)
   - 7.4.2 Aggregation (has-a)
   - 7.4.3 Composition (part-of / strong has-a)
   - 7.4.4 Generalization / Inheritance (is-a)
@@ -108,6 +110,7 @@
 - 7.5 การเปลี่ยนจาก Analysis Class Diagram ไปสู่ Design Class Diagram
 
 ## Unit 8: แผนภาพพฤติกรรม (Behavioral Diagrams: Activity & Sequence)
+
 - 8.1 Activity Diagram (แผนภาพกิจกรรม)
   - 8.1.1 องค์ประกอบ: Initial Node, Final Node, Action, Control Flow
   - 8.1.2 Decision Node และ Merge Node (เงื่อนไข)
@@ -122,6 +125,7 @@
   - 8.2.5 Combined Fragments เบื้องต้น (alt, opt, loop) เพื่อจัดการเงื่อนไขและการวนซ้ำ
 
 ## Unit 9: การประยุกต์ใช้และโครงงานขนาดเล็ก (Mini Project)
+
 - 9.1 การตรวจสอบความสอดคล้อง (Consistency) ของโมเดลทั้งหมด
   - 9.1.1 ความเชื่อมโยงระหว่าง Use Case, Activity, Sequence และ Class Diagram
 - 9.2 การออกแบบสถาปัตยกรรมซอฟต์แวร์เบื้องต้น (Software Architecture)
