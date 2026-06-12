@@ -1,1847 +1,1012 @@
 /**
- * it4_1.jsx — หน่วยที่ 4.1 อุปกรณ์เครือข่ายระดับฮาร์ดแวร์พื้นฐาน (Network Devices)
- * ====================================================================
- * Vertical Stacking Page Architecture: 7 academic subtopics + 5 premium simulators + Quiz + Task
- * Immersive Full-Page Standard (4 Layers) — Fluid Open-Air Layout
- * NO sounds | NO dynamic Tailwind | Local State only
- * Deduplication via reuse of Shared Base Components
- * Symmetrical Center SVG Connection Standard
+ * it4_1.jsx — สื่อกลางและการเชื่อมต่อทางกายภาพ (Network Media & Cabling)
+ * =========================================================================
+ * บทเรียนรวมบทที่ 4:
+ *   4.1 อุปกรณ์เครือข่ายคอมพิวเตอร์พื้นฐาน (Basic Network Equipment)
+ *   4.2 สายสัญญาณคอมพิวเตอร์และสื่อกลาง (Network Cables & Transmission Media)
+ *   4.3 มาตรฐานการจัดสีและการเข้าหัวสาย LAN (Wiring Standards)
+ *   4.4 ขั้นตอนการปฏิบัติการเข้าหัวสายแลน RJ-45 (Termination Steps)
+ * 
+ * ระบบจำลองแบบรวมหน้าเดียว (Interactive UTP Termination Master Simulator):
+ *   - Phase 1: Arrange - เรียงสีสายแลนตามมาตรฐาน T568B
+ *   - Phase 2: Crimp - จำลองการใช้คีมย้ำทองแดงเข้าสัมผัสสาย
+ *   - Phase 3: Test Cable - สแกนไฟกะพริบเช็คสัญญาณ Pin 1-8
+ * 
+ * ธีมสี: Indigo / Blue / Sky (Cabling & Hardware Infrastructure Palette)
  */
-import React, { useState, useEffect, useRef } from 'react';
-import {
-  ShieldAlert, Settings, ChevronRight, FileText, Key, Award, AlertCircle,
-  Globe, Keyboard, ShieldCheck, Lock, Eye, EyeOff, Wifi, Download, Search, 
-  RefreshCw, Terminal, Layers, ArrowRight, RotateCcw, Play, Pause, Plus, Trash2, 
-  CheckCircle2, AlertTriangle, HelpCircle, Server, User, AppWindow, Database, Info, Check,
-  Cpu, Activity, Radio, LockKeyhole, Network, Sliders, Settings2, PlusCircle
-} from 'lucide-react';
-import {
-  AmbientBackdrop,
-  SimulatorShell,
-  ConsoleScreen,
-  OptionSelector,
-  QuizEngine,
-  ConceptCard,
-  SectionBlock
-} from '../shared';
+import React, { useState, useEffect } from 'react';
+import { AmbientBackdrop, SectionBlock, ConceptCard, SimulatorShell, QuizEngine } from '../shared';
 import TeacherTask from '../../ui/TeacherTask';
 
-/* ═══════════════════════════════════════════════════════════════════
-   AMBIENT BACKDROP THEME — IT Unit 4 (Cyan/Teal/Indigo/Slate Theme)
-   ═══════════════════════════════════════════════════════════════════ */
-const IT4_1_BLOBS = [
-  { color: 'bg-cyan-300',    size: 'w-[450px] h-[450px]', position: '-top-20 -left-20',       opacity: 'opacity-30' },
-  { color: 'bg-teal-200',    size: 'w-[400px] h-[400px]', position: 'top-1/3 -right-20',      opacity: 'opacity-25' },
-  { color: 'bg-indigo-300',  size: 'w-96 h-96', position: '-bottom-20 left-1/4',     opacity: 'opacity-20' },
-  { color: 'bg-slate-300',   size: 'w-80 h-80', position: 'top-2/3 right-1/3',       opacity: 'opacity-20' },
+// === สร้าง SVG Icons แบบ Inline เพื่อความเสถียรและความเข้ากันได้สูงสุดของระบบ Preview ===
+const CableIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <path d="M6 3h12a3 3 0 0 1 3 3v2a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3z" />
+    <path d="M10 11v8a3 3 0 0 0 3 3h5" />
+    <circle cx="6" cy="7" r="1" />
+    <circle cx="18" cy="7" r="1" />
+  </svg>
+);
+
+const ToolsIcon = () => (
+  <svg className="w-[1.2rem] h-[1.2rem] inline-block mr-1.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+  </svg>
+);
+
+const NetworkIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <rect x="16" y="16" width="6" height="6" rx="1" />
+    <rect x="2" y="16" width="6" height="6" rx="1" />
+    <rect x="9" y="2" width="6" height="6" rx="1" />
+    <path d="M12 8v8M5 16v-4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4" />
+  </svg>
+);
+
+const CheckIcon = () => (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+);
+
+const ShieldIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+  </svg>
+);
+
+const AlertIcon = () => (
+  <svg className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01" />
+  </svg>
+);
+
+const ArrowRightIcon = () => (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <line x1="5" y1="12" x2="19" y2="12" />
+    <polyline points="12 5 19 12 12 19" />
+  </svg>
+);
+
+const RotateIcon = () => (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+  </svg>
+);
+
+const InfoIcon = () => (
+  <svg className="w-5 h-5 text-indigo-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="16" x2="12" y2="12" />
+    <line x1="12" y1="8" x2="12.01" y2="8" />
+  </svg>
+);
+
+const CpuIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <rect x="4" y="4" width="16" height="16" rx="2" ry="2" />
+    <rect x="9" y="9" width="6" height="6" />
+    <line x1="9" y1="1" x2="9" y2="4" />
+    <line x1="15" y1="1" x2="15" y2="4" />
+    <line x1="9" y1="20" x2="9" y2="23" />
+    <line x1="15" y1="20" x2="15" y2="23" />
+    <line x1="20" y1="9" x2="23" y2="9" />
+    <line x1="20" y1="15" x2="23" y2="15" />
+    <line x1="1" y1="9" x2="4" y2="9" />
+    <line x1="1" y1="15" x2="4" y2="15" />
+  </svg>
+);
+
+/* ── Ambient Blobs (Chapter 4 Theme Blobs) ──────────────── */
+const IT4_UNIFIED_BLOBS = [
+  { color: 'bg-indigo-200', size: 'w-[500px] h-[500px]', position: '-top-20 -left-20', opacity: 'opacity-30' },
+  { color: 'bg-blue-200', size: 'w-[400px] h-[400px]', position: 'top-1/4 -right-20', opacity: 'opacity-25' },
+  { color: 'bg-sky-200', size: 'w-[400px] h-[400px]', position: 'bottom-1/3 left-1/3', opacity: 'opacity-20' },
+  { color: 'bg-cyan-200', size: 'w-[500px] h-[500px]', position: 'bottom-10 right-10', opacity: 'opacity-25' },
 ];
 
-/* ═══════════════════════════════════════════════════════════════════
-   DATA: QUIZ FOR UNIT 4.1
-   ═══════════════════════════════════════════════════════════════════ */
-const QUIZ_LEVELS = [
+/* ── Data: 4.1 Network Devices ────────────────────────────────── */
+const NETWORK_DEVICES = [
   {
-    title: 'โจทย์ที่ 1: ส่วนประกอบของหมายเลข MAC Address',
-    desc: 'รหัส 24 บิตแรกบนหมายเลข MAC Address ขนาด 48 บิตในมาตรฐาน IEEE 802 เรียกว่าอะไร และทำหน้าที่ระบุขอบเขตใด?',
-    options: [
-      { key: 'A', text: 'NIC Specific Identifier ทำหน้าที่ระบุลำดับสายการผลิตของแผงวงจรกายภาพ', isCorrect: false },
-      { key: 'B', text: 'Organizationally Unique Identifier (OUI) ทำหน้าที่ระบุรหัสประจำตัวของบริษัทผู้ผลิตชิ้นส่วนฮาร์ดแวร์นั้น', isCorrect: true },
-      { key: 'C', text: 'IPv4 Subnet Mask Boundary ทำหน้าที่จำแนกความกว้างวงเครือข่ายย่อยท้องถิ่น', isCorrect: false },
-      { key: 'D', text: 'Frame Check Sequence (FCS) ทำหน้าที่คำนวณข้อผิดพลาดของข้อมูลแพ็กเก็ตบิต', isCorrect: false }
-    ],
-    tip: 'OUI (24 บิตแรก) ออกให้โดยองค์กร IEEE เพื่อระบุค่ายผู้ผลิตอุปกรณ์เน็ตเวิร์ก เช่น Cisco, Intel, Realtek'
+    icon: <NetworkIcon />,
+    title: 'สวิตช์เครือข่าย (Switch)',
+    desc: 'ทำหน้าที่เป็นตัวกลางเชื่อมต่ออุปกรณ์คอมพิวเตอร์หลายเครื่องในวงแลน (LAN) เดียวกัน มีจุดเด่นคือส่งข้อมูลได้แม่นยำแยกตามพอร์ตอุปกรณ์ปลายทาง',
+    accent: 'indigo',
+    detail: 'ทำงานใน Layer 2 (Data Link Layer) — จดจำ MAC Address ของอุปกรณ์เพื่อสวิตช์และส่งข้อมูลโดยเฉพาะพอร์ต ป้องกันการชนกันของสัญญาณ',
   },
   {
-    title: 'โจทย์ที่ 2: ความแตกต่างของการกระจายข้อมูลระหว่าง Hub และ Switch',
-    desc: 'ในการออกแบบเครือข่ายแลน เพราะเหตุใด Switch จึงมีความปลอดภัยสูงและไม่มีการชนกันของสัญญาณข้อมูล (Collision) เหมือน Hub?',
-    options: [
-      { key: 'A', text: 'เนื่องจาก Switch บังคับแปลงสัญญาณจากสัญญาณไฟฟ้าเป็นความถี่วิทยุ WAP เสมอ', isCorrect: false },
-      { key: 'B', text: 'เนื่องจาก Switch ใช้หลักการเรียนรู้ตาราง MAC Address Table เพื่อนำส่งข้อมูลแบบเจาะจงรายพอร์ต (Unicast) ต่างจาก Hub ที่กระจายข้อมูลออกทุกพอร์ต (Broadcast) ตลอดเวลา', isCorrect: true },
-      { key: 'C', text: 'เนื่องจาก Switch ปิดพอร์ตเชื่อมต่อปลายทางโดยอัตโนมัติหากมีแพ็กเก็ตวิ่งผ่านเกิน 50 บิต', isCorrect: false },
-      { key: 'D', text: 'เนื่องจาก Switch ประมวลผลใน Physical Layer เท่านั้น จึงทำให้ไม่มีการอ่านค่าเฟรมข้อมูล', isCorrect: false }
-    ],
-    tip: 'Switch ทำงานใน Layer 2 มีความสามารถในการเรียนรู้ตารางจดจำพอร์ตแลนและ MAC Address ส่งผลให้จราจรส่งตรงถึงผู้รับเฉพาะตัว'
+    icon: <ArrowRightIcon />,
+    title: 'เราเตอร์ (Router)',
+    desc: 'อุปกรณ์หลักในการจัดเส้นทางข้อมูลระหว่างเครือข่าย ทำหน้าที่เชื่อมโยงวงแลนย่อยต่าง ๆ เข้ากัน และเป็นประตูออกสู่อินเทอร์เน็ตภายนอก',
+    accent: 'blue',
+    detail: 'ทำงานใน Layer 3 (Network Layer) — ค้นหาเส้นทางที่ดีที่สุดตามตาราง Routing Table และข้อมูล IP Address ในการรับส่งแพ็กเกจข้อมูล',
   },
   {
-    title: 'โจทย์ที่ 3: บทบาทการเลือกเส้นทางข้ามเครือข่ายของ Router',
-    desc: 'เราเตอร์ (Router) ทำหน้าที่สำคัญที่สุดในระดับสถาปัตยกรรมเครือข่ายตามชั้นการทำงาน (OSI Layer) ในลักษณะใด?',
-    options: [
-      { key: 'A', text: 'อ่านสัญญาณบิตทางฟิสิกส์แล้วขยายสัญญาณไฟฟ้าชดเชยค่าความสูญเสีย', isCorrect: false },
-      { key: 'B', text: 'วิเคราะห์เส้นทางที่ดีที่สุดตาม Routing Table และนำส่งข้อมูลข้ามวงเครือข่ายย่อยที่แตกต่างกัน (Layer 3 - Network Layer)', isCorrect: true },
-      { key: 'C', text: 'สร้างพาร์ติชันเก็บข้อมูล SAM ในตัวเครื่องเพื่อบันทึกไฟล์ผู้ใช้ระบบคอมพิวเตอร์', isCorrect: false },
-      { key: 'D', text: 'เข้ารหัสสิทธิการใช้งานระดับ OEM ลงบนแผงบอร์ดหลักด้วยมาตรฐาน UEFI BIOS', isCorrect: false }
-    ],
-    tip: 'Router เชื่อมโยงเครือข่ายย่อยต่าง Subnet โดยทำงานใน Layer 3 (Network Layer) และอาศัย IP Address'
+    icon: <CpuIcon />,
+    title: 'จุดเชื่อมต่อสัญญาณไร้สาย (Access Point)',
+    desc: 'ทำหน้าที่กระจายสัญญาณไวไฟ (Wi-Fi) เพื่อให้อุปกรณ์พกพา เช่น แล็ปท็อป แท็บเล็ต หรือมือถือ สามารถล็อกอินเข้าใช้วงเน็ตเวิร์กสายหลักได้',
+    accent: 'cyan',
+    detail: 'ทำหน้าที่เสมือนเป็นสวิตช์ไร้สาย ขยายขอบเขตทางกายภาพ โดยส่งสัญญาณคลื่นวิทยุความถี่สูงแทนการเดินสายสัญญาณย่อยไปยังผู้ใช้',
   },
   {
-    title: 'โจทย์ที่ 4: การทำงานของโมเด็ม (Modem)',
-    desc: 'กระบวนการแปลงสัญญาณดิจิทัลจากคอมพิวเตอร์ให้กลายเป็นสัญญาณอนาล็อกส่งผ่านสายโทรศัพท์ภายนอกเรียกว่าอะไร?',
-    options: [
-      { key: 'A', text: 'Demodulation (ดีโมดูเลชัน)', isCorrect: false },
-      { key: 'B', text: 'Modulation (มอดูเลชัน)', isCorrect: true },
-      { key: 'C', text: 'Attenuation (สัญญาณเสื่อมถอย)', isCorrect: false },
-      { key: 'D', text: 'Fragmentation (การจัดระเบียบเศษไฟล์ข้อมูล)', isCorrect: false }
-    ],
-    tip: 'Modulation (แปลงดิจิทัล -> อนาล็อก) และ Demodulation (แปลงอนาล็อก -> ดิจิทัล) คือที่มาของชื่อ Mo-Dem'
+    icon: <CableIcon />,
+    title: 'การ์ดเครือข่าย (Network Interface Card - NIC)',
+    desc: 'แผงวงจรควบคุมหลักที่อยู่บนเมนบอร์ด ทำหน้าที่แปลงชุดรหัสข้อมูลดิจิทัลให้อยู่ในรูปของสัญญาณไฟฟ้าเพื่อรับส่งผ่านสายแลนผ่านพอร์ต RJ-45',
+    accent: 'sky',
+    detail: 'มีการระบุรหัสประจำตัวทางกายภาพเรียกว่า MAC Address ซึ่งสลักมาจากโรงงานผู้ผลิตและไม่ซ้ำกันเลยในเครื่องคอมพิวเตอร์ทั่วโลก',
   },
-  {
-    title: 'โจทย์ที่ 5: หน้าที่และการตั้งค่า Firewall ขอบเขตความปลอดภัย',
-    desc: 'อุปกรณ์ไฟร์วอลล์ (Firewall) ระดับฮาร์ดแวร์ใช้เครื่องมือใดในสถาปัตยกรรมระบบเพื่ออนุญาตหรือปิดกั้นการจราจรเครือข่ายตามเกณฑ์ที่ช่างกำหนด?',
-    options: [
-      { key: 'A', text: 'Rufus Partitioning Scheme Table', isCorrect: false },
-      { key: 'B', text: 'Access Control Lists (ACL) ที่ระบุเงื่อนไขการอนุมัติหรือปฏิเสธไอพีแอดเดรสและพอร์ตสั่งงาน', isCorrect: true },
-      { key: 'C', text: 'MAC Address Table ที่บันทึกพอร์ตและบัสส่งสัญญาณนาฬิกา', isCorrect: false },
-      { key: 'D', text: 'Windows Cumulative Security Hotfix Packages', isCorrect: false }
-    ],
-    tip: 'ไฟร์วอลล์กรองแพ็กเก็ตโดยอาศัยกฎที่สร้างขึ้นใน Access Control List (ACL) ในการอนุญาต (ALLOW) หรือปฏิเสธ (DENY) สิทธิ์เชื่อมต่อ'
-  }
 ];
 
-export default function ComponentName() {
+/* ── Data: 4.2 Cables ────────────────────────────────────────── */
+const CABLE_CATEGORIES = [
+  {
+    name: 'CAT 5e',
+    bandwidth: '100 MHz',
+    speed: '1 Gbps (1,000 Mbps)',
+    dist: '100 เมตร',
+    desc: 'มาตรฐานสายแลนดั้งเดิมที่นิยมใช้เดินตามบ้านพักอาศัยทั่วไป มีราคาประหยัด ติดตั้งง่ายและยืดหยุ่นสูง',
+    accent: 'sky',
+  },
+  {
+    name: 'CAT 6',
+    bandwidth: '250 MHz',
+    speed: '10 Gbps (ระยะไม่เกิน 55 ม.) / 1 Gbps (ระยะ 100 ม.)',
+    dist: '55 - 100 เมตร',
+    desc: 'มีความเร็วและแบนด์วิดท์สูงขึ้น มีแกนแกนพลาสติกทรงกากบาทแยกคู่สายสัญญาณข้างในเพื่อลดสัญญาณรบกวน',
+    accent: 'blue',
+  },
+  {
+    name: 'CAT 6A',
+    bandwidth: '500 MHz',
+    speed: '10 Gbps (สปีดเต็มพิกัด)',
+    dist: '100 เมตร',
+    desc: 'พัฒนาเกราะและฉนวนป้องกันสัญญาณรบกวนข้ามสายได้ดียิ่งขึ้น รองรับความเร็ว 10 Gbps ได้ยาวเต็มความยาวสายสากล',
+    accent: 'indigo',
+  },
+];
+
+/* ── Data: 4.3 Color Codes ────────────────────────────────────── */
+const T568B_COLORS = [
+  { id: 'wo', name: 'ขาว-ส้ม', code: 'white-orange', bgClass: 'bg-amber-100 border-t-4 border-orange-500 text-amber-950 font-bold' },
+  { id: 'o', name: 'ส้ม', code: 'orange', bgClass: 'bg-orange-500 text-white font-bold' },
+  { id: 'wg', name: 'ขาว-เขียว', code: 'white-green', bgClass: 'bg-emerald-100 border-t-4 border-emerald-500 text-emerald-950 font-bold' },
+  { id: 'b', name: 'น้ำเงิน', code: 'blue', bgClass: 'bg-blue-600 text-white font-bold' },
+  { id: 'wb', name: 'ขาว-น้ำเงิน', code: 'white-blue', bgClass: 'bg-blue-100 border-t-4 border-blue-500 text-blue-950 font-bold' },
+  { id: 'g', name: 'เขียว', code: 'green', bgClass: 'bg-emerald-600 text-white font-bold' },
+  { id: 'wbr', name: 'ขาว-น้ำตาล', code: 'white-brown', bgClass: 'bg-amber-50 border-t-4 border-amber-800 text-amber-900 font-bold' },
+  { id: 'br', name: 'น้ำตาล', code: 'brown', bgClass: 'bg-amber-800 text-white font-bold' }
+];
+
+const T568A_COLORS = [
+  { id: 'wg', name: 'ขาว-เขียว', code: 'white-green', bgClass: 'bg-emerald-100 border-t-4 border-emerald-500 text-emerald-950 font-bold' },
+  { id: 'g', name: 'เขียว', code: 'green', bgClass: 'bg-emerald-600 text-white font-bold' },
+  { id: 'wo', name: 'ขาว-ส้ม', code: 'white-orange', bgClass: 'bg-amber-100 border-t-4 border-orange-500 text-amber-950 font-bold' },
+  { id: 'b', name: 'น้ำเงิน', code: 'blue', bgClass: 'bg-blue-600 text-white font-bold' },
+  { id: 'wb', name: 'ขาว-น้ำเงิน', code: 'white-blue', bgClass: 'bg-blue-100 border-t-4 border-blue-500 text-blue-950 font-bold' },
+  { id: 'o', name: 'ส้ม', code: 'orange', bgClass: 'bg-orange-500 text-white font-bold' },
+  { id: 'wbr', name: 'ขาว-น้ำตาล', code: 'white-brown', bgClass: 'bg-amber-50 border-t-4 border-amber-800 text-amber-900 font-bold' },
+  { id: 'br', name: 'น้ำตาล', code: 'brown', bgClass: 'bg-amber-800 text-white font-bold' }
+];
+
+/* ── Data: 4.5 Unified Quiz ───────────────────────────────────── */
+const QUIZ_LEVELS_CABLE = [
+  {
+    title: 'ข้อใดอธิบายหน้าที่การทำงานของสวิตช์เครือข่าย (Switch) ได้ถูกต้องที่สุด?',
+    desc: 'เลือกนิยามการทำงานของอุปกรณ์ในเครือข่ายวงแลนเดียวกัน',
+    options: [
+      { key: 'A', text: 'เชื่อมอินเทอร์เน็ตภายนอกเข้าหาวงแลนเพื่อค้นหา IP ของเว็บ', isCorrect: false },
+      { key: 'B', text: 'เป็นสื่อกลางไร้สายกระจายสัญญาณไวไฟให้อุปกรณ์พกพา', isCorrect: false },
+      { key: 'C', text: 'เชื่อมต่ออุปกรณ์ในวงแลนเดียวกัน โดยส่งข้อมูลตรงพอร์ตปลายทางตาม MAC Address', isCorrect: true },
+      { key: 'D', text: 'แปลงพลังงานไฟกระแสสลับมาจ่ายบอร์ดคอมพิวเตอร์', isCorrect: false },
+    ],
+    tip: 'Switch จะบันทึกตาราง MAC Address Table เพื่อสลับช่องสัญญาณส่งข้อมูลตรงหาคอมพิวเตอร์พอร์ตปลายทางโดยไม่ส่งกวนพอร์ตอื่น',
+  },
+  {
+    title: 'สายสัญญาณประเภทใดมีเกราะชีลด์ฟอยล์โลหะเสริมภายในเพื่อป้องกันคลื่นสัญญาณแม่เหล็กไฟฟ้ารบกวนข้ามสาย?',
+    desc: 'เลือกประเภทสายสัญญาณที่ระบุฉนวนป้องกันสัญญาณรบกวนภายนอก',
+    options: [
+      { key: 'A', text: 'สาย UTP (Unshielded Twisted Pair)', isCorrect: false },
+      { key: 'B', text: 'สาย STP (Shielded Twisted Pair)', isCorrect: true },
+      { key: 'C', text: 'สาย Coaxial เปลือกเดี่ยว', isCorrect: false },
+      { key: 'D', text: 'สาย Fiber Optic แกนพลาสติก', isCorrect: false },
+    ],
+    tip: 'สาย STP (Shielded) มีฟอยล์โลหะหุ้มเป็นเกราะเสริมเพื่อบล็อกคลื่นรบกวนภายนอก เหมาะสำหรับโซนโรงงานอุตสาหกรรม',
+  },
+  {
+    title: 'ตามมาตรฐานสากล T568B ในการเข้าหัวสาย LAN ลำดับสี 3 เส้นแรกต้องเรียงตามข้อใด?',
+    desc: 'เลือกคู่ลำดับสีทองแดง T568B ที่ถูกต้อง',
+    options: [
+      { key: 'A', text: 'ขาวเขียว → เขียว → ขาวส้ม', isCorrect: false },
+      { key: 'B', text: 'ขาวส้ม → ส้ม → ขาวเขียว', isCorrect: true },
+      { key: 'C', text: 'ขาวน้ำเงิน → น้ำเงิน → ขาวเขียว', isCorrect: false },
+      { key: 'D', text: 'ขาวส้ม → ขาวเขียว → ส้ม', isCorrect: false },
+    ],
+    tip: 'มาตรฐาน T568B ยอดนิยมจะเริ่มด้วยคู่สีส้ม: ขาวส้ม (พิน 1) -> ส้ม (พิน 2) -> ขาวเขียว (พิน 3)',
+  },
+  {
+    title: 'เมื่อต้องการเชื่อมต่อคอมพิวเตอร์ 2 เครื่องโดยตรงแบบเครื่องชนเครื่อง (PC-to-PC) โดยไม่ผ่าน Switch จะต้องเข้าหัวสายแลนชนิดใด?',
+    desc: 'เลือกประเภทสายต่อพ่วงสัญญาณทางกายภาพ',
+    options: [
+      { key: 'A', text: 'สายตรง (Straight-through Cable) โดยสลับพอร์ตที่ตัวบอร์ด', isCorrect: false },
+      { key: 'B', text: 'สายไขว้ (Crossover Cable) เข้า T568A ฝั่งหนึ่ง และ T568B อีกฝั่งหนึ่ง', isCorrect: true },
+      { key: 'C', text: 'สายคู่แบบ MDI-X สำรองข้อมูล', isCorrect: false },
+      { key: 'D', text: 'สาย Coaxial เชื่อมโยงตรงผ่านการ์ดเสียง', isCorrect: false },
+    ],
+    tip: 'การต่ออุปกรณ์ชนิดเดียวกันตรงๆ ต้องใช้สายไขว้ (Crossover) เพื่อให้พินส่งข้อมูล (TX) ฝั่งหนึ่งตรงพอร์ตรับ (RX) ของอีกฝั่งหนึ่ง',
+  },
+  {
+    title: 'ในขั้นตอนการทดสอบสัญญาณผ่านเครื่อง Cable Tester ไฟ LED ของพิน 1-8 ควรมีพฤติกรรมอย่างไรจึงจะพร้อมใช้งาน?',
+    desc: 'เลือกพฤติกรรมดวงไฟ LED ตรวจเช็คสายสัญญาณสำเร็จ',
+    options: [
+      { key: 'A', text: 'ไฟติดนิ่งค้างสีส้มพร้อมกันทุกดวงบนเครื่องเทส', isCorrect: false },
+      { key: 'B', text: 'ไฟกะพริบวิ่งกวาดสลับดวงคี่และดวงคู่สลับไปมา', isCorrect: false },
+      { key: 'C', text: 'ไฟวิ่งกะพริบเรียงลำดับพิน 1 ถึง 8 ขนานตรงกันทั้งฝั่ง Master และ Remote', isCorrect: true },
+      { key: 'D', text: 'ไฟฝั่ง Remote ดับทั้งหมดเพื่อยืนยันว่าสัญญาณไม่มีกระแสไหลวน', isCorrect: false },
+    ],
+    tip: 'ไฟต้องกะพริบไล่ลำดับตั้งแต่ 1 ไปถึง 8 ทีละดวงพร้อมกันทั้งสองฝั่ง แสดงว่าขั้วทองแดงสัมผัสครบถ้วนและไม่สลับไขว้สาย',
+  },
+];
+
+/* ── SUB-COMPONENT: Device Info Card ───────────────────────────── */
+function DeviceCard({ device }) {
+  const [expanded, setExpanded] = useState(false);
+  const accent = device.accent;
+
+  const ACCENT_BORDER = {
+    indigo: 'border-indigo-200/60 hover:border-indigo-400/80',
+    blue: 'border-blue-200/60 hover:border-blue-400/80',
+    cyan: 'border-cyan-200/60 hover:border-cyan-400/80',
+    sky: 'border-sky-200/60 hover:border-sky-400/80',
+  };
+
+  const ACCENT_ICON_BG = {
+    indigo: 'bg-indigo-50 text-indigo-650',
+    blue: 'bg-blue-50 text-blue-650',
+    cyan: 'bg-cyan-50 text-cyan-650',
+    sky: 'bg-sky-50 text-sky-650',
+  };
+
+  const ACCENT_TEXT = {
+    indigo: 'text-indigo-650',
+    blue: 'text-blue-650',
+    cyan: 'text-cyan-650',
+    sky: 'text-sky-650',
+  };
+
+  const ACCENT_BG = {
+    indigo: 'bg-indigo-50/50',
+    blue: 'bg-blue-50/50',
+    cyan: 'bg-cyan-50/50',
+    sky: 'bg-sky-50/50',
+  };
+
   return (
-    <>
-      {/* Layer 1: Ambient Backdrop & Theme Gradients */}
-      <AmbientBackdrop blobs={IT4_1_BLOBS} />
+    <div
+      onClick={() => setExpanded(!expanded)}
+      className={`bg-white/70 backdrop-blur-xl border ${ACCENT_BORDER[accent]} shadow-xl rounded-[2rem] p-7 
+        hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer group relative overflow-hidden`}
+    >
+      <div className={`absolute top-0 right-0 w-24 h-24 ${ACCENT_BG[accent]} rounded-bl-full z-0 transition-transform group-hover:scale-110`} />
 
-      {/* Layer 3: Flexible Subtopics & Fluid Open-Air Layout */}
-      <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-6 space-y-12 md:space-y-16 relative z-10">
-        
-        {/* ─── SUBTOPIC 4.1.1 ─────────────────────────────────────────────── */}
-        <section className="space-y-6">
-          <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-cyan-600 tracking-wider uppercase">แผงเชื่อมต่อและรหัสประจำตัวกายภาพ</span>
-            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              การ์ดเครือข่าย (Network Interface Card - NIC) และหมายเลข MAC Address
-            </h3>
+      <div className="relative z-10">
+        <div className="flex items-start gap-5 mb-3">
+          <div className={`p-4 rounded-2xl ${ACCENT_ICON_BG[accent]} ${ACCENT_TEXT[accent]} 
+            transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-inner shrink-0`}>
+            {device.icon}
           </div>
-          
-          <div className="text-[16px] md:text-[17px] font-normal text-zinc-600 leading-relaxed space-y-4">
-            <p>
-              ในการวิศวกรรมสถาปัตยกรรมเครือข่าย <strong>การ์ดเครือข่าย (Network Interface Card)</strong> หรือย่อสั้นๆ ว่า <strong>NIC</strong> 
-              คือแผงวงจรอิเล็กทรอนิกส์กายภาพทำหน้าที่แปลงกระแสชุดข้อมูลระดับคอมพิวเตอร์ให้อยู่ในรูปสัญญาณคลื่นเพื่อส่งผ่านสายนำสัญญาณ 
-              ชิ้นส่วนนี้ถือเป็นจุดนัดพบบันไดขั้นแรกของการเดินทางข้อมูล โดยฮาร์ดแวร์ NIC แต่ละชิ้นทั่วโลกจะถูกสลักหมายเลขประจำตัวถาวร 
-              ที่เรียกว่า <strong>MAC Address (Media Access Control Address)</strong> ขนาด 48 บิตในรูปแบบเลขฐานสิบหก 12 หลัก
-            </p>
-            <p>
-              รหัส MAC Address จะไม่ซ้ำกันเลยแม้แต่ชิ้นเดียวในระบบนิเวศการผลิตโลก โดยโครงสร้าง 48 บิตจะถูกจำแนกสมมาตรแบ่งครึ่งออกเป็น 2 ส่วนหลัก:
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 text-left">
-              <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 hover:-translate-y-1 hover:shadow-2xl hover:border-indigo-500/30 transition-all duration-300 cursor-pointer space-y-2 group">
-                <span className="p-2 rounded-xl bg-indigo-50/80 text-indigo-700 font-mono font-bold text-xs inline-block transition-all duration-300 group-hover:scale-110 shadow-inner">24 บิตแรก (OUI)</span>
-                <h6 className="font-bold text-indigo-950 text-[15.5px] transition-colors group-hover:text-indigo-600">Organizationally Unique Identifier</h6>
-                <p className="text-[14px] text-zinc-500 leading-relaxed font-sans">
-                  รหัสเฉพาะประจำบริษัทค่ายผู้ผลิตอุปกรณ์อิเล็กทรอนิกส์ ได้รับการจดทะเบียนรับรองหลักสูตรโดยองค์กรสากล IEEE เช่น รหัส <code className="bg-indigo-50/80 border border-indigo-200/50 px-1 py-0.5 rounded text-xs text-indigo-700 font-mono">00-60-2F</code> ชี้เฉพาะแบรนด์ Cisco Systems
-                </p>
-              </div>
-              <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 hover:-translate-y-1 hover:shadow-2xl hover:border-cyan-500/30 transition-all duration-300 cursor-pointer space-y-2 group">
-                <span className="p-2 rounded-xl bg-cyan-50/80 text-cyan-800 font-mono font-bold text-xs inline-block transition-all duration-300 group-hover:scale-110 shadow-inner">24 บิตหลัง (NIC Specific)</span>
-                <h6 className="font-bold text-cyan-950 text-[15.5px] transition-colors group-hover:text-cyan-600">Device / Serial Number</h6>
-                <p className="text-[14px] text-zinc-500 leading-relaxed font-sans">
-                  หมายเลขลำดับเฉพาะตัวประแผงชิปการ์ดเครือข่าย ถูกสร้างและบันทึกข้อมูล (Hard-coded) มาจากโรงงานการผลิต ไม่เปลี่ยนรูปข้าม OS เพื่อระบุความมีอยู่ของพอร์ตทางกายภาพ
-                </p>
-              </div>
-            </div>
+          <div className="flex-1 min-w-0 pr-4">
+            <h4 className="text-lg font-bold text-zinc-900 leading-snug mb-1">{device.title}</h4>
+            <p className="text-[14.5px] md:text-[15.5px] text-zinc-605 leading-relaxed">{device.desc}</p>
           </div>
-
-          {/* Interactive Simulator 1: MAC Frame Builder */}
-          <MacFrameBuilder />
-        </section>
-
-        {/* ─── SUBTOPIC 4.1.2 ─────────────────────────────────────────────── */}
-        <section className="space-y-6">
-          <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-cyan-600 tracking-wider uppercase">การแพร่กระจายระดับฟิสิกส์</span>
-            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              หลักการทำงานของฮับ (Hub) และรีพีตเตอร์ (Repeater)
-            </h3>
-          </div>
-
-          <div className="text-[16px] md:text-[17px] font-normal text-zinc-600 leading-relaxed space-y-4">
-            <p>
-              ในประวัติศาสตร์ของเครือข่าย LAN อุปกรณ์ <strong>ฮับ (Hub)</strong> และ <strong>รีพีตเตอร์ (Repeater)</strong> 
-              ทำงานประมวลผลกระแสไฟฟ้าในระดับต่ำสุดของแบบจำลองอ้างอิง นั่นคือชั้นกายภาพ <strong>(Layer 1 - Physical Layer)</strong> 
-              โดยไม่มีโครงสร้างสมองอ่านข้อมูลระดับที่อยู่ MAC Address หรือ IP Address เลย
-            </p>
-            <p>
-              กลไกการทำงานของอุปกรณ์ทั้งสองชิ้นนี้มีขีดจำกัดที่สำคัญอย่างชัดเจน:
-            </p>
-            <ul className="space-y-3.5 my-4 text-left">
-              <li className="flex items-start">
-                <span className="inline-flex items-center justify-center p-1 rounded-full bg-cyan-100 text-cyan-600 mr-3 shrink-0 mt-0.5"><Check className="w-4 h-4" /></span>
-                <div>
-                  <strong>Hub Broadcast & Collision:</strong> เมื่อข้อมูลถูกส่งมายังพอร์ตหนึ่งในฮับ ฮับจะทำหน้าที่เสมือนสายเชื่อมโยงไฟฟ้ากระจายข้อมูลส่งต่ออกไปยังทุกพอร์ตที่เชื่อมต่ออยู่ (Broadcast) ทำให้คอมพิวเตอร์ทุกเครื่องต้องรับข้อมูลไปคัดกรองเอง ส่งผลให้เกิดความแออัดของการจราจรสายสัญญาณ และหากมีคอมพิวเตอร์ 2 เครื่องกดยิงบิตข้อมูลในเวลาเดียวกัน สัญญาณคลื่นไฟฟ้าจะเกิดการกระแทกชำรุดล้มเหลวที่เรียกว่า <strong>การชนกันของข้อมูล (Collision)</strong> โดยฮับจะเปิดใช้โปรโตคอลตรวจตรา CSMA/CD สั่งรัน Jam Signal และระงับการพิมพ์ชั่วคราว
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="inline-flex items-center justify-center p-1 rounded-full bg-cyan-100 text-cyan-600 mr-3 shrink-0 mt-0.5"><Check className="w-4 h-4" /></span>
-                <div>
-                  <strong>Repeater Signal Boost:</strong> ในกรณีสายสัญญาณทางกายภาพ (เช่น สาย UTP) ลากทางไกลเกินกว่า 100 เมตร จะเกิดปรากฏการณ์ความแรงไฟฟ้าเสื่อมถอย (Attenuation) อุปกรณ์ <strong>รีพีตเตอร์ (Repeater)</strong> จึงเข้ามามีบทบาทในการดักคลื่นความถี่นั้น และเหนี่ยวนำแรงดันไฟฟ้าขยายเพิ่มพลังสัญญาณชดเชยการสูญเสียให้กลับมาบริสุทธิ์เพื่อวิ่งงานต่อยาวข้ามเครือข่าย
-                </div>
-              </li>
-            </ul>
-          </div>
-
-          {/* Interactive Simulator 2: Hub Broadcast & CSMA/CD Lab */}
-          <HubCollisionSimulator />
-        </section>
-
-        {/* ─── SUBTOPIC 4.1.3 ─────────────────────────────────────────────── */}
-        <section className="space-y-6">
-          <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-cyan-600 tracking-wider uppercase">การสื่อสารส่วนบุคคลในเครือข่าย</span>
-            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              หลักการทำงานของสวิตช์ (Switch) และตารางจดจำพอร์ต MAC Address Table
-            </h3>
-          </div>
-
-          <div className="text-[16px] md:text-[17px] font-normal text-zinc-600 leading-relaxed space-y-4">
-            <p>
-              อุปกรณ์หลักที่เป็นศูนย์กลางการเชื่อมสายสัญญาณ LAN ในปัจจุบันคือ <strong>สวิตช์ (Switch)</strong> 
-              ซึ่งทำงานยกระดับสมองขึ้นมาที่ชั้นการเชื่อมโยงข้อมูล <strong>(Layer 2 - Data Link Layer)</strong> 
-              สวิตช์สามารถอ่านและถอดรหัสข้อมูลแพ็กเก็ต (Ethernet Frame) เพื่อค้นหาหมายเลข MAC Address ได้อย่างชาญฉลาด 
-              ส่งผลให้การรับส่งข้อมูลมีลักษณะปลอดภัย ไหลลื่น และไม่มีปัญหาการจราจรติดขัดชนกันเลยเนื่องจากสวิตช์สร้าง Collision Domain แยกขาดในทุกพอร์ตเชื่อม
-            </p>
-            <p>
-              ความลับในการประมวลเส้นทางการวิ่งของสวิตช์อยู่ที่ตรรกะ **การเรียนรู้ตารางหมายเลข (MAC Address Table Learning)**:
-            </p>
-
-            <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-6 border-l-[3.5px] border-l-cyan-500/80 mt-4 space-y-3">
-              <h5 className="font-bold text-slate-800 flex items-center gap-2">
-                <Info className="w-5 h-5 text-cyan-500 animate-pulse" /> กระบวนการเรียนรู้และบันทึกข้อมูลของสวิตช์
-              </h5>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-[14px] text-left">
-                <div className="bg-white/40 backdrop-blur-md p-4 rounded-xl border border-cyan-100 shadow-sm leading-normal hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 cursor-pointer">
-                  <span className="font-bold text-cyan-700 block mb-1 text-[14.5px]">1. ภาวะเริ่มต้นและเรียนรู้ผู้ส่ง</span>
-                  เมื่อเปิดการทำงานตารางสวิตช์ยังเป็นค่าว่าง เมื่อ PC A สั่งส่ง ข้อมูลสวิตช์จะจับจดบันทึกพอร์ตทางกายภาพเข้าคู่กับ MAC Address ต้นทางลงตารางทันที
-                </div>
-                <div className="bg-white/40 backdrop-blur-md p-4 rounded-xl border border-slate-200 shadow-sm leading-normal hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 cursor-pointer">
-                  <span className="font-bold text-slate-700 block mb-1 text-[14.5px]">2. การสาดกระจายข้อมูล (Flooding)</span>
-                  หากไม่พบข้อมูล MAC ปลายทางในตารางจดจำ สวิตช์จะทำการกระจายข้อมูลออกไปทุกช่องพอร์ต (ยกเว้นพอร์ตต้นทาง) เพื่อเสาะหาตำแหน่ง
-                </div>
-                <div className="bg-white/40 backdrop-blur-md p-4 rounded-xl border border-indigo-100 shadow-sm leading-normal hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 cursor-pointer">
-                  <span className="font-bold text-indigo-700 block mb-1 text-[14.5px]">3. บันทึกส่งตรงรายตัว (Unicast)</span>
-                  เมื่อปลายทางตอบรับและสลักชื่อบันทึกลงตารางแลนสำเร็จ สวิตช์จะปิดระบบ Flood และใช้การส่งข้อมูลตรงตัวหาผู้รับรายพอร์ต 100%
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Interactive Simulator 3: Switch MAC Address Table Learning Lab */}
-          <SwitchLearningSimulator />
-        </section>
-
-        {/* ─── SUBTOPIC 4.1.4 ─────────────────────────────────────────────── */}
-        <section className="space-y-6">
-          <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-cyan-600 tracking-wider uppercase">สะพานเชื่อมข้ามพรมแดนเครือข่าย</span>
-            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              เราเตอร์ (Router) ตารางเส้นทาง และกลไก NAT Gateway
-            </h3>
-          </div>
-
-          <div className="text-[16px] md:text-[17px] font-normal text-zinc-600 leading-relaxed space-y-4">
-            <p>
-              ขณะที่ Switch รับส่งข้อมูลอยู่เฉพาะภายในเครือข่ายเดียวกัน (Intranet/LAN) อุปกรณ์ที่ก้าวเข้ามาเป็น 
-              <strong>"นายประตูสะพานเชื่อม"</strong> นำส่งข้อมูลข้ามวงเครือข่ายไปยังโลกอินเทอร์เน็ตภายนอกคือ 
-              <strong>เราเตอร์ (Router)</strong> ซึ่งทำงานวิเคราะห์ชุดบิตในระดับชั้นเครือข่าย 
-              <strong>(Layer 3 - Network Layer)</strong> โดยอาศัยหมายเลขที่อยู่โลจิคัลอย่าง <strong>IP Address</strong> 
-              มาเป็นกุญแจสำคัญในการนำพาข้อมูลผ่านเส้นทางที่เหมาะสมที่สุด (Best Route) จากตาราง <strong>Routing Table</strong>
-            </p>
-            <p>
-              นอกจากการนำส่งเส้นทางข้ามพอร์ตแล้ว เราเตอร์ยังเป็นหัวใจหลักในสถาปัตยกรรม IP ยุคปัจจุบันด้วยระบบ 
-              <strong>NAT (Network Address Translation)</strong> ซึ่งช่วยแก้ปัญหาระบบ IP Address ทั่วโลกขาดแคลน 
-              โดยเราเตอร์จะคัดกรองแปลงหมายเลข IP ท้องถิ่นส่วนบุคคลในบ้านหรือออฟฟิศ (Private IP) 
-              ให้เปลี่ยนรูปโครงสร้างออกมาเป็น IP สาธารณะเดียว (Public IP) เมื่อกระโจนเชื่อมต่อออกสู่โลกกว้าง
-            </p>
-          </div>
-
-          {/* Interactive Simulator 4: Router Routing Table & NAT Gateway */}
-          <RouterRoutingSimulator />
-        </section>
-
-        {/* ─── SUBTOPIC 4.1.5, 4.1.6, 4.1.7 ───────────────────────────────── */}
-        <section className="space-y-6">
-          <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-cyan-600 tracking-wider uppercase">การสื่อสารไร้สาย ความปลอดภัย และการแปลงคลื่น</span>
-            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              อุปกรณ์กระจายสัญญาณไร้สาย (WAP) ไฟร์วอลล์ (Firewall) และโมเด็ม (Modem)
-            </h3>
-          </div>
-
-          <div className="text-[16px] md:text-[17px] font-normal text-zinc-600 leading-relaxed space-y-4">
-            <p>
-              ในการประกอบอาชีพของช่างไอทีระบบเครือข่าย การวางผังบริการโครงข่ายสำนักงานอัจฉริยะจำเป็นต้องประสานงานอุปกรณ์พิเศษอีก 3 รายการสำคัญ:
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-4 text-left">
-              <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 hover:-translate-y-1 hover:shadow-2xl hover:border-indigo-500/30 transition-all duration-300 cursor-pointer space-y-2 group">
-                <span className="p-3 rounded-2xl bg-indigo-50 text-indigo-600 inline-block transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-inner"><Radio className="w-5 h-5 group-hover:animate-pulse" /></span>
-                <h6 className="font-bold text-indigo-950 text-[15.5px] transition-colors group-hover:text-indigo-600">Wireless Access Point (WAP)</h6>
-                <p className="text-[14px] text-zinc-500 leading-relaxed font-sans">
-                  ทำหน้าที่เป็นสะพานแปลงข้อมูลสัญญาณแบบไร้สาย โดยดักรวบรวมแพ็กเก็ตบิตจากสาย LAN (มาตรฐาน 802.3) แผ่กระจายตัวออกอากาศด้วยคลื่นวิทยุความถี่สูงสู่เสาอากาศ (มาตรฐาน 802.11 Wi-Fi)
-                </p>
-              </div>
-              <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 hover:-translate-y-1 hover:shadow-2xl hover:border-cyan-500/30 transition-all duration-300 cursor-pointer space-y-2 group">
-                <span className="p-3 rounded-2xl bg-cyan-50 text-cyan-600 inline-block transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-inner"><LockKeyhole className="w-5 h-5 group-hover:animate-pulse" /></span>
-                <h6 className="font-bold text-cyan-950 text-[15.5px] transition-colors group-hover:text-cyan-600">Hardware Firewall (ไฟร์วอลล์)</h6>
-                <p className="text-[14px] text-zinc-500 leading-relaxed font-sans">
-                  ด่านรักษาความมั่นคงปลอดภัยทำหน้าที่คอยตรวจสอบพิกัด IP และพอร์ตของแพ็กเก็ตทุกตัวที่วิ่งพ้นสะพานข้าม โดยมีกลไก <strong>Access Control Lists (ACL)</strong> คอยกรองสกัดมัลแวร์และแฮกเกอร์
-                </p>
-              </div>
-              <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 hover:-translate-y-1 hover:shadow-2xl hover:border-slate-500/30 transition-all duration-300 cursor-pointer space-y-2 group">
-                <span className="p-3 rounded-2xl bg-slate-100 text-slate-600 inline-block transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-inner"><Activity className="w-5 h-5 group-hover:animate-pulse" /></span>
-                <h6 className="font-bold text-slate-950 text-[15.5px] transition-colors group-hover:text-slate-600">โมเด็ม (Modem)</h6>
-                <p className="text-[14px] text-zinc-500 leading-relaxed font-sans">
-                  อุปกรณ์แปลงสัญญาณ (Modulator / Demodulator) แปลงกระแสสัญญาณไฟฟ้าแบบดิจิทัล (0 และ 1) ของเครือข่าย LAN ให้กลายเป็นสัญญาณเสียง/อนาล็อกวิ่งผ่านโครงสร้างสายค่ายบริการภายนอกอินเทอร์เน็ต
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Interactive Simulator 5: WAP Signal, Firewall Filter, and Modulation graph */}
-          <TripleNetworkLab />
-        </section>
-
-        {/* ─── QUIZ ENGINE SECTION ────────────────────────────────────────── */}
-        <section className="space-y-6">
-          <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-cyan-600 tracking-wider uppercase">การประเมินผล</span>
-            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              แบบทดสอบวัดความรู้บทเรียนย่อย
-            </h3>
-          </div>
-
-          <div className="max-w-4xl mx-auto">
-            <QuizEngine levels={QUIZ_LEVELS} />
-          </div>
-        </section>
-
-        {/* Layer 4: Standardized TeacherTask Footer */}
-        <div className="pt-6">
-          <TeacherTask
-            title="ภารกิจออกแบบและวินิจฉัยโครงสร้างอุปกรณ์ทางกายภาพสำหรับเครือข่ายออฟฟิศขนาดกลาง"
-            taskText={`ให้นักเรียนสวมบทบาทเป็นวิศวกรเน็ตเวิร์กระดับปฏิบัติการ และจัดทำเอกสาร "แผนผังการจัดวางอุปกรณ์และวิเคราะห์ขอบเขตทางกายภาพ" (Physical Network Integration Plan)
-1. วิเคราะห์และถอดรหัสเลข MAC Address ที่ระบุต้นทางของพอร์ตแผงวงจร LAN: 00-1A-11-AC-DE-48 อธิบายความสอดคล้องของส่วนบิตประจำโรงงาน (OUI) ค่ายผู้ผลิต และบิตเฉพาะตัวเครื่องคอมพิวเตอร์
-2. วางโครงร่างจัดวาง Switch และ Hub ในเครือข่าย พร้อมเขียนอธิบายเปรียบเทียบในแง่มุมของประสิทธิภาพการแชร์ช่องสัญญาณ (Collision Domain) และการส่งต่อข้อมูลแบบเจาะจงรายพอร์ตเมื่อผู้จัดการเรียกดูฐานข้อมูลบริษัท
-3. วางข้อเสนอแนะในการตั้งค่า Access Control List (ACL) ใน Firewall ของออฟฟิศเพื่อป้องกันพนักงานดาวน์โหลดข้อมูลภายนอกจากไอพีแอดเดรสที่ระบุพิกัดอันตรายข้ามเครือข่าย`}
-          />
         </div>
 
-      </main>
-    </>
+        <div className={`overflow-hidden transition-all duration-350 ${expanded ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+          <div className={`${ACCENT_BG[accent]} border ${ACCENT_BORDER[accent]} rounded-2xl p-4 border-l-[3.5px] border-l-indigo-500`}>
+            <p className="text-[13.5px] text-zinc-700 leading-relaxed font-mono">{device.detail}</p>
+          </div>
+        </div>
+        
+        <div className="text-right mt-3">
+          <span className={`text-[12px] font-bold ${ACCENT_TEXT[accent]} flex items-center justify-end gap-1`}>
+            {expanded ? 'ย่อรายละเอียด ▲' : 'ดูรายละเอียดเพิ่มเติม ▼'}
+          </span>
+        </div>
+      </div>
+    </div>
   );
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   1. MAC FRAME BUILDER & OUI DECODER SIMULATOR (Subtopic 4.1.1)
-   ═══════════════════════════════════════════════════════════════════ */
-const VENDOR_PRESETS = [
-  { company: 'Cisco Systems, Inc.', prefix: '00-60-2F', desc: 'ผู้นำฮาร์ดแวร์สวิตช์องค์กรรุ่นใหญ่' },
-  { company: 'Intel Corporation', prefix: '00-1A-11', desc: 'ชิปการ์ดแลนไร้สายและเมนบอร์ดพีซี' },
-  { company: 'Apple Inc.', prefix: '00-25-00', desc: 'ชิปเครือข่ายตระกูล Mac & iPhone' },
-  { company: 'Realtek Semiconductor', prefix: '00-E0-4C', desc: 'ชิปการ์ดเสียงและแลนบนบอร์ดหลักที่คุ้นเคย' },
-  { company: 'Google LLC', prefix: '3C-5E-C3', desc: 'เซิร์ฟเวอร์ยักษ์ใหญ่และฮาร์ดแวร์เน็ตเวิร์กคลาวด์' }
-];
+/* ── MAIN EXPORT COMPONENT ──────────────────────────────────────── */
+export default function It4_1() {
+  /* ── State สำหรับ Toast Notification ── */
+  const [toast, setToast] = useState({ show: false, message: '', type: 'info' });
 
-function MacFrameBuilder() {
-  const [macInput, setMacInput] = useState('00-60-2F-3A-07-E4');
-  const [payloadText, setPayloadText] = useState('Hello ครูแม็ค! ส่งข้อมูลแพ็กเก็ต Layer 2');
-  const [copied, setCopied] = useState(false);
+  const showNotification = (msg, type = 'info') => {
+    setToast({ show: true, message: msg, type });
+    setTimeout(() => {
+      setToast(prev => ({ ...prev, show: false }));
+    }, 3500);
+  };
 
-  // Normalize input format
-  const cleanMac = macInput.replace(/[^A-Fa-f0-9]/g, '').toUpperCase();
-  const formatMacDisplay = (cleanVal) => {
-    const parts = [];
-    for (let i = 0; i < cleanVal.length && i < 12; i += 2) {
-      parts.push(cleanVal.slice(i, i + 2));
+  /* ── STATE: UTP Crimp Simulator ────────────────────────────────── */
+  const [simPhase, setSimPhase] = useState('arrange'); // arrange, crimp, test
+  const [poolWires, setPoolWires] = useState([]); // กองสายแลนรอเลือก
+  const [userWireOrder, setUserWireOrder] = useState([]); // สายแลนที่จัดเข้าพิน
+  const [crimpProgress, setCrimpProgress] = useState(0);
+  const [crimpCompleted, setCrimpCompleted] = useState(false);
+  const [testLedIndex, setTestLedIndex] = useState(-1);
+  const [isTesting, setIsTesting] = useState(false);
+  const [testResult, setTestResult] = useState(null); // pass, fail, null
+
+  // สุ่มลำดับสายแลนเมื่อโหลดหน้าจำลอง หรือรีเซ็ตค่า
+  const initializeSimulator = () => {
+    const shuffled = [...T568B_COLORS].sort(() => Math.random() - 0.5);
+    setPoolWires(shuffled);
+    setUserWireOrder([]);
+    setSimPhase('arrange');
+    setCrimpProgress(0);
+    setCrimpCompleted(false);
+    setTestLedIndex(-1);
+    setIsTesting(false);
+    setTestResult(null);
+    showNotification("รีเซ็ตแผงฝึกหัดและสุ่มลำดับกองสายสัญญาณแล้ว", "info");
+  };
+
+  useEffect(() => {
+    // โหลดลำดับสุ่มของสายเมื่อครั้งแรก
+    const shuffled = [...T568B_COLORS].sort(() => Math.random() - 0.5);
+    setPoolWires(shuffled);
+  }, []);
+
+  // เมื่อผู้เรียนเลือกหยิบสายจากกองเข้าใส่พิน
+  const handleSelectWire = (wire) => {
+    if (userWireOrder.length >= 8) return;
+    setUserWireOrder([...userWireOrder, wire]);
+    setPoolWires(poolWires.filter(w => w.id !== wire.id));
+  };
+
+  // ดึงสายล่าสุดคืนสู่กอง
+  const handleRemoveLastWire = () => {
+    if (userWireOrder.length === 0) return;
+    const last = userWireOrder[userWireOrder.length - 1];
+    setUserWireOrder(userWireOrder.slice(0, -1));
+    setPoolWires([...poolWires, last]);
+  };
+
+  // ตรวจการจัดลำดับว่าถูกต้องตาม T568B หรือไม่
+  const verifyWireOrder = () => {
+    const correctSequence = T568B_COLORS.map(c => c.id);
+    const userSequence = userWireOrder.map(c => c.id);
+    return JSON.stringify(correctSequence) === JSON.stringify(userSequence);
+  };
+
+  // สอดเข้าหัว RJ-45 และเข้าสู่สเต็ปบีบย้ำสาย
+  const handleInsertIntoRJ45 = () => {
+    if (userWireOrder.length < 8) {
+      showNotification("คำแนะนำ: กรุณาจัดสีสายไฟเข้าพอร์ตพินให้ครบถ้วนทั้ง 8 พินก่อนครับ!", "warning");
+      return;
     }
-    return parts.join('-');
+    setSimPhase('crimp');
+    showNotification("สอดสายสัญญาณเข้าหัว RJ-45 แล้ว! นำเข้าคีมเพื่อบีบย้ำสาย", "success");
   };
 
-  const currentFormatted = formatMacDisplay(cleanMac);
-  const isValid = cleanMac.length === 12;
-  const ouiPart = cleanMac.slice(0, 6);
-  const nicPart = cleanMac.slice(6, 12);
+  // การทำงานของคีมบีบย้ำหัวแลน
+  const handleCrimpAction = () => {
+    if (crimpProgress >= 100) return;
+    setCrimpProgress(prev => {
+      const next = prev + 25;
+      if (next >= 100) {
+        setCrimpCompleted(true);
+        showNotification("บีบอัดขั้วทองแดงยึดสายสัญญาณเข้ากับหัว RJ-45 แน่นสนิทแล้ว!", "success");
+        return 100;
+      }
+      return next;
+    });
+  };
 
-  // Find vendor matching
-  const matchedVendor = VENDOR_PRESETS.find(p => p.prefix.replace(/-/g, '') === ouiPart);
-  const vendorName = matchedVendor ? matchedVendor.company : 'Unknown Manufacturer (ค่ายผู้ผลิตทั่วไป)';
+  // เข้าสู่ส่วนทดสอบสายแลน (Cable Tester)
+  const handleGoToTest = () => {
+    setSimPhase('test');
+    showNotification("เข้าสู่แผงทดสอบสาย LAN เสียบสายเข้ากับขั้วเครื่องสแกน", "info");
+  };
 
-  const handleApplyPreset = (preset) => {
-    // Generate random 6 characters for NIC Specific
-    let randomHex = '';
-    const hexChars = '0123456789ABCDEF';
-    for (let i = 0; i < 6; i++) {
-      randomHex += hexChars[Math.floor(Math.random() * 16)];
+  // เริ่มรันไฟกะพริบ LED บนเครื่องสแกน
+  const handleStartCableTest = () => {
+    if (isTesting) return;
+    setIsTesting(true);
+    setTestLedIndex(0);
+    setTestResult(null);
+  };
+
+  // ไล่สลักกะพริบ LED 1 ถึง 8 ทีละดวงอย่างสมดุล ป้องกันเครื่องค้าง
+  useEffect(() => {
+    let timer;
+    if (isTesting && testLedIndex >= 0 && testLedIndex < 8) {
+      timer = setTimeout(() => {
+        setTestLedIndex(prev => prev + 1);
+      }, 300);
+    } else if (isTesting && testLedIndex === 8) {
+      setIsTesting(false);
+      const isCorrect = verifyWireOrder();
+      if (isCorrect) {
+        setTestResult('pass');
+        showNotification("PASS! สัญญาณไฟวิ่งสมบูรณ์ครบถ้วน 100% สายแลนพร้อมใช้งาน", "success");
+      } else {
+        setTestResult('fail');
+        showNotification("FAIL! สัญญาณขาดหาย ขั้วพินสลับตำแหน่งเนื่องจากเรียงสีไม่ตรงมาตรฐาน", "warning");
+      }
     }
-    const newMac = `${preset.prefix}-${randomHex.slice(0, 2)}-${randomHex.slice(2, 4)}-${randomHex.slice(4, 6)}`;
-    setMacInput(newMac);
-  };
-
-  // FCS Checksum Mock
-  const mockFcs = isValid ? `0x${((cleanMac.charCodeAt(4) + payloadText.length) * 7919).toString(16).toUpperCase().slice(-8)}` : '0x00000000';
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(currentFormatted);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+    return () => clearTimeout(timer);
+  }, [isTesting, testLedIndex]);
 
   return (
-    <SimulatorShell
-      icon={<Cpu className="w-6 h-6 text-cyan-500" />}
-      title="เครื่องจำลองโครงสร้างและถอดรหัส MAC Address & Ethernet Frame"
-      accentBg="bg-cyan-50"
-      iconColor="text-cyan-600"
-    >
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch select-none text-left font-sans">
-        
-        {/* Left Interactive Configurator Panel */}
-        <div className="bg-[#0f172a] rounded-2xl p-5 border border-slate-800 flex flex-col justify-between shadow-2xl relative min-h-[420px] text-xs text-slate-200">
-          <span className="text-[9px] font-mono text-slate-500 absolute top-3 right-4 font-bold font-sans">MAC ENGINE VISUALIZER</span>
-          
-          <div className="space-y-4">
-            <div>
-              <h6 className="text-[13px] font-bold text-white flex items-center gap-1.5"><Sliders className="w-4 h-4 text-cyan-400" /> MAC Address & Frame Inputs</h6>
-              <p className="text-[10px] text-slate-400 leading-normal">
-                ป้อนรหัส MAC Address ขนาด 48 บิต หรือเลือกใช้แม่แบบพรีเซ็ตยักษ์ใหญ่ระดับโลกด้านการผลิตชิป
+    <div className="font-sans text-slate-800 pb-24 selection:bg-sky-200 selection:text-sky-900">
+      {/* Layer 1: Ambient Background */}
+      <AmbientBackdrop blobs={IT4_UNIFIED_BLOBS} />
+
+      {/* Simulated Toast Overlay */}
+      {toast.show && (
+        <div className="fixed top-24 right-6 z-50 transition-all duration-300 ease-out opacity-100 transform translate-y-0">
+          <div className={`flex items-center gap-3 px-5 py-3.5 rounded-xl border shadow-2xl ${
+            toast.type === 'success' ? 'bg-emerald-950/95 border-emerald-500/50 text-emerald-300' :
+            toast.type === 'warning' ? 'bg-amber-950/95 border-amber-500/50 text-amber-300' :
+            'bg-slate-950/95 border-slate-800 text-slate-300'
+          }`}>
+            <div className="w-2.5 h-2.5 rounded-full bg-current animate-pulse"></div>
+            <span className="text-sm font-semibold leading-relaxed">{toast.message}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Layer 3: Main Immersive Layout */}
+      <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-6 space-y-12 md:space-y-16 relative z-10">
+
+        {/* ──────────── 1. SECTION: อุปกรณ์เครือข่ายพื้นฐาน ──────────── */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-indigo-650 tracking-wider uppercase">
+              Basic Network Devices
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              อุปกรณ์เครือข่ายคอมพิวเตอร์พื้นฐาน
+            </h3>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-xl border border-white/40 shadow-xl rounded-[2rem] p-8 border-l-[3.5px] border-l-indigo-500 leading-relaxed">
+            <p className="text-[16px] md:text-[17px] text-zinc-700">
+              <span className="bg-indigo-50/70 border border-indigo-200/50 text-indigo-700 text-[13.5px] font-bold px-2.5 py-1 rounded-lg mr-2 font-mono">
+                Network Devices
+              </span>
+              คือ <strong>อุปกรณ์ฮาร์ดแวร์หลักในการรับส่ง แปลความหมาย และนำพาแพ็กเกจข้อมูล</strong> เพื่อเชื่อมคอมพิวเตอร์และขยายขอบเขตการส่งสัญญาณภายในเครือข่ายท้องถิ่นหรือวงแลนให้เป็นระเบียบและเสถียร
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {NETWORK_DEVICES.map((dev, i) => (
+              <DeviceCard key={i} device={dev} />
+            ))}
+          </div>
+        </section>
+
+        {/* ──────────── 2. SECTION: สายสัญญาณและสื่อกลาง ──────────── */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-blue-650 tracking-wider uppercase">
+              Cables & Transmission Media
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              สายสัญญาณคอมพิวเตอร์และสื่อกลาง
+            </h3>
+          </div>
+
+          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed">
+            สื่อกลางทางกายภาพประเภทสายที่ได้รับความนิยมสูงสุดในเครือข่าย LAN คือ <strong>สายคู่บิดเกลียว (Twisted Pair Cable)</strong> ที่ทำการบิดเกลียวคู่สายทองแดงเพื่อลดสัญญาณรบกวนแม่เหล็กไฟฟ้าระหว่างคู่สาย (Crosstalk)
+          </p>
+
+          {/* UTP vs STP Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white/70 backdrop-blur-xl border border-blue-200/50 shadow-xl rounded-[2rem] p-7 border-l-[3.5px] border-l-blue-500">
+              <span className="bg-blue-100 text-blue-750 text-xs px-2.5 py-1 rounded-lg font-bold tracking-wide font-mono">UTP (Unshielded)</span>
+              <h4 className="font-bold text-zinc-900 text-lg mt-3.5 mb-2">สายชนิด Unshielded Twisted Pair</h4>
+              <p className="text-[14.5px] text-zinc-600 leading-relaxed">
+                สายทองแดงคู่บิดเกลียวทั่วไป <strong>ไม่มีเกราะโลหะหุ้มป้องกันสัญญาณรบกวนภายนอก</strong> มีจุดเด่นคือยืดหยุ่นสูง โค้งงอง่าย และมีราคาประหยัด จึงเป็นที่นิยมใช้เดินเครือข่ายคอมพิวเตอร์ในบ้านหรือสำนักงานทั่วไป
               </p>
             </div>
 
-            {/* Input field */}
-            <div className="space-y-2">
-              <label className="text-[10px] text-slate-400 font-bold block">1. ป้อนรหัส MAC Address (Hex format 0-9, A-F):</label>
-              <div className="relative">
-                <input
-                  type="text"
-                  maxLength={17}
-                  value={macInput}
-                  onChange={(e) => setMacInput(e.target.value)}
-                  className={`w-full pl-3 pr-20 py-2.5 bg-slate-950 border rounded-lg text-xs font-mono font-bold tracking-widest text-sky-400 focus:outline-none ${
-                    isValid ? 'border-slate-800 focus:border-cyan-500' : 'border-rose-500/50 focus:border-rose-500'
-                  }`}
-                />
-                <button
-                  onClick={handleCopy}
-                  className="absolute right-2 top-1.5 px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-[10px] font-bold rounded cursor-pointer text-slate-300 active:scale-95"
-                >
-                  {copied ? 'คัดลอกแล้ว!' : 'คัดลอก'}
-                </button>
-              </div>
-              {!isValid && (
-                <p className="text-[9.5px] text-rose-400 leading-none">⚠️ หมายเลข MAC ไม่ครบถ้วน (ต้องการรหัสเลขฐานสิบหก 12 หลัก)</p>
-              )}
+            <div className="bg-white/70 backdrop-blur-xl border border-indigo-200/50 shadow-xl rounded-[2rem] p-7 border-l-[3.5px] border-l-indigo-500">
+              <span className="bg-indigo-100 text-indigo-755 text-xs px-2.5 py-1 rounded-lg font-bold tracking-wide font-mono">STP (Shielded)</span>
+              <h4 className="font-bold text-zinc-900 text-lg mt-3.5 mb-2">สายชนิด Shielded Twisted Pair</h4>
+              <p className="text-[14.5px] text-zinc-600 leading-relaxed">
+                สายทองแดงคู่บิดเกลียวที่ <strong>มีชั้นเกราะฟอยล์โลหะบาง ๆ หุ้มห่อรอบสายทองแดงภายใน</strong> เพื่อเป็นโล่บัดกรีคลื่นรบกวนภายนอก เหมาะอย่างยิ่งสำหรับเดินสายพาดผ่านโซนเครื่องจักรหรือโรงงานอุตสาหกรรมที่มีคลื่นสัญญาณรบกวนสูง
+              </p>
             </div>
+          </div>
 
-            {/* Preset select chips */}
-            <div className="space-y-1.5 pt-1.5">
-              <span className="text-[10px] text-slate-400 font-bold block">2. เลือกพรีเซ็ตค่ายการผลิต (OUI Presets):</span>
-              <div className="flex flex-wrap gap-2">
-                {VENDOR_PRESETS.map((preset) => (
-                  <button
-                    key={preset.prefix}
-                    onClick={() => handleApplyPreset(preset)}
-                    className="py-1 px-2.5 bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-cyan-500/40 rounded-lg text-[10.5px] cursor-pointer font-bold active:scale-95 transition-all text-left"
-                  >
-                    {preset.company.split(' ')[0]} ({preset.prefix})
-                  </button>
+          {/* Bandwidth Speed Categories */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+            {CABLE_CATEGORIES.map((cat, i) => (
+              <div key={i} className="bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl rounded-[2rem] overflow-hidden hover:-translate-y-1 hover:shadow-2xl transition-all duration-300">
+                <div className="bg-gradient-to-br from-sky-500/10 to-blue-650/5 p-5 border-b border-slate-100/80 flex justify-between items-center">
+                  <h4 className="font-black text-indigo-700 text-[17px] font-mono">{cat.name}</h4>
+                  <span className="text-[11px] bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded font-bold border border-indigo-200/80 font-mono">
+                    {cat.bandwidth}
+                  </span>
+                </div>
+                <div className="p-5 space-y-4 text-xs text-zinc-650">
+                  <div>
+                    <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">MAX SPEED / BANDWIDTH</span>
+                    <p className="text-zinc-800 font-extrabold text-[14px] mt-0.5 leading-snug font-mono">{cat.speed}</p>
+                    <p className="text-indigo-650 font-bold text-[11px] mt-1">ระยะทางส่งสัญญาณสูงสุด: {cat.dist}</p>
+                  </div>
+                  <p className="text-[13.5px] text-zinc-500 leading-relaxed border-t border-slate-100 pt-3.5">{cat.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ──────────── 3. SECTION: มาตรฐานการเข้าหัวสาย LAN ──────────── */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-cyan-650 tracking-wider uppercase">
+              Wiring Standards & Cables
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              มาตรฐานการจัดสีและการเข้าหัวสาย LAN
+            </h3>
+          </div>
+
+          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed">
+            ขั้วทองแดงสัมผัส 8 เส้นภายในหัว RJ-45 จำเป็นต้องจัดเรียงสลับคู่สีตามข้อกำหนดสากลทางไฟฟ้าเพื่อนำสัญญาณได้อย่างคงที่ <strong>มาตรฐาน T568B และ T568A</strong> กำหนดตำแหน่งพินจากซ้ายไปขวาดังนี้:
+          </p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* T568B Standard */}
+            <div className="bg-white/70 backdrop-blur-xl border border-amber-300/40 shadow-xl rounded-[2rem] p-6">
+              <h4 className="font-bold text-zinc-900 text-[15.5px] border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-orange-500 animate-pulse"></span>
+                มาตรฐาน T568B (ยอดนิยมเป็นมาตรฐานหลัก)
+              </h4>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {T568B_COLORS.map((wire, idx) => (
+                  <div key={idx} className={`p-3 rounded-xl border border-slate-200/45 text-center text-[12px] ${wire.bgClass} flex flex-col justify-between min-h-[72px] shadow-sm`}>
+                    <span className="text-[9.5px] text-zinc-600 block font-mono">Pin #{idx + 1}</span>
+                    <span className="mt-1 block leading-tight">{wire.name}</span>
+                  </div>
                 ))}
               </div>
             </div>
 
-            {/* Payload input */}
-            <div className="space-y-2 pt-2">
-              <label className="text-[10px] text-slate-400 font-bold block">3. ระบุเนื้อหาคำสั่ง Payload (ส่งในเครือข่าย LAN):</label>
-              <input
-                type="text"
-                value={payloadText}
-                onChange={(e) => setPayloadText(e.target.value)}
-                maxLength={40}
-                className="w-full pl-3 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500 font-sans"
-              />
-            </div>
-          </div>
-
-          {/* Decoded manufacturer banner */}
-          <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl mt-4 flex items-start gap-2.5 leading-normal">
-            <span className="p-1 rounded bg-indigo-950/80 border border-indigo-900/50 text-indigo-400 shrink-0"><ShieldCheck className="w-4 h-4" /></span>
-            <div className="text-[10.5px]">
-              <span className="font-bold text-slate-200 block">ค่ายผู้ผลิตที่สืบค้นพิจารณา (OUI Match):</span>
-              <span className="text-cyan-400 font-bold block mt-0.5">{vendorName}</span>
-              {matchedVendor && (
-                <span className="text-[9.5px] text-slate-500 block leading-tight mt-0.5">{matchedVendor.desc}</span>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Right Frame Structural Layout Display */}
-        <div className="flex flex-col justify-between space-y-6">
-          <span className="text-[13px] font-bold text-slate-400 uppercase tracking-wider block">โครงสร้างเฟรม Ethernet II (Layer 2 Packet Structure)</span>
-          
-          <div className="text-slate-600 text-sm leading-relaxed space-y-4">
-            <p>
-              ในระดับ Data Link Layer ข้อมูลจะถูกบรรจุลงในโครงสร้างที่ชื่อว่า <strong>Ethernet Frame</strong> 
-              โดยมีการนำรหัส MAC Address วางไว้ส่วนหัว (Header) เพื่อนำทางสายสัญญาณ
-            </p>
-
-            {/* Visual Frame Structuring grid */}
-            <div className="space-y-2 font-mono text-[11px] text-left">
-              {/* Destination MAC */}
-              <div className="bg-[#1e293b] rounded-xl border border-slate-700/60 p-2.5 hover:border-cyan-500/40 transition-all">
-                <div className="flex justify-between items-center text-slate-400 text-[9.5px] mb-1 font-bold">
-                  <span>DESTINATION MAC ADDRESS (ผู้รับปลายทาง)</span>
-                  <span>6 Bytes (48 bits)</span>
-                </div>
-                <div className="font-bold text-emerald-400 text-xs tracking-wider">
-                  FF-FF-FF-FF-FF-FF <span className="font-sans text-[9px] font-normal text-slate-400 ml-2">(จำลองการส่งข้ามพอร์ต Broadcast)</span>
-                </div>
-              </div>
-
-              {/* Source MAC */}
-              <div className="bg-[#1e293b] rounded-xl border border-slate-700/60 p-2.5 hover:border-cyan-500/40 transition-all">
-                <div className="flex justify-between items-center text-slate-400 text-[9.5px] mb-1 font-bold">
-                  <span>SOURCE MAC ADDRESS (ต้นทางผู้ส่ง)</span>
-                  <span>6 Bytes (48 bits)</span>
-                </div>
-                <div className="text-xs tracking-wider flex flex-wrap gap-x-2">
-                  <span className="font-bold text-indigo-400 font-mono">{isValid ? currentFormatted.slice(0, 8) : '00-60-2F'}</span>
-                  <span className="text-slate-500 font-bold select-none">-</span>
-                  <span className="font-bold text-amber-400 font-mono">{isValid ? currentFormatted.slice(9) : '3A-07-E4'}</span>
-                </div>
-                <div className="flex gap-4 text-[8px] font-sans text-slate-400 mt-1 font-bold">
-                  <span className="text-indigo-400 flex items-center gap-0.5">• 3 Bytes OUI</span>
-                  <span className="text-amber-400 flex items-center gap-0.5">• 3 Bytes NIC Specific</span>
-                </div>
-              </div>
-
-              {/* EtherType */}
-              <div className="grid grid-cols-2 gap-2">
-                <div className="bg-[#1e293b] rounded-xl border border-slate-700/60 p-2.5 text-left">
-                  <span className="text-slate-400 text-[9.5px] font-bold block mb-1">ETHERTYPE (ประเภทโปรโตคอล)</span>
-                  <span className="font-bold text-sky-400 text-xs">0x0800 (IPv4)</span>
-                  <span className="font-sans text-[8.5px] text-slate-500 block leading-tight mt-0.5">2 Bytes</span>
-                </div>
-                <div className="bg-[#1e293b] rounded-xl border border-slate-700/60 p-2.5 text-left">
-                  <span className="text-slate-400 text-[9.5px] font-bold block mb-1">FCS / CRC32 CHECKSUM</span>
-                  <span className="font-bold text-pink-400 text-xs">{mockFcs}</span>
-                  <span className="font-sans text-[8.5px] text-slate-500 block leading-tight mt-0.5">4 Bytes (ตรวจสอบความสมบูรณ์บิต)</span>
-                </div>
-              </div>
-
-              {/* Payload Field */}
-              <div className="bg-[#1e293b]/70 rounded-xl border border-slate-800 p-3 text-left">
-                <div className="flex justify-between items-center text-slate-400 text-[9.5px] mb-1 font-bold">
-                  <span>PAYLOAD DATA (ขนาดบิตเนื้อหาภายใน)</span>
-                  <span>{payloadText.length} Bytes</span>
-                </div>
-                <div className="font-bold text-white text-xs py-0.5 font-sans leading-normal">
-                  "{payloadText}"
-                </div>
+            {/* T568A Standard */}
+            <div className="bg-white/70 backdrop-blur-xl border border-emerald-300/40 shadow-xl rounded-[2rem] p-6">
+              <h4 className="font-bold text-zinc-900 text-[15.5px] border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
+                มาตรฐาน T568A (มักใช้สำหรับระบบงานราชการ)
+              </h4>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {T568A_COLORS.map((wire, idx) => (
+                  <div key={idx} className={`p-3 rounded-xl border border-slate-200/45 text-center text-[12px] ${wire.bgClass} flex flex-col justify-between min-h-[72px] shadow-sm`}>
+                    <span className="text-[9.5px] text-zinc-600 block font-mono">Pin #{idx + 1}</span>
+                    <span className="mt-1 block leading-tight">{wire.name}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
 
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-600 font-sans text-xs space-y-1.5">
-            <h6 className="font-bold text-slate-800 flex items-center gap-1.5"><Info className="w-4 h-4 text-cyan-500" /> คำแนะนำช่างเทคนิค:</h6>
-            <p className="text-[12px] leading-relaxed">
-              ในทางปฏิบัติ ช่างไอทีจะใช้โปรแกรมค้นหาใน Windows Command Prompt โดยพิมพ์คำสั่ง <span className="font-mono text-xs font-bold bg-slate-200 text-slate-800 px-1 py-0.5 rounded">getmac /v</span> หรือ <span className="font-mono text-xs font-bold bg-slate-200 text-slate-800 px-1 py-0.5 rounded">ipconfig /all</span> เพื่อตรวจสอบหมายเลข MAC Address ของการ์ดแลนในเครื่อง ซึ่งจะเรียกว่า **Physical Address**
-            </p>
-          </div>
-        </div>
-
-      </div>
-    </SimulatorShell>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   2. HUB BROADCAST & CSMA/CD SIMULATOR (Subtopic 4.1.2)
-   ═══════════════════════════════════════════════════════════════════ */
-function HubCollisionSimulator() {
-  const [activeNode, setActiveNode] = useState('none');
-  const [transState, setTransState] = useState('idle'); // idle | broadcasting | collision | jamming | backoff | success
-  const [logs, setLogs] = useState(['[READY] ระบบบัสของ Hub สแตนด์บาย รอการส่งสัญญาณ...']);
-  const [backoffTime, setBackoffTime] = useState(0);
-  const flowTimer = useRef(null);
-
-  // PC coordinate positions mapping (Absolute Center is x = 160, y = 160)
-  const nodeCoords = {
-    A: { x: 60, y: 60, label: 'PC A (MAC: 00-1A...)' },
-    B: { x: 260, y: 60, label: 'PC B (MAC: 00-60...)' },
-    C: { x: 60, y: 260, label: 'PC C (MAC: 00-E0...)' },
-    D: { x: 260, y: 260, label: 'PC D (MAC: 00-25...)' }
-  };
-
-  const triggerNormalSend = () => {
-    if (transState !== 'idle' && transState !== 'backoff') return;
-    setActiveNode('A');
-    setTransState('broadcasting');
-    setLogs([
-      '[PC A] เริ่มปล่อยกระแสไฟฟ้าส่งสัญญาณ LAN...',
-      '[HUB] สัญญาณเดินทางมาถึงพอร์ตที่ 1 ของฮับตรงกลาง...',
-      '[HUB BROADCAST] ฮับประมวลผล Layer 1 ทำการคัดลอกสัญญาณและกระจาย (Flood) ไปยังทุกพอร์ตที่ต่ออยู่ทันที!'
-    ]);
-
-    let step = 0;
-    if (flowTimer.current) clearInterval(flowTimer.current);
-
-    flowTimer.current = setInterval(() => {
-      step += 1;
-      if (step === 1) {
-        setLogs(current => [
-          ...current,
-          '[HUB BROADCAST] >> ส่งสัญญาณไปหา PC B, PC C และ PC D ในลักษณะคู่ขนาน...',
-          '[PC B] ตรวจพบ Destination IP ตรงกับตัวเอง จึงรับแพ็กเก็ตเสร็จสมบูรณ์ ✅',
-          '[PC C] ตรวจพบ Destination IP ไม่ตรงกับตนเอง จึงล้างทิ้งข้อมูลใน RAM',
-          '[PC D] ตรวจพบ Destination IP ไม่ตรงกับตนเอง จึงล้างทิ้งข้อมูลใน RAM'
-        ]);
-        setTransState('success');
-        clearInterval(flowTimer.current);
-      }
-    }, 2000);
-  };
-
-  const triggerCollision = () => {
-    if (transState !== 'idle' && transState !== 'backoff') return;
-    setActiveNode('AC');
-    setTransState('broadcasting');
-    setLogs([
-      '[MUTUAL TRANSMIT] PC A และ PC C เริ่มส่งบิตข้อมูลออกมาพร้อมกันในสล็อตเวลาเดียวกัน...',
-      '[DATA LINE] สัญญาณกระแสไฟฟ้ากำลังไหลเวียนเข้าสู่บัสเดียวกัน...'
-    ]);
-
-    if (flowTimer.current) clearInterval(flowTimer.current);
-    let step = 0;
-
-    flowTimer.current = setInterval(() => {
-      step += 1;
-      if (step === 1) {
-        setTransState('collision');
-        setLogs(current => [
-          ...current,
-          '💥 [COLLISION] สัญญาณปะทะชนกันรุนแรงที่แผงบัสของ Hub ตรงกลาง!',
-          '💥 [COLLISION] แรงดันไฟฟ้าสะสมสูงเกินกว่าพอร์ตระดับฟิสิกส์จะรองรับ ข้อมูลชำรุดเสียหายทันที'
-        ]);
-      }
-      else if (step === 2) {
-        setTransState('jamming');
-        setLogs(current => [
-          ...current,
-          '🚨 [CSMA/CD PROTOCOL] ฮับตรวจจับการชนกันสำเร็จ ส่งสัญญาณ Jam Signal ไปยังทุกพอร์ตทันที!',
-          '🚨 [ALERT] คอมพิวเตอร์ทุกเครื่องรับคำสั่ง Jam และทำความสะอาดบัส หยุดการส่งสัญญาณทั้งหมดทันที'
-        ]);
-      }
-      else if (step === 3) {
-        setTransState('backoff');
-        setBackoffTime(5);
-        setLogs(current => [
-          ...current,
-          '⏱️ [RANDOM BACKOFF] เข้าสู่โหมดรันเวลาถอยหลัง (สุ่มถอยเวลาระดับมิลลิวินาที) เพื่อป้องกันการส่งชนซ้ำซ้อน...'
-        ]);
-        clearInterval(flowTimer.current);
-      }
-    }, 1500);
-  };
-
-  const handleReset = () => {
-    if (flowTimer.current) clearInterval(flowTimer.current);
-    setActiveNode('none');
-    setTransState('idle');
-    setBackoffTime(0);
-    setLogs(['[READY] ระบบบัสของ Hub สแตนด์บาย รอการส่งสัญญาณ...']);
-  };
-
-  useEffect(() => {
-    let countdown;
-    if (transState === 'backoff' && backoffTime > 0) {
-      countdown = setTimeout(() => {
-        setBackoffTime(prev => {
-          if (prev <= 1) {
-            setTransState('idle');
-            setLogs(current => [...current, '[READY] บัสว่างแล้ว! ยินดีต้อนรับสู่สิทธิ์การส่งครั้งถัดไป']);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-    return () => clearTimeout(countdown);
-  }, [transState, backoffTime]);
-
-  useEffect(() => {
-    return () => {
-      if (flowTimer.current) clearInterval(flowTimer.current);
-    };
-  }, []);
-
-  return (
-    <SimulatorShell
-      icon={<Terminal className="w-6 h-6 text-cyan-500" />}
-      title="เครื่องจำลองระบบบัส Hub Broadcast & สัญญาณชนกัน (CSMA/CD)"
-      accentBg="bg-cyan-50"
-      iconColor="text-cyan-600"
-    >
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch select-none text-left">
-        
-        {/* Left Column: Symmetrical circular SVG design */}
-        <div className="bg-slate-950 rounded-2xl p-6 border border-slate-800 flex flex-col justify-between items-center relative min-h-[420px]">
-          <span className="text-[10px] font-mono text-slate-500 absolute top-3 left-3">PHYSICAL LAYER COLLISION DIAGRAM</span>
-          
-          <svg viewBox="0 0 320 320" className="w-72 h-72 z-10 my-auto">
-            {/* Absolute Center is x = 160, y = 160 */}
-            
-            {/* Hub Central Device */}
-            <rect x="120" y="130" width="80" height="60" rx="10" fill="#1E293B" stroke={
-              transState === 'collision' ? '#F43F5E' :
-              transState === 'jamming' ? '#F59E0B' :
-              transState === 'success' ? '#10B981' : '#475569'
-            } strokeWidth="2.5" />
-            <text x="160" y="158" textAnchor="middle" fill="#FFFFFF" fontSize="10.5" fontWeight="bold" fontFamily="sans-serif">HUB (L1)</text>
-            <text x="160" y="174" textAnchor="middle" fill="#94A3B8" fontSize="8" fontFamily="sans-serif">Physical Broadcaster</text>
-
-            {/* Wires - Symmetrically routed from center (160, 160) to each PC node center */}
-            {/* Port A Wire: 160,160 to 60,60 */}
-            <line x1="160" y1="160" x2="60" y2="60" stroke={
-              transState === 'jamming' ? '#F59E0B' :
-              (activeNode === 'A' || activeNode === 'AC') && transState !== 'idle' ? '#06B6D4' : '#334155'
-            } strokeWidth="3" />
-            
-            {/* Port B Wire: 160,160 to 260,60 */}
-            <line x1="160" y1="160" x2="260" y2="60" stroke={
-              transState === 'jamming' ? '#F59E0B' :
-              activeNode === 'A' && transState === 'success' ? '#10B981' : '#334155'
-            } strokeWidth="3" />
-
-            {/* Port C Wire: 160,160 to 60,260 */}
-            <line x1="160" y1="160" x2="60" y2="260" stroke={
-              transState === 'jamming' ? '#F59E0B' :
-              activeNode === 'AC' && transState !== 'idle' ? '#06B6D4' : '#334155'
-            } strokeWidth="3" />
-
-            {/* Port D Wire: 160,160 to 260,260 */}
-            <line x1="160" y1="160" x2="260" y2="260" stroke={
-              transState === 'jamming' ? '#F59E0B' :
-              activeNode === 'A' && transState === 'success' ? '#10B981' : '#334155'
-            } strokeWidth="3" />
-
-            {/* Glowing signal balls flowing on paths */}
-            {activeNode === 'A' && transState === 'broadcasting' && (
-              <circle cx="110" cy="110" r="5" fill="#22D3EE" className="animate-[pulse_1s_infinite]">
-                <animate attributeName="cx" from="60" to="160" dur="1s" repeatCount="indefinite" />
-                <animate attributeName="cy" from="60" to="160" dur="1s" repeatCount="indefinite" />
-              </circle>
-            )}
-
-            {activeNode === 'A' && transState === 'success' && (
-              <>
-                {/* Broadcast wave circles */}
-                <circle cx="210" cy="110" r="5" fill="#10B981">
-                  <animate attributeName="cx" from="160" to="260" dur="1s" repeatCount="indefinite" />
-                  <animate attributeName="cy" from="160" to="60" dur="1s" repeatCount="indefinite" />
-                </circle>
-                <circle cx="110" cy="210" r="5" fill="#10B981">
-                  <animate attributeName="cx" from="160" to="60" dur="1s" repeatCount="indefinite" />
-                  <animate attributeName="cy" from="160" to="260" dur="1s" repeatCount="indefinite" />
-                </circle>
-                <circle cx="210" cy="210" r="5" fill="#10B981">
-                  <animate attributeName="cx" from="160" to="260" dur="1s" repeatCount="indefinite" />
-                  <animate attributeName="cy" from="160" to="260" dur="1s" repeatCount="indefinite" />
-                </circle>
-              </>
-            )}
-
-            {activeNode === 'AC' && transState === 'broadcasting' && (
-              <>
-                <circle cx="110" cy="110" r="5" fill="#06B6D4">
-                  <animate attributeName="cx" from="60" to="160" dur="0.8s" repeatCount="indefinite" />
-                  <animate attributeName="cy" from="60" to="160" dur="0.8s" repeatCount="indefinite" />
-                </circle>
-                <circle cx="110" cy="210" r="5" fill="#06B6D4">
-                  <animate attributeName="cx" from="60" to="160" dur="0.8s" repeatCount="indefinite" />
-                  <animate attributeName="cy" from="260" to="160" dur="0.8s" repeatCount="indefinite" />
-                </circle>
-              </>
-            )}
-
-            {/* Collision Shockwave at (160, 160) */}
-            {transState === 'collision' && (
-              <circle cx="160" cy="160" r="25" fill="none" stroke="#EF4444" strokeWidth="3" className="animate-[ping_0.8s_infinite]" />
-            )}
-
-            {/* PCs Symmetrical Layout */}
-            {/* PC A */}
-            <rect x="30" y="30" width="60" height="40" rx="6" fill="#0F172A" stroke="#475569" strokeWidth="1.5" />
-            <text x="60" y="54" textAnchor="middle" fill="#E2E8F0" fontSize="9" fontWeight="bold" fontFamily="sans-serif">PC A</text>
-            
-            {/* PC B */}
-            <rect x="230" y="30" width="60" height="40" rx="6" fill="#0F172A" stroke="#475569" strokeWidth="1.5" />
-            <text x="260" y="54" textAnchor="middle" fill="#E2E8F0" fontSize="9" fontWeight="bold" fontFamily="sans-serif">PC B</text>
-
-            {/* PC C */}
-            <rect x="30" y="240" width="60" height="40" rx="6" fill="#0F172A" stroke="#475569" strokeWidth="1.5" />
-            <text x="60" y="264" textAnchor="middle" fill="#E2E8F0" fontSize="9" fontWeight="bold" fontFamily="sans-serif">PC C</text>
-
-            {/* PC D */}
-            <rect x="230" y="240" width="60" height="40" rx="6" fill="#0F172A" stroke="#475569" strokeWidth="1.5" />
-            <text x="260" y="264" textAnchor="middle" fill="#E2E8F0" fontSize="9" fontWeight="bold" fontFamily="sans-serif">PC D</text>
-          </svg>
-
-          {/* Symmetrical countdown backoff container */}
-          {transState === 'backoff' && (
-            <div className="absolute inset-0 bg-slate-950/90 flex flex-col items-center justify-center rounded-2xl z-20 space-y-2 p-6 text-center border border-slate-800">
-              <RefreshCw className="w-10 h-10 text-amber-500 animate-spin" />
-              <p className="font-bold text-white text-[14px]">CSMA/CD Backoff Active</p>
-              <p className="text-[11px] text-slate-400">ระบบตรวจพบข้อมูลชนกัน กำลังสุ่มระงับเวลาพิมพ์: <span className="font-mono text-amber-400 font-bold text-xs">{backoffTime}s</span></p>
-            </div>
-          )}
-
-          {/* Reset & Status bar */}
-          <div className="w-full flex gap-3 text-slate-500 text-[10px] font-mono justify-between items-center border-t border-slate-900 pt-3">
-            <span>STATE: <span className={`font-bold ${transState === 'success' ? 'text-emerald-400' : transState === 'collision' || transState === 'jamming' ? 'text-rose-400' : 'text-slate-400'}`}>{transState.toUpperCase()}</span></span>
-            <button onClick={handleReset} className="px-2 py-1 bg-slate-900 border border-slate-800 text-slate-400 hover:text-white rounded cursor-pointer active:scale-95 transition-all text-right font-bold">CLEAR LAB</button>
-          </div>
-        </div>
-
-        {/* Right Column: Execution Controls & Console logger */}
-        <div className="flex flex-col justify-between">
-          <div className="space-y-4">
-            <span className="text-[13px] font-bold text-slate-400 uppercase tracking-wider block">ทดลองส่งข้อมูลเพื่อตรวจการทำงาน</span>
-            <div className="flex flex-col gap-2.5">
-              <button
-                onClick={triggerNormalSend}
-                disabled={transState !== 'idle'}
-                className="p-3.5 rounded-xl border text-left cursor-pointer transition-all duration-200 active:scale-98 flex justify-between items-center group border-slate-200 bg-white hover:border-cyan-500/40 hover:bg-slate-50 disabled:bg-slate-50 disabled:text-slate-400 disabled:border-slate-100"
-              >
-                <div className="grow text-left">
-                  <p className="text-sm font-bold text-slate-800">1. ส่งปกติ (PC A ส่งไปหา PC B)</p>
-                  <p className="text-[11px] text-slate-500 font-normal leading-normal mt-0.5">ข้อมูลไหลผ่านบัสฮับ สังเกตการ Broadcast ไปยังคอมพิวเตอร์พอร์ตอื่นๆ ที่ไม่เกี่ยวข้องด้วย</p>
-                </div>
-                <ChevronRight className="w-4 h-4 text-slate-400 shrink-0 group-hover:translate-x-1 transition-transform" />
-              </button>
-
-              <button
-                onClick={triggerCollision}
-                disabled={transState !== 'idle'}
-                className="p-3.5 rounded-xl border text-left cursor-pointer transition-all duration-200 active:scale-98 flex justify-between items-center group border-slate-200 bg-white hover:border-rose-500/40 hover:bg-slate-50 disabled:bg-slate-50 disabled:text-slate-400 disabled:border-slate-100"
-              >
-                <div className="grow text-left">
-                  <p className="text-sm font-bold text-rose-950">2. ส่งพร้อมกันจนเกิดการชน (A และ C ส่งชนกัน)</p>
-                  <p className="text-[11px] text-slate-500 font-normal leading-normal mt-0.5">จำลองการชนกันของสัญญาณไฟฟ้าใน Hub พร้อมแสดงพฤติกรรมการกู้ระบบด้วยระเบียบ CSMA/CD</p>
-                </div>
-                <ChevronRight className="w-4 h-4 text-slate-400 shrink-0 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
-          </div>
-
-          {/* Console Logger box */}
-          <div className="bg-slate-950 rounded-xl p-4 border border-slate-900 mt-5">
-            <div className="text-slate-500 text-[10px] font-mono mb-2 uppercase tracking-wider flex justify-between items-center border-b border-slate-900 pb-1.5 font-sans">
-              <span className="flex items-center gap-1.5"><Terminal className="w-3.5 h-3.5" /> Hub Physical Log Console</span>
-              {transState !== 'idle' && transState !== 'success' && transState !== 'backoff' && (
-                <span className="text-cyan-400 flex items-center gap-1 text-[9px]"><RefreshCw className="w-2.5 h-2.5 animate-spin" /> ELECTRICAL TRANSIT</span>
-              )}
-            </div>
-
-            <div className="space-y-1.5 min-h-[140px] max-h-[140px] overflow-y-auto leading-relaxed">
-              {logs.map((log, index) => (
-                <div key={index} className="flex gap-2 text-xs font-mono">
-                  <span className="text-slate-700 select-none">&gt;&gt;</span>
-                  <p className={`${
-                    log.includes('✅') || log.includes('เสร็จสมบูรณ์')
-                      ? 'text-emerald-400 font-bold' 
-                      : log.startsWith('💥') 
-                      ? 'text-rose-400 font-bold'
-                      : log.startsWith('🚨') || log.startsWith('⏱️')
-                      ? 'text-amber-300 font-bold' 
-                      : 'text-slate-300'
-                  }`}>
-                    {log}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </SimulatorShell>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   3. SWITCH MAC TABLE LEARNING SIMULATOR (Subtopic 4.1.3)
-   ═══════════════════════════════════════════════════════════════════ */
-function SwitchLearningSimulator() {
-  const [macTable, setMacTable] = useState([]); // Array of { port: number, mac: string }
-  const [transState, setTransState] = useState('idle'); // idle | sending | flooding | unicasting | learned | done
-  const [logs, setLogs] = useState(['[READY] รอการส่งข้อมูลระดับเฟรมของ Switch...']);
-  const [currentSender, setCurrentSender] = useState('');
-  const [currentReceiver, setCurrentReceiver] = useState('');
-  const timerRef = useRef(null);
-
-  const pcDetails = {
-    A: { port: 1, mac: '00-1A-11-AC-DE-01' },
-    B: { port: 2, mac: '00-60-2F-AC-DE-02' },
-    C: { port: 3, mac: '00-E0-4C-AC-DE-03' },
-    D: { port: 4, mac: '00-25-00-AC-DE-04' }
-  };
-
-  const handleStartLab = (senderKey, receiverKey) => {
-    if (transState !== 'idle') return;
-    setCurrentSender(senderKey);
-    setCurrentReceiver(receiverKey);
-    setTransState('sending');
-
-    const sMac = pcDetails[senderKey].mac;
-    const rMac = pcDetails[receiverKey].mac;
-    const sPort = pcDetails[senderKey].port;
-
-    setLogs([
-      `[PC ${senderKey}] ทำการแพ็กเก็ตส่งเฟรม: Source MAC=${sMac} | Destination MAC=${rMac}`,
-      `[SWITCH L2] ได้รับเฟรมข้อมูลที่พอร์ตทางกายภาพ ${sPort}...`
-    ]);
-
-    let step = 0;
-    if (timerRef.current) clearInterval(timerRef.current);
-
-    timerRef.current = setInterval(() => {
-      step += 1;
-      if (step === 1) {
-        // Learn the sender
-        const alreadyLearned = macTable.some(item => item.mac === sMac);
-        if (!alreadyLearned) {
-          setMacTable(prev => [...prev, { port: sPort, mac: sMac }]);
-          setLogs(current => [
-            ...current,
-            `💡 [MAC TABLE UPDATE] สวิตช์ตรวจหาและบันทึกค่า: Port ${sPort} -> MAC ${sMac} ลงตารางเรียบร้อย`
-          ]);
-        } else {
-          setLogs(current => [
-            ...current,
-            `💡 [MAC TABLE INSPECT] พอร์ต ${sPort} มีรหัส MAC ${sMac} อยู่ในตารางเรียบร้อยแล้ว`
-          ]);
-        }
-      }
-      else if (step === 2) {
-        // Check if receiver is in table
-        const receiverLearned = macTable.some(item => item.mac === rMac);
-        if (!receiverLearned) {
-          setTransState('flooding');
-          setLogs(current => [
-            ...current,
-            `⚠️ [DESTINATION UNKNOWN] สวิตช์ไม่พบที่พอร์ตปลายทางของ MAC ${rMac} ในตาราง`,
-            `🔍 [FLOODING] สวิตช์ทำการ Flood ข้อมูลบิตออกทุกพอร์ต (ยกเว้นพอร์ตต้นทาง ${sPort}) เพื่อตามหาผู้รับ...`
-          ]);
-        } else {
-          setTransState('unicasting');
-          const targetPort = pcDetails[receiverKey].port;
-          setLogs(current => [
-            ...current,
-            `✨ [DESTINATION FOUND] สวิตช์ค้นพบ MAC ${rMac} ตรงกับพอร์ต ${targetPort} ในตาราง!`,
-            `✨ [UNICAST TRANSMISSION] สวิตช์นำส่งข้อมูลวิ่งตรงจากพอร์ต ${sPort} ไปยังพอร์ต ${targetPort} ข้ามสัญญาณช่องทางอื่นทั้งหมดเงียบเชียบ ✅`
-          ]);
-        }
-      }
-      else if (step === 3) {
-        // Flooding action completed, learn the receiver
-        if (transState === 'flooding' || !macTable.some(item => item.mac === rMac)) {
-          const rPort = pcDetails[receiverKey].port;
-          setMacTable(prev => [...prev, { port: rPort, mac: rMac }]);
-          setLogs(current => [
-            ...current,
-            `💡 [RESPONSE LEARNED] PC ${receiverKey} ตอบรับการสื่อสาร สวิตช์จดบันทึกประวัติทันที: Port ${rPort} -> MAC ${rMac}`,
-            `[COMPLETE] สวิตช์ดำเนินการเรียนรู้พฤติกรรมการเชื่อมสำเร็จเรียบร้อย`
-          ]);
-        }
-        setTransState('done');
-        clearInterval(timerRef.current);
-      }
-    }, 1800);
-  };
-
-  const handleResetLab = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    setMacTable([]);
-    setTransState('idle');
-    setCurrentSender('');
-    setCurrentReceiver('');
-    setLogs(['[READY] รอการส่งข้อมูลระดับเฟรมของ Switch...']);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, []);
-
-  return (
-    <SimulatorShell
-      icon={<Network className="w-6 h-6 text-cyan-500" />}
-      title="เครื่องจำลองตรรกะการเรียนรู้ของสวิตช์ (Switch MAC Table Learning Lab)"
-      accentBg="bg-cyan-50"
-      iconColor="text-cyan-600"
-    >
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch select-none text-left font-sans">
-        
-        {/* Left Column: Symmetrical Circular Layout with Central Switch */}
-        <div className="bg-slate-950 rounded-2xl p-6 border border-slate-800 flex flex-col justify-between items-center relative min-h-[380px] lg:col-span-1">
-          <span className="text-[9px] font-mono text-slate-500 absolute top-3 left-3">SWITCH PORT TOPOLOGY</span>
-          
-          <svg viewBox="0 0 320 320" className="w-64 h-64 z-10 my-auto">
-            {/* Absolute Center x=160, y=160 */}
-            
-            {/* Switch Central Box */}
-            <rect x="110" y="125" width="100" height="70" rx="10" fill="#0F172A" stroke={
-              transState === 'flooding' ? '#EF4444' :
-              transState === 'unicasting' ? '#10B981' : '#0891B2'
-            } strokeWidth="2.5" />
-            <text x="160" y="156" textAnchor="middle" fill="#FFFFFF" fontSize="10.5" fontWeight="bold" fontFamily="sans-serif">SWITCH (L2)</text>
-            <text x="160" y="172" textAnchor="middle" fill="#67E8F9" fontSize="8" fontFamily="sans-serif">MAC Learning Engine</text>
-
-            {/* Ports and Symmetrical Wires from center (160,160) */}
-            {/* Port 1 (PC A): 160,160 to 60,60 */}
-            <line x1="160" y1="160" x2="60" y2="60" stroke={currentSender === 'A' || currentReceiver === 'A' ? '#22D3EE' : '#334155'} strokeWidth="2.5" />
-            <text x="100" y="100" fill="#94A3B8" fontSize="8" fontWeight="bold" fontFamily="mono">P1</text>
-
-            {/* Port 2 (PC B): 160,160 to 260,60 */}
-            <line x1="160" y1="160" x2="260" y2="60" stroke={
-              (transState === 'flooding' && currentSender !== 'B') || currentSender === 'B' || currentReceiver === 'B' ? '#22D3EE' : '#334155'
-            } strokeWidth="2.5" />
-            <text x="210" y="100" fill="#94A3B8" fontSize="8" fontWeight="bold" fontFamily="mono">P2</text>
-
-            {/* Port 3 (PC C): 160,160 to 60,260 */}
-            <line x1="160" y1="160" x2="60" y2="260" stroke={
-              (transState === 'flooding' && currentSender !== 'C') || currentSender === 'C' || currentReceiver === 'C' ? '#22D3EE' : '#334155'
-            } strokeWidth="2.5" />
-            <text x="100" y="210" fill="#94A3B8" fontSize="8" fontWeight="bold" fontFamily="mono">P3</text>
-
-            {/* Port 4 (PC D): 160,160 to 260,260 */}
-            <line x1="160" y1="160" x2="260" y2="260" stroke={
-              (transState === 'flooding' && currentSender !== 'D') || currentSender === 'D' || currentReceiver === 'D' ? '#22D3EE' : '#334155'
-            } strokeWidth="2.5" />
-            <text x="210" y="210" fill="#94A3B8" fontSize="8" fontWeight="bold" fontFamily="mono">P4</text>
-
-            {/* PC Nodes */}
-            <circle cx="60" cy="60" r="18" fill="#1E293B" stroke="#475569" />
-            <text x="60" y="63" textAnchor="middle" fill="#FFFFFF" fontSize="9.5" fontWeight="bold">PC A</text>
-
-            <circle cx="260" cy="60" r="18" fill="#1E293B" stroke="#475569" />
-            <text x="260" y="63" textAnchor="middle" fill="#FFFFFF" fontSize="9.5" fontWeight="bold">PC B</text>
-
-            <circle cx="60" cy="260" r="18" fill="#1E293B" stroke="#475569" />
-            <text x="60" y="263" textAnchor="middle" fill="#FFFFFF" fontSize="9.5" fontWeight="bold">PC C</text>
-
-            <circle cx="260" cy="260" r="18" fill="#1E293B" stroke="#475569" />
-            <text x="260" y="263" textAnchor="middle" fill="#FFFFFF" fontSize="9.5" fontWeight="bold">PC D</text>
-          </svg>
-        </div>
-
-        {/* Center Column: Live Dynamic MAC Table */}
-        <div className="flex flex-col justify-between space-y-4 lg:col-span-1">
-          <div className="space-y-3">
-            <span className="text-[12px] font-bold text-slate-400 uppercase tracking-wider block">ตารางความจำ Switch MAC Table</span>
-            
-            <div className="bg-[#0f172a] rounded-xl border border-slate-800 p-4 min-h-[180px] flex flex-col justify-between">
-              <table className="w-full text-[10.5px] font-mono text-left">
-                <thead>
-                  <tr className="border-b border-slate-800 text-slate-500">
-                    <th className="pb-1.5 font-bold">PORT</th>
-                    <th className="pb-1.5 font-bold">MAC ADDRESS</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-900">
-                  {macTable.length > 0 ? (
-                    macTable.map((item, idx) => (
-                      <tr key={idx} className="text-cyan-400 hover:bg-slate-900/50">
-                        <td className="py-2.5 font-bold">Port {item.port}</td>
-                        <td className="py-2.5 font-bold">{item.mac}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={2} className="py-8 text-center text-slate-600 font-sans italic text-[11px]">
-                        [ตารางค่าว่างเปล่า - Switch กำลังรอเรียนรู้เฟรมข้อมูลเริ่มต้น]
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-
-              <div className="text-[8px] text-slate-500 border-t border-slate-900 pt-2 font-sans font-bold flex justify-between">
-                <span>ตระกูลเรียนรู้: Dynamic CAM</span>
-                <span className="text-cyan-500">{macTable.length}/4 อุปกรณ์จำเรียบร้อย</span>
+          {/* Straight vs Crossover Callout */}
+          <div className="bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl rounded-[2rem] p-6 border-l-[3.5px] border-l-indigo-500 flex flex-col sm:flex-row gap-4 text-zinc-700">
+            <div className="flex-shrink-0 text-indigo-500 mt-1"><InfoIcon /></div>
+            <div className="space-y-2.5">
+              <h5 className="font-bold text-zinc-900 text-sm leading-snug">การเลือกนำสายไปใช้งานต่อเชื่อมต่ออุปกรณ์:</h5>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-zinc-650 leading-relaxed text-[13.5px]">
+                <p>
+                  🛡️ <strong>สายตรง (Straight-through Cable):</strong> เข้าหัวแบบ <strong>T568B ทั้งสองฝั่ง</strong> ใช้เชื่อมโยงต่อสัญญาณระหว่างอุปกรณ์ต่างชนิดกัน เช่น คอมพิวเตอร์เข้ากับ Switch หรือเราเตอร์เชื่อมเข้าสวิตช์
+                </p>
+                <p>
+                  🔄 <strong>สายไขว้ (Crossover Cable):</strong> เข้าหัวแบบ <strong>T568A ฝั่งหนึ่ง และ T568B อีกฝั่งหนึ่ง</strong> ใช้เชื่อมโยงคอมพิวเตอร์ 2 เครื่องเข้าหากันตรง ๆ เพื่อสลับคู่รับ-ส่งข้อมูล (TX/RX) โดยไม่ต้องผ่านสวิตช์
+                </p>
               </div>
             </div>
           </div>
+        </section>
 
-          <div className="flex flex-col gap-2">
-            <button
-              onClick={handleResetLab}
-              className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white font-bold text-xs cursor-pointer border border-slate-800 active:scale-98 transition-all text-center"
-            >
-              รีเซ็ตตาราง Switch เป็นค่าว่าง (RESET)
-            </button>
-          </div>
-        </div>
-
-        {/* Right Column: Dynamic interactive controls & Console logger */}
-        <div className="flex flex-col justify-between lg:col-span-1">
-          <div className="space-y-3">
-            <span className="text-[12px] font-bold text-slate-400 uppercase tracking-wider block">เลือกมาตรการยิงข้อมูลข้ามระบบ</span>
-            
-            <div className="flex flex-col gap-2">
-              <button
-                onClick={() => handleStartLab('A', 'B')}
-                disabled={transState !== 'idle'}
-                className="p-3 bg-white border border-slate-200 hover:border-cyan-500/40 rounded-xl text-left cursor-pointer active:scale-98 text-xs font-bold text-slate-700 disabled:bg-slate-50 disabled:text-slate-400 disabled:border-slate-100"
-              >
-                ยิงข้อมูล: PC A ➔ PC B
-              </button>
-              <button
-                onClick={() => handleStartLab('A', 'C')}
-                disabled={transState !== 'idle'}
-                className="p-3 bg-white border border-slate-200 hover:border-cyan-500/40 rounded-xl text-left cursor-pointer active:scale-98 text-xs font-bold text-slate-700 disabled:bg-slate-50 disabled:text-slate-400 disabled:border-slate-100"
-              >
-                ยิงข้อมูล: PC A ➔ PC C
-              </button>
-              <button
-                onClick={() => handleStartLab('B', 'A')}
-                disabled={transState !== 'idle'}
-                className="p-3 bg-white border border-slate-200 hover:border-cyan-500/40 rounded-xl text-left cursor-pointer active:scale-98 text-xs font-bold text-slate-700 disabled:bg-slate-50 disabled:text-slate-400 disabled:border-slate-100"
-              >
-                ยิงข้อมูล: PC B ➔ PC A
-              </button>
-              <button
-                onClick={() => handleStartLab('D', 'B')}
-                disabled={transState !== 'idle'}
-                className="p-3 bg-white border border-slate-200 hover:border-cyan-500/40 rounded-xl text-left cursor-pointer active:scale-98 text-xs font-bold text-slate-700 disabled:bg-slate-50 disabled:text-slate-400 disabled:border-slate-100"
-              >
-                ยิงข้อมูล: PC D ➔ PC B
-              </button>
-            </div>
+        {/* ──────────── 4. SECTION: ขั้นตอนการเข้าหัวสายแลน ──────────── */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-indigo-650 tracking-wider uppercase">
+              LAN Cable Termination Steps
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              ขั้นตอนทางปฏิบัติในการเข้าหัวสายแลน RJ-45
+            </h3>
           </div>
 
-          {/* Console Logger box */}
-          <div className="bg-slate-950 rounded-xl p-3 border border-slate-900 mt-4">
-            <div className="text-slate-500 text-[9.5px] font-mono mb-2 uppercase tracking-wider flex justify-between items-center border-b border-slate-900 pb-1 pb-1.5 font-sans">
-              <span className="flex items-center gap-1"><Terminal className="w-3 h-3" /> L2 Switch Console</span>
-              {transState !== 'idle' && transState !== 'done' && (
-                <span className="text-cyan-400 flex items-center gap-1 text-[8.5px]"><RefreshCw className="w-2.5 h-2.5 animate-spin" /> DISPATCHING</span>
-              )}
-            </div>
-
-            <div className="space-y-1.5 min-h-[110px] max-h-[110px] overflow-y-auto leading-relaxed">
-              {logs.map((log, index) => (
-                <div key={index} className="flex gap-1.5 text-[11px] font-mono">
-                  <span className="text-slate-700 select-none">&gt;</span>
-                  <p className={`${
-                    log.includes('✨') || log.includes('✅')
-                      ? 'text-emerald-400 font-bold' 
-                      : log.startsWith('💡') 
-                      ? 'text-cyan-300 font-bold'
-                      : log.startsWith('⚠️') || log.startsWith('🔍')
-                      ? 'text-rose-300' 
-                      : 'text-slate-400'
-                  }`}>
-                    {log}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </SimulatorShell>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   4. ROUTER ROUTING TABLE & NAT SIMULATOR (Subtopic 4.1.4)
-   ═══════════════════════════════════════════════════════════════════ */
-function RouterRoutingSimulator() {
-  const [step, setStep] = useState(0); // 0: idle | 1: lan_switch | 2: router_inside | 3: router_outside_nat | 4: destination_complete
-  const [logs, setLogs] = useState(['[READY] ระบบนำทางเราเตอร์ว่าง รอการส่งผ่าน IP Packet ข้าม Subnet...']);
-  const timer = useRef(null);
-
-  const startRouting = () => {
-    if (step !== 0) return;
-    setStep(1);
-    setLogs([
-      '[PC Host] ประกอบชุดข้อมูล IP Packet: Src=192.168.1.15 | Dest=8.8.8.8 | TTL=64',
-      '[PC Host] ปล่อยสิทธิ์ออกพอร์ตแลนส่งต่อหา Switch A ท้องถิ่น'
-    ]);
-
-    let currentStep = 1;
-    if (timer.current) clearInterval(timer.current);
-
-    timer.current = setInterval(() => {
-      currentStep += 1;
-      if (currentStep === 2) {
-        setStep(2);
-        setLogs(current => [
-          ...current,
-          '[SWITCH A] รับสัญญาณ Layer 2 และส่งพอร์ตต่อไปยัง Default Gateway (เสาพิกัดเราเตอร์ 192.168.1.1)...',
-          '🔍 [ROUTER INSPECTION] เราเตอร์ได้รับข้อมูลที่พอร์ต LAN ตรวจสอบ IP Header: Destination IP (8.8.8.8) อยู่ขอบเขตเครือข่ายภายนอก'
-        ]);
-      }
-      else if (currentStep === 3) {
-        setStep(3);
-        setLogs(current => [
-          ...current,
-          '🗺️ [ROUTING TABLE MATCH] เราเตอร์วิเคราะห์เส้นทางข้ามเครือข่าย ค้นพบแมตช์พอร์ต WAN ออกไปยัง ISP Gateway...',
-          '⚡ [NAT TRANSLATION] เพื่อให้ข้อมูลสื่อสารกลับมาหาไอพีส่วนตัวได้ เราเตอร์เปลี่ยนค่า IP Header: แปลง Source IP 192.168.1.15 ➔ Public WAN IP 203.0.113.1 และสลักตาราง Socket NAT Table',
-          '⚡ [TTL DECREMENT] ลดทอนค่า Time To Live (TTL): 64 ➔ 63 เพื่อป้องกันบิตข้อมูลลูปค้างข้ามอินเทอร์เน็ตถาวร'
-        ]);
-      }
-      else if (currentStep === 4) {
-        setStep(4);
-        setLogs(current => [
-          ...current,
-          '☁️ [PUBLIC CLOUD REACH] แพ็กเก็ตส่งผ่านสายเคเบิล ISP ถึงโฮสต์เซิร์ฟเวอร์ความมั่นคง Google DNS (8.8.8.8) เรียบร้อย ✅ [สำเร็จ]',
-          '[COMPLETE] การเลือกเส้นทางและการทำ NAT Gateway ข้ามเครือข่ายสัมฤทธิผลสมบูรณ์'
-        ]);
-        clearInterval(timer.current);
-      }
-    }, 2000);
-  };
-
-  const handleReset = () => {
-    if (timer.current) clearInterval(timer.current);
-    setStep(0);
-    setLogs(['[READY] ระบบนำทางเราเตอร์ว่าง รอการส่งผ่าน IP Packet ข้าม Subnet...']);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (timer.current) clearInterval(timer.current);
-    };
-  }, []);
-
-  return (
-    <SimulatorShell
-      icon={<Activity className="w-6 h-6 text-cyan-500" />}
-      title="เครื่องจำลองการเลือกเส้นทางเราเตอร์ & ตรรกะ NAT Gateway"
-      accentBg="bg-cyan-50"
-      iconColor="text-cyan-600"
-    >
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch select-none text-left font-sans">
-        
-        {/* Left Network diagram display using Symmetrical SVG mapping */}
-        <div className="bg-slate-950 rounded-2xl p-6 border border-slate-800 flex flex-col justify-between items-center relative min-h-[400px] lg:col-span-2">
-          <span className="text-[10px] font-mono text-slate-500 absolute top-3 left-3">ROUTER & NAT TOPOLOGY LAYOUT</span>
-          
-          <svg viewBox="0 0 450 320" className="w-full max-w-[400px] h-72 z-10 my-auto">
-            {/* Coordinates Symmetrical layout:
-               PC: x=50, y=80
-               Switch A: x=140, y=80
-               Router (NAT): x=240, y=160
-               Cloud Server (8.8.8.8): x=380, y=240
-            */}
-
-            {/* Subnet A LAN boundaries visual */}
-            <rect x="15" y="30" width="180" height="110" rx="8" fill="#1e293b" fillOpacity="0.3" stroke="#475569" strokeDasharray="3,3" />
-            <text x="25" y="45" fill="#94A3B8" fontSize="8" fontWeight="bold">LAN SUBNET (192.168.1.0/24)</text>
-
-            {/* Wires */}
-            {/* PC to Switch */}
-            <line x1="60" y1="80" x2="140" y2="80" stroke={step >= 1 ? '#06B6D4' : '#334155'} strokeWidth="2.5" />
-            {/* Switch to Router */}
-            <line x1="140" y1="80" x2="240" y2="160" stroke={step >= 2 ? '#06B6D4' : '#334155'} strokeWidth="2.5" />
-            {/* Router to Cloud WAN */}
-            <line x1="240" y1="160" x2="380" y2="240" stroke={step >= 3 ? '#10B981' : '#334155'} strokeWidth="2.5" />
-
-            {/* Glowing flowing Packet */}
-            {step === 1 && (
-              <circle cx="100" cy="80" r="5.5" fill="#22D3EE">
-                <animate attributeName="cx" from="60" to="140" dur="1s" repeatCount="indefinite" />
-              </circle>
-            )}
-            {step === 2 && (
-              <circle cx="190" cy="120" r="5.5" fill="#22D3EE">
-                <animate attributeName="cx" from="140" to="240" dur="1s" repeatCount="indefinite" />
-                <animate attributeName="cy" from="80" to="160" dur="1s" repeatCount="indefinite" />
-              </circle>
-            )}
-            {step === 3 && (
-              <circle cx="310" cy="200" r="5.5" fill="#10B981">
-                <animate attributeName="cx" from="240" to="380" dur="1s" repeatCount="indefinite" />
-                <animate attributeName="cy" from="160" to="240" dur="1s" repeatCount="indefinite" />
-              </circle>
-            )}
-
-            {/* Nodes */}
-            {/* PC Host */}
-            <rect x="25" y="65" width="50" height="30" rx="4" fill="#0F172A" stroke="#475569" />
-            <text x="50" y="80" textAnchor="middle" fill="#FFFFFF" fontSize="8" fontWeight="bold">PC Host</text>
-            <text x="50" y="90" textAnchor="middle" fill="#94A3B8" fontSize="6.5" fontFamily="mono">192.168.1.15</text>
-
-            {/* Switch A */}
-            <rect x="115" y="65" width="50" height="30" rx="4" fill="#0F172A" stroke="#475569" />
-            <text x="140" y="80" textAnchor="middle" fill="#E2E8F0" fontSize="8" fontWeight="bold">Switch A</text>
-            <text x="140" y="90" textAnchor="middle" fill="#67E8F9" fontSize="6.5" fontFamily="mono">L2 Device</text>
-
-            {/* Router Gateway */}
-            <circle cx="240" cy="160" r="30" fill="#0F172A" stroke={step >= 3 ? '#10B981' : '#0891B2'} strokeWidth="2.5" />
-            <text x="240" y="158" textAnchor="middle" fill="#FFFFFF" fontSize="8.5" fontWeight="bold">ROUTER (NAT)</text>
-            <text x="240" y="168" textAnchor="middle" fill="#22D3EE" fontSize="6" fontFamily="mono">LAN: 192.168.1.1</text>
-            <text x="240" y="176" textAnchor="middle" fill="#10B981" fontSize="6" fontFamily="mono">WAN: 203.0.113.1</text>
-
-            {/* Cloud Target */}
-            <rect x="350" y="225" width="60" height="35" rx="5" fill="#0F172A" stroke={step === 4 ? '#10B981' : '#475569'} strokeWidth="2" />
-            <text x="380" y="240" textAnchor="middle" fill="#FFFFFF" fontSize="8" fontWeight="bold">Google Cloud</text>
-            <text x="380" y="250" textAnchor="middle" fill="#F472B6" fontSize="7" fontFamily="mono">IP: 8.8.8.8</text>
-          </svg>
-        </div>
-
-        {/* Right Info and NAT tables */}
-        <div className="flex flex-col justify-between space-y-4 lg:col-span-1">
-          <div className="space-y-4">
-            <span className="text-[12px] font-bold text-slate-400 uppercase tracking-wider block">สลักตารางแปลไอพี NAT Table (Live)</span>
-            
-            <div className="bg-[#0f172a] rounded-xl border border-slate-800 p-4 min-h-[160px] flex flex-col justify-between">
-              <table className="w-full text-[9.5px] font-mono text-slate-200">
-                <thead>
-                  <tr className="border-b border-slate-800 text-slate-500">
-                    <th className="pb-1.5 font-bold">INTERNAL SOCKET</th>
-                    <th className="pb-1.5 font-bold">NAT WAN SOCKET</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-900">
-                  {step >= 3 ? (
-                    <tr className="text-emerald-400 font-bold">
-                      <td className="py-2.5">192.168.1.15:49152</td>
-                      <td className="py-2.5">203.0.113.1:51024</td>
-                    </tr>
-                  ) : (
-                    <tr>
-                      <td colSpan={2} className="py-8 text-center text-slate-600 font-sans italic text-[10.5px]">
-                        [NAT Table ว่างเปล่า - รอการแปลงข้อมูลข้าม Gateway]
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-
-              {/* Dynamic Header Inspector */}
-              <div className="border-t border-slate-900 pt-3.5 space-y-1.5">
-                <span className="text-[9px] text-slate-500 font-bold font-sans block">LIVE IP HEADER INSPECTOR:</span>
-                <div className="bg-slate-950 p-2.5 rounded-lg border border-slate-900 font-mono text-[9px] space-y-1">
-                  <div><span className="text-slate-500">SOURCE IP:</span> <span className="text-cyan-400 font-bold">{step >= 3 ? '203.0.113.1 (WAN Translation)' : '192.168.1.15'}</span></div>
-                  <div><span className="text-slate-500">DESTIN IP:</span> <span className="text-pink-400 font-bold">8.8.8.8</span></div>
-                  <div><span className="text-slate-500">TTL INDEX:</span> <span className="text-amber-400 font-bold">{step >= 3 ? '63 (Decremented)' : '64'}</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-2">
-            {step === 0 ? (
-              <button
-                onClick={startRouting}
-                className="w-full py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs rounded-xl cursor-pointer active:scale-98 shadow-md"
-              >
-                กดยิงส่งชุดข้อมูลข้าม IP Subnet
-              </button>
-            ) : (
-              <button
-                onClick={handleReset}
-                className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white font-bold text-xs rounded-xl cursor-pointer border border-slate-800 active:scale-98 transition-all"
-              >
-                เคลียร์ข้อมูลจำลอง (RESET)
-              </button>
-            )}
-          </div>
-        </div>
-
-      </div>
-      
-      {/* Dynamic log console */}
-      <div className="bg-slate-950 rounded-xl p-4 border border-slate-900 mt-5 text-left">
-        <div className="text-slate-500 text-[10px] font-mono mb-2 uppercase tracking-wider flex justify-between items-center border-b border-slate-900 pb-1.5 font-sans">
-          <span className="flex items-center gap-1.5"><Terminal className="w-3.5 h-3.5" /> L3 Router Gateway Trace Logs</span>
-          {step > 0 && step < 4 && (
-            <span className="text-cyan-400 flex items-center gap-1 text-[9px]"><RefreshCw className="w-2.5 h-2.5 animate-spin" /> ROUTING IN PROGRESS</span>
-          )}
-        </div>
-
-        <div className="space-y-1.5 min-h-[90px] max-h-[110px] overflow-y-auto leading-relaxed">
-          {logs.map((log, index) => (
-            <div key={index} className="flex gap-2 text-xs font-mono">
-              <span className="text-slate-700 select-none">&gt;&gt;</span>
-              <p className={`${
-                log.includes('✅') 
-                  ? 'text-emerald-400 font-bold' 
-                  : log.startsWith('⚡') 
-                  ? 'text-cyan-300 font-bold'
-                  : log.startsWith('🗺️') || log.startsWith('🔍')
-                  ? 'text-amber-300 font-bold' 
-                  : 'text-slate-300'
-              }`}>
-                {log}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </SimulatorShell>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   5. TRIPLE INTEGRATED NETWORK LAB (Subtopic 4.1.5, 4.1.6, 4.1.7)
-   ═══════════════════════════════════════════════════════════════════ */
-function TripleNetworkLab() {
-  const [activeTab, setActiveTab] = useState('wap'); // 'wap' | 'firewall' | 'modem'
-
-  // WAP state parameters
-  const [frequency, setFrequency] = useState('2.4GHz');
-  const [obstacle, setObstacle] = useState('none');
-  const obstaclePenalties = { none: 0, wood: 15, glass: 20, concrete: 55, metal: 85 };
-
-  const basePower = frequency === '2.4GHz' ? 95 : 85; // 5GHz naturally attenuates faster
-  const obstaclePenalty = obstaclePenalties[obstacle] + (frequency === '5GHz' && obstacle !== 'none' ? 10 : 0); // 5GHz suffers more loss in solid materials
-  const finalSignal = Math.max(5, basePower - obstaclePenalty);
-
-  // Firewall state parameters
-  const [firewallRules, setFirewallRules] = useState([
-    { id: 1, action: 'DENY', ip: '10.0.0.99', port: 'Any', desc: 'บล็อกไอพีพนักงานที่แอบแฮกระบบ' },
-    { id: 2, action: 'DENY', ip: 'Any', port: '80', desc: 'ปิดการเชื่อมต่อ HTTP (บังคับใช้ HTTPS)' },
-    { id: 3, action: 'ALLOW', ip: 'Any', port: 'Any', desc: 'เปิดช่องสัญญาณสื่อสารสากลปกติ' }
-  ]);
-  const [attackerIp, setAttackerIp] = useState('10.0.0.99');
-  const [attackerPort, setAttackerPort] = useState('80');
-  const [fwLogs, setFwLogs] = useState(['[READY] ป้อมป้องสกัดข้อมูล Firewall สแตนด์บาย...']);
-
-  const handleFirewallTest = () => {
-    // Audit packet based on ACL Rules
-    let matchedRule = firewallRules.find(rule => 
-      (rule.ip === 'Any' || rule.ip === attackerIp) && 
-      (rule.port === 'Any' || rule.port === attackerPort)
-    );
-
-    if (!matchedRule) {
-      matchedRule = { action: 'ALLOW', desc: 'Default Rule' };
-    }
-
-    if (matchedRule.action === 'DENY') {
-      setFwLogs(current => [
-        `🚨 [PACKET DROP] ตรวจพบการละเมิดกฎ! ปฏิเสธแพ็กเก็ตจาก ${attackerIp}:${attackerPort} ข้ามระบบขอบเขตสำเร็จ`,
-        `💡 กฎที่ทำงานบล็อก: ${matchedRule.desc}`,
-        ...current
-      ]);
-    } else {
-      setFwLogs(current => [
-        `✅ [PACKET ALLOWED] ผ่านสิทธิ์ข้ามเครื่องเรียบร้อย: ข้อมูลจาก ${attackerIp}:${attackerPort} เดินทางสู่ Server ภายในได้สำเร็จ`,
-        ...current
-      ]);
-    }
-  };
-
-  // Modem state parameters
-  const [modBitstream, setModBitstream] = useState([1, 0, 1, 1, 0, 1, 0]);
-  const [modulationType, setModulationType] = useState('ASK'); // ASK | FSK | PSK
-
-  return (
-    <SimulatorShell
-      icon={<Sliders className="w-6 h-6 text-cyan-500" />}
-      title="แผงควบคุมและห้องวิจัยสัญญาณ WAP, Firewall & Modem Lab"
-      accentBg="bg-cyan-50"
-      iconColor="text-cyan-600"
-    >
-      <div className="space-y-6 select-none font-sans text-left">
-        
-        {/* Navigation Tabs Header */}
-        <div className="flex border-b border-slate-200">
-          <button
-            onClick={() => setActiveTab('wap')}
-            className={`py-2 px-5 font-bold text-xs cursor-pointer border-b-2 transition-all ${
-              activeTab === 'wap'
-                ? 'border-cyan-500 text-cyan-600 bg-cyan-50/30'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            🛰️ WAP WiFi Lab
-          </button>
-          <button
-            onClick={() => setActiveTab('firewall')}
-            className={`py-2 px-5 font-bold text-xs cursor-pointer border-b-2 transition-all ${
-              activeTab === 'firewall'
-                ? 'border-cyan-500 text-cyan-600 bg-cyan-50/30'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            🛡️ Firewall Rule ACL
-          </button>
-          <button
-            onClick={() => setActiveTab('modem')}
-            className={`py-2 px-5 font-bold text-xs cursor-pointer border-b-2 transition-all ${
-              activeTab === 'modem'
-                ? 'border-cyan-500 text-cyan-600 bg-cyan-50/30'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            〰️ Modem Modulation Graph
-          </button>
-        </div>
-
-        {/* 1. WAP TAB PANEL */}
-        {activeTab === 'wap' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-            <div className="bg-[#0f172a] rounded-2xl p-5 border border-slate-800 flex flex-col justify-between shadow-2xl relative min-h-[300px] text-xs text-slate-200">
-              <span className="text-[9px] font-mono text-slate-500 absolute top-3 right-4 font-bold">WIFI WAVELENGTH SIMULATOR</span>
-              
-              <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+            {[
+              { num: '1', title: 'ปลอกฉนวนภายนอก', desc: 'ใช้คัตเตอร์ปลอกสายสัญญาณ ค่อย ๆ ขูดเปลือกสีภายนอกออกยาวประมาณ 2-3 ซม. โดยระวังไม่ให้กรีดโดนแกนพลาสติกหรือสายหุ้มคู่ทองแดงเส้นข้างในชำรุดขาด' },
+              { num: '2', title: 'คลี่เกลียวเรียงสี T568B', desc: 'คลายเกลียวที่บิดออก ดึงเส้นสายทองแดงแต่ละสีให้ตรง สลับตำแหน่งและจัดพินจากซ้ายไปขวา: ขาวส้ม, ส้ม, ขาวเขียว, น้ำเงิน, ขาวน้ำเงิน, เขียว, ขาวน้ำตาล, น้ำตาล' },
+              { num: '3', title: 'ตัดแต่งปลายสายไฟ', desc: 'รวบแนวระนาบทองแดงทั้ง 8 เส้นบีบให้เรียงชิดแบนเสมอกัน จากนั้นใช้ปากใบมีดคีมตัดปลายสายออกให้เรียบตรงเป็นฉากขนาน โดยคงเหลือความยาวสายประมาณ 1.5 ซม.' },
+              { num: '4', title: 'สอดหัวและบีบย้ำหัว', desc: 'หันหน้าสัมผัสทองเหลืองของหัว RJ-45 ขึ้น (หันสลักล็อกลงล่าง) สอดสายแลนเข้าไปจนสุดปลายหน้าสัมผัส สอดหัวเข้าที่ช่องย้ำคีม แล้วกดบีบด้ามให้สลักกดทับสายแน่นหนา' },
+              { num: '5', title: 'สแกนทดสอบสัญญาณ', desc: 'เสียบสายแลนทั้ง 2 ปลายเข้ากับพอร์ตเครื่อง Cable Tester เปิดสแกนรันไฟ LED 1-8 หากไฟกะพริบวิ่งตรงกันจากบนลงล่างทั้งฝั่ง Master/Remote แสดงว่าเข้าสายสำเร็จ' }
+            ].map((card, idx) => (
+              <div key={idx} className="bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl rounded-[2rem] p-5 flex flex-col justify-between hover:-translate-y-0.5 transition-all">
                 <div>
-                  <h6 className="text-[13px] font-bold text-white flex items-center gap-1.5"><Radio className="w-4 h-4 text-cyan-400" /> WiFi Signal Parameters</h6>
-                  <p className="text-[10px] text-slate-400 leading-normal">
-                    วิเคราะห์กลไกความแรงสัญญาณถดถอย (Attenuation) เมื่อคลื่นวิ่งชนสิ่งกีดขวางวัสดุชนิดต่างๆ
-                  </p>
-                </div>
-
-                {/* Frequency Selector */}
-                <div className="space-y-1.5">
-                  <span className="text-[10px] text-slate-400 font-bold block">1. เลือกย่านความถี่คลื่นวิทยุ (Frequency Band):</span>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setFrequency('2.4GHz')}
-                      className={`py-1.5 px-3 rounded-lg text-xs font-bold cursor-pointer transition-all ${
-                        frequency === '2.4GHz'
-                          ? 'bg-cyan-600 text-white'
-                          : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      2.4 GHz (ส่งไกล ทะลุทะลวงดี แบนด์วิดท์ต่ำ)
-                    </button>
-                    <button
-                      onClick={() => setFrequency('5GHz')}
-                      className={`py-1.5 px-3 rounded-lg text-xs font-bold cursor-pointer transition-all ${
-                        frequency === '5GHz'
-                          ? 'bg-cyan-600 text-white'
-                          : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      5 GHz (ส่งสั้น ทะลุทะลวงแย่ แบนด์วิดท์สูงลิ่ว)
-                    </button>
-                  </div>
-                </div>
-
-                {/* Obstacle Selector */}
-                <div className="space-y-1.5 pt-1.5">
-                  <span className="text-[10px] text-slate-400 font-bold block">2. เลือกประเภทกำแพงสิ่งกีดขวาง (Obstacle Material):</span>
-                  <div className="flex flex-wrap gap-2">
-                    {['none', 'wood', 'glass', 'concrete', 'metal'].map(mat => (
-                      <button
-                        key={mat}
-                        onClick={() => setObstacle(mat)}
-                        className={`py-1 px-2.5 rounded-lg text-[10.5px] cursor-pointer transition-all font-bold ${
-                          obstacle === mat
-                            ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-                            : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
-                        }`}
-                      >
-                        {mat === 'none' ? 'ไม่มีสิ่งกีดขวาง' :
-                         mat === 'wood' ? 'ไม้หนา (Wood)' :
-                         mat === 'glass' ? 'กระจกนิรภัย (Glass)' :
-                         mat === 'concrete' ? 'กำแพงปูน (Concrete)' : 'แผ่นโลหะสะท้อน (Metal)'}
-                      </button>
-                    ))}
-                  </div>
+                  <span className="bg-indigo-50 text-indigo-600 w-7 h-7 rounded-full flex items-center justify-center font-black text-xs font-mono mb-3 shadow-inner">{card.num}</span>
+                  <h4 className="font-bold text-zinc-900 text-[14.5px] leading-snug mb-2">{card.title}</h4>
+                  <p className="text-zinc-500 text-[12px] leading-relaxed">{card.desc}</p>
                 </div>
               </div>
+            ))}
+          </div>
+        </section>
 
-              {/* Attenuation Warning */}
-              <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl mt-4 text-[10.5px] leading-relaxed text-slate-400">
-                📌 <strong>เกร็ดความรู้:</strong> ความถี่สูงอย่าง 5GHz มีพลังงานระดับบิตข้อมูลสูง ทว่ามีขีดจำกัดทางฟิสิกส์คลื่นสะท้อนต่ำกว่า ทำให้เกิดการลดทอนความสูงยอดคลื่น (High Attenuation) เมื่อกั้นด้วยแผ่นวัสดุหนาแน่น
-              </div>
+        {/* ──────────── 5. SECTION: UTP Crimp Simulator ──────────── */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-indigo-650 tracking-wider uppercase">
+              Interactive Simulation
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              เครื่องจำลองปฏิบัติการเข้าหัวสาย UTP (Arrange {"->"} Crimp {"->"} Test)
+            </h3>
+          </div>
+
+          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed">
+            ทดลองลงมือปฏิบัติตามเฟสงาน ทั้งจัดเรียงแถบสีทองแดง 8 เส้น สอดเข้าพิน บีบคีมย้ำพินหัว RJ-45 และเปิดสัญญาณเครื่องเทสสแกนดูพฤติกรรมสายแลน:
+          </p>
+
+          <SimulatorShell
+            dark
+            icon={<ToolsIcon />}
+            title="UTP Termination Master Simulator [ระบบปฏิบัติการและบำรุงรักษาสายสัญญาณ]"
+            glowColors="from-blue-600/15 to-indigo-500/10"
+            iconColor="text-indigo-400"
+          >
+            <div className="flex justify-between items-center mb-5 text-xs font-mono relative z-10 border-b border-white/5 pb-2.5">
+              <span className="text-slate-400">
+                Phase: <strong className="text-indigo-400 uppercase tracking-widest">{simPhase}</strong>
+              </span>
+              <button
+                onClick={initializeSimulator}
+                className="text-xs bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-300 px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1"
+              >
+                <RotateIcon /> รีเซ็ตสายสัญญาณ
+              </button>
             </div>
 
-            {/* Signal visual representation column */}
-            <div className="bg-[#0f172a] rounded-2xl p-5 border border-slate-800 flex flex-col justify-between items-center relative min-h-[300px]">
-              <span className="text-[9px] font-mono text-slate-500 absolute top-3 left-3">LIVE SIGNAL WAVE AND INDEX</span>
-              
-              <div className="my-auto w-full space-y-6 text-center text-slate-200">
-                {/* Visual gauge */}
-                <div className="space-y-2 max-w-xs mx-auto">
-                  <span className="text-xs text-slate-400 block font-bold">WiFi Signal Indicator strength:</span>
-                  <div className="text-4xl font-mono font-bold tracking-tight text-cyan-400">
-                    {finalSignal} <span className="text-xs text-slate-500">dBm (Mocked Index)</span>
-                  </div>
+            {/* Main Simulator Work Area */}
+            <div className="relative min-h-[380px] flex items-center justify-center relative z-10">
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
+
+              {/* SIMULATOR PHASE: Arrange Wires */}
+              {simPhase === 'arrange' && (
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full items-stretch">
                   
-                  {/* Gauge bar */}
-                  <div className="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden border border-slate-800">
-                    <div className={`h-full transition-all duration-500 ${
-                      finalSignal > 60 ? 'bg-emerald-500' :
-                      finalSignal > 30 ? 'bg-amber-400' : 'bg-rose-500'
-                    }`} style={{ width: `${finalSignal}%` }} />
-                  </div>
-
-                  <span className="text-[10px] text-slate-400 block leading-tight font-sans mt-1">
-                    {finalSignal > 60 ? '✅ สัญญาณดีเยี่ยม! เล่นเน็ตไหลลื่น รบกวนสัญญาณต่ำ' :
-                     finalSignal > 30 ? '⚠️ สัญญาณปานกลาง - ระวังแพ็กเก็ตหลุดลอยชั่วคราว' :
-                     '❌ สัญญาณวิกฤต! ข้อมูลขาดหาย (High Attenuation) การสื่อสารล้มเหลว'}
-                  </span>
-                </div>
-
-                {/* Animated emitting waves */}
-                <div className="relative w-28 h-20 mx-auto flex items-end justify-center overflow-hidden">
-                  <div className="w-10 h-10 bg-cyan-500/10 border border-cyan-500/30 rounded-full flex items-center justify-center relative">
-                    <Wifi className="w-5 h-5 text-cyan-400 z-10" />
-                    {finalSignal > 30 && (
-                      <>
-                        <div className="absolute inset-0 bg-cyan-400/20 rounded-full animate-ping" />
-                        <div className="absolute inset-0 bg-cyan-400/10 rounded-full animate-[ping_1.5s_infinite]" />
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 2. FIREWALL TAB PANEL */}
-        {activeTab === 'firewall' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-            {/* Control panel & custom inputs */}
-            <div className="bg-[#0f172a] rounded-2xl p-5 border border-slate-800 flex flex-col justify-between shadow-2xl relative min-h-[340px] text-xs text-slate-200 lg:col-span-1">
-              <span className="text-[9px] font-mono text-slate-500 absolute top-3 right-4 font-bold">FIREWALL PACKET FILTER</span>
-              
-              <div className="space-y-4">
-                <div>
-                  <h6 className="text-[13px] font-bold text-white flex items-center gap-1.5"><Sliders className="w-4 h-4 text-cyan-400" /> Packet Generator Parameters</h6>
-                  <p className="text-[10px] text-slate-400 leading-normal">
-                    จำลองแพ็กเก็ตประสงค์ร้ายยิงถล่มเครือข่าย เพื่อทดสอบความทนทานของป้อมสกัด Firewall
-                  </p>
-                </div>
-
-                {/* Attacker IP */}
-                <div className="space-y-1.5">
-                  <label className="text-[10px] text-slate-400 font-bold block">1. ป้อนไอพีแพ็กเก็ตต้นทาง (Source IP):</label>
-                  <input
-                    type="text"
-                    value={attackerIp}
-                    onChange={(e) => setAttackerIp(e.target.value)}
-                    className="w-full pl-3 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500 font-mono font-bold"
-                  />
-                </div>
-
-                {/* Attacker Port */}
-                <div className="space-y-1.5">
-                  <label className="text-[10px] text-slate-400 font-bold block">2. ป้อนเป้าหมายพอร์ตสัญญาณ (Destination Port):</label>
-                  <input
-                    type="text"
-                    value={attackerPort}
-                    onChange={(e) => setAttackerPort(e.target.value)}
-                    className="w-full pl-3 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500 font-mono font-bold"
-                  />
-                </div>
-              </div>
-
-              <div className="pt-4 flex gap-2">
-                <button
-                  onClick={handleFirewallTest}
-                  className="w-full py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl cursor-pointer active:scale-98 shadow-md"
-                >
-                  🚀 ยิงยิงข้อมูลทดสอบการรับสิทธิ์ (Inject Packet)
-                </button>
-              </div>
-            </div>
-
-            {/* Firewall Rules ACL Table */}
-            <div className="bg-[#0f172a] rounded-2xl p-5 border border-slate-800 flex flex-col justify-between shadow-2xl relative min-h-[340px] text-xs text-slate-200 lg:col-span-1">
-              <span className="text-[9px] font-mono text-slate-500 absolute top-3 right-4 font-bold font-sans">ACCESS CONTROL LIST</span>
-              
-              <div className="space-y-3">
-                <h6 className="text-[12px] font-bold text-slate-400 uppercase tracking-wider block">ตารางบัญชีสิทธิ์ Access Control Lists (ACL)</h6>
-                
-                <div className="space-y-2 max-h-[220px] overflow-y-auto min-h-[180px]">
-                  {firewallRules.map(rule => (
-                    <div key={rule.id} className="p-3 bg-slate-950 border border-slate-900 rounded-xl flex justify-between items-center gap-2">
-                      <div className="space-y-1">
-                        <span className="font-bold text-white text-[11px] block">{rule.desc}</span>
-                        <span className="font-mono text-[9px] text-slate-500 block">IP: {rule.ip} | Port: {rule.port}</span>
-                      </div>
-                      <span className={`py-1 px-2.5 font-bold text-[9px] rounded-md ${
-                        rule.action === 'DENY' 
-                          ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' 
-                          : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                      }`}>
-                        {rule.action}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="text-[8px] text-slate-500 border-t border-slate-900 pt-2 font-mono">
-                * กฎสืบเช็คจากบนลงล่าง (Top-Down inspection) ตรวจตราเสร็จแล้วหยุดรัน
-              </div>
-            </div>
-
-            {/* Firewall Logs console panel */}
-            <div className="flex flex-col justify-between lg:col-span-1">
-              <div className="bg-slate-950 rounded-xl p-4 border border-slate-900 min-h-[260px] flex flex-col justify-between">
-                <div className="text-slate-500 text-[10px] font-mono mb-2 uppercase tracking-wider flex justify-between items-center border-b border-slate-900 pb-1.5">
-                  <span className="flex items-center gap-1.5"><Terminal className="w-3.5 h-3.5" /> Firewall Defense Event logs</span>
-                </div>
-
-                <div className="space-y-1.5 min-h-[190px] max-h-[190px] overflow-y-auto leading-relaxed">
-                  {fwLogs.map((log, index) => (
-                    <div key={index} className="flex gap-2 text-xs font-mono">
-                      <span className="text-slate-700 select-none">&gt;</span>
-                      <p className={`${
-                        log.startsWith('✅') 
-                          ? 'text-emerald-400 font-bold' 
-                          : log.startsWith('🚨') 
-                          ? 'text-rose-400 font-bold'
-                          : 'text-slate-300'
-                      }`}>
-                        {log}
+                  {/* Left: Pool Wires (shuffled) */}
+                  <div className="lg:col-span-5 bg-slate-900/95 backdrop-blur-md p-5 rounded-2xl border border-white/10 flex flex-col justify-between">
+                    <div>
+                      <h4 className="text-xs font-extrabold text-slate-300 mb-1 border-b border-white/5 pb-2 uppercase tracking-wide">1. คลังคู่สายทองแดงย่อย (คลิกเลือกตามลำดับ)</h4>
+                      <p className="text-[10px] text-slate-500 leading-normal mb-3.5">
+                        เป้าหมาย: คลิกเลือกสายเรียงให้ถูกต้องตามลำดับ T568B
                       </p>
+                      
+                      {poolWires.length > 0 ? (
+                        <div className="grid grid-cols-2 gap-2.5">
+                          {poolWires.map(wire => (
+                            <button
+                              key={wire.id}
+                              onClick={() => handleSelectWire(wire)}
+                              className={`p-2.5 rounded-lg border border-slate-800 text-left text-xs cursor-pointer hover:border-indigo-500 hover:bg-slate-950 transition-all font-mono flex items-center gap-2 ${wire.bgClass.split(' text-')[0]}`}
+                            >
+                              <span className="w-2.5 h-2.5 rounded-full bg-slate-100 border shadow-inner"></span>
+                              <span className="text-[11px] leading-none">{wire.name}</span>
+                            </button>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-6 text-slate-550 font-mono text-[11px]">
+                          จัดสายครบ 8 เส้นเรียบร้อยในพินหัวแลน
+                        </div>
+                      )}
                     </div>
-                  ))}
-                </div>
-              </div>
-              
-              <button 
-                onClick={() => setFwLogs(['[READY] ป้องกันสกัดข้อมูล Firewall สแตนด์บาย...'])}
-                className="w-full mt-3 py-2 bg-slate-900 border border-slate-800 hover:text-white text-slate-400 font-bold rounded-lg text-xs cursor-pointer active:scale-95 transition-all text-center"
-              >
-                เคลียร์เหตุการณ์บันทึก (CLEAR LOGS)
-              </button>
-            </div>
-          </div>
-        )}
 
-        {/* 3. MODEM MODULATION GRAPH PANEL */}
-        {activeTab === 'modem' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-            {/* Controls bitstream config */}
-            <div className="bg-[#0f172a] rounded-2xl p-5 border border-slate-800 flex flex-col justify-between shadow-2xl relative min-h-[300px] text-xs text-slate-200 lg:col-span-1">
-              <span className="text-[9px] font-mono text-slate-500 absolute top-3 right-4 font-bold">DIGITAL SIGNAL INPUTS</span>
-              
-              <div className="space-y-4">
-                <div>
-                  <h6 className="text-[13px] font-bold text-white flex items-center gap-1.5"><Sliders className="w-4 h-4 text-cyan-400" /> Modulation Setup</h6>
-                  <p className="text-[10px] text-slate-400 leading-normal">
-                    ปรับเปลี่ยนรหัสเลขฐานสอง และประเภทวิธีเปลี่ยนระดับยอดคลื่น (Modulation) เพื่อส่งออกทางโทรศัพท์อนาล็อก
-                  </p>
-                </div>
+                    <div className="pt-4 mt-4 border-t border-white/5 flex justify-between items-center text-[10px] text-slate-500">
+                      <span>เหลือกองสาย: {poolWires.length} เส้น</span>
+                      {userWireOrder.length > 0 && (
+                        <button
+                          onClick={handleRemoveLastWire}
+                          className="bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-rose-450 px-2.5 py-1.5 rounded-lg cursor-pointer transition-all"
+                        >
+                          ดึงสายเส้นหลังออก
+                        </button>
+                      )}
+                    </div>
+                  </div>
 
-                {/* Modulation type selector */}
-                <div className="space-y-1.5">
-                  <span className="text-[10px] text-slate-400 font-bold block">1. เลือกประเภทการแปลงสัญญาณ (Modulation Type):</span>
-                  <div className="flex flex-col gap-2">
-                    {[
-                      { type: 'ASK', label: 'ASK (Amplitude Shift Keying)', desc: 'ปรับยอดความสูงคลื่น (Amplitude)' },
-                      { type: 'FSK', label: 'FSK (Frequency Shift Keying)', desc: 'ปรับความเร็วความถี่คลื่น (Frequency)' },
-                      { type: 'PSK', label: 'PSK (Phase Shift Keying)', desc: 'สับมุมเฟสองศาของยอดคลื่น (Phase)' }
-                    ].map(mod => (
+                  {/* Right: RJ-45 Pin Slots */}
+                  <div className="lg:col-span-7 bg-slate-950/95 p-5 rounded-2xl border border-white/5 flex flex-col justify-between">
+                    <div>
+                      <h4 className="text-xs font-extrabold text-slate-350 mb-1 border-b border-white/5 pb-2 uppercase tracking-wide">2. พินและพอร์ต RJ-45 CONNECTOR SLOTS</h4>
+                      <p className="text-[10px] text-slate-500 leading-normal mb-4">
+                        จัดลำดับสายจากซ้ายพิน 1 ไปยังขวาพิน 8
+                      </p>
+                      
+                      {/* Interactive Visual Wire Slots */}
+                      <div className="bg-slate-900 border border-slate-850 p-6 rounded-2xl flex flex-col items-center justify-center min-h-[160px] shadow-inner">
+                        
+                        {/* RJ-45 Connector Shape representation */}
+                        <div className="w-full max-w-sm bg-slate-950 border border-slate-800 rounded-xl p-4 flex flex-col gap-3 relative shadow-inner">
+                          <span className="text-[8px] font-mono text-slate-500 absolute top-2 right-3 select-none">RJ-45 CLIP SIDE</span>
+                          
+                          {/* Pins container */}
+                          <div className="grid grid-cols-8 gap-1 border-b border-slate-800 pb-3">
+                            {[0, 1, 2, 3, 4, 5, 6, 7].map((pinIdx) => {
+                              const wire = userWireOrder[pinIdx];
+                              return (
+                                <div key={pinIdx} className="flex flex-col items-center gap-1.5">
+                                  <span className="text-[9px] text-slate-600 font-mono">P{pinIdx + 1}</span>
+                                  <div className="w-full aspect-square max-w-[28px] rounded-md border border-slate-800 flex items-center justify-center bg-slate-900 overflow-hidden shadow-inner">
+                                    {wire ? (
+                                      <div className={`w-full h-full ${wire.bgClass.split(' text-')[0]}`} />
+                                    ) : (
+                                      <div className="w-1.5 h-1.5 bg-slate-800 rounded-full animate-pulse"></div>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+
+                          {/* Render wires coming out of jacket */}
+                          <div className="flex justify-between items-stretch px-1 h-10">
+                            {[0, 1, 2, 3, 4, 5, 6, 7].map((pinIdx) => {
+                              const wire = userWireOrder[pinIdx];
+                              return (
+                                <div key={pinIdx} className="w-[11.5%] flex justify-center items-stretch">
+                                  {wire && (
+                                    <div className={`w-1.5 rounded-b shadow-inner ${wire.bgClass.split(' text-')[0]}`} />
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+
+                          {/* Outer sheath jacket */}
+                          <div className="bg-slate-800/80 border border-slate-700/50 rounded-lg p-2.5 text-center text-[9px] text-slate-400 font-mono uppercase tracking-widest shadow-inner">
+                            UTP outer jacket sheath
+                          </div>
+
+                        </div>
+
+                      </div>
+
+                      {/* Complete phase trigger button */}
+                      {userWireOrder.length === 8 && (
+                        <div className="text-right pt-2 border-t border-white/5 mt-4">
+                          <button
+                            onClick={handleInsertIntoRJ45}
+                            className="bg-indigo-650 hover:bg-indigo-550 hover:scale-[1.02] text-white font-bold text-xs py-2 px-6 rounded-lg flex items-center gap-2 ml-auto transition-all cursor-pointer shadow-lg shadow-indigo-950/20"
+                          >
+                            สอดสายเข้าหัวแลน <ArrowRightIcon />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+                {/* SIMULATOR PHASE: Crimp */}
+                {simPhase === 'crimp' && (
+                  <div className="space-y-6 flex-1 flex flex-col justify-center items-center py-6 relative z-10">
+                    <div className="text-center space-y-5">
+                      {/* Simulated Crimp Visual Representation */}
+                      <div className="relative w-44 h-44 bg-slate-900 border border-slate-800 rounded-full flex items-center justify-center mx-auto shadow-2xl">
+                        <ToolsIcon />
+                        {/* Status badge in circle */}
+                        <div className="absolute inset-0 border-4 border-dashed border-indigo-500/20 rounded-full animate-pulse pointer-events-none"></div>
+                        {crimpCompleted && (
+                          <div className="absolute inset-2 border-2 border-emerald-500/30 rounded-full animate-ping pointer-events-none"></div>
+                        )}
+                      </div>
+
+                      <div>
+                        <h4 className="text-slate-100 font-bold text-sm">ย้ำหัวสายสัญญาณผ่านคีมแลน</h4>
+                        <p className="text-[11.5px] text-slate-500 mt-1 max-w-xs leading-relaxed">
+                          กดคลิกปุ่มบีบคีมย้ำสายซ้ำเพื่อล็อกพินขั้วทองแดงขูดทะลุฉนวนยึดแน่น
+                        </p>
+                      </div>
+
+                      {/* Progress bar info */}
+                      <div className="space-y-2 w-48 mx-auto text-xs font-sans">
+                        <div className="flex justify-between font-mono text-slate-400">
+                          <span>บีบแรงย้ำ:</span>
+                          <span className="font-bold text-indigo-400">{crimpProgress}%</span>
+                        </div>
+                        <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden border border-slate-700 shadow-inner">
+                          <div className="h-full bg-gradient-to-r from-indigo-500 to-cyan-500 transition-all duration-300" style={{ width: `${crimpProgress}%` }}></div>
+                        </div>
+                      </div>
+
+                      {/* Crimp action button */}
+                      {!crimpCompleted ? (
+                        <button
+                          onClick={handleCrimpAction}
+                          className="bg-indigo-600 hover:bg-indigo-500 hover:scale-[1.02] text-white font-bold text-xs py-2 px-6 rounded-lg inline-flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-indigo-950/20"
+                        >
+                          <ToolsIcon /> บีบคีมย้ำสายแลน
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleGoToTest}
+                          className="bg-emerald-650 hover:bg-emerald-550 hover:scale-[1.02] text-white font-bold text-xs py-2.5 px-6 rounded-lg inline-flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-emerald-950/20"
+                        >
+                          ไปยังเฟสถัดไป: ทดสอบสัญญาณ <ArrowRightIcon />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* SIMULATOR PHASE: Test Cable */}
+                {simPhase === 'test' && (
+                  <div className="space-y-6 flex-1 flex flex-col justify-between mt-4 relative z-10">
+                    
+                    {/* Simulated Tester Panel */}
+                    <div className="grid grid-cols-2 gap-6 max-w-sm mx-auto w-full py-4">
+                      
+                      {/* Master Unit Display */}
+                      <div className="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl flex flex-col items-center shadow-inner">
+                        <span className="text-[10px] text-slate-500 block mb-3 font-mono font-bold tracking-wider">MASTER TX</span>
+                        <div className="grid grid-cols-2 gap-2 w-full text-[11px] font-mono text-slate-400">
+                          {[0, 1, 2, 3, 4, 5, 6, 7].map((num) => {
+                            const isActive = isTesting && testLedIndex === num;
+                            const isTested = testResult === 'pass';
+                            const isFailed = testResult === 'fail';
+                            return (
+                              <div key={num} className="flex items-center gap-1.5 justify-center py-1.5 bg-slate-950 rounded-lg border border-slate-800 shadow-sm">
+                                <span className={`w-2.5 h-2.5 rounded-full block transition-all ${
+                                  isActive ? 'bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.8)] animate-pulse' :
+                                  isTested ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]' :
+                                  isFailed ? 'bg-rose-500 shadow-[0_0_6px_rgba(239,68,68,0.5)]' : 'bg-slate-800'
+                                }`}></span>
+                                <span className="font-bold">พิน {num + 1}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Remote Unit Display */}
+                      <div className="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl flex flex-col items-center shadow-inner">
+                        <span className="text-[10px] text-slate-500 block mb-3 font-mono font-bold tracking-wider">REMOTE RX</span>
+                        <div className="grid grid-cols-2 gap-2.5 w-full text-[11px] font-mono text-slate-450">
+                          {[0, 1, 2, 3, 4, 5, 6, 7].map((num) => {
+                            const isActive = isTesting && testLedIndex === num;
+                            // จำลองว่าพินฝั่ง Remote จะสว่างตามค่าสายไฟที่เรียงมา
+                            // ค้นหาตำแหน่งของพินทองแดงที่ผู้เรียนเรียงไว้จริง
+                            const expectedColorId = T568B_COLORS[num].id;
+                            const userWireAtPin = userWireOrder[num];
+                            const isPinCorrect = userWireAtPin && userWireAtPin.id === expectedColorId;
+                            
+                            const isTested = testResult === 'pass';
+                            const isFailed = testResult === 'fail';
+
+                            return (
+                              <div key={num} className="flex items-center gap-1.5 justify-center py-1.5 bg-slate-950 rounded-lg border border-slate-850 shadow-sm">
+                                <span className={`w-2.5 h-2.5 rounded-full block transition-all ${
+                                  isActive ? (isPinCorrect ? 'bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.8)] animate-pulse' : 'bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)] animate-pulse') :
+                                  isTested ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]' :
+                                  isFailed ? (isPinCorrect ? 'bg-emerald-500/40' : 'bg-rose-500 shadow-[0_0_6px_rgba(239,68,68,0.5)]') : 'bg-slate-800'
+                                }`}></span>
+                                <span className="font-bold">พิน {num + 1}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Result Notification strip */}
+                    {testResult && (
+                      <div className={`p-4 rounded-xl border text-center text-xs leading-relaxed max-w-sm mx-auto w-full font-sans shadow-xl ${
+                        testResult === 'pass' 
+                          ? 'bg-emerald-950/70 border-emerald-500/30 text-emerald-300' 
+                          : 'bg-rose-950/70 border-rose-500/30 text-rose-300'
+                      }`}>
+                        {testResult === 'pass' ? (
+                          <p>🎉 <strong>PASS:</strong> ยินดีด้วยครับ! สัญญาณไฟวิ่งผ่านตรงกันครบ 8 พินตามลำดับสี T568B สาย LAN สมบูรณ์พร้อมใช้งานจริง</p>
+                        ) : (
+                          <div>
+                            <p>⚠️ <strong>FAIL:</strong> ตรวจพบการเรียงพินสลับตำแหน่ง สัญญาณไม่วิ่งตรงกันทำให้เน็ตเวิร์กเกิดความผิดพลาด</p>
+                            <button 
+                              onClick={initializeSimulator}
+                              className="mt-2 text-rose-300 underline font-bold hover:text-white cursor-pointer transition-colors block mx-auto text-[10.5px]"
+                            >
+                              คลิกเพื่อกลับไปจัดเรียงสายสัญญาณใหม่
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Action button panel */}
+                    <div className="text-right pt-2 border-t border-white/5 mt-4 flex justify-between items-center">
+                      <span className="text-[10px] text-slate-500 font-medium font-sans">
+                        {isTesting ? "กำลังจ่ายสัญญาณสแกนพิน..." : "พร้อมสำหรับการตรวจสอบความสมบูรณ์สัญญาณ"}
+                      </span>
                       <button
-                        key={mod.type}
-                        onClick={() => setModulationType(mod.type)}
-                        className={`p-2.5 rounded-lg text-left cursor-pointer transition-all border ${
-                          modulationType === mod.type
-                            ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold'
-                            : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
+                        onClick={handleStartCableTest}
+                        disabled={isTesting}
+                        className={`font-bold text-xs py-2 px-6 rounded-lg transition-all flex items-center gap-2 cursor-pointer shadow-lg ${
+                          isTesting 
+                            ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-800' 
+                            : 'bg-emerald-600 hover:bg-emerald-500 border border-emerald-500 text-white shadow-emerald-950/20'
                         }`}
                       >
-                        <span className="text-xs block">{mod.label}</span>
-                        <span className="text-[8.5px] font-normal text-slate-500 leading-none">{mod.desc}</span>
+                        <PlayIcon /> ทดสอบสาย LAN (TEST)
                       </button>
-                    ))}
+                    </div>
                   </div>
-                </div>
+                )}
+
               </div>
+            </SimulatorShell>
+          </section>
 
-              <div className="text-[8.5px] text-slate-500 pt-2 font-mono leading-tight">
-                * โมเด็มแปลงจาก สัญญาณดิจิทัล (0/1) ใน LAN ➔ สัญญาณอนาล็อก (Sine Wave) ในสายโทรศัพท์ภายนอก
-              </div>
-            </div>
-
-            {/* Symmetrical SVG wave graph rendering */}
-            <div className="bg-slate-950 rounded-2xl p-6 border border-slate-800 flex flex-col justify-between relative min-h-[300px] lg:col-span-2 text-left font-mono">
-              <span className="text-[9px] font-mono text-slate-500 absolute top-3 left-3">LIVE ANALOG SINE WAVE GRAPH</span>
-              
-              <div className="my-auto space-y-4 pt-4">
-                <div className="flex gap-2 justify-center font-bold text-xs text-white">
-                  <span>บิตสตรีมนำเข้า (Binary bits):</span>
-                  {modBitstream.map((bit, idx) => (
-                    <span key={idx} className="bg-slate-800 px-2 py-0.5 rounded text-cyan-400">{bit}</span>
-                  ))}
-                </div>
-
-                {/* SVG Graph representation */}
-                <div className="w-full bg-slate-900/60 p-4 rounded-xl border border-slate-900 relative">
-                  <svg viewBox="0 0 350 100" className="w-full h-24 overflow-visible">
-                    {/* Center line reference */}
-                    <line x1="0" y1="50" x2="350" y2="50" stroke="#334155" strokeWidth="1" strokeDasharray="2,2" />
-
-                    {/* Construct dynamic wave path based on bits and type */}
-                    <path
-                      d={(() => {
-                        let pathD = 'M 0 50';
-                        const segmentWidth = 350 / modBitstream.length; // 50 units per bit
-
-                        modBitstream.forEach((bit, idx) => {
-                          const startX = idx * segmentWidth;
-                          const halfX = startX + segmentWidth / 2;
-                          const endX = startX + segmentWidth;
-
-                          if (modulationType === 'ASK') {
-                            // Amplitude shift: 1 has big wave, 0 has tiny flat wave
-                            const amp = bit === 1 ? 30 : 6;
-                            pathD += ` Q ${startX + segmentWidth/4} ${50 - amp}, ${halfX} 50`;
-                            pathD += ` Q ${startX + (3*segmentWidth)/4} ${50 + amp}, ${endX} 50`;
-                          }
-                          else if (modulationType === 'FSK') {
-                            // Frequency shift: 1 has rapid waves, 0 has slow waves
-                            if (bit === 1) {
-                              const q = segmentWidth / 4;
-                              pathD += ` Q ${startX + q/2} ${50 - 25}, ${startX + q} 50`;
-                              pathD += ` Q ${startX + 1.5*q} ${50 + 25}, ${halfX} 50`;
-                              pathD += ` Q ${startX + 2.5*q} ${50 - 25}, ${startX + 3*q} 50`;
-                              pathD += ` Q ${startX + 3.5*q} ${50 + 25}, ${endX} 50`;
-                            } else {
-                              pathD += ` Q ${startX + segmentWidth/4} ${50 - 25}, ${halfX} 50`;
-                              pathD += ` Q ${startX + (3*segmentWidth)/4} ${50 + 25}, ${endX} 50`;
-                            }
-                          }
-                          else if (modulationType === 'PSK') {
-                            // Phase shift: 1 starts up, 0 starts down
-                            const phaseMult = bit === 1 ? 1 : -1;
-                            pathD += ` Q ${startX + segmentWidth/4} ${50 - 25 * phaseMult}, ${halfX} 50`;
-                            pathD += ` Q ${startX + (3*segmentWidth)/4} ${50 + 25 * phaseMult}, ${endX} 50`;
-                          }
-                        });
-
-                        return pathD;
-                      })()}
-                      fill="none"
-                      stroke="#22D3EE"
-                      strokeWidth="2"
-                    />
-                  </svg>
-                </div>
-
-                <div className="flex justify-between text-[8px] text-slate-500">
-                  <span>0 Hz (ขอบล่างบอร์ด)</span>
-                  <span>ความถี่ที่ส่งสัญญาณ: {modulationType === 'FSK' ? '1200 / 2200 Baud' : '1200 Baud'}</span>
-                  <span>100% Modulated (ขอบบนบอร์ด)</span>
-                </div>
-              </div>
-
-              <div className="text-[9.5px] leading-relaxed text-slate-400 font-sans border-t border-slate-900 pt-3">
-                💡 <strong>วิเคราะห์กราฟ:</strong> การเลือกใช้ **{modulationType}** จะสับรูปแบบโครงสร้าง Sine Wave อนาล็อกสอดคล้องกับเลขบิตกระแสไฟฟ้า 0 หรือ 1 ที่ป้อนเข้ามาอย่างสมบูรณ์ 100%
-              </div>
-            </div>
+        {/* ──────────── 6. SECTION: Gamification Quiz ──────────── */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-indigo-600 tracking-wider uppercase">
+              Gamification Zone
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              แบบทดสอบประเมินความรู้รวมบทเรียน
+            </h3>
           </div>
-        )}
 
-      </div>
-    </SimulatorShell>
+          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed">
+            ทดสอบความรู้ความเข้าใจเกี่ยวกับการออกแบบสายสัญญาณคอมพิวเตอร์ UTP vs STP, มาตรฐานความเร็วของคู่สายแลน CAT 5e/6/6A, ลำดับพินการจัดคู่สี T568B/T568A ตลอดจนข้อกำหนดและการวิเคราะห์แก้ปัญหาการติดตั้ง:
+          </p>
+
+          <QuizEngine
+            title="ระบบทดสอบประเมินผลความรู้รวมบทเรียนบทที่ 4"
+            description="ตอบคำถามเพื่อตรวจสอบทักษะระดับช่างเน็ตเวิร์ก อุปกรณ์ สเปกสาย มาตรฐานสี T568B และวิเคราะห์ตัวทดสอบ LED"
+            levels={QUIZ_LEVELS_CABLE}
+            accentColor="from-sky-600/20 to-blue-500/10"
+            icon={<CableIcon />}
+          />
+        </section>
+
+        {/* ─── Layer 4: Standardized TeacherTask Footer ─── */}
+        <section className="relative z-10">
+          <TeacherTask
+            title="ภารกิจปฏิบัติการประจำบทเรียน: การประกอบจัดเรียงสี และตรวจสอบสัญญาณสาย LAN UTP"
+            taskText={`ให้นักเรียนประยุกต์ใช้เนื้อหาทฤษฎีควบคู่แผงทดสอบห้องปฏิบัติการจำลองในหน้านี้ เพื่อจำลองการเข้าหัวสายและทำใบงานรายงานผลการทดลอง:
+
+1. ปฏิบัติการจำลองจัดเรียงสีคู่สาย T568B:
+- เข้าจำลองพาร์ท Simulator 1 ทำการคลิกเรียงลำดับสีทองแดงให้ถูกต้องตามมาตรฐาน T568B (ขาวส้ม, ส้ม, ขาวเขียว, น้ำเงิน, ขาวน้ำเงิน, เขียว, ขาวน้ำตาล, น้ำตาล)
+- จากนั้นสอดสายสัญญาณเข้าหัวและกดย้ำบีบคีมจำลอง (Crimp) จนระดับความคืบหน้าครบ 100%
+
+2. ปฏิบัติการสแกนทดสอบสัญญาณ:
+- ในสเต็ปที่ 3 ให้กดเริ่มทดสอบสัญญาณ (TEST) สังเกตดวงไฟ LED ตรวจจับทั้งฝั่ง Master และ Remote ว่าวิ่งเรียงแถวครบตามลำดับสัญญาณดีหรือไม่
+- ดึงหน้าจอยืนยันสเตตัส PASS สีเขียว หรือวิเคราะห์ข้อบกพร่องหากกะพริบผิดปกติ
+
+3. ทำรายงานรายงานส่งครูผู้สอน:
+- เขียนรายงานคู่สี T568B และ T568A ประจำพิน 1 ถึง 8 ลงในรายงานผลวิเคราะห์
+- ระบุความแตกต่างในการนำสายตรง (Straight) และสายไขว้ (Crossover) ไปใช้งานจริง พร้อมชนิดการใช้งานสาย STP และ UTP`}
+          />
+        </section>
+
+      </main>
+    </div>
   );
 }
+
+// === ไอคอนเสริมสำหรับการเล่นมินิเกม ===
+const PlayIcon = () => (
+  <svg className="w-4 h-4 mr-1.5 inline-block" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <polygon points="5 3 19 12 5 21 5 3" />
+  </svg>
+);

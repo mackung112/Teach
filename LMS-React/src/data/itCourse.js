@@ -86,35 +86,11 @@ const itCourse = {
             lessons: [
                 {
                     id: "3.1",
-                    title: "3.1 บทบาทของระบบปฏิบัติการ (OS)",
-                    mainTitle: "บทบาทของระบบปฏิบัติการ (OS)",
-                    subTitle: "(Operating System Architecture)",
-                    description: "หน้าที่ โครงสร้าง และเปรียบเทียบความแตกต่างระหว่าง OS ยอดนิยม (Windows, macOS, Linux)",
+                    title: "3.1 การติดตั้งระบบปฏิบัติการและการเตรียมความพร้อม",
+                    mainTitle: "การติดตั้งระบบปฏิบัติการและการเตรียมความพร้อม",
+                    subTitle: "(OS Installation & Deployment)",
+                    description: "เรียนรู้บทบาทหน้าที่และประเภทของระบบปฏิบัติการ (OS) ตลอดจนขั้นตอนปฏิบัติงานจริง: การเตรียมเครื่องและสำรองข้อมูล, การทำ USB บูตผ่าน Rufus, การบูตเข้าตั้งค่า BIOS/UEFI, ขั้นตอนติดตั้ง Windows 10 แบบล้างเครื่อง และการอัปเดตไดรเวอร์ของอุปกรณ์",
                     content: "[it3_1]"
-                },
-                {
-                    id: "3.2",
-                    title: "3.2 การเตรียมสื่อติดตั้ง",
-                    mainTitle: "การเตรียมสื่อติดตั้ง",
-                    subTitle: "(Pre-installation & Bootable USB)",
-                    description: "ขั้นตอนการสร้าง USB Bootable เรียนรู้ระบบไฟล์ (FAT32, NTFS) และโครงสร้างพาร์ติชัน (MBR/GPT)",
-                    content: "[it3_2]"
-                },
-                {
-                    id: "3.3",
-                    title: "3.3 การติดตั้ง Windows OS",
-                    mainTitle: "การติดตั้ง Windows OS",
-                    subTitle: "(Operating System Installation)",
-                    description: "ขั้นตอนการลงระบบปฏิบัติการแบบล้างเครื่อง (Clean Install) การจัดการพาร์ติชัน และ OOBE",
-                    content: "[it3_3]"
-                },
-                {
-                    id: "3.4",
-                    title: "3.4 การจัดการไดรเวอร์ (Device Drivers)",
-                    mainTitle: "การจัดการไดรเวอร์ (Device Drivers)",
-                    subTitle: "(Device Drivers & System Update)",
-                    description: "การตรวจสอบ ค้นหา โหลด และติดตั้ง Driver อุปกรณ์ต่างๆ ให้ฮาร์ดแวร์ทำงานได้สมบูรณ์",
-                    content: "[it3_4]"
                 }
             ]
         },
@@ -124,35 +100,11 @@ const itCourse = {
             lessons: [
                 {
                     id: "4.1",
-                    title: "4.1 อุปกรณ์เครือข่ายพื้นฐาน",
-                    mainTitle: "อุปกรณ์เครือข่ายพื้นฐาน",
-                    subTitle: "(Network Devices & Hardware)",
-                    description: "ทำความรู้จักการทำงานของ NIC, Hub, Switch, Router, Access Point และ Modem",
+                    title: "4.1 สื่อกลางและการเชื่อมต่อทางกายภาพ",
+                    mainTitle: "สื่อกลางและการเชื่อมต่อทางกายภาพ",
+                    subTitle: "(Network Media & Cabling)",
+                    description: "เรียนรู้อุปกรณ์เครือข่ายคอมพิวเตอร์พื้นฐาน (Switch, Router, AP, NIC), ชนิดสายสัญญาณ UTP vs STP และสเปกความเร็วมาตรฐาน CAT 5e/6/6A, มาตรฐานสีและการขั้วต่อสาย T568A vs T568B ตลอดจนขั้นตอนปฏิบัติการจำลองการเข้าหัวสายสัญญาณ RJ-45 และทดสอบผ่านเครื่องสแกนสัญญาณเน็ตเวิร์ก",
                     content: "[it4_1]"
-                },
-                {
-                    id: "4.2",
-                    title: "4.2 สายสัญญาณและสื่อกลาง",
-                    mainTitle: "สายสัญญาณและสื่อกลาง",
-                    subTitle: "(Wired Transmission Media)",
-                    description: "ศึกษาคุณสมบัติของสาย UTP, Coaxial, Fiber Optic และข้อควรระวังในการติดตั้งเดินสายสัญญาณ",
-                    content: "[it4_2]"
-                },
-                {
-                    id: "4.3",
-                    title: "4.3 มาตรฐานการเข้าหัวสาย LAN",
-                    mainTitle: "มาตรฐานการเข้าหัวสาย LAN",
-                    subTitle: "(RJ-45 Crimping & Testing)",
-                    description: "โครงสร้างหัว RJ-45, มาตรฐานการเรียงสี TIA/EIA-568A/B และการเข้าสายตรง (Straight)/สายไขว้ (Crossover)",
-                    content: "[it4_3]"
-                },
-                {
-                    id: "4.4",
-                    title: "4.4 การเชื่อมต่อไร้สาย (Wireless)",
-                    mainTitle: "การเชื่อมต่อไร้สาย (Wireless)",
-                    subTitle: "(Wireless & Bluetooth Technologies)",
-                    description: "มาตรฐานการเชื่อมต่อ Wi-Fi (802.11) คลื่นความถี่ (2.4GHz/5GHz) และเทคโนโลยี Bluetooth",
-                    content: "[it4_4]"
                 }
             ]
         },
