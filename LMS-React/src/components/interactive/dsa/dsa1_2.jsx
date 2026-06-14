@@ -12,7 +12,6 @@ import {
   RotateCcw,
   Cpu,
   Layers,
-  List,
   CheckCircle2,
   Info,
   AlertCircle,
@@ -21,7 +20,9 @@ import {
   Plus,
   Trash2,
   Sliders,
-  Sparkles
+  HelpCircle,
+  AlertTriangle,
+  ArrowLeft
 } from 'lucide-react';
 
 export default function DSA1_2() {
@@ -30,142 +31,367 @@ export default function DSA1_2() {
     { color: 'bg-indigo-200', size: 'w-[450px] h-[450px]', position: '-top-32 -left-32', opacity: 'opacity-40' },
     { color: 'bg-cyan-200',    size: 'w-[400px] h-[400px]', position: 'top-1/3 -right-32', opacity: 'opacity-35' },
     { color: 'bg-blue-200',    size: 'w-[380px] h-[380px]', position: '-bottom-32 left-1/4', opacity: 'opacity-30' },
-    { color: 'bg-teal-200',    size: 'w-[300px] h-[300px]', position: 'top-1/2 left-2/3', opacity: 'opacity-25' }
+    { color: 'bg-violet-200', size: 'w-[300px] h-[300px]', position: 'top-1/2 left-2/3', opacity: 'opacity-25' }
   ];
 
-  // ─── 2. Python List Dynamic Array Simulator State ──────────────────────────
-  const [listItems, setListItems] = useState([10, 20, 30]);
-  const [capacity, setCapacity] = useState(4);
-  const [activeCellIdx, setActiveCellIdx] = useState(-1);
-  const [shiftDirection, setShiftDirection] = useState(null); // 'left' | 'right' | null
-  const [simLog, setSimLog] = useState(['เริ่มต้นความจุ List (Capacity) = 4, ขนาดข้อมูลจริง (Size) = 3']);
-  const [isAnimating, setIsAnimating] = useState(false);
+  // ─── 2. Initial List Simulator States ──────────────────────────────────────
+  const INITIAL_LIST = ['Apple', 'Banana', 'Cherry', 'Dates'];
+  const [list, setList] = useState(INITIAL_LIST);
+  const [simLogs, setSimLogs] = useState(['ระบบเตรียมพร้อม: โหลดรายการเริ่มต้น [Apple, Banana, Cherry, Dates]']);
+  const [lastComplexity, setLastComplexity] = useState('N/A - รอการสั่งงาน');
+  const [lastFormula, setLastFormula] = useState('เลือกคำสั่งเพื่อวิเคราะห์ประสิทธิภาพ');
+  
+  // Animation states
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [animationStep, setAnimationStep] = useState('idle'); // idle | scanning | shifting | updated | error
+  const [animatingIndices, setAnimatingIndices] = useState([]);
+  const [scanningIdx, setScanningIdx] = useState(-1);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [shiftingDirection, setShiftingDirection] = useState('none'); // none | right | left
 
-  // Dynamic Array Python memory reallocation simulator
+  // Inputs
+  const [appendInput, setAppendInput] = useState('');
+  const [insertVal, setInsertVal] = useState('');
+  const [insertIdx, setInsertIdx] = useState('');
+  const [popIdx, setPopIdx] = useState('');
+  const [removeVal, setRemoveVal] = useState('');
+
+  // ─── 3. Simulator Log helper ──────────────────────────────────────────────
+  const addLog = (msg) => {
+    setSimLogs(prev => [...prev, msg]);
+  };
+
+  const resetSimulator = () => {
+    if (isSimulating) return;
+    setList(INITIAL_LIST);
+    setSimLogs(['ระบบรีเซ็ตกลับสู่สถานะเริ่มต้น']);
+    setLastComplexity('N/A - รอการสั่งงาน');
+    setLastFormula('เลือกคำสั่งเพื่อวิเคราะห์ประสิทธิภาพ');
+    setAnimationStep('idle');
+    setAnimatingIndices([]);
+    setScanningIdx(-1);
+    setHighlightedIndex(-1);
+    setShiftingDirection('none');
+    setAppendInput('');
+    setInsertVal('');
+    setInsertIdx('');
+    setPopIdx('');
+    setRemoveVal('');
+  };
+
+  // ─── 4. List Operations Simulations ───────────────────────────────────────
+
+  // A. APPEND
   const handleAppend = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
+    if (isSimulating) return;
+    const value = appendInput.trim();
+    if (!value) {
+      alert('กรุณากรอกข้อมูลที่ต้องการเพิ่ม');
+      return;
+    }
 
-    const nextValue = Math.floor(Math.random() * 90) + 10;
-    const currentSize = listItems.length;
-    const newSize = currentSize + 1;
-    let logs = [];
-    
-    if (newSize > capacity) {
-      // Reallocation! Python doubles or increases capacity
-      const newCapacity = capacity * 2;
-      setCapacity(newCapacity);
-      logs.push(`[แรมล้น] ขนาดข้อมูลจริง (${newSize}) เกินความจุของอาเรย์เดิม (${capacity})`);
-      logs.push(`[จองแรมเพิ่ม] ทำการขยายพื้นที่หน่วยความจำสำรองใหม่: ${capacity} → ${newCapacity} ช่อง`);
-      logs.push(`[โอนข้อมูล] คัดลอกตำแหน่งข้อมูลเดิมไปบล็อกแรมใหม่ (O(n) overhead)`);
+    setIsSimulating(true);
+    setAnimationStep('shifting');
+    setLastComplexity('O(1) - Amortized Constant Time');
+    setLastFormula('ปกติใช้ O(1) เนื่องจากเป็นการบันทึกต่อท้ายตำแหน่งหน่วยความจำที่สำรองไว้');
+
+    addLog(`>>> list.append("${value}")`);
+
+    // Worst case dynamic array doubling logic info
+    if (list.length >= 8) {
+      addLog(`[การขยายหน่วยความจำ] ข้อมูลเกินขนาดปกติ! ระบบทำการคัดลอกลิสต์เดิมไปยังพื้นที่ขนาดใหญ่ขึ้น O(n)`);
+    }
+
+    // Highlighting end position
+    const newIdx = list.length;
+    setAnimatingIndices([newIdx]);
+
+    setTimeout(() => {
+      setList(prev => [...prev, value]);
+      setAnimationStep('updated');
+      setAnimatingIndices([]);
+      addLog(`➔ ผลลัพธ์สำเร็จ: เพิ่ม "${value}" ที่ดัชนี ${newIdx}`);
+      setAppendInput('');
       
-      setActiveCellIdx(currentSize);
       setTimeout(() => {
-        setListItems(prev => [...prev, nextValue]);
-        logs.push(`[สำเร็จ] ต่อท้ายข้อมูล ${nextValue} เข้าในดัชนีที่ ${currentSize} (O(1) amortized)`);
-        setSimLog(logs);
-        setIsAnimating(false);
-        setActiveCellIdx(-1);
-      }, 1500);
-    } else {
-      logs.push(`[ต่อท้าย] พบความจุเพียงพอ (Size: ${newSize} <= Capacity: ${capacity})`);
-      setActiveCellIdx(currentSize);
-      setTimeout(() => {
-        setListItems(prev => [...prev, nextValue]);
-        logs.push(`[สำเร็จ] ต่อท้ายข้อมูล ${nextValue} เข้าในดัชนีที่ ${currentSize} (ใช้เวลาคงที่ O(1))`);
-        setSimLog(logs);
-        setIsAnimating(false);
-        setActiveCellIdx(-1);
+        setIsSimulating(false);
+        setAnimationStep('idle');
       }, 800);
-    }
-
-    setSimLog(logs);
+    }, 1000);
   };
 
-  const handleInsertAtStart = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
+  // B. INSERT
+  const handleInsert = () => {
+    if (isSimulating) return;
+    const value = insertVal.trim();
+    const idxStr = insertIdx.trim();
 
-    const insertValue = 99;
-    const currentSize = listItems.length;
-    const newSize = currentSize + 1;
-    let logs = [`[แทรกหน้าสุด] แทรกข้อมูล ${insertValue} ที่ดัชนี 0`];
-    
-    let nextCapacity = capacity;
-    if (newSize > capacity) {
-      nextCapacity = capacity * 2;
-      setCapacity(nextCapacity);
-      logs.push(`[แรมล้น] ทำการปรับความจุหน่วยความจำใหม่: ${capacity} → ${nextCapacity} ช่อง`);
+    if (!value || idxStr === '') {
+      alert('กรุณากรอกข้อมูลและดัชนีที่ต้องการแทรก');
+      return;
     }
 
-    logs.push(`[ขยับข้อมูล] ข้อมูลเดิมจำนวน ${currentSize} ตัว ต้องเคลื่อนย้ายสไลด์ไปทางขวาทีละดัชนี (O(n) complexity)`);
-    setShiftDirection('right');
-    setSimLog([...logs]);
+    const idx = parseInt(idxStr, 10);
+    if (isNaN(idx) || idx < 0 || idx > list.length) {
+      setIsSimulating(true);
+      setAnimationStep('error');
+      setLastComplexity('O(1)');
+      setLastFormula('เกิดข้อผิดพลาดในการตรวจสอบดัชนี');
+      addLog(`>>> list.insert(${idxStr}, "${value}")`);
+      addLog(`IndexError: list insert index out of range (ดัชนีต้องอยู่ในช่วง 0 ถึง ${list.length})`);
+      setTimeout(() => {
+        setIsSimulating(false);
+        setAnimationStep('idle');
+      }, 1500);
+      return;
+    }
 
-    // Animate shifting
+    setIsSimulating(true);
+    setAnimationStep('shifting');
+    setShiftingDirection('right');
+    setLastComplexity('O(n) - Linear Time');
+    setLastFormula('เนื่องจากต้องเลื่อนขยับข้อมูลตั้งแต่ดัชนี i ไปทางขวาเพื่อเปิดพื้นที่ว่าง');
+    
+    addLog(`>>> list.insert(${idx}, "${value}")`);
+    
+    // Highlight elements from idx to list.length - 1 that need to be shifted
+    const shiftIndices = [];
+    for (let i = idx; i < list.length; i++) {
+      shiftIndices.push(i);
+    }
+    setAnimatingIndices(shiftIndices);
+    
+    addLog(`➔ เลื่อนข้อมูลตัวเดิมตั้งแต่ดัชนี ${idx} ไปทางขวา (+1 Address)`);
+
     setTimeout(() => {
-      setListItems(prev => {
-        const nextList = [insertValue, ...prev];
-        logs.push(`[สำเร็จ] ขยับข้อมูลทุกตัวเรียบร้อย และบรรจุ ${insertValue} ลงช่องดัชนีที่ 0`);
-        setSimLog(logs);
-        setShiftDirection(null);
-        setIsAnimating(false);
-        return nextList;
+      setList(prev => {
+        const next = [...prev];
+        next.splice(idx, 0, value);
+        return next;
       });
+      setAnimationStep('updated');
+      setShiftingDirection('none');
+      setAnimatingIndices([]);
+      setHighlightedIndex(idx);
+      addLog(`➔ แทรก "${value}" ลงในตำแหน่งดัชนี ${idx} เรียบร้อยแล้ว`);
+      setInsertVal('');
+      setInsertIdx('');
+
+      setTimeout(() => {
+        setIsSimulating(false);
+        setAnimationStep('idle');
+        setHighlightedIndex(-1);
+      }, 1000);
     }, 1500);
   };
 
+  // C. POP
   const handlePop = () => {
-    if (isAnimating || listItems.length === 0) return;
-    setIsAnimating(true);
+    if (isSimulating) return;
+    if (list.length === 0) {
+      setIsSimulating(true);
+      setAnimationStep('error');
+      setLastComplexity('O(1)');
+      setLastFormula('ข้อผิดพลาด: ดึงข้อมูลจากลิสต์เปล่า');
+      addLog(`>>> list.pop()`);
+      addLog(`IndexError: pop from empty list`);
+      setTimeout(() => {
+        setIsSimulating(false);
+        setAnimationStep('idle');
+      }, 1500);
+      return;
+    }
 
-    const popIndex = listItems.length - 1;
-    const poppedVal = listItems[popIndex];
-    let logs = [`[ลบท้ายสุด] ทำการดึงและลบค่าข้อมูล ${poppedVal} ออกจากดัชนีสุดท้าย ${popIndex}`];
+    const idxStr = popIdx.trim();
     
-    setActiveCellIdx(popIndex);
+    // If no index is specified, pop the last element
+    if (idxStr === '') {
+      setIsSimulating(true);
+      setAnimationStep('shifting');
+      const targetIdx = list.length - 1;
+      const poppedVal = list[targetIdx];
+      
+      setLastComplexity('O(1) - Constant Time');
+      setLastFormula('เป็น O(1) เนื่องจากดึงตัวสุดท้ายออก ไม่ต้องขยับตำแหน่งหน่วยความจำตัวอื่นๆ');
+      addLog(`>>> list.pop()`);
+      setAnimatingIndices([targetIdx]);
+
+      setTimeout(() => {
+        setList(prev => prev.slice(0, -1));
+        setAnimationStep('updated');
+        setAnimatingIndices([]);
+        addLog(`➔ ผลลัพธ์สำเร็จ: ดึงและลบตัวท้ายสุดคือ "${poppedVal}"`);
+        
+        setTimeout(() => {
+          setIsSimulating(false);
+          setAnimationStep('idle');
+        }, 800);
+      }, 1000);
+      return;
+    }
+
+    const idx = parseInt(idxStr, 10);
+    if (isNaN(idx) || idx < 0 || idx >= list.length) {
+      setIsSimulating(true);
+      setAnimationStep('error');
+      setLastComplexity('O(1)');
+      setLastFormula('เกิดข้อผิดพลาดในการตรวจสอบดัชนี');
+      addLog(`>>> list.pop(${idxStr})`);
+      addLog(`IndexError: pop index out of range (ดัชนีต้องอยู่ในช่วง 0 ถึง ${list.length - 1})`);
+      setTimeout(() => {
+        setIsSimulating(false);
+        setAnimationStep('idle');
+      }, 1500);
+      return;
+    }
+
+    // Pop specific index
+    setIsSimulating(true);
+    setAnimationStep('shifting');
+    setShiftingDirection('left');
+    setLastComplexity('O(n) - Linear Time');
+    setLastFormula('เนื่องจากหลังลบตำแหน่ง i แล้ว ต้องขยับข้อมูลที่อยู่ถัดไปทั้งหมดไปทางซ้าย');
     
+    const poppedVal = list[idx];
+    addLog(`>>> popped_value = list.pop(${idx})`);
+    addLog(`➔ ดึงตัวแปรที่ต้องการนำออก: "${poppedVal}"`);
+
+    // Highlighting popped index
+    setHighlightedIndex(idx);
+
     setTimeout(() => {
-      setListItems(prev => prev.slice(0, -1));
-      logs.push(`[สำเร็จ] ลบค่าเสร็จสิ้น ไม่เกิดการเคลื่อนย้ายตำแหน่งข้อมูลตัวอื่น (ใช้เวลาคงที่ O(1))`);
-      setSimLog(logs);
-      setIsAnimating(false);
-      setActiveCellIdx(-1);
+      // Elements that need to be shifted left
+      const shiftIndices = [];
+      for (let i = idx + 1; i < list.length; i++) {
+        shiftIndices.push(i);
+      }
+      setAnimatingIndices(shiftIndices);
+      setHighlightedIndex(-1);
+      addLog(`➔ ลบเสร็จสิ้น! ขยับข้อมูลตัวที่เหลือจากขวามาซ้ายเพื่อปิดช่องว่าง`);
+
+      setTimeout(() => {
+        setList(prev => {
+          const next = [...prev];
+          next.splice(idx, 1);
+          return next;
+        });
+        setAnimationStep('updated');
+        setShiftingDirection('none');
+        setAnimatingIndices([]);
+        addLog(`➔ คืนค่าข้อมูลที่ถูกเอาออก: "${poppedVal}"`);
+        setPopIdx('');
+
+        setTimeout(() => {
+          setIsSimulating(false);
+          setAnimationStep('idle');
+        }, 800);
+      }, 1200);
+
     }, 800);
-
-    setSimLog(logs);
   };
 
-  const handleRemoveFromStart = () => {
-    if (isAnimating || listItems.length === 0) return;
-    setIsAnimating(true);
+  // D. REMOVE
+  const handleRemove = () => {
+    if (isSimulating) return;
+    const value = removeVal.trim();
+    if (!value) {
+      alert('กรุณากรอกข้อมูลที่ต้องการค้นหาเพื่อลบ');
+      return;
+    }
 
-    const removedVal = listItems[0];
-    let logs = [`[ลบหน้าสุด] สั่งลบข้อมูลดัชนีที่ 0 (ค่าคือ ${removedVal})`];
-    logs.push(`[ขยับข้อมูล] ข้อมูลที่เหลือทั้งหมดต้องขยับสไลด์มาทางซ้าย 1 ตำแหน่งเพื่อทดแทนช่องที่ว่างลง (O(n) complexity)`);
-    
-    setShiftDirection('left');
-    setSimLog([...logs]);
+    setIsSimulating(true);
+    setAnimationStep('scanning');
+    setLastComplexity('O(n) - Linear Time');
+    setLastFormula('เป็น O(n) เพราะต้องวนลูปสืบค้นหาข้อมูลใน Worst Case พร้อมทั้งขยับย้ายหน่วยความจำหลังลบ');
+    addLog(`>>> list.remove("${value}")`);
+
+    // Search scanning simulator loop
+    let currentScan = 0;
+    addLog(`➔ กำลังเริ่มสแกนข้อมูลแบบเชิงเส้น (Linear Search) ค้นหา "${value}"...`);
+
+    const scanInterval = setInterval(() => {
+      if (currentScan < list.length) {
+        setScanningIdx(currentScan);
+        addLog(`  - ตรวจสอบดัชนี [${currentScan}]: "${list[currentScan]}" ${list[currentScan] === value ? '== เข้าคู่กัน! (พบ)' : '!= ไม่ตรงกัน'}`);
+        
+        if (list[currentScan] === value) {
+          clearInterval(scanInterval);
+          setScanningIdx(-1);
+          performRemoveAt(currentScan, value);
+        } else {
+          currentScan++;
+        }
+      } else {
+        clearInterval(scanInterval);
+        setScanningIdx(-1);
+        setAnimationStep('error');
+        addLog(`ValueError: list.remove(x): x not in list (ไม่พบ "${value}" อยู่ในรายการ)`);
+        
+        setTimeout(() => {
+          setIsSimulating(false);
+          setAnimationStep('idle');
+        }, 1500);
+      }
+    }, 800);
+  };
+
+  const performRemoveAt = (idx, value) => {
+    setAnimationStep('shifting');
+    setShiftingDirection('left');
+    setHighlightedIndex(idx);
 
     setTimeout(() => {
-      setListItems(prev => {
-        const nextList = prev.slice(1);
-        logs.push(`[สำเร็จ] จัดระเบียบข้อมูลใหม่เสร็จสิ้นโดยการสไลด์ค่าทุกตัว`);
-        setSimLog(logs);
-        setShiftDirection(null);
-        setIsAnimating(false);
-        return nextList;
-      });
-    }, 1500);
+      const shiftIndices = [];
+      for (let i = idx + 1; i < list.length; i++) {
+        shiftIndices.push(i);
+      }
+      setAnimatingIndices(shiftIndices);
+      setHighlightedIndex(-1);
+      addLog(`➔ ตรวจพบข้อมูลที่ดัชนี [${idx}] ลบข้อมูลแล้วสไลด์ลิสต์ด้านหลังมาซ้าย`);
+
+      setTimeout(() => {
+        setList(prev => {
+          const next = [...prev];
+          next.splice(idx, 1);
+          return next;
+        });
+        setAnimationStep('updated');
+        setShiftingDirection('none');
+        setAnimatingIndices([]);
+        addLog(`➔ สำเร็จ! นำ "${value}" ตัวแรกที่ค้นพบออกจากลิสต์`);
+        setRemoveVal('');
+
+        setTimeout(() => {
+          setIsSimulating(false);
+          setAnimationStep('idle');
+        }, 800);
+      }, 1200);
+
+    }, 800);
   };
 
-  const handleResetSim = () => {
-    if (isAnimating) return;
-    setListItems([10, 20, 30]);
-    setCapacity(4);
-    setSimLog(['ทำการรีเซ็ตความจุ List (Capacity) = 4, ขนาดข้อมูล (Size) = 3']);
-    setActiveCellIdx(-1);
-    setShiftDirection(null);
+  // E. LEN
+  const handleLen = () => {
+    if (isSimulating) return;
+    setIsSimulating(true);
+    setAnimationStep('updated');
+    setLastComplexity('O(1) - Constant Time');
+    setLastFormula('เป็น O(1) เนื่องจากระบบ Python บันทึกความยาวเก็บไว้เป็น Metadata ของออบเจกต์');
+
+    addLog(`>>> len(list)`);
+    // Light up all slots
+    const allIndices = list.map((_, i) => i);
+    setAnimatingIndices(allIndices);
+
+    setTimeout(() => {
+      addLog(`➔ คืนค่าความยาวรายการ: ${list.length} รายการ`);
+      setAnimatingIndices([]);
+      
+      setTimeout(() => {
+        setIsSimulating(false);
+        setAnimationStep('idle');
+      }, 800);
+    }, 1000);
   };
 
   return (
@@ -177,48 +403,49 @@ export default function DSA1_2() {
       {/* ─── Layer 3: Main Page Content ─── */}
       <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-6 space-y-12 md:space-y-16 relative z-10">
 
-        {/* ─── Section 1: What is a List ─── */}
+        {/* ─── Section 1: Introduction to List ─── */}
         <section className="space-y-6">
           <div className="border-b border-zinc-200/80 pb-4">
             <span className="text-sm font-bold text-indigo-600 tracking-wider uppercase">
-              ความหมายและนิยาม
+              ความหมายและคุณสมบัติ
             </span>
             <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              โครงสร้างข้อมูลแบบรายการ (List) คืออะไร
+              โครงสร้างข้อมูลแบบรายการ (List Data Structure) คืออะไร
             </h3>
           </div>
 
           <div className="space-y-6">
             <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
-              ในทางวิทยาการคอมพิวเตอร์ <strong className="mx-1 px-1.5 py-0.5 rounded bg-indigo-50 border border-indigo-200 text-indigo-700 font-mono text-[14px]">List</strong> 
-              คือ โครงสร้างข้อมูลพื้นฐานที่ใช้เก็บรวบรวมกลุ่มของข้อมูลแบบเรียงลำดับต่อเนื่องกัน โดยในภาษาโปรแกรมชั้นนำอย่าง Python ตัวแปรประเภท List 
-              จะมีความพิเศษในฐานะที่เป็น <strong>Dynamic Array (อาเรย์ปรับขนาดได้)</strong> ซึ่งทำงานอยู่เบื้องหลัง ทำให้ผู้พัฒนาสามารถจัดเก็บข้อมูลโดยไม่ต้องระบุความจุหน่วยความจำล่วงหน้า
+              ในทางวิทยาการคอมพิวเตอร์ <strong className="mx-1 px-1.5 py-0.5 rounded bg-indigo-50 border border-indigo-200 text-indigo-700 font-mono text-[14px]">List (รายการ)</strong> 
+              คือ โครงสร้างข้อมูลเชิงเส้น (Linear Data Structure) ที่ใช้เก็บข้อมูลเรียงต่อกันเป็นลำดับต่อเนื่องในหน่วยความจำ 
+              ข้อมูลแต่ละตัวเรียกว่า **สมาชิก (Element)** โดยจุดเด่นหลักของ List คือการใช้เลข **ดัชนี (Index)** เริ่มต้นจาก 0 
+              เพื่อใช้ระบุพิกัดระบุตำแหน่งข้อมูลที่ต้องการแก้ไขหรือดึงไปใช้งานได้ทันทีในหน่วยความจำ
             </p>
 
             {/* List Properties Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <ConceptCard
-                symbol="Index"
-                title="อ้างอิงผ่านตำแหน่งดัชนี"
-                description="สมาชิกทุกตัวใน List จะมีพิกัดชี้วัดเป็นตัวเลขจำนวนเต็ม เริ่มต้นตั้งแต่ดัชนี 0 เป็นตัวแรกสุด"
+                symbol="Ordered"
+                title="จัดเรียงตามลำดับ"
+                description="ข้อมูลแต่ละตัวจะถูกบันทึกและรักษาระดับตำแหน่งไว้ตามลำดับการแทรกก่อนหลังชัดเจน"
                 accent="indigo"
               />
               <ConceptCard
                 symbol="Mutable"
-                title="แก้ไขข้อมูลได้ตลอดเวลา"
-                description="คุณสามารถแก้ไข เพิ่ม หรือลบข้อมูลใน List ได้โดยตรงในหน่วยความจำโดยไม่ต้องจองออบเจกต์ขึ้นมาใหม่"
+                title="เปลี่ยนรูปค่าข้อมูลได้"
+                description="สามารถเพิ่ม (Insert), ลบ (Delete) หรือแทนค่าข้อมูล (Update) สมาชิกตัวใดตัวหนึ่งในลิสต์ได้ตลอดเวลา"
                 accent="cyan"
               />
               <ConceptCard
-                symbol="Hetero"
-                title="เก็บคละชนิดข้อมูลได้"
-                description="ในหนึ่ง List สามารถเก็บ Integer, String, Float หรือแม้กระทั่งออบเจกต์ของคลาสรวมอยู่ด้วยกันได้"
+                symbol="Duplicates"
+                title="อนุญาตให้ค่าซ้ำกัน"
+                description="สมาชิกสามารถมีค่าซ้ำกันอยู่ในลิสต์ได้ โดยจะแยกความแตกต่างด้วยตำแหน่งดัชนี (Index) เสมอ"
                 accent="emerald"
               />
               <ConceptCard
                 symbol="Dynamic"
-                title="ขยายขนาดได้แบบออโต้"
-                description="เมื่อมีข้อมูลใหม่เพิ่มเข้ามาแต่แรมเดิมล้น ระบบจะโคลนจองข้อมูลพื้นที่สำรองที่ใหญ่ขึ้นให้อัตโนมัติ"
+                title="ขนาดแปรผันยืดหยุ่น"
+                description="ในภาษาอย่าง Python ลิสต์จะปรับขนาดความจุโดยอัตโนมัติเมื่อมีการเพิ่มหรือลดสมาชิกจำนวนมาก"
                 accent="violet"
               />
             </div>
@@ -229,10 +456,10 @@ export default function DSA1_2() {
         <section className="space-y-6">
           <div className="border-b border-zinc-200/80 pb-4">
             <span className="text-sm font-bold text-indigo-600 tracking-wider uppercase">
-              การประเมินประสิทธิภาพ
+              การวิเคราะห์ประสิทธิภาพเชิงลึก
             </span>
             <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              ข้อดีและข้อเสียของโครงสร้างแบบรายการ
+              ข้อดีและข้อเสียในการใช้โครงสร้างข้อมูลแบบ List
             </h3>
           </div>
 
@@ -248,25 +475,19 @@ export default function DSA1_2() {
                   <div className="flex items-start gap-2.5">
                     <ArrowRight className="w-4.5 h-4.5 text-emerald-600 shrink-0 mt-1" />
                     <p>
-                      <strong>ความเร็วการสุ่มเข้าถึง $O(1)$ (Random Access):</strong> ค้นหาข้อมูลได้ทันทีเมื่อรู้ดัชนี เช่น `my_list[5]` เพราะหน่วยความจำถูกจองต่อเนื่องกันในแรม
+                      <strong>เข้าถึงข้อมูลฉับไวทันที $O(1)$ ผ่านดัชนี (Direct Access):</strong> หากรู้ตำแหน่งดัชนีที่แน่นอน ระบบคอมพิวเตอร์สามารถดึงข้อมูลในหน่วยความจำออกมาได้รวดเร็วคงที่ระดับเสี้ยววินาที
                     </p>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <ArrowRight className="w-4.5 h-4.5 text-emerald-600 shrink-0 mt-1" />
                     <p>
-                      <strong>การต่อท้ายความเร็วสูง:</strong> เมธอด `append()` ใช้เวลาเฉลี่ยคงที่ $O(1)$ Amortized เนื่องจากตัวแปรมักจะมีการจองแรมสำรองไว้ด้านท้ายเสมอ
-                    </p>
-                  </div>
-                  <div className="flex items-start gap-2.5">
-                    <ArrowRight className="w-4.5 h-4.5 text-emerald-600 shrink-0 mt-1" />
-                    <p>
-                      <strong>เขียนโปรแกรมง่าย:</strong> มีคำสั่งอำนวยความสะดวกครบถ้วนและประยุกต์ใช้ทำหน้าที่โครงสร้างข้อมูลอื่นได้ (เช่น Stack)
+                      <strong>เหมาะกับงานดึงข้อมูลและต่อท้าย:</strong> จัดเก็บบันทึกข้อมูลประวัติ เหตุการณ์ หรือข้อมูลที่มีทิศทางการต่อขยายที่ตำแหน่งปลายสุด (Append)
                     </p>
                   </div>
                 </div>
               </div>
               <div className="mt-6 pt-4 border-t border-emerald-100 text-xs font-semibold text-emerald-800 font-mono">
-                RECOMMENDED FOR: FAST APPENDS & INDEX LOOKUPS
+                SUITABLE FOR: RANDOM INDEX LOOKUPS & APPEND OPERATIONS
               </div>
             </div>
 
@@ -275,221 +496,390 @@ export default function DSA1_2() {
               <div>
                 <h4 className="text-[20px] font-bold text-rose-950 mb-4 flex items-center gap-2">
                   <AlertCircle className="w-6 h-6 text-rose-500" />
-                  ข้อเสียและข้อจำกัดของ List
+                  ข้อจำกัดและข้อเสียของ List
                 </h4>
                 <div className="space-y-4 text-[14.5px] text-slate-700 leading-relaxed font-sans">
                   <div className="flex items-start gap-2.5">
                     <ArrowRight className="w-4.5 h-4.5 text-rose-500 shrink-0 mt-1" />
                     <p>
-                      <strong>การแทรก/ลบจุดแรกเริ่มช้า $O(n)$:</strong> การใช้ `insert(0, val)` หรือ `pop(0)` บังคับให้ระบบต้องเลื่อนขยับสมาชิกอื่นทั้งหมดที่เหลือหลีกทาง
+                      <strong>ความซับซ้อนในการลบหรือแทรกข้อมูล $O(n)$:</strong> หากกระทำการลบหรือแทรกในตำแหน่งกึ่งกลาง ลิสต์จำเป็นต้องสั่งให้คอมพิวเตอร์เลื่อนขยับสไลด์ย้ายที่อยู่ข้อมูลตัวหลังทั้งหมด
                     </p>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <ArrowRight className="w-4.5 h-4.5 text-rose-500 shrink-0 mt-1" />
                     <p>
-                      <strong>การค้นหาช้าแบบเชิงเส้น $O(n)$:</strong> หากต้องการหาข้อมูลที่เก็บแต่ไม่รู้ดัชนี จำเป็นต้องวนลูปเปรียบเทียบทีละตัวตั้งแต่หัวแถว
-                    </p>
-                  </div>
-                  <div className="flex items-start gap-2.5">
-                    <ArrowRight className="w-4.5 h-4.5 text-rose-500 shrink-0 mt-1" />
-                    <p>
-                      <strong>Overhead ในแรม:</strong> การปรับขนาดออโต้มีกรรมวิธีการจองแรมสำรองเกินขนาดจริง (Over-allocation) เสมอ ทำให้สูญเสียหน่วยความจำบางส่วน
+                      <strong>เสียเวลาในการสืบค้น $O(n)$:</strong> เมื่อไม่ดึงผ่านดัชนีแต่ค้นหาด้วยชื่อข้อมูล ระบบจำต้องลูปเช็คทีละโหนดตั้งแต่ตัวแรกจนถึงตัวสุดท้าย ทำให้เสียเวลานานขึ้นตามปริมาณข้อมูล
                     </p>
                   </div>
                 </div>
               </div>
               <div className="mt-6 pt-4 border-t border-rose-100 text-xs font-semibold text-rose-800 font-mono">
-                LIMITATION: SLOW SEARCH & SLOW FRONT-INSERTION
+                LIMITATION: MEMORY POSITION SHIFTING ON INSERT/DELETE
               </div>
             </div>
           </div>
         </section>
 
-        {/* ─── Section 3: Interactive Python List Dynamic Array Simulator ─── */}
+        {/* ─── Section 3: Summary of Basic List Methods ─── */}
         <section className="space-y-6">
           <div className="border-b border-zinc-200/80 pb-4">
             <span className="text-sm font-bold text-indigo-600 tracking-wider uppercase">
-              ตัวจำลองการทำงานเชิงลึก
+              คู่มือวิทยาการคำนวณ
             </span>
             <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              ห้องทดลองการจัดการหน่วยความจำของ Python List
+              สรุปคำสั่งพื้นฐานในการจัดการลิสต์ (List Methods Summary)
             </h3>
           </div>
 
           <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
-            ทดลองโต้ตอบโดยกดสั่ง เพิ่ม แทรก หรือลบข้อมูลในลิสต์ เพื่อศึกษาการเปลี่ยนแปลงของขนาดข้อมูลจริง (Size), 
-            การจองแรมส่วนเกิน (Capacity) และการขยับย้ายสไลด์สมาชิกภายในหน่วยความจำเมื่อแทรกข้อมูลตรงส่วนหัว:
+            การทำงานกับตัวแปรประเภทลิสต์ในภาษา Python มีเมธอดหลักมาตรฐานในการควบคุมปริมาณข้อมูลภายในที่คุณต้องจดจำไปใช้งานดังนี้:
+          </p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+            {[
+              {
+                method: ".append(x)",
+                desc: "เพิ่มข้อมูล x ไปที่ตำแหน่งสุดท้ายของ List",
+                complexity: "O(1) amortized",
+                theme: "border-l-indigo-500 bg-indigo-50/40 text-indigo-950",
+                badge: "text-indigo-700 bg-indigo-100"
+              },
+              {
+                method: ".insert(i, x)",
+                desc: "แทรกข้อมูล x ที่ตำแหน่งดัชนี i ข้อมูลเดิมจะถูกขยับขยายไปด้านหลัง",
+                complexity: "O(n) linear time",
+                theme: "border-l-cyan-500 bg-cyan-50/40 text-cyan-950",
+                badge: "text-cyan-700 bg-cyan-100"
+              },
+              {
+                method: ".pop(i)",
+                desc: "ลบและส่งคืนข้อมูล ณ ดัชนี i (หากไม่ระบุดัชนีจะเป็นการเอาตัวท้ายสุดออก)",
+                complexity: "O(n) (ท้ายสุด O(1))",
+                theme: "border-l-violet-500 bg-violet-50/40 text-violet-950",
+                badge: "text-violet-700 bg-violet-100"
+              },
+              {
+                method: ".remove(x)",
+                desc: "ค้นหาและลบข้อมูล x ออกตัวแรกที่ตรวจพบ (หากไม่พบจะ Error)",
+                complexity: "O(n) linear time",
+                theme: "border-l-rose-500 bg-rose-50/40 text-rose-950",
+                badge: "text-rose-700 bg-rose-100"
+              },
+              {
+                method: "len(list)",
+                desc: "ฟังก์ชันตรวจสอบจำนวนสมาชิกทั้งหมดที่มีอยู่ใน List",
+                complexity: "O(1) constant time",
+                theme: "border-l-emerald-500 bg-emerald-50/40 text-emerald-950",
+                badge: "text-emerald-700 bg-emerald-100"
+              }
+            ].map((m, idx) => (
+              <div key={idx} className={`p-4 rounded-2xl border border-slate-200 border-l-[3.5px] flex flex-col justify-between min-h-[160px] shadow-sm hover:shadow-md transition-all duration-200 ${m.theme}`}>
+                <div>
+                  <span className={`inline-block font-mono text-[13.5px] font-bold px-2 py-0.5 rounded ${m.badge} mb-2`}>
+                    {m.method}
+                  </span>
+                  <p className="text-[13px] leading-relaxed opacity-90">{m.desc}</p>
+                </div>
+                <div className="text-[10px] font-mono opacity-60 uppercase font-bold tracking-wider pt-2 border-t border-slate-200/50 mt-2">
+                  Time Complexity: {m.complexity}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ─── Section 4: Interactive List Simulator ─── */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-indigo-600 tracking-wider uppercase">
+              ห้องปฏิบัติการจำลอง
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              ตัวจำลองตรรกะลิสต์และการขยับขยายหน่วยความจำ (List Operations Simulator)
+            </h3>
+          </div>
+
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
+            ทดลองกรอกข้อมูลเพื่อกระทำคำสั่งต่าง ๆ ของ List สังเกตการเปลี่ยนแปลงลำดับดัชนี 
+            รวมถึง **ขั้นตอนการเคลื่อนย้ายและขยับตำแหน่งหน่วยความจำ (Memory Shifting)** แบบทีละขั้น:
           </p>
 
           <SimulatorShell
             dark
-            title="Python List (Dynamic Array) Memory Allocator Simulator"
-            icon={<Sliders className="w-8 h-8 text-teal-400" />}
+            title="Interactive Python List Operations & Shifting Tracer"
+            icon={<Cpu className="w-8 h-8 text-indigo-400" />}
             glowColors="from-zinc-900/30 to-zinc-950/10"
-            iconColor="text-teal-400"
+            iconColor="text-indigo-400"
           >
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mt-4">
               
-              {/* Controls (Left) */}
-              <div className="lg:col-span-5 bg-slate-900/90 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-2xl relative flex flex-col justify-between min-h-[440px]">
+              {/* Controller Panel (Left) */}
+              <div className="lg:col-span-5 bg-slate-900/90 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-2xl relative flex flex-col justify-between min-h-[500px]">
                 <div className="text-[9px] font-mono text-slate-500 absolute top-3 right-4 font-bold tracking-widest">
                   CONTROLLER
                 </div>
 
-                <div className="space-y-6">
-                  {/* Stats Panel */}
-                  <div className="grid grid-cols-2 gap-4 bg-black/40 p-4 rounded-xl border border-slate-800">
-                    <div className="text-center">
-                      <span className="text-[10px] text-slate-400 font-mono block uppercase">ข้อมูลจริง (Size)</span>
-                      <span className="font-mono text-2xl font-bold text-teal-400">{listItems.length} ตัว</span>
+                <div className="space-y-4 pt-3">
+                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide block mb-1">
+                    ปฏิบัติการที่ต้องการทดสอบ:
+                  </span>
+
+                  {/* Append Control */}
+                  <div className="bg-slate-800/30 p-3 rounded-xl border border-slate-800/80 flex items-center justify-between gap-3">
+                    <div className="flex flex-col gap-0.5 grow">
+                      <span className="text-[11px] font-mono text-indigo-300 font-bold">.append(x)</span>
+                      <input
+                        type="text"
+                        placeholder="ข้อมูล เช่น Mango"
+                        value={appendInput}
+                        onChange={(e) => setAppendInput(e.target.value)}
+                        disabled={isSimulating}
+                        className="bg-slate-950 border border-slate-700/60 rounded px-2.5 py-1 text-xs text-white placeholder-slate-650 focus:outline-none focus:border-indigo-500 w-full"
+                      />
                     </div>
-                    <div className="text-center border-l border-slate-800">
-                      <span className="text-[10px] text-slate-400 font-mono block uppercase">จองในแรม (Capacity)</span>
-                      <span className="font-mono text-2xl font-bold text-amber-400">{capacity} ช่อง</span>
-                    </div>
-                  </div>
-
-                  {/* Actions Grid */}
-                  <div className="space-y-3">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block">1. เลือกสั่งคำสั่งใช้งาน List:</span>
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        onClick={handleAppend}
-                        disabled={isAnimating}
-                        className="py-2.5 px-3 bg-teal-900/80 hover:bg-teal-800 border border-teal-700/60 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-45"
-                      >
-                        <Plus className="w-4 h-4 text-teal-400" /> append(สุ่ม) [ท้ายสุด]
-                      </button>
-
-                      <button
-                        onClick={handleInsertAtStart}
-                        disabled={isAnimating}
-                        className="py-2.5 px-3 bg-indigo-900/80 hover:bg-indigo-800 border border-indigo-700/60 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-45"
-                      >
-                        <Plus className="w-4 h-4 text-indigo-400" /> insert(0, 99) [หน้าสุด]
-                      </button>
-
-                      <button
-                        onClick={handlePop}
-                        disabled={isAnimating || listItems.length === 0}
-                        className="py-2.5 px-3 bg-rose-950/80 hover:bg-rose-900 border border-rose-800/60 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-45"
-                      >
-                        <Trash2 className="w-4 h-4 text-rose-400" /> pop() [ท้ายสุด]
-                      </button>
-
-                      <button
-                        onClick={handleRemoveFromStart}
-                        disabled={isAnimating || listItems.length === 0}
-                        className="py-2.5 px-3 bg-amber-950/80 hover:bg-amber-900 border border-amber-800/60 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-45"
-                      >
-                        <Trash2 className="w-4 h-4 text-amber-400" /> pop(0) [หน้าสุด]
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Reset & Output Console */}
-                <div className="mt-8 pt-4 border-t border-slate-800 space-y-4">
-                  <div className="flex gap-2">
                     <button
-                      onClick={handleResetSim}
-                      disabled={isAnimating}
-                      className="w-full py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-all active:scale-95 disabled:opacity-40"
+                      onClick={handleAppend}
+                      disabled={isSimulating}
+                      className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-2 px-3 rounded-lg flex items-center gap-1 cursor-pointer shrink-0 transition-colors disabled:opacity-40"
                     >
-                      <RotateCcw className="w-4 h-4" /> รีเซ็ตหน่วยความจำจำลอง
+                      <Plus className="w-3.5 h-3.5" /> Append
                     </button>
                   </div>
 
-                  <div className="bg-black/60 p-3.5 rounded-xl border border-slate-950 min-h-[90px] font-mono text-[11.5px] leading-relaxed text-teal-400 select-all overflow-y-auto max-h-[140px]">
-                    <div className="text-zinc-500 border-b border-slate-900 pb-1 mb-2 uppercase tracking-wide text-[9px] font-bold">Memory Tracer Logs:</div>
-                    {simLog.map((line, idx) => (
-                      <div key={idx} className="animate-fadeIn">
-                        <span className="text-zinc-500">&gt; </span>
-                        <span>{line}</span>
+                  {/* Insert Control */}
+                  <div className="bg-slate-800/30 p-3 rounded-xl border border-slate-800/80 flex items-center justify-between gap-3">
+                    <div className="grid grid-cols-2 gap-2 grow">
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[11px] font-mono text-cyan-300 font-bold">.insert(i, x) - ดัชนี i</span>
+                        <input
+                          type="number"
+                          placeholder="ดัชนี (เช่น 1)"
+                          value={insertIdx}
+                          onChange={(e) => setInsertIdx(e.target.value)}
+                          disabled={isSimulating}
+                          className="bg-slate-950 border border-slate-700/60 rounded px-2.5 py-1 text-xs text-white placeholder-slate-650 focus:outline-none focus:border-cyan-500 w-full"
+                        />
                       </div>
-                    ))}
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[11px] font-mono text-cyan-300 font-bold">ข้อมูล x</span>
+                        <input
+                          type="text"
+                          placeholder="ข้อมูล เช่น Pear"
+                          value={insertVal}
+                          onChange={(e) => setInsertVal(e.target.value)}
+                          disabled={isSimulating}
+                          className="bg-slate-950 border border-slate-700/60 rounded px-2.5 py-1 text-xs text-white placeholder-slate-650 focus:outline-none focus:border-cyan-500 w-full"
+                        />
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleInsert}
+                      disabled={isSimulating}
+                      className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs py-3 px-3 rounded-lg flex items-center gap-1 cursor-pointer shrink-0 transition-colors mt-4 disabled:opacity-40"
+                    >
+                      <Sliders className="w-3.5 h-3.5" /> Insert
+                    </button>
+                  </div>
+
+                  {/* Pop Control */}
+                  <div className="bg-slate-800/30 p-3 rounded-xl border border-slate-800/80 flex items-center justify-between gap-3">
+                    <div className="flex flex-col gap-0.5 grow">
+                      <span className="text-[11px] font-mono text-violet-300 font-bold">.pop(i) - (เว้นว่าง = ตัวท้าย)</span>
+                      <input
+                        type="number"
+                        placeholder="ดัชนีที่จะนำออก (เช่น 0)"
+                        value={popIdx}
+                        onChange={(e) => setPopIdx(e.target.value)}
+                        disabled={isSimulating}
+                        className="bg-slate-950 border border-slate-700/60 rounded px-2.5 py-1 text-xs text-white placeholder-slate-650 focus:outline-none focus:border-violet-500 w-full"
+                      />
+                    </div>
+                    <button
+                      onClick={handlePop}
+                      disabled={isSimulating}
+                      className="bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs py-2 px-3 rounded-lg flex items-center gap-1 cursor-pointer shrink-0 transition-colors disabled:opacity-40"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" /> Pop
+                    </button>
+                  </div>
+
+                  {/* Remove Control */}
+                  <div className="bg-slate-800/30 p-3 rounded-xl border border-slate-800/80 flex items-center justify-between gap-3">
+                    <div className="flex flex-col gap-0.5 grow">
+                      <span className="text-[11px] font-mono text-rose-300 font-bold">.remove(x)</span>
+                      <input
+                        type="text"
+                        placeholder="ค้นหาเพื่อลบ เช่น Banana"
+                        value={removeVal}
+                        onChange={(e) => setRemoveVal(e.target.value)}
+                        disabled={isSimulating}
+                        className="bg-slate-950 border border-slate-700/60 rounded px-2.5 py-1 text-xs text-white placeholder-slate-650 focus:outline-none focus:border-rose-500 w-full"
+                      />
+                    </div>
+                    <button
+                      onClick={handleRemove}
+                      disabled={isSimulating}
+                      className="bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs py-2 px-3 rounded-lg flex items-center gap-1 cursor-pointer shrink-0 transition-colors disabled:opacity-40"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" /> Remove
+                    </button>
+                  </div>
+
+                  {/* Helper Operations */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={handleLen}
+                      disabled={isSimulating}
+                      className="py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-colors disabled:opacity-40"
+                    >
+                      <Info className="w-3.5 h-3.5" /> Check len()
+                    </button>
+                    <button
+                      onClick={resetSimulator}
+                      disabled={isSimulating}
+                      className="py-2.5 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-colors disabled:opacity-40"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" /> Reset List
+                    </button>
+                  </div>
+
+                </div>
+
+                {/* Console Logger Panel */}
+                <div className="mt-6 pt-3 border-t border-slate-800">
+                  <div className="bg-black/60 p-3.5 rounded-xl border border-slate-950 min-h-[110px] font-mono text-[11.5px] leading-relaxed text-teal-400 select-all overflow-y-auto max-h-[150px]">
+                    <div className="text-zinc-500 border-b border-slate-900 pb-1 mb-2 uppercase tracking-wide text-[9px] font-bold">
+                      Python Console Log Trace:
+                    </div>
+                    {simLogs.map((log, index) => {
+                      const isError = log.includes('Error');
+                      const isCommand = log.startsWith('>>>');
+                      return (
+                        <div key={index} className="animate-fadeIn">
+                          {!isCommand && <span className="text-zinc-500">&gt;&gt; </span>}
+                          <span className={isError ? 'text-rose-400 font-semibold' : isCommand ? 'text-indigo-300 font-bold' : 'text-teal-400'}>
+                            {log}
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
               </div>
 
-              {/* Memory Visual Grid Display (Right) */}
-              <div className="lg:col-span-7 bg-slate-950/95 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-2xl relative flex flex-col justify-between min-h-[440px]">
+              {/* Memory Display Panel (Right) */}
+              <div className="lg:col-span-7 bg-slate-950/95 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-2xl relative flex flex-col justify-between min-h-[500px]">
                 <div className="text-[9px] font-mono text-slate-500 absolute top-3 left-3 font-bold tracking-widest">
-                  RAM PHYSICAL MEMORY VIEW
+                  CONTIGUOUS MEMORY VISUALIZER
                 </div>
 
-                <div className="space-y-8 mt-6 grow flex flex-col justify-between">
+                <div className="grow flex flex-col justify-between mt-6">
                   
-                  {/* Dynamic Slots */}
+                  {/* Slots visual layout */}
                   <div className="space-y-4">
-                    <div className="flex justify-between items-center text-xs font-bold text-slate-400 uppercase tracking-wide">
-                      <span>บล็อกหน่วยความจำเสมือน:</span>
-                      {shiftDirection && (
-                        <span className={`text-[10px] animate-pulse font-mono ${shiftDirection === 'right' ? 'text-indigo-400' : 'text-amber-400'}`}>
-                          {shiftDirection === 'right' ? 'SHIFT RIGHTING...' : 'SHIFT LEFTING...'}
-                        </span>
-                      )}
-                    </div>
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block">
+                      ผังหน่วยความจำเรียงลำดับดัชนี (List indices [0-7]):
+                    </span>
 
-                    <div className="grid grid-cols-4 gap-4 bg-slate-900/60 border border-slate-900 p-5 rounded-2xl">
-                      {Array.from({ length: capacity }).map((_, idx) => {
-                        const hasVal = idx < listItems.length;
-                        const val = hasVal ? listItems[idx] : null;
-                        const isActive = idx === activeCellIdx;
-                        
-                        let cellClass = 'border-slate-800 text-slate-650 bg-slate-950/20 border-dashed';
-                        if (hasVal) {
-                          cellClass = 'border-indigo-600 text-white bg-indigo-950/60 scale-100 shadow-[0_0_10px_rgba(79,70,229,0.1)]';
-                        }
-                        if (isActive) {
-                          cellClass = 'border-teal-500 text-teal-300 bg-teal-950/80 scale-105 shadow-[0_0_15px_rgba(20,184,166,0.4)]';
-                        }
+                    <div className="bg-slate-900/40 border border-slate-900 p-4 rounded-xl">
+                      {/* Grid representation */}
+                      <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
+                        {Array(8).fill(null).map((_, i) => {
+                          const hasVal = i < list.length;
+                          const val = list[i];
+                          const isAnimating = animatingIndices.includes(i);
+                          const isScanning = scanningIdx === i;
+                          const isHighlighted = highlightedIndex === i;
 
-                        return (
-                          <div
-                            key={idx}
-                            className={`border rounded-2xl p-3 flex flex-col items-center justify-between min-h-[95px] transition-all duration-500 relative overflow-hidden
-                              ${cellClass}`}
-                          >
-                            <span className="text-[9px] font-mono opacity-50">Addr 0x{1000 + idx * 4}</span>
-                            <span className="font-mono font-bold text-[18px] my-1 tracking-wider">
-                              {hasVal ? val : '-'}
-                            </span>
-                            
-                            {/* Index tag */}
-                            <span className="text-[10px] font-mono text-zinc-500">[{idx}]</span>
+                          let slotClass = 'border-slate-800 text-slate-650 bg-slate-950/20 border-dashed';
+                          let animText = '';
 
-                            {/* Shift Arrow overlay */}
-                            {shiftDirection === 'right' && hasVal && idx < listItems.length && (
-                              <div className="absolute inset-0 bg-indigo-950/40 backdrop-blur-xs flex items-center justify-center animate-slideRight">
-                                <ArrowRight className="w-5 h-5 text-indigo-400 animate-pulse" />
+                          if (hasVal) {
+                            slotClass = 'border-slate-700 bg-slate-900/60 text-slate-100';
+                          }
+
+                          // Action highlights
+                          if (isAnimating) {
+                            if (animationStep === 'shifting') {
+                              if (shiftingDirection === 'right') {
+                                slotClass = 'border-cyan-500 bg-cyan-950/40 text-cyan-300 scale-[1.03] shadow-[0_0_10px_rgba(6,182,212,0.2)]';
+                                animText = 'Shift ➔';
+                              } else if (shiftingDirection === 'left') {
+                                slotClass = 'border-violet-500 bg-violet-950/40 text-violet-300 scale-[1.03] shadow-[0_0_10px_rgba(139,92,246,0.2)]';
+                                animText = '⬅ Shift';
+                              } else {
+                                // Default append
+                                slotClass = 'border-indigo-500 bg-indigo-950/40 text-indigo-300 scale-[1.03]';
+                              }
+                            } else if (animationStep === 'updated') {
+                              slotClass = 'border-emerald-500 bg-emerald-950/40 text-emerald-300';
+                            }
+                          }
+
+                          if (isScanning) {
+                            slotClass = 'border-yellow-500 bg-yellow-950/40 text-yellow-300 ring-2 ring-yellow-500/20 scale-[1.05]';
+                            animText = 'Scan ?';
+                          }
+
+                          if (isHighlighted) {
+                            slotClass = 'border-rose-500 bg-rose-950/50 text-rose-300 scale-[1.05] ring-2 ring-rose-500/30';
+                            animText = 'Remove';
+                          }
+
+                          return (
+                            <div key={i} className="flex flex-col items-center gap-1.5">
+                              {/* Element container */}
+                              <div className={`w-full h-16 border rounded-xl flex flex-col justify-center items-center text-xs font-mono relative transition-all duration-300 ${slotClass}`}>
+                                <span className="absolute top-1 text-[8.5px] text-slate-500 font-bold">[{i}]</span>
+                                {hasVal ? (
+                                  <span className="font-bold text-[13px] tracking-wide mt-2">{val}</span>
+                                ) : (
+                                  <span className="italic text-[10px] text-slate-700 mt-2">None</span>
+                                )}
+                                {animText && (
+                                  <span className="absolute bottom-1 text-[8px] font-bold px-1 py-0.2 rounded bg-black/60 text-slate-300 scale-90">
+                                    {animText}
+                                  </span>
+                                )}
                               </div>
-                            )}
-                            {shiftDirection === 'left' && hasVal && (
-                              <div className="absolute inset-0 bg-amber-950/40 backdrop-blur-xs flex items-center justify-center animate-slideLeft">
-                                <ArrowRight className="w-5 h-5 text-amber-400 rotate-180 animate-pulse" />
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
+                              <span className="text-[10px] font-mono text-slate-500">
+                                {hasVal ? `addr+${i}` : '-'}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
 
-                  {/* Dynamic Analysis Panel */}
-                  <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl">
-                    <h5 className="text-[12px] font-bold text-slate-400 uppercase tracking-wide mb-1 flex items-center gap-1.5">
-                      <Cpu className="w-3.5 h-3.5 text-teal-400" />
-                      วิเคราะห์สถาปัตยกรรม (Memory Analysis):
-                    </h5>
-                    <p className="text-[12px] text-slate-400 leading-relaxed font-sans">
-                      {listItems.length === 0 ? (
-                        'รายการว่างเปล่า (Empty List) ไม่มีข้อมูลถูกจองในแรมดัชนีหลัก'
-                      ) : (
-                        `ปัจจุบันมีข้อมูลใช้งานจริง ${listItems.length} ช่อง ความจุสำรองทั้งหมด ${capacity} ช่อง โดยเกิดหน่วยความจำสูญเสียในรูปแรมสำรอง (Overhead) = ${(capacity - listItems.length) * 4} Bytes (หรือ ${capacity - listItems.length} ช่องว่างที่ไม่ได้ใช้งานแต่อัลโลเคตเก็บไว้เตรียม append)`
-                      )}
-                    </p>
+                  {/* Transition arrow visualization for shifting */}
+                  {animationStep === 'shifting' && shiftingDirection !== 'none' && (
+                    <div className="animate-pulse bg-slate-900/60 p-2.5 border border-slate-800 rounded-xl flex items-center justify-center gap-2 text-[11px] font-mono text-cyan-400">
+                      <ArrowRight className={`w-4 h-4 ${shiftingDirection === 'left' ? 'rotate-180 text-violet-400' : ''}`} />
+                      <span>
+                        {shiftingDirection === 'right' 
+                          ? 'กำลังขยับเลื่อนสไลด์ข้อมูลขวาทีละ 1 สล็อตเพื่อแทรกข้อมูลใหม่'
+                          : 'กำลังจัดเลื่อนสไลด์ดึงข้อมูลฝั่งขวามาแทนที่ดัชนีที่ว่างเปล่า'
+                        }
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Complexity and metadata bar */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 mt-6">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-indigo-400 tracking-wider uppercase">Big O Notation:</span>
+                        <span className="text-xs font-bold text-white bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+                          {lastComplexity}
+                        </span>
+                      </div>
+                      <div className="text-xs leading-relaxed text-slate-400 font-mono">
+                        <span className="text-slate-500 font-bold block mb-0.5">รายละเอียดกระบวนการ (Process detail):</span>
+                        {lastFormula}
+                      </div>
+                    </div>
                   </div>
 
                 </div>
@@ -499,68 +889,21 @@ export default function DSA1_2() {
           </SimulatorShell>
         </section>
 
-        {/* ─── Section 4: Python List Syntax & Usage ─── */}
-        <section className="space-y-6">
-          <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-indigo-600 tracking-wider uppercase">
-              คู่มือเขียนรหัสโปรแกรม
-            </span>
-            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              วิธีการใช้งานโครงสร้าง List ในภาษา Python
-            </h3>
-          </div>
-
-          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
-            การประกาศใช้งานและจัดการข้อมูลของรายการ (List) ใน Python มีไวยากรณ์เรียบง่ายและเป็นระเบียบ โดยมีคำสั่งมาตรฐานที่สำคัญดังนี้:
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                title: "1. การประกาศค่าและเข้าถึง (Init & Access)",
-                desc: "สร้างลิสต์เปล่าหรือลิสต์ที่มีค่าเริ่มต้น และอ้างอิงตำแหน่งด้วยดัชนี",
-                code: `# สร้างลิสต์ที่มีสมาชิก\nnumbers = [10, 20, 30]\n\n# เข้าถึงดัชนี 1\nval = numbers[1]  # ได้ค่า 20`,
-                accent: "indigo"
-              },
-              {
-                title: "2. การเพิ่มและแทรกข้อมูล (Insert & Append)",
-                desc: "ต่อท้ายข้อมูลด้วย append() หรือเลือกดัชนีที่จะแทรกด้วย insert()",
-                code: `# ต่อท้ายสุด O(1)\nnumbers.append(40)\n\n# แทรกที่หน้าสุด O(n)\nnumbers.insert(0, 99)`,
-                accent: "cyan"
-              },
-              {
-                title: "3. การลบข้อมูล (Remove & Pop)",
-                desc: "ลบตัวท้ายออกด้วย pop() หรือลบดัชนีที่ต้องการ หรือระบุลบด้วยค่าข้อมูล",
-                code: `# ลบตัวท้ายสุด O(1)\nnumbers.pop()\n\n# ลบดัชนี 0 ออก O(n)\nnumbers.pop(0)`,
-                accent: "emerald"
-              }
-            ].map((card, idx) => (
-              <div key={idx} className="bg-white/60 backdrop-blur-xl border border-slate-200/50 shadow-sm rounded-2xl p-5 hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between min-h-[220px]">
-                <div>
-                  <h4 className="font-bold text-slate-800 text-[15px] leading-tight mb-1">{card.title}</h4>
-                  <p className="text-[12.5px] text-slate-500 leading-relaxed mb-4">{card.desc}</p>
-                </div>
-                <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl font-mono text-[11.5px] text-slate-700 leading-normal whitespace-pre">
-                  <code>{card.code}</code>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
         {/* ─── Layer 4: Standardized TeacherTask Footer ─── */}
         <TeacherTask
-          title="ภารกิจท้ายบทเรียน: วิเคราะห์การใช้หน่วยความจำและสถิติของอาเรย์ยืดหยุ่น"
-          taskText={`[โจทย์ปฏิบัติประจำวิชาโครงสร้างข้อมูลและอัลกอริทึม]
+          title="ภารกิจท้ายบทเรียน: วิเคราะห์ประสิทธิภาพและจัดทำโครงสร้าง List ใน Python"
+          taskText={`[โจทย์ปฏิบัติการหลักสูตรรายวิชาโครงสร้างข้อมูล 21900-1002]
 
-ให้นักเรียนวิเคราะห์ประสิทธิภาพของ List ในภาษา Python ตามข้อกำหนดดังนี้:
+ให้นักเรียนศึกษาและนำคำสั่งพื้นฐาน (List Methods) ทั้ง 5 คำสั่งมาร้อยเรียงสร้างตัวแปรลิสต์ในการควบคุมคลังสินค้า:
 
-1. เขียนชุดคำสั่งโปรแกรมรับค่าคะแนนสอบของเพื่อนนักเรียนในห้องเรียน โดยให้เพิ่มเข้าลิสต์คะแนนทีละคนผ่าน append()
-2. เขียนฟังก์ชัน calc_average_score(scores) วนลูปเพื่อคำนวณหาคะแนนเฉลี่ย และคืนค่าสถิตินั้นกลับออกมา
-3. เขียนฟังก์ชัน remove_outliers(scores) เพื่อลบคะแนนที่ต่ำกว่าเกณฑ์เฉลี่ยออกทั้งหมดโดยใช้ pop() หรือ remove()
-4. อธิบายเหตุผลพร้อมคอมเมนต์วิเคราะห์ความซับซ้อนเชิงเวลา (Time Complexity) ของฟังก์ชัน remove_outliers เปรียบเทียบกับการ append คะแนนในกรณีแย่ที่สุด (Worst Case) ด้วยสัญกรณ์ Big O พร้อมเขียนเปรียบเทียบคำอธิบายข้อดี-ข้อเสียให้เข้าใจง่ายที่สุด
+1. ประกาศลิสต์ว่างชื่อ cargo = []
+2. ดำเนินการต่อเติมสินค้าโดยใช้ .append() จำนวน 3 รายการ ได้แก่ "Iron", "Copper", "Gold" ตามลำดับ
+3. แทรกสินค้าพิเศษชื่อ "Gem" เข้าไปที่ดัชนี 1 โดยใช้คำสั่ง .insert()
+4. สั่งตรวจสอบจำนวนของข้อมูลสินค้าทั้งหมดที่เก็บรักษาด้วย len(cargo) และลบข้อมูลตำแหน่งสุดท้ายด้วย .pop()
+5. ตรวจสอบให้มั่นใจว่าในลิสต์ไม่มีตัวแปรชื่อ "Gold" หากมีให้ใช้ .remove() สั่งเคลียร์ประวัติออก
+6. ให้นักเรียนเขียนอธิบายวิเคราะห์ความซับซ้อนเชิงเวลา (Time Complexity / Big O) ของแต่ละขั้นตอน (2-5) ลงในสคริปต์โค้ดเพื่อนำส่งสรุปผล
 
-ส่งงานโดยคัดลอกโจทย์ชุดนี้ไปตรวจสอบและส่งคำสั่งปฏิบัติการเพื่อวัดผลในห้องเรียน`}
+ให้นักเรียนนำผลลัพธ์การทำงานและภาพวาดผังหน่วยความจำจำลองการเลื่อนสไลด์ข้อมูลส่งครูผู้สอนเพื่อประเมินเกรด`}
         />
 
       </main>
