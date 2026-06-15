@@ -363,11 +363,40 @@ const ReservedWordsQuiz = () => {
 // 3. Main Page Component
 // ============================================================================
 const pyUnit3_2_NamingRules = () => {
-  const teacherTaskContent = `
-    ใบงาน "ตั้งชื่อตัวแปรให้ถูกต้อง"
-    1. ให้นักเรียนพิจารณารายชื่อตัวแปร 10 ข้อ (เช่น student_name, 1st_prize, my var, class) 
-    2. ทำเครื่องหมายถูกหน้าข้อที่ตั้งชื่อได้ถูกต้อง และกากบาทข้อที่ผิด พร้อมระบุเหตุผลว่าผิดกฎข้อใด
-  `;
+  const [passcode, setPasscode] = useState('');
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [passError, setPassError] = useState(false);
+
+  const handleUnlock = (e) => {
+    e.preventDefault();
+    if (passcode === '1122') {
+      setIsUnlocked(true);
+      setPassError(false);
+    } else {
+      setPassError(true);
+    }
+  };
+
+  const teacherTaskContent = `# ให้นักเรียน สร้างตัวแปร ดังต่อไปนี้
+#  1. จงประกาศตัวแปรชื่อ student_age เพื่อเก็บอายุของนักเรียนคนหนึ่ง โดยกำหนดให้อายุเริ่มต้นคือ 15 ปี
+
+#  2. จงสร้างตัวแปรสำหรับเก็บชื่อและนามสกุลของอาจารย์ผู้สอน โดยใช้ชื่อตัวแปรว่า teacher_name และกำหนดค่าเริ่มต้นเป็นข้อความ "Somchai Deejaichan"
+
+#  3. ในการคำนวณเกรด ต้องมีการใช้คะแนนเฉลี่ยสะสม (GPA) จงประกาศตัวแปรชื่อ current_gpa และกำหนดค่าเริ่มต้นเป็น 3.75 โดยเลือกประเภทข้อมูลให้เหมาะสม
+
+#  4. จงสร้างตัวแปรประเภทตรรกศาสตร์ (Boolean) ชื่อ is_passed เพื่อเก็บสถานะการผ่านประเมิน โดยกำหนดค่าเริ่มต้นให้เป็น "จริง" (True)
+
+#  5. จงประกาศตัวแปรแบบค่าคงที่ (Constant) เพื่อเก็บค่าของแรงโน้มถ่วงโลก (g) เท่ากับ 9.81 โดยใช้หลักการตั้งชื่อตัวแปรค่าคงที่ตามมาตรฐานของภาษาที่คุณถนัด
+
+#  6. มีตัวแปร wallet_balance = 500 ต่อมาได้รับเงินเพิ่มอีก 150 บาท จงเขียนคำสั่งเพื่อปรับปรุง (Update) ค่าในตัวแปรเดิมให้ถูกต้องโดยใช้ตัวดำเนินการกำหนดค่าแบบย่อ (Assignment Operator)
+
+#  7. จงเขียนโปรแกรมสร้างตัวแปร 2 ตัว ได้แก่ width = 10.5 และ length = 20.0 จากนั้นสร้างตัวแปรตัวที่ 3 ชื่อ rectangle_area เพื่อคำนวณและเก็บผลลัพธ์พื้นที่รูปสี่เหลี่ยม
+
+#  8. กำหนดให้ item_price = 299 และ tax_rate = 0.07 จงสร้างตัวแปรชื่อ total_price เพื่อคำนวณราคาสินค้ารวมภาษีมูลค่าเพิ่ม
+
+#  9. จงสร้างตัวแปรชื่อ counter เริ่มต้นที่ค่า 0 จากนั้นเขียนคำสั่งเพื่อเพิ่มค่า (Increment) ของตัวแปรนี้ขึ้นครั้งละ 1 เป็นจำนวน 3 ครั้งติดต่อกัน
+
+#  10. กำหนดให้ a = 5 และ b = 10 จงเขียนคำสั่งสลับค่าระหว่างตัวแปรสองตัวนี้ เพื่อให้ผลลัพธ์สุดท้าย a มีค่าเป็น 10 และ b มีค่าเป็น 5 (ห้ามกำหนดค่าด้วยตัวเลขตรงๆ)`;
 
   return (
     <div className="text-zinc-900 pb-20">
@@ -491,7 +520,52 @@ const pyUnit3_2_NamingRules = () => {
         <ReservedWordsQuiz />
 
         {/* Teacher Task */}
-        <TeacherTask title="ใบงานกิจกรรม (ทบทวนความรู้ 3.2)" taskText={teacherTaskContent} />
+        {isUnlocked ? (
+          <TeacherTask title="ใบงานกิจกรรม (ทบทวนความรู้ 3.2)" taskText={teacherTaskContent} />
+        ) : (
+          <div className="relative mt-24 rounded-3xl p-[1px] overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-indigo-400 to-cyan-400 opacity-40 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative bg-white/90 backdrop-blur-xl p-8 md:p-10 rounded-3xl h-full flex flex-col items-center justify-center text-center shadow-xl">
+              <div className="p-4 bg-purple-100 rounded-2xl text-purple-600 border border-purple-200 shadow-[0_0_15px_rgba(168,85,247,0.3)] mb-6 animate-pulse">
+                <span className="text-3xl">🔐</span>
+              </div>
+              <h3 className="text-2xl font-bold text-slate-800 mb-2">เข้าถึงภารกิจสำหรับนักเรียน (Instructor Task)</h3>
+              <p className="text-slate-500 text-sm max-w-md mb-6 leading-relaxed">
+                กิจกรรมปฏิบัติการนี้ถูกจำกัดสิทธิ์เฉพาะในชั้นเรียน กรุณากรอกรหัสผ่าน 4 หลักที่ได้รับจากอาจารย์ผู้สอนเพื่อเข้าสู่แบบฝึกหัด
+              </p>
+              
+              <form onSubmit={handleUnlock} className="flex flex-col sm:flex-row gap-3 w-full max-w-sm justify-center items-center">
+                <input 
+                  type="password"
+                  maxLength={4}
+                  value={passcode}
+                  onChange={(e) => {
+                    setPasscode(e.target.value);
+                    setPassError(false);
+                  }}
+                  placeholder="ป้อนรหัสผ่าน 4 หลัก"
+                  className={`h-[42px] w-full sm:w-48 text-center border rounded-xl font-mono text-lg tracking-widest focus:outline-none transition-all ${
+                    passError 
+                      ? 'border-red-500 focus:border-red-500 focus:ring-3 focus:ring-red-500/12 bg-red-50' 
+                      : 'border-slate-300 focus:border-indigo-500 focus:ring-3 focus:ring-indigo-500/12 bg-white'
+                  }`}
+                />
+                <button
+                  type="submit"
+                  className="h-[42px] w-full sm:w-auto px-6 bg-indigo-600 text-white hover:bg-indigo-500 active:scale-95 rounded-xl font-semibold cursor-pointer transition-all flex items-center justify-center gap-2"
+                >
+                  ถอดรหัสผ่าน
+                </button>
+              </form>
+              
+              {passError && (
+                <p className="text-red-500 font-bold text-xs mt-3 animate-bounce">
+                  ⚠️ รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง
+                </p>
+              )}
+            </div>
+          </div>
+        )}
 
       </main>
     </div>
