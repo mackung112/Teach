@@ -3,6 +3,7 @@ import {
   Layers, 
   Database, 
   HelpCircle, 
+  Info,
   Play, 
   RotateCcw, 
   ArrowRight, 
@@ -318,42 +319,123 @@ except TypeError as error:
         <section className="space-y-6" aria-labelledby="section-intro-title">
           <div className="border-b border-zinc-200/80 pb-4">
             <span className="text-sm font-bold text-indigo-600 tracking-wider uppercase">
-              วิทยาการคอมพิวเตอร์และชนิดข้อมูลพื้นฐาน
+              ความหมายและคุณสมบัติ
             </span>
             <h2 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1" id="section-intro-title">
-              โครงสร้างข้อมูลแบบทิวเพิล (Tuple) และการล็อกข้อมูลในหน่วยความจำ
+              Tuple (ทิวเพิล)
             </h2>
           </div>
 
-          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
-            ในการเขียนโปรแกรมระดับวิศวกรรมคอมพิวเตอร์ <span className="mx-1 px-1.5 py-0.5 rounded bg-indigo-50 border border-indigo-200/50 text-indigo-700 font-mono text-[14px]">Tuple</span> คือโครงสร้างข้อมูลประเภทเรียงลำดับดัชนี (Sequence) ที่มีคุณสมบัติเฉพาะตัวคือเป็น <strong>อิมมิวเทเบิล (Immutable)</strong> หรือไม่สามารถเปลี่ยนสภาพข้อมูลและโครงสร้างได้ภายหลังการสถาปนาขึ้นในหน่วยความจำ แตกต่างจากโครงสร้างข้อมูลแบบรายการ (List) ที่มีความลื่นไหลเป็นมิวเทเบิล (Mutable):
-          </p>
+          <div className="space-y-6">
+            <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+              Inทางวิทยาการคอมพิวเตอร์ <strong className="mx-1 px-1.5 py-0.5 rounded bg-indigo-50 border border-indigo-200/50 text-indigo-700 font-mono text-[14px]">Tuple (ทิวเพิล)</strong> 
+              คือ โครงสร้างข้อมูลเชิงเส้นประเภทเรียงลำดับดัชนี (Sequence) ที่ใช้สำหรับจัดเก็บกลุ่มข้อมูลเรียงต่อกันในหน่วยความจำ คล้ายกับ List แต่มีจุดต่างสำคัญคือมีสถานะเป็น **Immutable (ไม่สามารถปรับปรุงแก้ไขโครงสร้างและข้อมูลได้หลังจากถูกสร้างขึ้นมาแล้ว)** ช่วยเพิ่มความเร็วในการอ่านข้อมูลและปลอดภัยจากการเขียนทับข้อมูลโดยไม่ได้รับอนุญาต
+            </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6" id="tuple-properties-cards">
-            <ConceptCard
-              symbol="Immutable"
-              title="สิทธิ์แบบอ่านอย่างเดียว"
-              description="เมื่อข้อมูลถูกเขียนลง Heap Memory แล้ว จะไม่สามารถลบ แก้ไข หรือเพิ่มสมาชิกแทรกระหว่างแถวได้อีก"
-              accent="indigo"
-            />
-            <ConceptCard
-              symbol="Ordered"
-              title="การรักษาลำดับดัชนี"
-              description="ระบุพิกัดสมาชิกด้วยระบบดัชนีแบบ 0-based index โดยตำแหน่งและทิศทางการจัดเรียงจะคงที่เสมอ"
-              accent="sky"
-            />
-            <ConceptCard
-              symbol="Hetero"
-              title="เก็บข้อมูลหลากหลายประเภท"
-              description="สามารถจัดเก็บสมาชิกร่วมกันที่มีชนิดข้อมูลต่างกันได้ในหนึ่ง Tuple เช่น สตริง บูลีน หรือออบเจกต์"
-              accent="emerald"
-            />
-            <ConceptCard
-              symbol="Hashable"
-              title="การตรวจสอบเสถียรภาพคีย์"
-              description="การันตีความมั่นคงของค่าข้อมูล ทำให้สามารถนำไปจัดทำคีย์ในพจนานุกรม (Dict Key) ได้ปลอดภัย"
-              accent="purple"
-            />
+            <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <h4 className="text-lg font-bold text-zinc-900 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                    การประกาศและสร้างทิวเพิล (Tuple Declaration)
+                  </h4>
+                  <p className="text-[15px] text-zinc-650 leading-relaxed">
+                    เราสร้าง Tuple ในภาษา Python โดยใช้เครื่องหมายวงเล็บโค้ง <code className="px-1.5 py-0.5 rounded bg-slate-100 font-mono text-sm text-indigo-600 font-semibold">( )</code> (Parentheses) ในการครอบสมาชิก และคั่นแต่ละตัวด้วยเครื่องหมายจุลภาค (Comma)
+                  </p>
+                  <div className="bg-slate-900 text-slate-100 rounded-xl p-3.5 font-mono text-[13px] border border-white/10 shadow-inner">
+                    <span className="text-zinc-500 font-bold block mb-1">PYTHON CODE:</span>
+                    <span className="text-emerald-400"># สร้างทิวเพิลว่าง</span><br />
+                    cargo = ()<br />
+                    <span className="text-emerald-400"># สร้างทิวเพิลที่มีข้อมูลเริ่มต้น</span><br />
+                    scores = (<span className="text-amber-300">85</span>, <span className="text-amber-300">90</span>, <span className="text-amber-300">78</span>)<br />
+                    <span className="text-emerald-400"># การสร้างทิวเพิลสมาชิกเดี่ยว (ต้องลงท้ายด้วย Comma เสมอ)</span><br />
+                    single_val = (<span className="text-amber-300">85</span>,)
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <h4 className="text-lg font-bold text-zinc-900 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                    การระบุตำแหน่งด้วยดัชนี (Indexing)
+                  </h4>
+                  <p className="text-[15px] text-zinc-650 leading-relaxed">
+                    แม้ข้อมูลใน Tuple จะไม่สามารถเปลี่ยนแปลงค่าได้ (Immutable) แต่สามารถอ้างอิงอ่านค่าผ่านเลขพิกัดดัชนีเหมือนกับ List ทุกประการ:
+                  </p>
+                  <ul className="space-y-2 text-[14.5px] text-zinc-650 pl-1">
+                    <li className="flex items-start gap-2">
+                      <span className="text-indigo-600 font-bold font-mono">1.</span>
+                      <span><strong>ดัชนีปกติ (Positive Index):</strong> เริ่มตั้งแต่ <code className="px-1 py-0.2 bg-emerald-50 text-emerald-700 font-mono font-bold rounded">0</code> สำหรับตัวหน้าสุด ไล่ไปทางขวาทีละ +1</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-indigo-600 font-bold font-mono">2.</span>
+                      <span><strong>ดัชนีติดลบ (Negative Index):</strong> เริ่มตั้งแต่ <code className="px-1 py-0.2 bg-rose-50 text-rose-700 font-mono font-bold rounded">-1</code> สำหรับตัวท้ายสุด ไล่ย้อนกลับมาทางซ้ายทีละ -1</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Visual Indexing Map */}
+              <div className="border-t border-zinc-200/80 pt-5 space-y-4">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+                  แผนผังการเข้าถึงข้อมูลผ่านดัชนีของ Tuple (Tuple Index Map)
+                </span>
+                
+                <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 overflow-x-auto">
+                  <div className="min-w-[480px] flex flex-col gap-2">
+                    {/* Positive index row */}
+                    <div className="flex gap-4">
+                      <div className="w-32 shrink-0 flex items-center justify-end pr-3">
+                        <span className="text-xs font-bold text-emerald-600 font-mono">Positive Index</span>
+                      </div>
+                      <div className="grow grid grid-cols-4 gap-3">
+                        {['0', '1', '2', '3'].map((idx, i) => (
+                          <div key={i} className="text-center font-mono text-xs font-bold text-emerald-600 py-1 bg-emerald-50 rounded-lg border border-emerald-100/50">
+                            {idx}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Elements row */}
+                    <div className="flex gap-4">
+                      <div className="w-32 shrink-0 flex items-center justify-end pr-3">
+                        <span className="text-xs font-bold text-slate-800">Element (ข้อมูล Tuple)</span>
+                      </div>
+                      <div className="grow grid grid-cols-4 gap-3">
+                        {['"Red"', '"Green"', '"Blue"', '"Yellow"'].map((val, i) => (
+                          <div key={i} className="text-center font-mono text-sm font-bold text-indigo-700 py-3 bg-white rounded-xl border border-indigo-100/50 shadow-sm">
+                            {val}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Negative index row */}
+                    <div className="flex gap-4">
+                      <div className="w-32 shrink-0 flex items-center justify-end pr-3">
+                        <span className="text-xs font-bold text-rose-500 font-mono">Negative Index</span>
+                      </div>
+                      <div className="grow grid grid-cols-4 gap-3">
+                        {['-4', '-3', '-2', '-1'].map((idx, i) => (
+                          <div key={i} className="text-center font-mono text-xs font-bold text-rose-500 py-1 bg-rose-50 rounded-lg border border-rose-100/50">
+                            {idx}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-500 leading-relaxed font-sans">
+                  <div className="flex items-start gap-2 bg-emerald-50/50 border border-emerald-100/50 p-2.5 rounded-xl">
+                    <Info className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <p><strong>Positive Indexing:</strong> อ้างอิงจากลำดับหน้าสุด เหมาะสำหรับใช้งานในการอ้างอิงข้อมูลลำดับเริ่มต้นทั่วไป</p>
+                  </div>
+                  <div className="flex items-start gap-2 bg-rose-50/50 border border-rose-100/50 p-2.5 rounded-xl">
+                    <Info className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                    <p><strong>Negative Indexing:</strong> อ้างอิงย้อนกลับจากสมาชิกตัวหลังสุด เหมาะสำหรับตรวจสอบหรือดึงข้อมูลตัวท้าย ๆ ออกมาใช้งาน</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -419,49 +501,73 @@ except TypeError as error:
           </div>
 
           <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
-            เนื่องจากทิวเพิลเป็นประเภทข้อมูลแบบคงที่ (Immutable) เมธอดพื้นฐานในการจัดการข้อมูลจึงมีอย่างจำกัด โดยมีคำสั่งหลักที่ใช้สืบค้นและดำเนินงานดังนี้:
+            เนื่องจากทิวเพิลเป็นประเภทข้อมูลแบบคงที่ (Immutable) เมธอดและฟังก์ชันพื้นฐานในการจัดการและเข้าถึงข้อมูลจึงมีข้อจำกัด โดยมีคำสั่งหลักดังนี้:
           </p>
 
-          <div className="flex flex-col gap-3.5">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
               {
-                method: "len(tuple)",
-                desc: "ฟังก์ชันตรวจสอบจำนวนสมาชิกทั้งหมดที่มีอยู่ใน Tuple",
-                complexity: "O(1) constant time",
-                theme: "border-l-indigo-500 bg-indigo-50/40 text-indigo-950",
-                badge: "text-indigo-700 bg-indigo-100"
+                title: 'len(tuple)',
+                subtitle: 'การตรวจสอบความยาว',
+                description: 'ฟังก์ชันตรวจสอบและคืนค่าจำนวนสมาชิกทั้งหมดที่มีอยู่ภายใน Tuple',
+                code: 'len(scores)',
+                result: '4',
+                titleClass: 'text-emerald-600',
+                bgGradient: 'from-emerald-50/50 via-transparent to-transparent',
               },
               {
-                method: "tuple.count(x)",
-                desc: "นับจำนวนข้อมูล x ทั้งหมดที่มีอยู่ใน Tuple",
-                complexity: "O(n) linear time",
-                theme: "border-l-sky-500 bg-sky-50/40 text-sky-950",
-                badge: "text-sky-700 bg-sky-100"
+                title: '.count(x)',
+                subtitle: 'การนับข้อมูลเฉพาะค่า',
+                description: 'นับปริมาณการปรากฏตัวทั้งหมดของข้อมูลที่มีค่าเท่ากับ x ภายใน Tuple',
+                code: 'scores.count(90)',
+                result: '2',
+                titleClass: 'text-sky-500',
+                bgGradient: 'from-sky-50/50 via-transparent to-transparent',
               },
               {
-                method: "tuple.index(x)",
-                desc: "ค้นหาและคืนค่าตำแหน่งดัชนีตัวแรกที่ตรวจพบข้อมูล x (หากไม่พบจะเกิด ValueError)",
-                complexity: "O(n) linear time",
-                theme: "border-l-violet-500 bg-violet-50/40 text-violet-950",
-                badge: "text-violet-700 bg-violet-100"
+                title: '.index(x)',
+                subtitle: 'การสืบค้นตำแหน่งดัชนี',
+                description: 'ค้นหาและคืนค่าดัชนีตัวแรกที่ตรวจพบข้อมูลที่มีค่าเท่ากับ x (หากไม่พบจะ Error)',
+                code: 'scores.index(78)',
+                result: '2',
+                titleClass: 'text-rose-500',
+                bgGradient: 'from-rose-50/50 via-transparent to-transparent',
               },
               {
-                method: "tuple1 + tuple2",
-                desc: "สั่งรวมข้อมูลทิวเพิลสองตัวเข้าด้วยกัน เพื่อสถาปนาวัตถุ Tuple ใหม่แยกออกมา",
-                complexity: "O(n1 + n2) linear time",
-                theme: "border-l-emerald-500 bg-emerald-50/40 text-emerald-950",
-                badge: "text-emerald-700 bg-emerald-100"
+                title: 'tuple1 + tuple2',
+                subtitle: 'การเชื่อมรวมทิวเพิล',
+                description: 'สั่งเชื่อมรวมข้อมูลทิวเพิลสองตัวเข้าด้วยกันเพื่อสถาปนาวัตถุ Tuple ใหม่แยกออกมา',
+                code: 'scores + (95,)',
+                result: '(85, 90, 78, 90, 95)',
+                titleClass: 'text-amber-500',
+                bgGradient: 'from-amber-50/50 via-transparent to-transparent',
               }
-            ].map((m, idx) => (
-              <div key={idx} className={`p-4 md:p-5 rounded-2xl border border-slate-200 border-l-[4px] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 ${m.theme}`}>
-                <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 grow">
-                  <span className={`inline-block font-mono text-[14px] font-bold px-3 py-1 rounded-lg ${m.badge} shrink-0 w-fit`}>
-                    {m.method}
+            ].map((card, idx) => (
+              <div
+                key={idx}
+                className="bg-white border border-slate-100 rounded-3xl p-6 md:p-7 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden"
+              >
+                {/* Top soft ambient light glow */}
+                <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b ${card.bgGradient} opacity-60 pointer-events-none`} />
+
+                <div className="space-y-4 relative z-10">
+                  <span className={`block font-mono text-[22px] font-bold tracking-tight ${card.titleClass}`}>
+                    {card.title}
                   </span>
-                  <p className="text-[15px] leading-relaxed opacity-95">{m.desc}</p>
+                  <div className="space-y-2">
+                    <h4 className="text-[17px] font-bold text-slate-800 leading-tight">
+                      {card.subtitle}
+                    </h4>
+                    <p className="text-[14px] text-slate-500 leading-relaxed min-h-[64px]">
+                      {card.description}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-[11px] font-mono opacity-70 uppercase font-bold tracking-wider pt-2 md:pt-0 border-t md:border-t-0 border-slate-200/60 md:pl-5 md:border-l border-slate-200/60 shrink-0">
-                  Time Complexity: <span className="font-semibold text-slate-800">{m.complexity}</span>
+
+                {/* Code Snippet Box */}
+                <div className="bg-slate-50 border border-slate-100/60 rounded-xl p-3 flex justify-between items-center font-mono text-[12px] md:text-[13px] mt-6 relative z-10">
+                  <span className="text-slate-700">{card.code}</span>
+                  <span className="text-indigo-600 font-bold">{card.result}</span>
                 </div>
               </div>
             ))}

@@ -57,10 +57,10 @@ const CustomStyles = () => (
 export default function DSA1_6() {
   // ─── Layer 1: Ambient Background Blobs (Teal/Indigo/Sky/Purple) ───
   const blobs = [
-    { color: 'bg-emerald-200', size: 'w-[450px] h-[450px]', position: '-top-32 -left-32', opacity: 'opacity-30' },
-    { color: 'bg-teal-100',    size: 'w-[400px] h-[400px]', position: 'top-1/3 -right-32', opacity: 'opacity-25' },
-    { color: 'bg-sky-200',     size: 'w-[380px] h-[380px]', position: '-bottom-32 left-1/4', opacity: 'opacity-25' },
-    { color: 'bg-indigo-150',  size: 'w-[300px] h-[300px]', position: 'top-1/2 left-2/3', opacity: 'opacity-20' }
+    { color: 'bg-teal-200',    size: 'w-[450px] h-[450px]', position: '-top-32 -left-32',   opacity: 'opacity-45' },
+    { color: 'bg-cyan-200',    size: 'w-[400px] h-[400px]', position: 'top-1/3 -right-32',  opacity: 'opacity-40' },
+    { color: 'bg-emerald-200', size: 'w-[380px] h-[380px]', position: '-bottom-32 left-1/4', opacity: 'opacity-35' },
+    { color: 'bg-indigo-200',  size: 'w-[300px] h-[300px]', position: 'top-1/2 left-2/3',    opacity: 'opacity-30' }
   ];
 
   // ─── State for ADT Simulator ───
@@ -343,7 +343,7 @@ export default function DSA1_6() {
             </h3>
           </div>
 
-          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
             ในการพัฒนาซอฟต์แวร์ <span className="mx-1 px-1.5 py-0.5 rounded bg-teal-50 border border-teal-200/50 text-teal-700 font-mono text-[14px]">Abstract Data Type (ADT)</span> 
             หรือประเภทข้อมูลนามธรรม คือการระบุข้อตกลงและชุดการปฏิบัติการ (API/Operations) ที่ข้อมูลนั้นสามารถทำได้ 
             โดยจะไม่ระบุวิธีการจัดเก็บจริงในฮาร์ดแวร์หรือแรม (Implementation) แนวคิดนี้ช่วยให้นักพัฒนาสามารถแยกแยะ
@@ -439,57 +439,83 @@ export default function DSA1_6() {
             </h3>
           </div>
 
-          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
             ประเภทข้อมูลนามธรรมที่เป็นมาตรฐานสองประเภทคือ **Stack (สแตก)** และ **Queue (คิว)** มีการกำหนดคำสั่งและกฎเกณฑ์พฤติกรรมการจัดการข้อมูลดังนี้:
           </p>
 
-          <div className="flex flex-col gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {[
               {
-                method: "stack.push(item)",
-                desc: "เพิ่มข้อมูลเข้าไปไว้ที่ตำแหน่งบนสุดของ Stack (LIFO - เข้าหลังออกก่อน)",
-                complexity: "O(1) constant time",
-                theme: "border-l-indigo-500 bg-indigo-50/40 text-indigo-950",
-                badge: "text-indigo-700 bg-indigo-100"
+                title: 'stack.push(item)',
+                subtitle: 'เพิ่มข้อมูลใน Stack',
+                description: 'เพิ่มข้อมูลเข้าไปไว้ที่ตำแหน่งบนสุดของ Stack (LIFO - เข้าหลังออกก่อน)',
+                code: 'stack.push("C")',
+                result: '[\'A\', \'B\', \'C\']',
+                titleClass: 'text-indigo-600',
+                bgGradient: 'from-indigo-50/50 via-transparent to-transparent',
               },
               {
-                method: "stack.pop()",
-                desc: "ลบและส่งคืนข้อมูลตัวบนสุดของ Stack ออกจากโครงสร้าง",
-                complexity: "O(1) constant time",
-                theme: "border-l-cyan-500 bg-cyan-50/40 text-cyan-950",
-                badge: "text-cyan-700 bg-cyan-100"
+                title: 'stack.pop()',
+                subtitle: 'ลบข้อมูลใน Stack',
+                description: 'ลบและส่งคืนข้อมูลตัวบนสุดของ Stack ออกจากโครงสร้าง',
+                code: 'stack.pop()',
+                result: '\'B\'',
+                titleClass: 'text-sky-500',
+                bgGradient: 'from-sky-50/50 via-transparent to-transparent',
               },
               {
-                method: "queue.enqueue(item)",
-                desc: "เพิ่มข้อมูลเข้าสู่ท้ายแถวของ Queue (FIFO - เข้าก่อนออกก่อน)",
-                complexity: "O(1) constant time",
-                theme: "border-l-teal-500 bg-teal-50/40 text-teal-950",
-                badge: "text-teal-700 bg-teal-100"
+                title: 'queue.enqueue(item)',
+                subtitle: 'เพิ่มข้อมูลใน Queue',
+                description: 'เพิ่มข้อมูลเข้าสู่ท้ายแถวของ Queue (FIFO - เข้าก่อนออกก่อน)',
+                code: 'queue.enqueue("C")',
+                result: '[\'A\', \'B\', \'C\']',
+                titleClass: 'text-teal-600',
+                bgGradient: 'from-teal-50/50 via-transparent to-transparent',
               },
               {
-                method: "queue.dequeue()",
-                desc: "ลบและส่งคืนข้อมูลจากหัวแถวสุดของ Queue ออกไปใช้งาน",
-                complexity: "O(1) (O(n) หากใช้ Array)",
-                theme: "border-l-rose-500 bg-rose-50/40 text-rose-950",
-                badge: "text-rose-700 bg-rose-100"
+                title: 'queue.dequeue()',
+                subtitle: 'ลบข้อมูลใน Queue',
+                description: 'ลบและส่งคืนข้อมูลจากหัวแถวสุดของ Queue ออกไปใช้งาน',
+                code: 'queue.dequeue()',
+                result: '\'A\'',
+                titleClass: 'text-rose-500',
+                bgGradient: 'from-rose-50/50 via-transparent to-transparent',
               },
               {
-                method: "adt.peek() / front()",
-                desc: "เรียกดูข้อมูลตัวหัวแถวหรือตัวบนสุดของโครงสร้างโดยไม่มีการลบข้อมูลจริงออกไป",
-                complexity: "O(1) constant time",
-                theme: "border-l-emerald-500 bg-emerald-50/40 text-emerald-950",
-                badge: "text-emerald-700 bg-emerald-100"
+                title: 'adt.peek()',
+                subtitle: 'เรียกดูหัวแถว/บนสุด',
+                description: 'เรียกดูข้อมูลตัวหัวแถวหรือตัวบนสุดของโครงสร้างโดยไม่มีการลบข้อมูลจริงออกไป',
+                code: 'stack.peek()',
+                result: '\'B\'',
+                titleClass: 'text-emerald-600',
+                bgGradient: 'from-emerald-50/50 via-transparent to-transparent',
               }
-            ].map((m, idx) => (
-              <div key={idx} className={`p-4 md:p-5 rounded-2xl border border-slate-200 border-l-[4px] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 ${m.theme}`}>
-                <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 grow">
-                  <span className={`inline-block font-mono text-[14px] font-bold px-3 py-1 rounded-lg ${m.badge} shrink-0 w-fit`}>
-                    {m.method}
+            ].map((card, idx) => (
+              <div
+                key={idx}
+                className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-3xl p-5 md:p-6 hover:shadow-2xl hover:-translate-y-1 hover:border-teal-500/30 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden"
+              >
+                {/* Top soft ambient light glow */}
+                <div className={`absolute top-0 left-0 right-0 h-20 bg-gradient-to-b ${card.bgGradient} opacity-60 pointer-events-none`} />
+
+                <div className="space-y-3.5 relative z-10">
+                  <span className={`block font-mono text-[16px] md:text-[18px] font-bold tracking-tight truncate ${card.titleClass}`}>
+                    {card.title}
                   </span>
-                  <p className="text-[15px] leading-relaxed opacity-95">{m.desc}</p>
+                  <div className="space-y-1.5">
+                    <h4 className="text-[15px] font-bold text-slate-800 leading-tight">
+                      {card.subtitle}
+                    </h4>
+                    <p className="text-[13px] text-slate-500 leading-relaxed min-h-[54px]">
+                      {card.description}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-[11px] font-mono opacity-70 uppercase font-bold tracking-wider pt-2 md:pt-0 border-t md:border-t-0 border-slate-200/60 md:pl-5 md:border-l border-slate-200/60 shrink-0">
-                  Time Complexity: <span className="font-semibold text-slate-800">{m.complexity}</span>
+
+                {/* Code Snippet Box */}
+                <div className="bg-slate-50 border border-slate-100/60 rounded-xl p-3 flex flex-col gap-1 font-mono text-[11px] md:text-[12px] mt-4 relative z-10 w-full overflow-hidden">
+                  <span className="text-slate-600 truncate">{card.code}</span>
+                  <span className="text-indigo-600 font-bold self-end truncate">{card.result}</span>
                 </div>
               </div>
             ))}
@@ -507,7 +533,7 @@ export default function DSA1_6() {
             </h3>
           </div>
 
-          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
             ทดลองจำลองการทำธุรกรรมด้วยประเภทข้อมูลนามธรรม โดยคุณสามารถสลับอินเตอร์เฟซระหว่าง <strong>"Stack (LIFO)"</strong> หรือ <strong>"Queue (FIFO)"</strong> 
             และจับคู่การจำลองบันทึกข้อมูลเบื้องหลังด้วยโครงสร้างทางกายภาพที่แตกต่างกัน เพื่อสังเกตขั้นตอนความแตกต่างทางหน่วยความจำ:
           </p>
@@ -522,7 +548,7 @@ export default function DSA1_6() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mt-4">
               
               {/* Left Panel: Control panel */}
-              <div className="lg:col-span-5 bg-slate-900/90 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-2xl relative flex flex-col justify-between min-h-[480px]">
+              <div className="lg:col-span-5 bg-slate-950/40 backdrop-blur-xl rounded-2xl p-6 border border-slate-800/80 shadow-2xl relative flex flex-col justify-between min-h-[480px]">
                 <div className="text-[9px] font-mono text-slate-500 absolute top-3 right-4 font-bold tracking-widest">
                   ADT CONSOLE
                 </div>
@@ -637,7 +663,7 @@ export default function DSA1_6() {
                     <div className="text-slate-500 border-b border-slate-900 pb-1 mb-1.5 uppercase tracking-wide text-[8.5px] font-bold">ADT Runtime Trace:</div>
                     {terminalLogs.map((log, i) => (
                       <div key={i} className="animate-fadeIn">
-                        <span className="text-slate-650">&gt; </span>
+                        <span className="text-slate-400">&gt; </span>
                         <span>{log}</span>
                       </div>
                     ))}
@@ -646,7 +672,7 @@ export default function DSA1_6() {
               </div>
 
               {/* Right Panel: Visual representation of memory */}
-              <div className="lg:col-span-7 bg-slate-950/95 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-2xl relative flex flex-col justify-between min-h-[480px]">
+              <div className="lg:col-span-7 bg-slate-950/70 backdrop-blur-xl rounded-2xl p-6 border border-slate-800/80 shadow-2xl relative flex flex-col justify-between min-h-[480px]">
                 <div className="text-[9px] font-mono text-slate-500 absolute top-3 left-3 font-bold tracking-widest">
                   ADT LAYERING GRAPH & MEMORY VIEW
                 </div>
@@ -735,7 +761,7 @@ export default function DSA1_6() {
                         <g transform="translate(-9, -9)">
                           <Sliders className={`w-4.5 h-4.5 ${activeStep === 1 && implementation === 'Array' ? 'text-teal-400' : 'text-slate-400'}`} />
                         </g>
-                        <text x="-32" y="4" textAnchor="end" className="fill-slate-450 font-sans text-[8.5px] font-bold">Array Implementation</text>
+                        <text x="-32" y="4" textAnchor="end" fill="#94a3b8" className="font-sans text-[8.5px] font-bold">Array Implementation</text>
                       </g>
 
                       {/* Node 3: Linked-List-Based Implementation */}
@@ -744,7 +770,7 @@ export default function DSA1_6() {
                         <g transform="translate(-9, -9)">
                           <Activity className={`w-4.5 h-4.5 ${activeStep === 1 && implementation === 'LinkedList' ? 'text-indigo-400' : 'text-slate-400'}`} />
                         </g>
-                        <text x="32" y="4" textAnchor="start" className="fill-slate-450 font-sans text-[8.5px] font-bold">Linked List Implementation</text>
+                        <text x="32" y="4" textAnchor="start" fill="#94a3b8" className="font-sans text-[8.5px] font-bold">Linked List Implementation</text>
                       </g>
 
                       {/* Node 4: Physical RAM Node */}
@@ -800,7 +826,7 @@ export default function DSA1_6() {
                               {Array.from({ length: 5 - items.length }).map((_, i) => (
                                 <div key={i} className="flex flex-col items-center opacity-30">
                                   <div className="w-12 h-12 rounded-lg border border-dashed border-slate-800 bg-transparent flex items-center justify-center text-slate-700 text-xs">-</div>
-                                  <span className="text-[9px] text-slate-650 mt-1 font-mono">[{items.length + i}]</span>
+                                  <span className="text-[9px] text-slate-500 mt-1 font-mono">[{items.length + i}]</span>
                                 </div>
                               ))}
                             </div>
@@ -858,7 +884,7 @@ export default function DSA1_6() {
             </h3>
           </div>
 
-          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
             ในภาษา <span className="mx-1 px-1.5 py-0.5 rounded bg-teal-50 border border-teal-200/50 text-teal-700 font-mono text-[14px]">Python</span> 
             เราสามารถนิยามโครงสร้างคลาสเพื่อทำหน้าที่เป็น ADT โดยซ่อนตัวแปรจัดเก็บข้อมูลจริงไว้เบื้องหลัง (Information Hiding) 
             ทำให้ภายนอกเรียกใช้งานผ่านอินเตอร์เฟซ API ที่ผ่านการควบคุมดูแลความถูกต้องเรียบร้อยแล้วเท่านั้น:
@@ -892,7 +918,7 @@ export default function DSA1_6() {
             </h3>
           </div>
 
-          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
             ทดสอบความรู้ความเข้าใจเกี่ยวกับสถาปัตยกรรมประเภทข้อมูลนามธรรมและประโยชน์ในการพัฒนาโครงสร้างซอฟต์แวร์สากล:
           </p>
 

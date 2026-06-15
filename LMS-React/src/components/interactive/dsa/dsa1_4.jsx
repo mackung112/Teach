@@ -163,43 +163,105 @@ export default function DSA1_4() {
               โครงสร้างคู่กุญแจและค่า
             </span>
             <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              โครงสร้างข้อมูลแบบ Dictionary คืออะไร
+              Dictionary (พจนานุกรม)
             </h3>
           </div>
 
           <div className="space-y-6">
             <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
               ในทางวิทยาการคอมพิวเตอร์ <strong className="mx-1 px-1.5 py-0.5 rounded bg-indigo-50 border border-indigo-200 text-indigo-700 font-mono text-[14px]">Dictionary</strong> 
-              (หรือ Hash Map ในภาษาอื่น) คือโครงสร้างข้อมูลแบบนามธรรมที่จับคู่ระหว่าง **กุญแจ (Key)** กับ **ค่าข้อมูล (Value)** 
-              โดยเป้าหมายหลักคือต้องการค้นหาข้อมูลได้รวดเร็วทันทีโดยไม่ต้องวนลูปไล่หาทีละตัวเหมือน Array หรือ List
+              (หรือ Hash Map ในภาษาอื่น) คือโครงสร้างข้อมูลประเภทจัดเก็บกลุ่มข้อมูลเป็นคู่ของกุญแจและค่าข้อมูล (Key-Value Pairs) โดยเน้นเรื่องความรวดเร็วสูงสุดในการเข้าถึงข้อมูลผ่านค่าคีย์ โดยระบบเบื้องหลังจะเก็บข้อมูลลงในตารางแฮช (Hash Table) เพื่อจัดทำดัชนีเข้าค้นหาข้อมูลได้โดยตรงทันที
             </p>
 
-            {/* Dictionary Properties */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <ConceptCard
-                symbol="Key-Value"
-                title="คู่กุญแจและค่า"
-                description="จัดเก็บข้อมูลเป็นคู่เสมอ เช่น คีย์คือรหัสนักเรียน คู่กับค่าข้อมูลคือชื่อนักเรียน"
-                accent="indigo"
-              />
-              <ConceptCard
-                symbol="Unique Keys"
-                title="คีย์ห้ามซ้ำซ้อน"
-                description="คีย์ในหนึ่ง Dictionary ห้ามมีค่าซ้ำกันเด็ดขาด แต่ค่าข้อมูล (Values) สามารถซ้ำกันได้"
-                accent="cyan"
-              />
-              <ConceptCard
-                symbol="Hashable"
-                title="คีย์ต้องไม่เปลี่ยนรูป"
-                description="คีย์ต้องเป็นข้อมูลชนิดที่ไม่สามารถเปลี่ยนรูปได้ (Immutable/Hashable) เช่น String หรือ Number"
-                accent="emerald"
-              />
-              <ConceptCard
-                symbol="Fast Lookups"
-                title="สืบค้นฉับไว O(1)"
-                description="ระบบใช้แฮชฟังก์ชันคำนวณระบุตำแหน่งจัดเก็บได้โดยตรงในแรมโดยไม่ต้องวนรอบค้นหา"
-                accent="violet"
-              />
+            <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <h4 className="text-lg font-bold text-zinc-900 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                    การประกาศและสร้าง Dictionary
+                  </h4>
+                  <p className="text-[15px] text-zinc-600 leading-relaxed">
+                    เราสามารถสร้าง Dictionary ในภาษา Python โดยใช้เครื่องหมายปีกกา <code className="px-1.5 py-0.5 rounded bg-slate-100 font-mono text-sm text-indigo-600 font-semibold">{"{ }"}</code> (Curly braces) ในการครอบข้อมูล และคั่นระหว่าง Key กับ Value ด้วยเครื่องหมายโคลอน (Colon: `:`)
+                  </p>
+                  <div className="bg-slate-900 text-slate-100 rounded-xl p-3.5 font-mono text-[13px] border border-white/10 shadow-inner">
+                    <span className="text-zinc-500 font-bold block mb-1">PYTHON CODE:</span>
+                    <span className="text-emerald-400"># สร้าง Dictionary ว่าง</span><br />
+                    cargo = {"{}"}<br />
+                    <span className="text-emerald-400"># สร้าง Dictionary พร้อมข้อมูลเริ่มต้น {"{คีย์: ค่า}"}</span><br />
+                    user = {"{"}<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-amber-350">"name"</span>: <span className="text-sky-300">"Mac"</span>,<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-amber-350">"age"</span>: <span className="text-amber-300">25</span>,<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-amber-350">"gpa"</span>: <span className="text-amber-300">3.8</span><br />
+                    {"}"}
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <h4 className="text-lg font-bold text-zinc-900 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                    โครงสร้างและหลักการทำงาน (Hash Table)
+                  </h4>
+                  <p className="text-[15px] text-zinc-600 leading-relaxed">
+                    Dictionary จะใช้กลไกของ **ตารางแฮช (Hash Table)** เพื่อเชื่อมคีย์กับตำแหน่งในหน่วยความจำ (Index) โดยระบบจะนำกุญแจ (Key) ไปประมวลผลผ่าน **แฮชฟังก์ชัน (Hash Function)** เพื่อระบุสล็อตที่ถูกต้องทันที ทำให้เข้าถึงค่า (Value) ได้อย่างรวดเร็ว
+                  </p>
+                  <ul className="space-y-2 text-[14.5px] text-zinc-650 pl-1">
+                    <li className="flex items-start gap-2">
+                      <span className="text-indigo-600 font-bold font-mono">1.</span>
+                      <span><strong>กุญแจ (Key):</strong> ต้องเป็นข้อมูลชนิดที่แก้ไขไม่ได้ (Immutable / Hashable) เช่น String, Number, หรือ Tuple และต้องมีค่าไม่ซ้ำกัน</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-indigo-600 font-bold font-mono">2.</span>
+                      <span><strong>ค่าข้อมูล (Value):</strong> สามารถเป็นข้อมูลชนิดใดก็ได้ รวมถึงสามารถมีค่าซ้ำกันได้</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Visual Indexing Map */}
+              <div className="border-t border-zinc-200/80 pt-5 space-y-4">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+                  แผนผังการทำงานและการจับคู่คีย์-ค่า (Key-Value Mapping Process)
+                </span>
+                <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 overflow-x-auto">
+                  <div className="min-w-[500px] flex flex-col gap-4">
+                    {/* Steps showing Key -> Hash Function -> Index -> Value */}
+                    <div className="grid grid-cols-3 gap-6">
+                      {[
+                        { key: '"name"', idx: 'Hash -> Slot [2]', val: '"Mac"' },
+                        { key: '"age"', idx: 'Hash -> Slot [5]', val: '25' },
+                        { key: '"gpa"', idx: 'Hash -> Slot [0]', val: '3.8' }
+                      ].map((item, i) => (
+                        <div key={i} className="flex flex-col items-center bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
+                          <div className="text-[11px] font-bold text-slate-500 font-sans uppercase mb-1">Key (กุญแจ)</div>
+                          <div className="font-mono text-xs font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-lg w-full text-center">
+                            {item.key}
+                          </div>
+                          
+                          <div className="my-2 text-[10px] font-mono text-zinc-400 font-bold flex flex-col items-center">
+                            <ArrowRight className="w-3.5 h-3.5 text-zinc-400 rotate-90 my-0.5" />
+                            <span className="bg-slate-100 px-2 py-0.5 rounded border border-slate-200 text-slate-600 font-sans">{item.idx}</span>
+                            <ArrowRight className="w-3.5 h-3.5 text-zinc-400 rotate-90 my-0.5" />
+                          </div>
+
+                          <div className="text-[11px] font-bold text-slate-500 font-sans uppercase mb-1">Value (ค่าข้อมูล)</div>
+                          <div className="font-mono text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-lg w-full text-center">
+                            {item.val}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-500 leading-relaxed font-sans">
+                  <div className="flex items-start gap-2 bg-indigo-50/50 border border-indigo-100/50 p-2.5 rounded-xl">
+                    <Info className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
+                    <p><strong>Hash Function:</strong> เบื้องหลังระบบจะนำ Key ไปคำนวณผ่านฟังก์ชันแฮชเพื่อระบุ Slot ดัชนีในตาราง เพื่อดึงค่า Value ออกมาโดยไม่ต้องค้นหาทีละตำแหน่ง</p>
+                  </div>
+                  <div className="flex items-start gap-2 bg-amber-50/50 border border-amber-100/50 p-2.5 rounded-xl">
+                    <Info className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                    <p><strong>Unique Keys Constraint:</strong> กุญแจ (Key) แต่ละตัวห้ามซ้ำกัน แต่ค่าข้อมูล (Value) สามารถซ้ำกันได้ตามความต้องการ</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -284,56 +346,82 @@ export default function DSA1_4() {
           </div>
 
           <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
-            การดำเนินการกับตัวแปรประเภท Dictionary ในภาษา Python มีเมธอดหลักมาตรฐานในการค้นหาและจัดการข้อมูลอย่างรวดเร็วดังนี้:
+            การดำเนินการกับตัวแปรประเภท Dictionary ในภาษา Python มีเมธอดและฟังก์ชันการจัดการมาตรฐานหลักในการควบคุมและเข้าถึงข้อมูลดังนี้:
           </p>
 
-          <div className="flex flex-col gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {[
               {
-                method: "len(dict)",
-                desc: "ฟังก์ชันตรวจสอบจำนวนคู่ข้อมูล (Key-Value) ทั้งหมดที่บันทึกอยู่ใน Dictionary",
-                complexity: "O(1) constant time",
-                theme: "border-l-indigo-500 bg-indigo-50/40 text-indigo-950",
-                badge: "text-indigo-700 bg-indigo-100"
+                title: 'len(dict)',
+                subtitle: 'ความยาวพจนานุกรม',
+                description: 'ฟังก์ชันตรวจสอบจำนวนคู่ข้อมูล (Key-Value) ทั้งหมดที่บันทึกอยู่ใน Dictionary',
+                code: 'len(user)',
+                result: '3',
+                titleClass: 'text-emerald-600',
+                bgGradient: 'from-emerald-50/50 via-transparent to-transparent',
               },
               {
-                method: "dict.get(key, default)",
-                desc: "ดึงค่าข้อมูลของ Key ที่ต้องการอย่างปลอดภัย หากไม่พบจะคืนค่า default แทนการค้างระบบ",
-                complexity: "O(1) average time",
-                theme: "border-l-cyan-500 bg-cyan-50/40 text-cyan-950",
-                badge: "text-cyan-700 bg-cyan-100"
+                title: '.get(key, def)',
+                subtitle: 'ดึงข้อมูลปลอดภัย',
+                description: 'ดึงค่าข้อมูลผ่าน Key หากไม่พบจะคืนค่าเริ่มต้น (default) แทนการหยุดชะงักของโปรแกรม',
+                code: 'user.get("gpa", 4.0)',
+                result: '3.8',
+                titleClass: 'text-sky-500',
+                bgGradient: 'from-sky-50/50 via-transparent to-transparent',
               },
               {
-                method: "dict.keys()",
-                desc: "ดึงรายชื่อคีย์ทั้งหมดที่มีอยู่ใน Dictionary ออกมาเพื่อใช้ในการตรวจสอบหรือลูปข้อมูล",
-                complexity: "O(1) constant time",
-                theme: "border-l-violet-500 bg-violet-50/40 text-violet-950",
-                badge: "text-violet-700 bg-violet-100"
+                title: '.keys()',
+                subtitle: 'ดึงคีย์ทั้งหมด',
+                description: 'ดึงรายการกุญแจ (Key) ทั้งหมดออกมาเพื่อทำการตรวจสอบหรือสั่งวนลูป',
+                code: 'user.keys()',
+                result: "['name', 'age', 'gpa']",
+                titleClass: 'text-rose-500',
+                bgGradient: 'from-rose-50/50 via-transparent to-transparent',
               },
               {
-                method: "dict.values()",
-                desc: "ดึงรายการของค่าข้อมูลดิบ (Values) ทั้งหมดที่มีอยู่ใน Dictionary ออกมา",
-                complexity: "O(1) constant time",
-                theme: "border-l-rose-500 bg-rose-50/40 text-rose-950",
-                badge: "text-rose-700 bg-rose-100"
+                title: '.values()',
+                subtitle: 'ดึงค่าข้อมูลทั้งหมด',
+                description: 'ดึงรายการเฉพาะข้อมูลดิบ (Value) ทั้งหมดออกมาอ้างอิงรวดเร็ว',
+                code: 'user.values()',
+                result: "['Mac', 25, 3.8]",
+                titleClass: 'text-amber-500',
+                bgGradient: 'from-amber-50/50 via-transparent to-transparent',
               },
               {
-                method: "dict.pop(key)",
-                desc: "ลบคู่ข้อมูลและคืนค่า Value ของ Key นั้นออกจาก Dictionary",
-                complexity: "O(1) average time",
-                theme: "border-l-emerald-500 bg-emerald-50/40 text-emerald-950",
-                badge: "text-emerald-700 bg-emerald-100"
+                title: '.pop(key)',
+                subtitle: 'ลบคู่คีย์-ค่า',
+                description: 'ลบคู่กุญแจและค่าออกจากหน่วยความจำ พร้อมส่งคืนค่า Value ของคู่ที่ถูกเอาออก',
+                code: 'user.pop("age")',
+                result: '25',
+                titleClass: 'text-violet-500',
+                bgGradient: 'from-violet-50/50 via-transparent to-transparent',
               }
-            ].map((m, idx) => (
-              <div key={idx} className={`p-4 md:p-5 rounded-2xl border border-slate-200 border-l-[4px] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 ${m.theme}`}>
-                <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 grow">
-                  <span className={`inline-block font-mono text-[14px] font-bold px-3 py-1 rounded-lg ${m.badge} shrink-0 w-fit`}>
-                    {m.method}
+            ].map((card, idx) => (
+              <div
+                key={idx}
+                className="bg-white border border-slate-100 rounded-3xl p-5 md:p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden"
+              >
+                {/* Top soft ambient light glow */}
+                <div className={`absolute top-0 left-0 right-0 h-20 bg-gradient-to-b ${card.bgGradient} opacity-60 pointer-events-none`} />
+
+                <div className="space-y-3.5 relative z-10">
+                  <span className={`block font-mono text-[18px] md:text-[20px] font-bold tracking-tight truncate ${card.titleClass}`}>
+                    {card.title}
                   </span>
-                  <p className="text-[15px] leading-relaxed opacity-95">{m.desc}</p>
+                  <div className="space-y-1.5">
+                    <h4 className="text-[15px] font-bold text-slate-800 leading-tight">
+                      {card.subtitle}
+                    </h4>
+                    <p className="text-[13px] text-slate-500 leading-relaxed min-h-[54px]">
+                      {card.description}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-[11px] font-mono opacity-70 uppercase font-bold tracking-wider pt-2 md:pt-0 border-t md:border-t-0 border-slate-200/60 md:pl-5 md:border-l border-slate-200/60 shrink-0">
-                  Time Complexity: <span className="font-semibold text-slate-800">{m.complexity}</span>
+
+                {/* Code Snippet Box */}
+                <div className="bg-slate-50 border border-slate-100/60 rounded-xl p-3 flex flex-col gap-1 font-mono text-[11px] md:text-[12px] mt-4 relative z-10 w-full overflow-hidden">
+                  <span className="text-slate-600 truncate">{card.code}</span>
+                  <span className="text-indigo-600 font-bold self-end truncate">{card.result}</span>
                 </div>
               </div>
             ))}

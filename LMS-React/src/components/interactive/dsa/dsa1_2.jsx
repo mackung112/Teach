@@ -410,44 +410,117 @@ export default function DSA1_2() {
               ความหมายและคุณสมบัติ
             </span>
             <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              โครงสร้างข้อมูลแบบรายการ (List Data Structure) คืออะไร
+              List (รายการ)
             </h3>
           </div>
 
           <div className="space-y-6">
             <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
               ในทางวิทยาการคอมพิวเตอร์ <strong className="mx-1 px-1.5 py-0.5 rounded bg-indigo-50 border border-indigo-200 text-indigo-700 font-mono text-[14px]">List (รายการ)</strong> 
-              คือ โครงสร้างข้อมูลเชิงเส้น (Linear Data Structure) ที่ใช้เก็บข้อมูลเรียงต่อกันเป็นลำดับต่อเนื่องในหน่วยความจำ 
-              ข้อมูลแต่ละตัวเรียกว่า **สมาชิก (Element)** โดยจุดเด่นหลักของ List คือการใช้เลข **ดัชนี (Index)** เริ่มต้นจาก 0 
-              เพื่อใช้ระบุพิกัดระบุตำแหน่งข้อมูลที่ต้องการแก้ไขหรือดึงไปใช้งานได้ทันทีในหน่วยความจำ
+              คือ โครงสร้างข้อมูลเชิงเส้น (Linear Data Structure) ที่ใช้ในการจัดเก็บข้อมูลชุดแบบเรียงต่อกันเป็นลำดับในหน่วยความจำ โดยเน้นเรื่องความยืดหยุ่นในการประกาศสร้าง และการระบุพิกัดข้อมูลผ่านค่าดัชนีทั้งทางบวกและทางลบ
             </p>
 
-            {/* List Properties Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <ConceptCard
-                symbol="Ordered"
-                title="จัดเรียงตามลำดับ"
-                description="ข้อมูลแต่ละตัวจะถูกบันทึกและรักษาระดับตำแหน่งไว้ตามลำดับการแทรกก่อนหลังชัดเจน"
-                accent="indigo"
-              />
-              <ConceptCard
-                symbol="Mutable"
-                title="เปลี่ยนรูปค่าข้อมูลได้"
-                description="สามารถเพิ่ม (Insert), ลบ (Delete) หรือแทนค่าข้อมูล (Update) สมาชิกตัวใดตัวหนึ่งในลิสต์ได้ตลอดเวลา"
-                accent="cyan"
-              />
-              <ConceptCard
-                symbol="Duplicates"
-                title="อนุญาตให้ค่าซ้ำกัน"
-                description="สมาชิกสามารถมีค่าซ้ำกันอยู่ในลิสต์ได้ โดยจะแยกความแตกต่างด้วยตำแหน่งดัชนี (Index) เสมอ"
-                accent="emerald"
-              />
-              <ConceptCard
-                symbol="Dynamic"
-                title="ขนาดแปรผันยืดหยุ่น"
-                description="ในภาษาอย่าง Python ลิสต์จะปรับขนาดความจุโดยอัตโนมัติเมื่อมีการเพิ่มหรือลดสมาชิกจำนวนมาก"
-                accent="violet"
-              />
+            <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <h4 className="text-lg font-bold text-zinc-900 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                    การประกาศและสร้างลิสต์ (List Declaration)
+                  </h4>
+                  <p className="text-[15px] text-zinc-600 leading-relaxed">
+                    เราสามารถสร้าง List ในภาษา Python ได้ง่ายๆ โดยใช้เครื่องหมายวงเล็บเหลี่ยม <code className="px-1.5 py-0.5 rounded bg-slate-100 font-mono text-sm text-indigo-600 font-semibold">[ ]</code> (Square brackets) ในการสร้างสมาชิก และคั่นแต่ละตัวด้วยเครื่องหมายจุลภาค (Comma)
+                  </p>
+                  <div className="bg-slate-900 text-slate-100 rounded-xl p-3.5 font-mono text-[13px] border border-white/10 shadow-inner">
+                    <span className="text-zinc-500 font-bold block mb-1">PYTHON CODE:</span>
+                    <span className="text-emerald-400"># สร้างลิสต์ว่าง</span><br />
+                    cargo = []<br />
+                    <span className="text-emerald-400"># สร้างลิสต์ที่มีข้อมูลเริ่มต้น</span><br />
+                    scores = [<span className="text-amber-300">85</span>, <span className="text-amber-300">90</span>, <span className="text-amber-300">78</span>]
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <h4 className="text-lg font-bold text-zinc-900 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                    การระบุตำแหน่งด้วยดัชนี (Indexing)
+                  </h4>
+                  <p className="text-[15px] text-zinc-600 leading-relaxed">
+                    คือกลไกการกำหนดเลขพิกัดของแต่ละช่องข้อมูลเพื่อเข้าถึงหรือแก้ไขสมาชิกเฉพาะตัวในลิสต์ได้ทันที โดยในภาษา Python จะแบ่งการดึงตำแหน่งออกเป็น 2 รูปแบบอย่างสะดวก:
+                  </p>
+                  <ul className="space-y-2 text-[14.5px] text-zinc-600 pl-1">
+                    <li className="flex items-start gap-2">
+                      <span className="text-indigo-600 font-bold font-mono">1.</span>
+                      <span><strong>ดัชนีปกติ (Positive Index):</strong> เริ่มตั้งแต่ <code className="px-1 py-0.2 bg-emerald-50 text-emerald-700 font-mono font-bold rounded">0</code> สำหรับตัวหน้าสุด ไล่ไปจนถึง <code className="px-1 py-0.2 bg-emerald-50 text-emerald-700 font-mono font-bold rounded">n - 1</code> ทางด้านขวา</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-indigo-600 font-bold font-mono">2.</span>
+                      <span><strong>ดัชนีติดลบ (Negative Index):</strong> เริ่มตั้งแต่ <code className="px-1 py-0.2 bg-rose-50 text-rose-700 font-mono font-bold rounded">-1</code> สำหรับตัวท้ายสุด ไล่ย้อนกลับมาทางซ้ายจนถึง <code className="px-1 py-0.2 bg-rose-50 text-rose-700 font-mono font-bold rounded">-n</code></span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Visual Indexing Map */}
+              <div className="border-t border-zinc-200/80 pt-5 space-y-4">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+                  แผนผังการเข้าถึงข้อมูลผ่านดัชนี (Positive & Negative Index Map)
+                </span>
+                
+                <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 overflow-x-auto">
+                  <div className="min-w-[480px] flex flex-col gap-2">
+                    {/* Positive index row */}
+                    <div className="flex gap-4">
+                      <div className="w-32 shrink-0 flex items-center justify-end pr-3">
+                        <span className="text-xs font-bold text-emerald-600 font-mono">Positive Index</span>
+                      </div>
+                      <div className="grow grid grid-cols-4 gap-3">
+                        {['0', '1', '2', '3'].map((idx, i) => (
+                          <div key={i} className="text-center font-mono text-xs font-bold text-emerald-600 py-1 bg-emerald-50 rounded-lg border border-emerald-100/50">
+                            {idx}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Elements row */}
+                    <div className="flex gap-4">
+                      <div className="w-32 shrink-0 flex items-center justify-end pr-3">
+                        <span className="text-xs font-bold text-slate-800">Element (ข้อมูล)</span>
+                      </div>
+                      <div className="grow grid grid-cols-4 gap-3">
+                        {['"Apple"', '"Banana"', '"Cherry"', '"Dates"'].map((val, i) => (
+                          <div key={i} className="text-center font-mono text-sm font-bold text-slate-800 py-3 bg-white rounded-xl border border-slate-200 shadow-sm">
+                            {val}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Negative index row */}
+                    <div className="flex gap-4">
+                      <div className="w-32 shrink-0 flex items-center justify-end pr-3">
+                        <span className="text-xs font-bold text-rose-500 font-mono">Negative Index</span>
+                      </div>
+                      <div className="grow grid grid-cols-4 gap-3">
+                        {['-4', '-3', '-2', '-1'].map((idx, i) => (
+                          <div key={i} className="text-center font-mono text-xs font-bold text-rose-500 py-1 bg-rose-50 rounded-lg border border-rose-100/50">
+                            {idx}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-500 leading-relaxed font-sans">
+                  <div className="flex items-start gap-2 bg-emerald-50/50 border border-emerald-100/50 p-2.5 rounded-xl">
+                    <Info className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <p><strong>Positive Indexing:</strong> เริ่มจากดัชนี 0 ด้านหน้าสุด ไปทางขวาทีละ +1 เหมาะสำหรับใช้งานในกรณีทั่วไป</p>
+                  </div>
+                  <div className="flex items-start gap-2 bg-rose-50/50 border border-rose-100/50 p-2.5 rounded-xl">
+                    <Info className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                    <p><strong>Negative Indexing:</strong> เริ่มจากดัชนี -1 ด้านหลังสุด ย้อนมาซ้ายทีละ -1 เหมาะสำหรับเรียกใช้สมาชิกตัวท้ายๆ ของลิสต์</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -532,56 +605,73 @@ export default function DSA1_2() {
           </div>
 
           <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
-            การทำงานกับตัวแปรประเภทลิสต์ในภาษา Python มีเมธอดหลักมาตรฐานในการควบคุมปริมาณข้อมูลภายในที่คุณต้องจดจำไปใช้งานดังนี้:
+            การทำงานกับตัวแปรประเภทลิสต์ในภาษา Python มีเมธอดและฟังก์ชันการจัดการมาตรฐานหลักในการควบคุมและตรวจสอบสมาชิกดังนี้:
           </p>
 
-          <div className="flex flex-col gap-3.5">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
               {
-                method: ".append(x)",
-                desc: "เพิ่มข้อมูล x ไปที่ตำแหน่งสุดท้ายของ List",
-                complexity: "O(1) amortized",
-                theme: "border-l-indigo-500 bg-indigo-50/40 text-indigo-950",
-                badge: "text-indigo-700 bg-indigo-100"
+                title: '.append(x)',
+                subtitle: 'การเพิ่มข้อมูลต่อท้าย',
+                description: 'นำค่า x ไปเพิ่มต่อเข้าท้ายสุดของลิสต์ ส่งผลให้จำนวนสมาชิกเพิ่มขึ้น 1 ตัว',
+                code: 'scores.append(95)',
+                result: '[85, 90, 78, 95]',
+                titleClass: 'text-emerald-600',
+                bgGradient: 'from-emerald-50/50 via-transparent to-transparent',
               },
               {
-                method: ".insert(i, x)",
-                desc: "แทรกข้อมูล x ที่ตำแหน่งดัชนี i ข้อมูลเดิมจะถูกขยับขยายไปด้านหลัง",
-                complexity: "O(n) linear time",
-                theme: "border-l-cyan-500 bg-cyan-50/40 text-cyan-950",
-                badge: "text-cyan-700 bg-cyan-100"
+                title: '.insert(i, x)',
+                subtitle: 'การแทรกข้อมูล ณ ดัชนี',
+                description: 'แทรกค่า x เข้าไป ณ ดัชนี i สมาชิกเดิมจากดัชนีนั้นจะโดนเลื่อนขยับไปทางขวา',
+                code: 'scores.insert(1, 88)',
+                result: '[85, 88, 90, 78]',
+                titleClass: 'text-sky-500',
+                bgGradient: 'from-sky-50/50 via-transparent to-transparent',
               },
               {
-                method: ".pop(i)",
-                desc: "ลบและส่งคืนข้อมูล ณ ดัชนี i (หากไม่ระบุดัชนีจะเป็นการเอาตัวท้ายสุดออก)",
-                complexity: "O(n) (ท้ายสุด O(1))",
-                theme: "border-l-violet-500 bg-violet-50/40 text-violet-950",
-                badge: "text-violet-700 bg-violet-100"
+                title: '.remove(x)',
+                subtitle: 'การลบตามค่าข้อมูล',
+                description: 'สืบค้นและลบข้อมูลที่มีค่าเท่ากับ x ตัวแรกสุดที่ตรวจพบบอกจากลิสต์',
+                code: 'scores.remove(90)',
+                result: '[85, 78]',
+                titleClass: 'text-rose-500',
+                bgGradient: 'from-rose-50/50 via-transparent to-transparent',
               },
               {
-                method: ".remove(x)",
-                desc: "ค้นหาและลบข้อมูล x ออกตัวแรกที่ตรวจพบ (หากไม่พบจะ Error)",
-                complexity: "O(n) linear time",
-                theme: "border-l-rose-500 bg-rose-50/40 text-rose-950",
-                badge: "text-rose-700 bg-rose-100"
-              },
-              {
-                method: "len(list)",
-                desc: "ฟังก์ชันตรวจสอบจำนวนสมาชิกทั้งหมดที่มีอยู่ใน List",
-                complexity: "O(1) constant time",
-                theme: "border-l-emerald-500 bg-emerald-50/40 text-emerald-950",
-                badge: "text-emerald-700 bg-emerald-100"
+                title: 'len(list)',
+                subtitle: 'การนับจำนวนสมาชิก',
+                description: 'ฟังก์ชันส่วนกลางสำหรับนับและคืนจำนวนสมาชิกทั้งหมดที่อยู่ภายในลิสต์ขณะนั้น',
+                code: 'len(scores)',
+                result: '3',
+                titleClass: 'text-amber-500',
+                bgGradient: 'from-amber-50/50 via-transparent to-transparent',
               }
-            ].map((m, idx) => (
-              <div key={idx} className={`p-4 md:p-5 rounded-2xl border border-slate-200 border-l-[4px] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 ${m.theme}`}>
-                <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 grow">
-                  <span className={`inline-block font-mono text-[14px] font-bold px-3 py-1 rounded-lg ${m.badge} shrink-0 w-fit`}>
-                    {m.method}
+            ].map((card, idx) => (
+              <div
+                key={idx}
+                className="bg-white border border-slate-100 rounded-3xl p-6 md:p-7 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden"
+              >
+                {/* Top soft ambient light glow */}
+                <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b ${card.bgGradient} opacity-60 pointer-events-none`} />
+
+                <div className="space-y-4 relative z-10">
+                  <span className={`block font-mono text-[22px] font-bold tracking-tight ${card.titleClass}`}>
+                    {card.title}
                   </span>
-                  <p className="text-[15px] leading-relaxed opacity-95">{m.desc}</p>
+                  <div className="space-y-2">
+                    <h4 className="text-[17px] font-bold text-slate-800 leading-tight">
+                      {card.subtitle}
+                    </h4>
+                    <p className="text-[14px] text-slate-500 leading-relaxed min-h-[64px]">
+                      {card.description}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-[11px] font-mono opacity-70 uppercase font-bold tracking-wider pt-2 md:pt-0 border-t md:border-t-0 border-slate-200/60 md:pl-5 md:border-l border-slate-200/60 shrink-0">
-                  Time Complexity: <span className="font-semibold text-slate-800">{m.complexity}</span>
+
+                {/* Code Snippet Box */}
+                <div className="bg-slate-50 border border-slate-100/60 rounded-xl p-3 flex justify-between items-center font-mono text-[12px] md:text-[13px] mt-6 relative z-10">
+                  <span className="text-slate-700">{card.code}</span>
+                  <span className="text-indigo-600 font-bold">{card.result}</span>
                 </div>
               </div>
             ))}

@@ -1,158 +1,117 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import TeacherTask from '../../ui/TeacherTask';
 import {
   SimulatorShell,
   ConceptCard,
-  SectionBlock,
   AmbientBackdrop
 } from '../shared';
 import {
-  Layers,
   Database,
   ArrowRight,
   Play,
   RotateCcw,
-  Sparkles,
   Cpu,
-  Activity,
-  HelpCircle,
+  Layers,
   CheckCircle2,
-  XCircle,
-  FileCode,
-  Terminal,
-  BarChart2,
-  AlertTriangle,
-  Lightbulb,
-  Workflow
+  Info,
+  AlertCircle,
+  Plus,
+  Trash2,
+  HelpCircle,
+  Binary,
+  Merge
 } from 'lucide-react';
 
 export default function DSA1_5() {
-  // ─── Layer 1: Ambient Background Blobs ─────────────────────────────────────
+  // ─── 1. Blobs for Layer 1 Background ──────────────────────────────────────
   const DSA1_5_BLOBS = [
-    { color: 'bg-emerald-200', size: 'w-[450px] h-[450px]', position: '-top-32 -left-32',   opacity: 'opacity-40' },
-    { color: 'bg-teal-200',    size: 'w-[400px] h-[400px]', position: 'top-1/3 -right-32',  opacity: 'opacity-35' },
-    { color: 'bg-cyan-200',    size: 'w-[380px] h-[380px]', position: '-bottom-32 left-1/4', opacity: 'opacity-30' },
+    { color: 'bg-teal-200',    size: 'w-[450px] h-[450px]', position: '-top-32 -left-32',   opacity: 'opacity-40' },
+    { color: 'bg-cyan-200',    size: 'w-[400px] h-[400px]', position: 'top-1/3 -right-32',  opacity: 'opacity-35' },
+    { color: 'bg-emerald-200', size: 'w-[380px] h-[380px]', position: '-bottom-32 left-1/4', opacity: 'opacity-30' },
     { color: 'bg-amber-100',   size: 'w-[300px] h-[300px]', position: 'top-1/2 left-2/3',    opacity: 'opacity-25' }
   ];
 
-  // ─── Playground State ──────────────────────────────────────────────────────
-  const [activeStep, setActiveStep] = useState('analysis'); // analysis | design | coding | testing | optimization
-  const [statusMsg, setStatusMsg] = useState('ยินดีต้อนรับเข้าสู่วงจรพัฒนาอัลกอริทึม! เริ่มต้นที่สเตปวิเคราะห์ปัญหา');
+  // ─── 2. Set Simulator States ──────────────────────────────────────────────
+  const [setA, setSetA] = useState(['Apple', 'Banana', 'Cherry']);
+  const [setB, setSetB] = useState(['Banana', 'Cherry', 'Dates']);
+  const [inputValA, setInputValA] = useState('');
+  const [inputValB, setInputValB] = useState('');
+  const [selectedOp, setSelectedOp] = useState('union'); // union | intersection | diffA | diffB
+  const [simLogs, setSimLogs] = useState(['ระบบจำลอง Set พร้อมทำงาน: โหลดค่าเริ่มต้น Set A และ Set B']);
+
+  // Dynamic set computing
+  const aOnly = setA.filter(x => !setB.includes(x));
+  const bOnly = setB.filter(x => !setA.includes(x));
+  const intersection = setA.filter(x => setB.includes(x));
   
-  // Design State (Flowchart ordering)
-  const [flowchartOrder, setFlowchartOrder] = useState({
-    box1: '', // input_n
-    box2: '', // compare_cards
-    box3: ''  // swap_cards
-  });
-
-  // Coding State (Python code dropdowns)
-  const [codingSwapLogic, setCodingSwapLogic] = useState(''); // empty | correct | incorrect_1 | incorrect_2
-  
-  // Testing State
-  const [testStatus, setTestStatus] = useState('idle'); // idle | running | completed
-  const [testResults, setTestResults] = useState({
-    normal: { input: '[5, 2, 9, 1]', output: 'ยังไม่ได้ทดสอบ', status: 'pending' },
-    edge: { input: '[1, 2, 5, 9]', output: 'ยังไม่ได้ทดสอบ', status: 'pending' },
-    boundary: { input: '[]', output: 'ยังไม่ได้ทดสอบ', status: 'pending' }
-  });
-
-  // Optimization State
-  const [isOptimized, setIsOptimized] = useState(false);
-
-  // Helper for status classes
-  const getStepStatusClass = (stepName) => {
-    let isActive = false;
-    if (stepName === 'analysis') isActive = true;
-    else if (stepName === 'design') {
-      isActive = flowchartOrder.box1 === 'input' && flowchartOrder.box2 === 'compare' && flowchartOrder.box3 === 'swap';
-    } else if (stepName === 'coding') {
-      isActive = codingSwapLogic === 'correct';
-    } else if (stepName === 'testing') {
-      isActive = testResults.normal.status === 'passed' && testResults.edge.status === 'passed' && testResults.boundary.status === 'passed';
-    } else if (stepName === 'optimization') {
-      isActive = isOptimized;
+  const getOpResult = () => {
+    if (selectedOp === 'union') {
+      // Set union: A ∪ B
+      return Array.from(new Set([...setA, ...setB]));
+    } else if (selectedOp === 'intersection') {
+      // Set intersection: A ∩ B
+      return intersection;
+    } else if (selectedOp === 'diffA') {
+      // Difference: A - B
+      return aOnly;
+    } else if (selectedOp === 'diffB') {
+      // Difference: B - A
+      return bOnly;
     }
-
-    return isActive
-      ? 'bg-emerald-800 border-emerald-700 text-emerald-100 font-bold'
-      : 'bg-slate-800 border-slate-700 text-zinc-400';
+    return [];
   };
 
-  // ─── Event Handlers ────────────────────────────────────────────────────────
-  
-  // 1. Flowchart ordering validator
-  const handleFlowchartSelect = (box, val) => {
-    const nextOrder = { ...flowchartOrder, [box]: val };
-    setFlowchartOrder(nextOrder);
-    
-    const isCorrect = nextOrder.box1 === 'input' && nextOrder.box2 === 'compare' && nextOrder.box3 === 'swap';
-    if (isCorrect) {
-      setStatusMsg('[FLOWCHART PASSED] ออกแบบผังงานถูกต้องตามลำดับตรรกะ! ดำเนินการต่อที่แท็บแปลงโค้ด (Coding)');
-    } else {
-      setStatusMsg(`[DESIGN] อัปเดตผังงาน ${box} เป็น ${val === 'input' ? 'รับไพ่' : val === 'compare' ? 'เปรียบเทียบค่า' : 'สลับไพ่'}`);
-    }
+  const addLog = (msg) => {
+    setSimLogs(prev => [...prev, msg]);
   };
 
-  // 2. Python Code selection
-  const handleCodingSelect = (val) => {
-    setCodingSwapLogic(val);
-    if (val === 'correct') {
-      setStatusMsg('[CODING PASSED] เขียนตรรกะการสลับตัวแปรสำเร็จ! โค้ดพร้อมสำหรับการนำไปรันในห้องทดสอบ (Testing)');
-    } else if (val === 'incorrect_1') {
-      setStatusMsg('[CODING WARNING] ตรรกะการสลับข้อมูลบกพร่อง การทำ cards[j] = cards[j+1] ทันทีโดยไม่มีการฝากค่า จะทำให้ข้อมูลเดิมสูญหาย!');
-    } else {
-      setStatusMsg('[CODING WARNING] โครงสร้างสลับข้อมูลไม่สมบูรณ์ ข้อมูลในแรมจะซ้ำและสูญหาย');
-    }
-  };
-
-  // 3. Test Runner
-  const handleRunTests = () => {
-    if (flowchartOrder.box1 !== 'input' || flowchartOrder.box2 !== 'compare' || flowchartOrder.box3 !== 'swap') {
-      setStatusMsg('[TEST BLOCKED] ผังงานอัลกอริทึมยังออกแบบไม่ถูกต้อง กรุณากลับไปเช็คผังงานในแท็บ Design ก่อน!');
+  // Add Element to Set A
+  const handleAddToA = () => {
+    const value = inputValA.trim();
+    if (!value) return;
+    if (setA.includes(value)) {
+      addLog(`>>> setA.add("${value}") -> สมาชิกซ้ำ! ข้อมูลไม่ถูกเพิ่มลงในเซต`);
+      setInputValA('');
       return;
     }
-    if (codingSwapLogic === '') {
-      setStatusMsg('[TEST BLOCKED] ยังไม่ได้เลือกตรรกะแปลงเป็นโค้ด Python กรุณาทำในแท็บ Coding ก่อน!');
-      return;
-    }
-
-    setTestStatus('running');
-    setStatusMsg('[TESTING] กำลังรันระบบและฟีดชุดข้อมูล Normal, Edge และ Boundary เข้าสู่หน่วยประมวลผล...');
-
-    setTimeout(() => {
-      if (codingSwapLogic === 'correct') {
-        setTestResults({
-          normal: { input: '[5, 2, 9, 1]', output: '[1, 2, 5, 9]', status: 'passed' },
-          edge: { input: '[1, 2, 5, 9]', output: '[1, 2, 5, 9]', status: 'passed' },
-          boundary: { input: '[]', output: '[]', status: 'passed' }
-        });
-        setStatusMsg('[TESTS PASSED] 🟢 ยอดเยี่ยม! อัลกอริทึมของคุณผ่าน Test Cases ทั้ง 3 รูปแบบได้อย่างถูกต้อง 100%!');
-      } else {
-        // Incorrect logics will fail normal and edge
-        setTestResults({
-          normal: { input: '[5, 2, 9, 1]', output: '[5, 5, 9, 9]', status: 'failed' },
-          edge: { input: '[1, 2, 5, 9]', output: '[1, 2, 5, 9]', status: 'passed' }, // Already sorted might pass but normal fails
-          boundary: { input: '[]', output: 'Crash! (No Data)', status: 'failed' }
-        });
-        setStatusMsg('[TESTS FAILED] 🔴 บั๊กทำงาน! ผลการทดสอบไม่ถูกต้องเนื่องจากเลือกตรรกะสลับตัวแปรผิดพลาดในขั้นตอน Coding');
-      }
-      setTestStatus('completed');
-    }, 1500);
+    setSetA(prev => [...prev, value]);
+    addLog(`>>> setA.add("${value}") -> เพิ่มสำเร็จ!`);
+    setInputValA('');
   };
 
-  const handleResetPlayground = () => {
-    setFlowchartOrder({ box1: '', box2: '', box3: '' });
-    setCodingSwapLogic('');
-    setTestStatus('idle');
-    setTestResults({
-      normal: { input: '[5, 2, 9, 1]', output: 'ยังไม่ได้ทดสอบ', status: 'pending' },
-      edge: { input: '[1, 2, 5, 9]', output: 'ยังไม่ได้ทดสอบ', status: 'pending' },
-      boundary: { input: '[]', output: 'ยังไม่ได้ทดสอบ', status: 'pending' }
-    });
-    setIsOptimized(false);
-    setActiveStep('analysis');
-    setStatusMsg('รีเซ็ตระบบวงจรพัฒนาเริ่มต้นเรียบร้อยแล้ว');
+  // Add Element to Set B
+  const handleAddToB = () => {
+    const value = inputValB.trim();
+    if (!value) return;
+    if (setB.includes(value)) {
+      addLog(`>>> setB.add("${value}") -> สมาชิกซ้ำ! ข้อมูลไม่ถูกเพิ่มลงในเซต`);
+      setInputValB('');
+      return;
+    }
+    setSetB(prev => [...prev, value]);
+    addLog(`>>> setB.add("${value}") -> เพิ่มสำเร็จ!`);
+    setInputValB('');
+  };
+
+  // Remove Element from Set A
+  const handleRemoveFromA = (val) => {
+    setSetA(prev => prev.filter(x => x !== val));
+    addLog(`>>> setA.remove("${val}") -> ลบออกจาก Set A เรียบร้อย`);
+  };
+
+  // Remove Element from Set B
+  const handleRemoveFromB = (val) => {
+    setSetB(prev => prev.filter(x => x !== val));
+    addLog(`>>> setB.remove("${val}") -> ลบออกจาก Set B เรียบร้อย`);
+  };
+
+  const handleResetSimulator = () => {
+    setSetA(['Apple', 'Banana', 'Cherry']);
+    setSetB(['Banana', 'Cherry', 'Dates']);
+    setInputValA('');
+    setInputValB('');
+    setSelectedOp('union');
+    setSimLogs(['รีเซ็ตตารางจำลองและค่าเริ่มต้นของเซตสำเร็จ']);
   };
 
   return (
@@ -164,674 +123,557 @@ export default function DSA1_5() {
       {/* ─── Layer 3: Main Page Content ─── */}
       <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-6 space-y-12 md:space-y-16 relative z-10">
 
-        {/* ─── Section 1: Overview of Algorithm Lifecycle ─── */}
+        {/* ─── Section 1: Introduction to Set ─── */}
         <section className="space-y-6">
           <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-emerald-600 tracking-wider uppercase">
-              วงจรการพัฒนาซอฟต์แวร์ต้นน้ำ / Development Lifecycle
+            <span className="text-sm font-bold text-teal-600 tracking-wider uppercase">
+              โครงสร้างข้อมูลกลุ่มเฉพาะ
             </span>
             <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              วงจรการพัฒนาอัลกอริทึม (Algorithm Development Cycle)
+              Set (เซต)
             </h3>
           </div>
 
-          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
-            การสร้างขั้นตอนวิธีที่มีความเสถียรและมีประสิทธิภาพสูง ไม่ใช่เรื่องของการเปิดเครื่องแล้วลงมือพิมพ์โค้ดทันที 
-            แต่นักพัฒนาที่ดีต้องผ่านกระบวนการที่เป็นระบบ 5 ขั้นตอนหลัก ซึ่งช่วยให้แก้ปัญหาได้อย่างถูกต้องตั้งแต่แนวคิด 
-            ลดโอกาสเกิดข้อผิดพลาดในขณะที่ระบบทำงานจริง และประหยัดทรัพยากรฮาร์ดแวร์ได้อย่างคุ้มค่าที่สุด
-          </p>
+          <div className="space-y-6">
+            <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+              ในทางวิทยาการคอมพิวเตอร์ <strong className="mx-1 px-1.5 py-0.5 rounded bg-teal-50 border border-teal-200 text-teal-700 font-mono text-[14px]">Set (เซต)</strong> 
+              คือ โครงสร้างข้อมูลเชิงเส้นประเภทลำดับเฉพาะที่ไม่มีการเรียงลำดับ (Unordered) และสมาชิกแต่ละตัวต้องไม่มีความซ้ำซ้อนกัน (Unique Elements) โดยคีย์ประมวลผลเบื้องหลังจะเก็บลงในตารางแฮช (Hash Table) เพื่อความเร็วสูงสุดในการสืบค้นข้อมูลในระดับ $O(1)$
+            </p>
 
-          {/* 5 Steps Description Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            {[
-              { id: 1, title: 'การวิเคราะห์ปัญหา', sub: 'Problem Analysis', desc: 'ทำความเข้าใจข้อมูลเข้า (Input), รูปแบบผลลัพธ์ (Output) และข้อจำกัดด้านแรม/ความเร็ว (Constraints) ให้ชัดเจนก่อนออกแบบ', accent: 'emerald' },
-              { id: 2, title: 'การออกแบบขั้นตอนวิธี', sub: 'Algorithm Design', desc: 'วางแผนสเต็ปทำงานโดยอิสระจากภาษาโปรแกรม ด้วยเครื่องมืออย่างภาษาพูด (Natural), รหัสจำลอง (Pseudocode) หรือผังงาน (Flowchart)', accent: 'cyan' },
-              { id: 3, title: 'การแปลงเป็นรหัสโปรแกรม', sub: 'Implementation', desc: 'เขียนซอร์สโค้ด (Source Code) จริง เช่น Python โดยคัดเลือกโครงสร้างข้อมูล (Data Structures) ที่เข้ากันมารับตรรกะในแรม', accent: 'indigo' },
-              { id: 4, title: 'การทดสอบหาข้อผิดพลาด', sub: 'Testing & Debugging', desc: 'ทดสอบโปรแกรมด้วยกรณีข้อมูลปกติ (Normal), ข้อมูลขอบเขต (Boundary) และข้อมูลล้มเหลว (Edge Case) เพื่อตรวจสอบความเสถียร', accent: 'amber' },
-              { id: 5, title: 'การปรับปรุงประสิทธิภาพ', sub: 'Optimization', desc: 'หาจุดคอขวด (Bottleneck) ปรับลดลูปหรือสัญกรณ์ Big O ให้ทำงานได้เร็วขึ้น หรือลดการใช้ RAM เพื่อการบำรุงรักษาอย่างยั่งยืน', accent: 'violet' }
-            ].map((step) => (
-              <div
-                key={step.id}
-                className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-5 hover:-translate-y-1 hover:shadow-2xl hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between min-h-[220px]"
-              >
-                <div>
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-xs font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">ขั้นตอนที่ {step.id}</span>
+            <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <h4 className="text-lg font-bold text-zinc-900 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-teal-500"></span>
+                    การประกาศและสร้างเซต (Set Declaration)
+                  </h4>
+                  <p className="text-[15px] text-zinc-650 leading-relaxed">
+                    เราสร้าง Set ในภาษา Python โดยใช้เครื่องหมายปีกกา <code className="px-1.5 py-0.5 rounded bg-slate-100 font-mono text-sm text-indigo-600 font-semibold">{"{ }"}</code> (Curly braces) ในการครอบสมาชิก และคั่นแต่ละตัวด้วยเครื่องหมายจุลภาค (Comma)
+                  </p>
+                  <div className="bg-slate-900 text-slate-100 rounded-xl p-3.5 font-mono text-[13px] border border-white/10 shadow-inner">
+                    <span className="text-zinc-500 font-bold block mb-1">PYTHON CODE:</span>
+                    <span className="text-emerald-400"># ⚠️ การสร้างเซตว่าง (ต้องใช้ set() เท่านั้น เพราะ {"{}"} จะสร้าง empty dict)</span><br />
+                    cargo = set()<br />
+                    <span className="text-emerald-400"># สร้างเซตที่มีข้อมูลเริ่มต้น</span><br />
+                    scores = {"{"}<span className="text-amber-300">85</span>, <span className="text-amber-300">90</span>, <span className="text-amber-300">78</span>{"}"}
                   </div>
-                  <h4 className="text-[14.5px] font-bold text-zinc-900 leading-snug">{step.title}</h4>
-                  <span className="text-[10px] font-mono font-bold text-slate-400 block mb-2 uppercase tracking-wide">{step.sub}</span>
-                  <p className="text-[12px] text-slate-500 leading-relaxed font-sans">{step.desc}</p>
+                </div>
+                <div className="space-y-3">
+                  <h4 className="text-lg font-bold text-zinc-900 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-teal-500"></span>
+                    คุณสมบัติหลักของ Set (เซต)
+                  </h4>
+                  <p className="text-[15px] text-zinc-650 leading-relaxed">
+                    เบื้องหลังของเซตขับเคลื่อนด้วยตารางแฮช (Hash Table) เช่นเดียวกับคีย์ของ Dictionary ทำให้มีความเร็วในการสืบค้นข้อมูลในระดับ $O(1)$ และมีคุณสมบัติที่ต้องจำดังนี้:
+                  </p>
+                  <ul className="space-y-2 text-[14.5px] text-zinc-655 pl-1">
+                    <li className="flex items-start gap-2">
+                      <span className="text-teal-600 font-bold font-mono">1.</span>
+                      <span><strong>ไม่มีลำดับ (Unordered):</strong> สมาชิกไม่มีดัชนี (No Index) เข้าถึงข้อมูลผ่าน `set[0]` ไม่ได้ และตำแหน่งสล็อตอาจเปลี่ยนแปลงได้เสมอ</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-teal-600 font-bold font-mono">2.</span>
+                      <span><strong>ค่าไม่ซ้ำซ้อน (Unique Elements):</strong> เซตจะบล็อกข้อมูลที่ซ้ำกันโดยอัตโนมัติ สมาชิกแต่ละตัวมีได้เพียงหนึ่งเดียวในเซต</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
-            ))}
-          </div>
-        </section>
 
-        {/* ─── Section: Summary of Basic Development & Sorting Operations ─── */}
-        <section className="space-y-6">
-          <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-emerald-600 tracking-wider uppercase">
-              คู่มือวิศวกรรมซอฟต์แวร์
-            </span>
-            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              สรุปคำสั่งและกลไกพื้นฐานในวงจรพัฒนาขั้นตอนวิธี (Algorithm Methods Summary)
-            </h3>
-          </div>
-
-          <p className="text-[16px] md:text-[17px] text-zinc-655 leading-relaxed font-normal">
-            การพัฒนาและปรับปรุงขั้นตอนวิธีในวิทยาการคอมพิวเตอร์ มีกลไกสำคัญและโครงสร้างการจัดการตัวแปรที่คุณควรทราบดังนี้:
-          </p>
-
-          <div className="flex flex-col gap-3.5">
-            {[
-              {
-                method: "temp = a; a = b; b = temp",
-                desc: "การสลับค่าตัวแปร (Variable Swapping) โดยจองตัวแปรชั่วคราว temp เพื่อป้องกันข้อมูลเดิมโดนเขียนทับสูญหาย",
-                complexity: "O(1) auxiliary space",
-                theme: "border-l-emerald-500 bg-emerald-50/40 text-emerald-950",
-                badge: "text-emerald-700 bg-emerald-100"
-              },
-              {
-                method: "bubble_sort(arr)",
-                desc: "การเรียงลำดับแบบเปรียบเทียบทีละคู่ติดกันและสลับค่าไปท้ายแถว เหมาะสำหรับข้อมูลขนาดเล็ก",
-                complexity: "O(n²) worst time",
-                theme: "border-l-cyan-500 bg-cyan-50/40 text-cyan-950",
-                badge: "text-cyan-700 bg-cyan-100"
-              },
-              {
-                method: "quick_sort(arr)",
-                desc: "การเรียงลำดับแบบแบ่งพาร์ทิชันซ้ายขวาตามค่า Pivot (Divide & Conquer) เพื่อความรวดเร็วระดับสูง",
-                complexity: "O(n log n) average time",
-                theme: "border-l-violet-500 bg-violet-50/40 text-violet-950",
-                badge: "text-violet-700 bg-violet-100"
-              },
-              {
-                method: "run_test_cases()",
-                desc: "การรันชุดข้อมูลตรวจสอบ ครอบคลุมทั้งกรณีปกติ (Normal), ข้อมูลเรียงอยู่แล้ว (Edge), และข้อมูลว่างเปล่า (Boundary)",
-                complexity: "Quality assurance",
-                theme: "border-l-amber-500 bg-amber-50/40 text-amber-950",
-                badge: "text-amber-700 bg-amber-100"
-              }
-            ].map((m, idx) => (
-              <div key={idx} className={`p-4 md:p-5 rounded-2xl border border-slate-200 border-l-[4px] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 ${m.theme}`}>
-                <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 grow">
-                  <span className={`inline-block font-mono text-[14px] font-bold px-3 py-1 rounded-lg ${m.badge} shrink-0 w-fit`}>
-                    {m.method}
-                  </span>
-                  <p className="text-[15px] leading-relaxed opacity-95">{m.desc}</p>
-                </div>
-                <div className="text-[11px] font-mono opacity-70 uppercase font-bold tracking-wider pt-2 md:pt-0 border-t md:border-t-0 border-slate-200/60 md:pl-5 md:border-l border-slate-200/60 shrink-0">
-                  Time/Space: <span className="font-semibold text-slate-800">{m.complexity}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ─── Section 2: Interactive Simulator (AlgoCycle-Playground) ─── */}
-        <section className="space-y-6">
-          <div className="border-b border-zinc-200/80 pb-4">
-            <span className="text-sm font-bold text-emerald-600 tracking-wider uppercase">
-              เครื่องมือฝึกทักษะต้นน้ำ / AlgoCycle-Playground
-            </span>
-            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-              ห้องปฏิบัติการวงจรพัฒนาขั้นตอนวิธีแบบเสมือนจริง
-            </h3>
-          </div>
-
-          <p className="text-[16px] md:text-[17px] text-zinc-600 leading-relaxed font-normal">
-            สวมบทบาทเป็นวิศวกรซอฟต์แวร์ต้นน้ำ เพื่อไขโจทย์ปัญหา **"เรียงลำดับตัวเลขบนหน้าไพ่ (Card Sorting Algorithm)"** 
-            ด้วยการเดินทางไปตามสถานีต่าง ๆ ในวงจรพัฒนา:
-          </p>
-
-          <SimulatorShell
-            dark
-            title="Algorithm Lifecycle Playground"
-            icon={<Workflow className="w-8 h-8 text-emerald-400 animate-spin" style={{ animationDuration: '6s' }} />}
-            glowColors="from-emerald-600/20 to-teal-500/10"
-            iconColor="text-emerald-400"
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mt-4">
-              
-              {/* Left Sandbox Control Panel */}
-              <div className="lg:col-span-6 bg-slate-900/90 backdrop-blur-xl rounded-2xl p-5 border border-white/10 shadow-2xl relative flex flex-col justify-between min-h-[520px]">
-                <span className="text-[9px] font-mono text-slate-500 absolute top-3 right-4 font-bold tracking-widest">
-                  LIFECYCLE STEP WIZARD
+              {/* Visual Duplicate Elimination Map */}
+              <div className="border-t border-zinc-200/80 pt-5 space-y-4">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+                  กระบวนการคัดกรองข้อมูลซ้ำซ้อนอัตโนมัติ (Duplicate Elimination Process)
                 </span>
-
-                <div className="space-y-5">
-                  {/* Step Selector Tab Pills */}
-                  <div className="flex flex-wrap gap-1.5 border-b border-slate-800 pb-3">
-                    {[
-                      { id: 'analysis', label: '1. วิเคราะห์ (Analysis)' },
-                      { id: 'design', label: '2. ออกแบบ (Design)' },
-                      { id: 'coding', label: '3. เขียนรหัส (Coding)' },
-                      { id: 'testing', label: '4. ทดสอบ (Testing)' },
-                      { id: 'optimization', label: '5. ปรับปรุง (Optimize)' }
-                    ].map(step => (
-                      <button
-                        key={step.id}
-                        onClick={() => {
-                          setActiveStep(step.id);
-                          setStatusMsg(`เปลี่ยนมาศึกษาขั้นตอน: ${step.label}`);
-                        }}
-                        className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
-                          activeStep === step.id
-                            ? 'bg-emerald-600 text-white shadow shadow-emerald-600/20'
-                            : 'bg-slate-800 text-slate-400 hover:text-slate-200'
-                        }`}
-                      >
-                        {step.label}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Dynamic Controls based on Active Step */}
-                  <div className="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-4">
-                    
-                    {activeStep === 'analysis' && (
-                      <div className="space-y-3 animate-fadeIn text-xs leading-relaxed text-slate-300">
-                        <h4 className="text-[13px] font-bold text-white flex items-center gap-1.5">
-                          <Sparkles className="w-4 h-4 text-emerald-400" />
-                          การวิเคราะห์ความต้องการและเงื่อนไขโจทย์ (Problem Spec)
-                        </h4>
-                        <p>
-                          ก่อนเริ่มเขียนโค้ด วิศวกรต้องกำหนดขอบเขตและรูปแบบของข้อมูลให้แน่ชัดดังนี้:
-                        </p>
-                        <div className="space-y-2 border-t border-slate-800 pt-2 font-mono">
-                          <div>
-                            <span className="text-emerald-400 block font-bold">ข้อมูลนำเข้า (Input):</span>
-                            <span>อาเรย์ของชุดตัวเลขไม่เรียงลำดับ เช่น <code className="text-white bg-slate-900 px-1 py-0.5 rounded">[5, 2, 9, 1]</code></span>
-                          </div>
-                          <div>
-                            <span className="text-emerald-400 block font-bold">ผลลัพธ์ที่ต้องการ (Output):</span>
-                            <span>อาเรย์ที่จัดเรียงจากน้อยไปมากสมบูรณ์แบบ <code className="text-white bg-slate-900 px-1 py-0.5 rounded">[1, 2, 5, 9]</code></span>
-                          </div>
-                          <div>
-                            <span className="text-emerald-400 block font-bold">ข้อจำกัด (Constraints):</span>
-                            <span>ต้องไม่เพิ่มการใช้แรมชั่วคราวเกินจำเป็น ($Space: O(1)$), และต้องทำงานเสร็จทันที</span>
-                          </div>
-                        </div>
-                        <button
-                          onClick={() => setActiveStep('design')}
-                          className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg cursor-pointer transition-all mt-2"
-                        >
-                          ผ่านการวิเคราะห์ -&gt; เริ่มออกแบบโครงสร้าง (Design)
-                        </button>
-                      </div>
-                    )}
-
-                    {activeStep === 'design' && (
-                      <div className="space-y-3 animate-fadeIn text-xs text-slate-300 leading-relaxed">
-                        <h4 className="text-[13px] font-bold text-white flex items-center gap-1.5">
-                          <Workflow className="w-4 h-4 text-emerald-400" />
-                          ออกแบบแผนผังขั้นตอนการแลกเปลี่ยนค่า (Flowchart Design)
-                        </h4>
-                        <p>
-                          เลือกส่วนประกอบของผังงานให้ถูกต้องตามขั้นตอนวิธีเปรียบเทียบข้อมูลเพื่อสลับค่าตัวแปร:
-                        </p>
-
-                        <div className="space-y-3 border-t border-slate-800 pt-2">
-                          <div className="flex items-center justify-between gap-3">
-                            <span className="font-mono text-[10px]">บล็อกที่ 1 (จุดเริ่มและนำข้อมูลเข้า):</span>
-                            <select
-                              value={flowchartOrder.box1}
-                              onChange={e => handleFlowchartSelect('box1', e.target.value)}
-                              className="bg-slate-900 border border-slate-800 text-[11px] text-white rounded p-1.5 w-[160px] cursor-pointer"
-                            >
-                              <option value="">-- กรุณาเลือก --</option>
-                              <option value="swap">สลับไพ่ (Process)</option>
-                              <option value="input">รับข้อมูลไพ่ (Input)</option>
-                              <option value="compare">เปรียบเทียบค่า (Decision)</option>
-                            </select>
-                          </div>
-
-                          <div className="flex items-center justify-between gap-3">
-                            <span className="font-mono text-[10px]">บล็อกที่ 2 (เงื่อนไขเปรียบเทียบค่าคู่ไพ่):</span>
-                            <select
-                              value={flowchartOrder.box2}
-                              onChange={e => handleFlowchartSelect('box2', e.target.value)}
-                              className="bg-slate-900 border border-slate-800 text-[11px] text-white rounded p-1.5 w-[160px] cursor-pointer"
-                            >
-                              <option value="">-- กรุณาเลือก --</option>
-                              <option value="swap">สลับไพ่ (Process)</option>
-                              <option value="input">รับข้อมูลไพ่ (Input)</option>
-                              <option value="compare">เปรียบเทียบค่า (Decision)</option>
-                            </select>
-                          </div>
-
-                          <div className="flex items-center justify-between gap-3">
-                            <span className="font-mono text-[10px]">บล็อกที่ 3 (ขั้นตอนประมวลผลสลับลำดับ):</span>
-                            <select
-                              value={flowchartOrder.box3}
-                              onChange={e => handleFlowchartSelect('box3', e.target.value)}
-                              className="bg-slate-900 border border-slate-800 text-[11px] text-white rounded p-1.5 w-[160px] cursor-pointer"
-                            >
-                              <option value="">-- กรุณาเลือก --</option>
-                              <option value="swap">สลับไพ่ (Process)</option>
-                              <option value="input">รับข้อมูลไพ่ (Input)</option>
-                              <option value="compare">เปรียบเทียบค่า (Decision)</option>
-                            </select>
-                          </div>
-                        </div>
-
-                        {flowchartOrder.box1 === 'input' && flowchartOrder.box2 === 'compare' && flowchartOrder.box3 === 'swap' ? (
-                          <button
-                            onClick={() => setActiveStep('coding')}
-                            className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg cursor-pointer transition-all mt-2"
-                          >
-                            ตรรกะถูกต้อง -&gt; แปลงผังงานเป็นชุดโค้ด (Coding)
-                          </button>
-                        ) : (
-                          <span className="text-[10px] text-slate-500 italic block text-center mt-2">
-                            * คำแนะนำ: ลำดับที่ถูกต้องคือ รับข้อมูล -&gt; เปรียบเทียบ -&gt; สลับข้อมูล
-                          </span>
-                        )}
-                      </div>
-                    )}
-
-                    {activeStep === 'coding' && (
-                      <div className="space-y-3 animate-fadeIn text-xs text-slate-300 leading-relaxed">
-                        <h4 className="text-[13px] font-bold text-white flex items-center gap-1.5">
-                          <FileCode className="w-4 h-4 text-emerald-400" />
-                          แปลงผังงานเป็นโค้ดสลับข้อมูล (Python Swapping Implementation)
-                        </h4>
-                        <p>
-                          เลือกส่วนคำสั่ง (Coding Option) เพื่อสลับค่าในตัวแปรอย่างถูกต้องในหน่วยความจำ RAM:
-                        </p>
-
-                        <div className="flex flex-col gap-2 pt-2">
-                          {[
-                            {
-                              id: 'correct',
-                              label: 'ตัวเลือก A (ใช้ตัวแปรชั่วคราวฝากค่า)',
-                              desc: 'temp = cards[j]\ncards[j] = cards[j+1]\ncards[j+1] = temp'
-                            },
-                            {
-                              id: 'incorrect_1',
-                              label: 'ตัวเลือก B (เขียนทับโดยไม่เก็บค่า)',
-                              desc: 'cards[j] = cards[j+1]\ncards[j+1] = cards[j]'
-                            },
-                            {
-                              id: 'incorrect_2',
-                              label: 'ตัวเลือก C (สลับค่าวนทับค่าชั่วคราว)',
-                              desc: 'temp = cards[j+1]\ntemp = cards[j]\ncards[j] = cards[j+1]'
-                            }
-                          ].map(item => (
-                            <label
-                              key={item.id}
-                              className={`flex flex-col p-2.5 rounded-lg border text-xs cursor-pointer transition-all ${
-                                codingSwapLogic === item.id
-                                  ? 'bg-emerald-950/30 border-emerald-500 text-emerald-300'
-                                  : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
-                              }`}
-                            >
-                              <div className="flex items-center gap-2 font-bold">
-                                <input
-                                  type="radio"
-                                  name="codeSelect"
-                                  value={item.id}
-                                  checked={codingSwapLogic === item.id}
-                                  onChange={() => handleCodingSelect(item.id)}
-                                  className="accent-emerald-500 cursor-pointer"
-                                />
-                                <span>{item.label}</span>
-                              </div>
-                              <pre className="text-[10px] bg-black/45 p-1.5 rounded mt-1.5 text-zinc-300 font-mono overflow-x-auto leading-relaxed">
-                                {item.desc}
-                              </pre>
-                            </label>
-                          ))}
-                        </div>
-
-                        {codingSwapLogic === 'correct' && (
-                          <button
-                            onClick={() => setActiveStep('testing')}
-                            className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg cursor-pointer transition-all mt-2"
-                          >
-                            รหัสพร้อมแล้ว -&gt; รันเพื่อจำลองทดสอบ (Testing)
-                          </button>
-                        )}
-                      </div>
-                    )}
-
-                    {activeStep === 'testing' && (
-                      <div className="space-y-3 animate-fadeIn text-xs text-slate-300 leading-relaxed">
-                        <h4 className="text-[13px] font-bold text-white flex items-center gap-1.5">
-                          <Terminal className="w-4 h-4 text-emerald-400" />
-                          ทดสอบความถูกต้องและขอบเขตข้อมูล (Test Matrix Simulator)
-                        </h4>
-                        <p>
-                          ส่งชุดข้อมูลเข้าทดสอบ 3 รูปแบบเพื่อตรวจจับบั๊กและพฤติกรรมในสถานการณ์ขอบเขตข้อมูล (Boundary Cases):
-                        </p>
-
-                        <div className="space-y-2 font-mono text-[10.5px]">
-                          <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 flex justify-between items-center">
-                            <div>
-                              <span className="text-zinc-500 block">1. Normal (ข้อมูลทั่วไป):</span>
-                              <span className="text-white font-bold">{testResults.normal.input}</span>
-                            </div>
-                            <div className="text-right shrink-0">
-                              <span className="text-slate-400 block">{testResults.normal.output}</span>
-                              {testResults.normal.status === 'passed' ? (
-                                <span className="text-emerald-400 font-bold">✔ PASSED</span>
-                              ) : testResults.normal.status === 'failed' ? (
-                                <span className="text-rose-400 font-bold">✘ FAILED</span>
-                              ) : (
-                                <span className="text-slate-600">PENDING</span>
-                              )}
-                            </div>
-                          </div>
-
-                          <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 flex justify-between items-center">
-                            <div>
-                              <span className="text-zinc-500 block">2. Edge (จัดเรียงอยู่แล้ว):</span>
-                              <span className="text-white font-bold">{testResults.edge.input}</span>
-                            </div>
-                            <div className="text-right shrink-0">
-                              <span className="text-slate-400 block">{testResults.edge.output}</span>
-                              {testResults.edge.status === 'passed' ? (
-                                <span className="text-emerald-400 font-bold">✔ PASSED</span>
-                              ) : testResults.edge.status === 'failed' ? (
-                                <span className="text-rose-400 font-bold">✘ FAILED</span>
-                              ) : (
-                                <span className="text-slate-600">PENDING</span>
-                              )}
-                            </div>
-                          </div>
-
-                          <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 flex justify-between items-center">
-                            <div>
-                              <span className="text-zinc-500 block">3. Boundary (อาร์เรย์ว่างเปล่า):</span>
-                              <span className="text-white font-bold">[]</span>
-                            </div>
-                            <div className="text-right shrink-0">
-                              <span className="text-slate-400 block">{testResults.boundary.output}</span>
-                              {testResults.boundary.status === 'passed' ? (
-                                <span className="text-emerald-400 font-bold">✔ PASSED</span>
-                              ) : testResults.boundary.status === 'failed' ? (
-                                <span className="text-rose-400 font-bold">✘ CRASH/BUG</span>
-                              ) : (
-                                <span className="text-slate-600">PENDING</span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-
-                        <button
-                          onClick={handleRunTests}
-                          disabled={testStatus === 'running'}
-                          className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg cursor-pointer transition-all disabled:opacity-40"
-                        >
-                          {testStatus === 'running' ? 'กำลังส่งข้อมูลจำลอง...' : 'สั่งประมวลผลชุดตรวจสอบ (Run Tests)'}
-                        </button>
-
-                        {testResults.normal.status === 'passed' && testResults.edge.status === 'passed' && testResults.boundary.status === 'passed' && (
-                          <button
-                            onClick={() => setActiveStep('optimization')}
-                            className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg cursor-pointer transition-all mt-1"
-                          >
-                            รันผ่านหมด -&gt; ขั้นตอนวิเคราะห์ประสิทธิภาพ (Optimize)
-                          </button>
-                        )}
-                      </div>
-                    )}
-
-                    {activeStep === 'optimization' && (
-                      <div className="space-y-3 animate-fadeIn text-xs text-slate-300 leading-relaxed">
-                        <h4 className="text-[13px] font-bold text-white flex items-center gap-1.5">
-                          <BarChart2 className="w-4 h-4 text-indigo-400" />
-                          ค้นหาคอขวดและปรับประสิทธิภาพ (Optimization & Scaling)
-                        </h4>
-                        <p>
-                          อัลกอริทึมของคุณประมวลผลได้ถูกต้องครบถ้วนแล้ว! แต่เมื่อวิเคราะห์ Big O พบว่าใช้รูปแบบ Bubble Sort มีความซับซ้อนเวลา $O(N^2)$:
-                        </p>
-
-                        <div className="bg-slate-900 border border-slate-800 p-3 rounded-lg space-y-1.5 font-mono text-[10.5px]">
-                          <div>
-                            <span className="text-slate-500">รูปแบบตรรกะปัจจุบัน: </span>
-                            <span className="text-rose-400 font-bold">Bubble Sort O(N²)</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-500">จำนวนขั้นตอนหาก N=50,000: </span>
-                            <span className="text-rose-400">2,500,000,000 steps</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-500">เวลาทำงานคาดการณ์: </span>
-                            <span className="text-rose-400 font-bold">~ 41 นาที (ซอฟต์แวร์ค้าง!)</span>
-                          </div>
-                        </div>
-
-                        {!isOptimized ? (
-                          <button
-                            onClick={() => {
-                              setIsOptimized(true);
-                              setStatusMsg('[OPTIMIZED] 🟢 ปรับเปลี่ยนอัลกอริทึมจาก Bubble Sort เป็น Quick Sort (O(N log N)) ประสิทธิภาพประหยัดเวลา CPU ดีขึ้น 50,000 เท่า!');
-                            }}
-                            className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg cursor-pointer transition-all"
-                          >
-                            สั่งเปลี่ยนเป็น Quick Sort O(N log N)
-                          </button>
-                        ) : (
-                          <div className="bg-emerald-950/20 border border-emerald-900/60 p-3 rounded-lg text-[10.5px] font-mono space-y-1">
-                            <span className="text-emerald-400 font-bold block">🟢 OPTIMIZED SUCCESSFULLY!</span>
-                            <p className="text-slate-400">
-                              เปลี่ยนสถาปัตยกรรมเรียงข้อมูลเป็น Quick/Merge Sort ขนาดขั้นตอนคำสั่งเหลือเพียง 780,000 สเตป และใช้เวลาเพียง 0.05 วินาที!
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Reset Control */}
-                  <button
-                    onClick={handleResetPlayground}
-                    className="w-full py-2 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" /> รีเซ็ตวงจรรันระบบใหม่
-                  </button>
-                </div>
-
-                {/* Status Bar */}
-                <div className="mt-4 pt-3 border-t border-slate-800 text-[11px] font-mono text-emerald-400 leading-relaxed bg-black/30 p-2.5 rounded-lg border border-slate-800">
-                  <span className="text-zinc-500 block text-[9px] uppercase tracking-wider mb-0.5">Terminal Log Output:</span>
-                  {statusMsg}
-                </div>
-              </div>
-
-              {/* Right Visual Board */}
-              <div className="lg:col-span-6 bg-slate-950/95 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-2xl relative flex flex-col justify-between min-h-[520px]">
-                <span className="text-[9px] font-mono text-slate-500 absolute top-3 left-3">
-                  RAM STEP MONITOR & COMPILER OUTLINE
-                </span>
-
-                <div className="grow flex flex-col justify-center items-center mt-6">
-                  {activeStep === 'analysis' && (
-                    <div className="w-full max-w-sm space-y-4 animate-fadeIn text-center">
-                      <span className="text-[10px] font-mono text-slate-500 uppercase block">Input Data Arrays structure:</span>
-                      <div className="flex gap-2 justify-center">
-                        {[5, 2, 9, 1].map((val, idx) => (
-                          <div key={idx} className="w-12 h-16 bg-slate-900 border border-slate-800 rounded-xl flex flex-col justify-between p-1.5 items-center">
-                            <span className="text-[8px] font-mono text-slate-500">[{idx}]</span>
-                            <span className="text-base font-bold text-white font-mono">{val}</span>
-                            <span className="text-[7.5px] font-mono text-emerald-500">0x1{idx * 4}</span>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="border border-dashed border-slate-800 rounded-xl p-4 bg-slate-900/30 text-xs font-mono text-slate-400">
-                        <span className="text-emerald-400 block font-bold text-[10px] uppercase mb-1">Constraints:</span>
-                        ต้องการใช้หน่วยความจำจำกัด และเรียงจากน้อยไปมาก
-                      </div>
-                    </div>
-                  )}
-
-                  {activeStep === 'design' && (
-                    <div className="w-full max-w-xs space-y-4 animate-fadeIn flex flex-col items-center">
-                      <span className="text-[10px] font-mono text-slate-500 uppercase block mb-1">Flowchart Logical Junctions:</span>
-                      
-                      {/* Box 1 */}
-                      <div className={`w-36 h-10 border rounded-lg flex items-center justify-center font-mono text-[10px] font-bold text-white transition-all ${
-                        flowchartOrder.box1 === 'input' ? 'bg-emerald-950/80 border-emerald-500' : 'bg-slate-900 border-slate-800 opacity-60'
-                      }`}>
-                        {flowchartOrder.box1 ? (flowchartOrder.box1 === 'input' ? 'INPUT cards' : flowchartOrder.box1 === 'compare' ? 'cards[j] > cards[j+1]?' : 'SWAP cards') : '???'}
-                      </div>
-                      <div className="w-0.5 h-4 bg-slate-800" />
-
-                      {/* Box 2 */}
-                      <div className={`w-36 h-10 border rounded-lg flex items-center justify-center font-mono text-[10px] font-bold text-white transition-all ${
-                        flowchartOrder.box2 === 'compare' ? 'bg-emerald-950/80 border-emerald-500' : 'bg-slate-900 border-slate-800 opacity-60'
-                      }`}>
-                        {flowchartOrder.box2 ? (flowchartOrder.box2 === 'input' ? 'INPUT cards' : flowchartOrder.box2 === 'compare' ? 'cards[j] > cards[j+1]?' : 'SWAP cards') : '???'}
-                      </div>
-                      <div className="w-0.5 h-4 bg-slate-800" />
-
-                      {/* Box 3 */}
-                      <div className={`w-36 h-10 border rounded-lg flex items-center justify-center font-mono text-[10px] font-bold text-white transition-all ${
-                        flowchartOrder.box3 === 'swap' ? 'bg-emerald-950/80 border-emerald-500' : 'bg-slate-900 border-slate-800 opacity-60'
-                      }`}>
-                        {flowchartOrder.box3 ? (flowchartOrder.box3 === 'input' ? 'INPUT cards' : flowchartOrder.box3 === 'compare' ? 'cards[j] > cards[j+1]?' : 'SWAP cards') : '???'}
-                      </div>
-                    </div>
-                  )}
-
-                  {activeStep === 'coding' && (
-                    <div className="w-full max-w-sm animate-fadeIn">
-                      <span className="text-[10px] font-mono text-slate-500 uppercase block mb-1">RAM Instruction Outline:</span>
-                      <pre className="bg-slate-900/60 p-4 rounded-xl border border-slate-800 font-mono text-[11px] text-emerald-300 leading-relaxed overflow-x-auto">
-{`def bubble_sort(cards):
-    n = len(cards)
-    for i in range(n):
-        for j in range(0, n-i-1):
-            if cards[j] > cards[j+1]:
-                # Swap operations:
-                ${codingSwapLogic === 'correct' ? 'temp = cards[j]\n                cards[j] = cards[j+1]\n                cards[j+1] = temp' : codingSwapLogic === 'incorrect_1' ? 'cards[j] = cards[j+1]\n                cards[j+1] = cards[j] (BUG)' : codingSwapLogic === 'incorrect_2' ? 'temp = cards[j+1]\n                temp = cards[j] (BUG)' : '__________ (จองช่องว่าง)'}
-    return cards`}
-                      </pre>
-                    </div>
-                  )}
-
-                  {activeStep === 'testing' && (
-                    <div className="w-full max-w-xs space-y-4 animate-fadeIn flex flex-col items-center">
-                      <span className="text-[10px] font-mono text-slate-500 uppercase block mb-2">Test Runner Simulation:</span>
-                      
-                      <div className="flex gap-1.5 justify-center">
-                        {[
-                          testResults.normal.status === 'passed' ? '1' : '5',
-                          testResults.normal.status === 'passed' ? '2' : '2',
-                          testResults.normal.status === 'passed' ? '5' : '9',
-                          testResults.normal.status === 'passed' ? '9' : '1'
-                        ].map((val, idx) => (
-                          <div
-                            key={idx}
-                            className={`w-10 h-14 border rounded-lg flex items-center justify-center font-mono text-sm font-bold text-white transition-all ${
-                              testStatus === 'running' ? 'animate-pulse' : ''
-                            } ${
-                              testResults.normal.status === 'passed'
-                                ? 'bg-emerald-950/70 border-emerald-500'
-                                : testResults.normal.status === 'failed'
-                                ? 'bg-rose-950/70 border-rose-500'
-                                : 'bg-slate-900 border-slate-800'
-                            }`}
-                          >
+                
+                <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 overflow-x-auto">
+                  <div className="min-w-[500px] flex items-center justify-between gap-4 py-4 px-6 bg-white border border-slate-200 rounded-xl">
+                    {/* Source List */}
+                    <div className="text-center space-y-2">
+                      <span className="text-xs font-bold text-slate-500 block">List (มีค่าซ้ำกัน)</span>
+                      <div className="flex gap-2 bg-slate-100 p-2.5 rounded-lg border border-slate-200">
+                        {['10', '20', '20', '30'].map((val, i) => (
+                          <div key={i} className={`w-10 h-10 flex items-center justify-center font-mono text-sm font-bold bg-white rounded border border-slate-300 shadow-sm ${i === 2 ? 'text-rose-500 border-rose-300' : 'text-slate-800'}`}>
                             {val}
                           </div>
                         ))}
                       </div>
+                    </div>
 
-                      <div className="bg-slate-900 border border-slate-800 p-3 rounded-lg text-center text-[10.5px] font-mono w-full text-slate-400">
-                        {testStatus === 'running' ? (
-                          <span className="text-amber-400 animate-pulse block">RUNNING INSTRUMENTATION TESTS...</span>
-                        ) : testResults.normal.status === 'passed' ? (
-                          <span className="text-emerald-400 font-bold block">🟢 ALL 3 TEST CASES PASSED SUCCESSFULLY</span>
-                        ) : testResults.normal.status === 'failed' ? (
-                          <span className="text-rose-400 font-bold block">🔴 COMPILER ERROR: DATA LOST ON SWAP</span>
-                        ) : (
-                          <span>รอกดปุ่มสั่งประมวลผล Test Cases</span>
-                        )}
+                    {/* Action arrow */}
+                    <div className="flex flex-col items-center shrink-0">
+                      <span className="text-[10px] font-mono text-indigo-650 font-bold px-2 py-0.5 rounded bg-indigo-50 border border-indigo-100">set() conversion</span>
+                      <ArrowRight className="w-6 h-6 text-indigo-500 mt-1" />
+                    </div>
+
+                    {/* Target Set */}
+                    <div className="text-center space-y-2">
+                      <span className="text-xs font-bold text-slate-500 block">Set (คัดกรองเหลือค่าเดียว)</span>
+                      <div className="flex gap-2 bg-teal-50/50 p-2.5 rounded-lg border border-teal-200">
+                        {['10', '20', '30'].map((val, i) => (
+                          <div key={i} className="w-10 h-10 flex items-center justify-center font-mono text-sm font-bold bg-white rounded border border-teal-300 text-teal-700 shadow-sm">
+                            {val}
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  )}
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-500 leading-relaxed font-sans">
+                  <div className="flex items-start gap-2 bg-emerald-50/50 border border-emerald-100/50 p-2.5 rounded-xl">
+                    <Info className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <p><strong>Duplicate Elimination:</strong> เมื่อทำการแปลง List ที่มีสมาชิกซ้ำกันให้เป็น Set ค่าที่ซ้ำกันจะถูกขจัดทิ้งทันที เหลือเพียงข้อมูลที่มีเอกลักษณ์ (Unique) เท่านั้น</p>
+                  </div>
+                  <div className="flex items-start gap-2 bg-rose-50/50 border border-rose-100/50 p-2.5 rounded-xl">
+                    <Info className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                    <p><strong>Unordered Nature:</strong> สมาชิกในเซตไม่ได้เรียงลำดับดัชนี เมื่อพิมพ์เซตออกมา ลำดับของข้อมูลอาจไม่เหมือนกับตอนที่เรากำหนดเริ่มต้น</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-                  {activeStep === 'optimization' && (
-                    <div className="w-full max-w-sm space-y-4 animate-fadeIn">
-                      <span className="text-[10px] font-mono text-slate-500 uppercase block mb-1">Time Complexity Comparison Graph:</span>
-                      
-                      <div className="border border-slate-800 bg-slate-900/60 p-4 rounded-xl relative overflow-hidden h-[180px] flex items-end gap-3 justify-center">
-                        {/* Bubble Sort Graph Bar */}
-                        <div className="flex flex-col items-center justify-end h-full w-1/3">
-                          <span className="text-[9px] font-mono text-rose-400 font-bold mb-1">41 min</span>
-                          <div
-                            className={`w-12 bg-rose-500/80 rounded-t-lg transition-all duration-700 ${
-                              isOptimized ? 'h-32' : 'h-32'
-                            }`}
-                          />
-                          <span className="text-[9.5px] font-mono text-slate-400 mt-2">Bubble O(N²)</span>
-                        </div>
+        {/* ─── Section 2: Pros & Cons ─── */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-teal-600 tracking-wider uppercase">
+              การวิเคราะห์ประสิทธิภาพ
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              ข้อดีและข้อจำกัดในการใช้โครงสร้างข้อมูลแบบ Set
+            </h3>
+          </div>
 
-                        {/* Quick Sort Graph Bar */}
-                        <div className="flex flex-col items-center justify-end h-full w-1/3">
-                          <span className={`text-[9px] font-mono font-bold mb-1 transition-all ${
-                            isOptimized ? 'text-emerald-400 font-bold' : 'text-slate-600'
-                          }`}>
-                            0.05 sec
-                          </span>
-                          <div
-                            className={`w-12 rounded-t-lg transition-all duration-700 ${
-                              isOptimized ? 'bg-emerald-500/85 h-0.5' : 'bg-slate-700 h-0'
-                            }`}
-                          />
-                          <span className="text-[9.5px] font-mono text-slate-400 mt-2">Quick O(N log N)</span>
-                        </div>
-                      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+            {/* Pros card */}
+            <div className="bg-emerald-50/60 backdrop-blur-md border border-emerald-200/60 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-sm">
+              <div>
+                <h4 className="text-[20px] font-bold text-emerald-950 mb-4 flex items-center gap-2">
+                  <CheckCircle2 className="w-6 h-6 text-emerald-600" />
+                  ข้อดีเด่นของ Set
+                </h4>
+                <div className="space-y-4 text-[14.5px] text-slate-700 leading-relaxed font-sans">
+                  <div className="flex items-start gap-2.5">
+                    <ArrowRight className="w-4.5 h-4.5 text-emerald-600 shrink-0 mt-1" />
+                    <p>
+                      <strong>สืบค้นรวดเร็วทันที $O(1)$:</strong> ใช้ Hash Table ค้นหาและระบุสมาชิกได้คงที่ระดับสัดส่วนเสี้ยววินาทีโดยไม่ต้องสแกนลูปหาข้อมูล
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <ArrowRight className="w-4.5 h-4.5 text-emerald-600 shrink-0 mt-1" />
+                    <p>
+                      <strong>การันตีความปลอดภัยไร้ตัวซ้ำ:</strong> ขจัดภาระงานเขียนฟังก์ชันคัดกรองข้อมูลซ้ำซ้อนในระดับ Application โค้ด
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-6 pt-4 border-t border-emerald-100 text-xs font-semibold text-emerald-800 font-mono">
+                SUITABLE FOR: MEMBERSHIP TESTING & MATH SET OPERATIONS
+              </div>
+            </div>
 
-                      <div className="bg-slate-900 border border-slate-800 p-3 rounded-lg text-[10.5px] font-mono text-slate-400 space-y-1">
-                        <span className="text-white font-bold block">💡 สรุปการปรับปรุงโค้ด (Optimization SOT):</span>
-                        <p>
-                          การแก้ไขตรรกะในระดับออกแบบช่วยเพิ่มความเร็วในการแก้ปัญหาขอบเขตได้สูงถึง 50,000 เท่า โดยที่ความถูกต้องของข้อมูล (Correctness) ยังคงตัวเสถียร 100%
-                        </p>
-                      </div>
-                    </div>
-                  )}
+            {/* Cons card */}
+            <div className="bg-rose-50/60 backdrop-blur-md border border-rose-200/60 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-sm">
+              <div>
+                <h4 className="text-[20px] font-bold text-rose-950 mb-4 flex items-center gap-2">
+                  <AlertCircle className="w-6 h-6 text-rose-500" />
+                  ข้อจำกัดและข้อเสียของ Set
+                </h4>
+                <div className="space-y-4 text-[14.5px] text-slate-700 leading-relaxed font-sans">
+                  <div className="flex items-start gap-2.5">
+                    <ArrowRight className="w-4.5 h-4.5 text-rose-500 shrink-0 mt-1" />
+                    <p>
+                      <strong>เข้าถึงข้อมูลผ่านดัชนีไม่ได้:</strong> เนื่องจากไม่มีลำดับ จึงไม่สามารถใช้วงเล็บดัชนีเข้าถึงตัวแปรแบบ `scores[0]` ได้โดยตรง
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <ArrowRight className="w-4.5 h-4.5 text-rose-500 shrink-0 mt-1" />
+                    <p>
+                      <strong>สมาชิกต้องเป็นข้อมูลคงที่ (Immutable):</strong> ข้อมูลสมาชิกในเซตต้องเป็นประเภท Hashable เท่านั้น ไม่สามารถเก็บ List ซ้อนภายในได้
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-6 pt-4 border-t border-rose-100 text-xs font-semibold text-rose-800 font-mono">
+                LIMITATION: NO INDEX ACCESS & MUTABLE ELEMENT RESTRICTION
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ─── Section 3: Summary of Basic Set Methods ─── */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-teal-600 tracking-wider uppercase">
+              คู่มือวิทยาการคำนวณ
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              สรุปคำสั่งพื้นฐานในการจัดการเซต (Set Methods Summary)
+            </h3>
+          </div>
+
+          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+            การทำงานกับตัวแปรประเภทเซตในภาษา Python มีเมธอดหลักมาตรฐานในการควบคุมและสั่งจัดการข้อมูลภายในดังนี้:
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {[
+              {
+                title: '.add(x)',
+                subtitle: 'การเพิ่มข้อมูล',
+                description: 'นำค่า x ไปบันทึกเพิ่มเข้าสู่เซต หากค่านั้นมีอยู่แล้วในเซต ระบบจะข้ามคำสั่งโดยไม่แจ้ง Error',
+                code: 'scores.add(95)',
+                result: '{85, 90, 78, 95}',
+                titleClass: 'text-emerald-600',
+                bgGradient: 'from-emerald-50/50 via-transparent to-transparent',
+              },
+              {
+                title: '.remove(x)',
+                subtitle: 'การลบตามค่าข้อมูล',
+                description: 'สืบค้นและลบข้อมูลที่มีค่าเท่ากับ x ออกจากเซต (หากตรวจไม่พบค่าข้อมูลในเซตจะเกิด KeyError)',
+                code: 'scores.remove(90)',
+                result: '{85, 78}',
+                titleClass: 'text-sky-500',
+                bgGradient: 'from-sky-50/50 via-transparent to-transparent',
+              },
+              {
+                title: 'A.union(B)',
+                subtitle: 'การรวมเซต (Union)',
+                description: 'การรวมสมาชิกทั้งหมดจากเซต A และเซต B เข้าไว้ด้วยกัน (หรือใช้สัญลักษณ์ดำเนินการ A | B)',
+                code: 'A.union({78, 99})',
+                result: '{85, 90, 78, 99}',
+                titleClass: 'text-rose-500',
+                bgGradient: 'from-rose-50/50 via-transparent to-transparent',
+              },
+              {
+                title: 'A.intersection(B)',
+                subtitle: 'การหาจุดร่วม (Intersection)',
+                description: 'ดึงเฉพาะสมาชิกที่ปรากฏอยู่ร่วมกันทั้งสองเซตออกมา (หรือใช้สัญลักษณ์ดำเนินการ A & B)',
+                code: 'A.intersection({78, 99})',
+                result: '{78}',
+                titleClass: 'text-amber-500',
+                bgGradient: 'from-amber-50/50 via-transparent to-transparent',
+              }
+            ].map((card, idx) => (
+              <div
+                key={idx}
+                className="bg-white border border-slate-100 rounded-3xl p-6 md:p-7 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden"
+              >
+                {/* Top soft ambient light glow */}
+                <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b ${card.bgGradient} opacity-60 pointer-events-none`} />
+
+                <div className="space-y-4 relative z-10">
+                  <span className={`block font-mono text-[20px] font-bold tracking-tight ${card.titleClass}`}>
+                    {card.title}
+                  </span>
+                  <div className="space-y-2">
+                    <h4 className="text-[17px] font-bold text-slate-800 leading-tight">
+                      {card.subtitle}
+                    </h4>
+                    <p className="text-[14px] text-slate-500 leading-relaxed min-h-[64px]">
+                      {card.description}
+                    </p>
+                  </div>
                 </div>
 
-                {/* Cycle Indicator Grid Status Panel */}
-                <div className="mt-4 bg-slate-900 border border-slate-800 rounded-xl p-3.5">
-                  <span className="text-[10px] font-mono text-slate-500 uppercase block mb-2">Cycle Step Status Board:</span>
-                  <div className="grid grid-cols-5 gap-2 text-center text-[9px] font-mono">
-                    {[
-                      { id: 'analysis', label: '1. Analysis' },
-                      { id: 'design', label: '2. Design' },
-                      { id: 'coding', label: '3. Coding' },
-                      { id: 'testing', label: '4. Testing' },
-                      { id: 'optimization', label: '5. Optimize' }
-                    ].map(step => (
-                      <div
-                        key={step.id}
-                        className={`p-1.5 rounded border transition-all ${getStepStatusClass(step.id)}`}
+                {/* Code Snippet Box */}
+                <div className="bg-slate-50 border border-slate-100/60 rounded-xl p-3 flex justify-between items-center font-mono text-[12px] md:text-[13px] mt-6 relative z-10">
+                  <span className="text-slate-700 truncate mr-2">{card.code}</span>
+                  <span className="text-indigo-600 font-bold shrink-0">{card.result}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ─── Section 4: Interactive Set Sandbox ─── */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-teal-600 tracking-wider uppercase">
+              ห้องปฏิบัติการจำลอง
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              ตัวจำลองตรรกะเชิงเซตและผังเวนน์-ออยเลอร์ (Set Operations & Venn Diagram Simulator)
+            </h3>
+          </div>
+
+          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+            ทดลองเพิ่ม/ลดข้อมูลในเซต A และเซต B สังเกตพฤติกรรมข้อมูลซ้ำซ้อน และเลือกตัวดำเนินการทางคณิตศาสตร์เซต เพื่อดูผลลัพธ์ผ่านแผนภาพเวนน์-ออยเลอร์จำลอง:
+          </p>
+
+          <SimulatorShell
+            dark
+            title="Interactive Python Set Operations & Venn Sandbox"
+            icon={<Merge className="w-8 h-8 text-teal-400" />}
+            glowColors="from-zinc-900/30 to-zinc-950/10"
+            iconColor="text-teal-400"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mt-4">
+              
+              {/* Controller Panel (Left) */}
+              <div className="lg:col-span-6 bg-slate-900/90 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-2xl relative flex flex-col justify-between min-h-[500px]">
+                <div className="text-[9px] font-mono text-slate-500 absolute top-3 right-4 font-bold tracking-widest">
+                  CONTROLLER
+                </div>
+
+                <div className="space-y-5 pt-3">
+                  {/* Set A Controls */}
+                  <div className="bg-slate-800/35 p-3 rounded-xl border border-slate-800/80 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-mono text-teal-300 font-bold">Set A = {`{ ${setA.join(', ')} }`}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="เพิ่ม เช่น Orange"
+                        value={inputValA}
+                        onChange={(e) => setInputValA(e.target.value)}
+                        className="bg-slate-950 border border-slate-700/60 rounded px-2.5 py-1 text-xs text-white placeholder-slate-650 focus:outline-none focus:border-teal-500 grow"
+                      />
+                      <button
+                        onClick={handleAddToA}
+                        className="bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs py-1.5 px-3 rounded-lg flex items-center gap-1 cursor-pointer shrink-0 transition-colors"
                       >
-                        {step.label}
+                        <Plus className="w-3.5 h-3.5" /> Add to A
+                      </button>
+                    </div>
+                    {setA.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-1.5 pt-1.5 border-t border-slate-800">
+                        {setA.map((val, idx) => (
+                          <span key={idx} className="bg-slate-900 text-slate-300 text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1 border border-slate-800">
+                            {val}
+                            <Trash2 className="w-2.5 h-2.5 text-rose-500 cursor-pointer" onClick={() => handleRemoveFromA(val)} />
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Set B Controls */}
+                  <div className="bg-slate-800/35 p-3 rounded-xl border border-slate-800/80 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-mono text-indigo-300 font-bold">Set B = {`{ ${setB.join(', ')} }`}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="เพิ่ม เช่น Melon"
+                        value={inputValB}
+                        onChange={(e) => setInputValB(e.target.value)}
+                        className="bg-slate-950 border border-slate-700/60 rounded px-2.5 py-1 text-xs text-white placeholder-slate-650 focus:outline-none focus:border-indigo-500 grow"
+                      />
+                      <button
+                        onClick={handleAddToB}
+                        className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-1.5 px-3 rounded-lg flex items-center gap-1 cursor-pointer shrink-0 transition-colors"
+                      >
+                        <Plus className="w-3.5 h-3.5" /> Add to B
+                      </button>
+                    </div>
+                    {setB.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-1.5 pt-1.5 border-t border-slate-800">
+                        {setB.map((val, idx) => (
+                          <span key={idx} className="bg-slate-900 text-slate-300 text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1 border border-slate-800">
+                            {val}
+                            <Trash2 className="w-2.5 h-2.5 text-rose-500 cursor-pointer" onClick={() => handleRemoveFromB(val)} />
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Set Operations Selectors */}
+                  <div className="space-y-2">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide block">ตัวดำเนินการคณิตศาสตร์เซต:</span>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                      {[
+                        { id: 'union', label: 'A | B (Union)' },
+                        { id: 'intersection', label: 'A & B (Intersect)' },
+                        { id: 'diffA', label: 'A - B (Diff A)' },
+                        { id: 'diffB', label: 'B - A (Diff B)' }
+                      ].map((op) => (
+                        <button
+                          key={op.id}
+                          onClick={() => {
+                            setSelectedOp(op.id);
+                            addLog(`>>> สั่งรันตัวดำเนินการ ${op.label}`);
+                          }}
+                          className={`py-2 rounded-xl border text-center font-bold text-[10.5px] cursor-pointer transition-all ${
+                            selectedOp === op.id
+                              ? 'border-teal-500 bg-teal-950/40 text-teal-350 shadow shadow-teal-500/25'
+                              : 'border-slate-800 bg-slate-950/20 text-slate-400 hover:border-slate-700'
+                          }`}
+                        >
+                          {op.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Reset & Quick Helper */}
+                  <button
+                    onClick={handleResetSimulator}
+                    className="w-full py-2 bg-slate-850 hover:bg-slate-750 text-slate-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer border border-slate-800"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" /> รีเซ็ตหน่วยความจำและค่าจำลอง
+                  </button>
+
+                </div>
+
+                {/* Console Log Panel */}
+                <div className="mt-6 pt-3 border-t border-slate-800">
+                  <div className="bg-black/60 p-3.5 rounded-xl border border-slate-950 min-h-[110px] font-mono text-[11.5px] leading-relaxed text-teal-400 select-all overflow-y-auto max-h-[140px]">
+                    <div className="text-zinc-500 border-b border-slate-900 pb-1 mb-2 uppercase tracking-wide text-[9px] font-bold">
+                      Python Console Log Trace:
+                    </div>
+                    {simLogs.map((log, index) => (
+                      <div key={index} className="animate-fadeIn">
+                        {log.startsWith('>>>') ? (
+                          <span className="text-indigo-300 font-bold">{log}</span>
+                        ) : (
+                          <span className="text-teal-400"><span className="text-zinc-500">&gt;&gt; </span>{log}</span>
+                        )}
                       </div>
                     ))}
                   </div>
                 </div>
+
               </div>
+
+              {/* Venn Diagram Visualizer (Right) */}
+              <div className="lg:col-span-6 bg-slate-950/95 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-2xl relative flex flex-col justify-between min-h-[500px]">
+                <div className="text-[9px] font-mono text-slate-500 absolute top-3 left-3 font-bold tracking-widest">
+                  VENN-EULER DIAGRAM & MEMORY VISUALIZER
+                </div>
+
+                <div className="grow flex flex-col justify-between mt-6">
+                  
+                  {/* Venn Diagram Canvas */}
+                  <div className="relative h-56 w-full max-w-[420px] mx-auto bg-slate-900/30 rounded-2xl border border-slate-900 flex items-center justify-center overflow-hidden">
+                    
+                    {/* Circle A */}
+                    <div className={`absolute left-6 w-44 h-44 rounded-full border-2 transition-all duration-300 flex flex-col items-center pt-8 px-4
+                      ${selectedOp === 'union' || selectedOp === 'diffA'
+                        ? 'bg-teal-500/15 border-teal-500 shadow-[0_0_20px_rgba(20,184,166,0.15)]'
+                        : 'border-slate-850 bg-slate-950/30'
+                      }`}
+                    >
+                      <span className="text-[10px] font-bold text-teal-400 font-mono tracking-wider absolute top-3">SET A</span>
+                    </div>
+
+                    {/* Circle B */}
+                    <div className={`absolute right-6 w-44 h-44 rounded-full border-2 transition-all duration-300 flex flex-col items-center pt-8 px-4
+                      ${selectedOp === 'union' || selectedOp === 'diffB'
+                        ? 'bg-indigo-500/15 border-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.15)]'
+                        : 'border-slate-850 bg-slate-950/30'
+                      }`}
+                    >
+                      <span className="text-[10px] font-bold text-indigo-400 font-mono tracking-wider absolute top-3">SET B</span>
+                    </div>
+
+                    {/* Intersect Overlap Highlighter */}
+                    <div className={`absolute w-[100px] h-[130px] rounded-[50px] transition-all duration-300 pointer-events-none
+                      ${selectedOp === 'union'
+                        ? 'bg-teal-500/15 shadow-[inset_0_0_15px_rgba(20,184,166,0.1)]'
+                        : selectedOp === 'intersection'
+                        ? 'bg-emerald-500/20 border-2 border-emerald-500/60 shadow-[0_0_20px_rgba(16,185,129,0.2)]'
+                        : 'bg-transparent'
+                      }`}
+                    />
+
+                    {/* Venn Regions Texts */}
+                    {/* Region 1: A Only */}
+                    <div className="absolute left-10 w-24 text-center z-10">
+                      <div className="flex flex-col gap-1 items-center justify-center">
+                        {aOnly.slice(0, 3).map((val, idx) => (
+                          <span key={idx} className={`text-[10.5px] font-mono transition-colors ${selectedOp === 'union' || selectedOp === 'diffA' ? 'text-teal-300 font-semibold' : 'text-slate-500'}`}>
+                            {val}
+                          </span>
+                        ))}
+                        {aOnly.length > 3 && <span className="text-[9px] text-slate-500 font-mono">+{aOnly.length - 3} elements</span>}
+                        {aOnly.length === 0 && <span className="text-[9px] text-slate-650 italic font-sans font-medium">ว่างเปล่า</span>}
+                      </div>
+                    </div>
+
+                    {/* Region 2: Overlap Intersection */}
+                    <div className="absolute w-24 text-center z-10">
+                      <div className="flex flex-col gap-1 items-center justify-center">
+                        {intersection.slice(0, 3).map((val, idx) => (
+                          <span key={idx} className={`text-[10.5px] font-mono transition-colors ${selectedOp === 'union' || selectedOp === 'intersection' ? 'text-emerald-300 font-semibold' : 'text-slate-500'}`}>
+                            {val}
+                          </span>
+                        ))}
+                        {intersection.length > 3 && <span className="text-[9px] text-slate-500 font-mono">+{intersection.length - 3} elements</span>}
+                        {intersection.length === 0 && <span className="text-[9px] text-slate-650 italic font-sans font-medium">ไม่มีจุดร่วม</span>}
+                      </div>
+                    </div>
+
+                    {/* Region 3: B Only */}
+                    <div className="absolute right-10 w-24 text-center z-10">
+                      <div className="flex flex-col gap-1 items-center justify-center">
+                        {bOnly.slice(0, 3).map((val, idx) => (
+                          <span key={idx} className={`text-[10.5px] font-mono transition-colors ${selectedOp === 'union' || selectedOp === 'diffB' ? 'text-indigo-300 font-semibold' : 'text-slate-500'}`}>
+                            {val}
+                          </span>
+                        ))}
+                        {bOnly.length > 3 && <span className="text-[9px] text-slate-500 font-mono">+{bOnly.length - 3} elements</span>}
+                        {bOnly.length === 0 && <span className="text-[9px] text-slate-650 italic font-sans font-medium">ว่างเปล่า</span>}
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* Operation Result Box */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 mt-6">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-teal-400 tracking-wider uppercase">Operation Result:</span>
+                        <span className="text-[10.5px] font-bold text-white bg-slate-800 px-2 py-0.5 rounded border border-slate-700 font-mono">
+                          {selectedOp === 'union'
+                            ? 'A ∪ B (Union)'
+                            : selectedOp === 'intersection'
+                            ? 'A ∩ B (Intersection)'
+                            : selectedOp === 'diffA'
+                            ? 'A - B (Difference A)'
+                            : 'B - A (Difference B)'}
+                        </span>
+                      </div>
+                      <div className="text-xs leading-relaxed text-slate-400 font-mono bg-black/40 p-2.5 rounded border border-slate-900/60 overflow-x-auto min-h-[46px] flex items-center">
+                        <span className="text-emerald-400 font-bold mr-2 shrink-0">Output:</span>
+                        <span className="text-slate-200">
+                          {`{ ${getOpResult().join(', ')} }`}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
             </div>
           </SimulatorShell>
         </section>
 
         {/* ─── Layer 4: Standardized TeacherTask Footer ─── */}
         <TeacherTask
-          title="วิเคราะห์ขั้นตอนการแก้ปัญหาและการสร้างชุดข้อมูลทดสอบตามวงจรพัฒนา"
-          taskText={`คำชี้แจง: ให้นักเรียนสั่งวิเคราะห์ทดลองและโต้ตอบกระบวนการ Lifecycle ตั้งแต่ขั้นตอนที่ 1 ถึง 5 ในห้องปฏิบัติการจำลอง AlgoCycle-Playground ด้านบน จากนั้นเขียนอธิบายเชิงทฤษฎีวิศวกรรมคอมพิวเตอร์ต่อไปนี้ลงในสมุดบันทึก:
+          title="ภารกิจท้ายบทเรียน: วิเคราะห์ประสิทธิภาพและควบคุมข้อมูลไร้ซ้ำด้วย Set ใน Python"
+          taskText={`[โจทย์ปฏิบัติการหลักสูตรรายวิชาโครงสร้างข้อมูล 21900-1002]
 
-1. เหตุใดการเขียนซอร์สโค้ดโปรแกรมในทันทีโดยไม่ผ่าน "ขั้นตอนการวิเคราะห์ปัญหา" และ "การออกแบบขั้นตอนวิธี" จึงจัดเป็นรูปแบบการพัฒนาที่บกพร่อง (Software Anti-pattern)
-   - ยกตัวอย่างข้อผิดพลาดด้านเงื่อนไขขอบเขตข้อมูล (Boundary/Edge Case) ที่มักถูกละเลยหากไม่ได้วิเคราะห์ปัญหาก่อนเขียนโค้ด
-2. จากการจำลองทำไมการสลับค่าตัวแปรในอาเรย์ระดับ Coding จึงจำเป็นต้องเรียกใช้งานตัวแปรตัวกลาง "temp" มารับฝากข้อมูลชั่วคราว
-   - หากเขียนทับข้อมูลตรงๆ จะเกิดผลกระทบใดในหน่วยความจำ RAM พร้อมยกตัวอย่างสถานะตัวแปรประกอบ
-3. ในกระบวนการปรับปรุงประสิทธิภาพ (Optimization) เหตุใดการเปลี่ยนรูปแบบขั้นตอนวิธีจาก Bubble Sort เป็น Quick Sort จึงส่งผลต่ออัตราการเจริญเติบโตของเวลาประมวลผล (Time Complexity) อย่างมีนัยสำคัญเมื่อขนาดข้อมูล (N) ขยายตัวในระดับอุตสาหกรรม`}
+ให้นักเรียนสร้างระบบจัดการรายชื่อผู้เข้าร่วมงานสัมมนา เพื่อป้องกันรายชื่อซ้ำซ้อนและเปรียบเทียบกลุ่มผู้ร่วมงานสัมมนาสองวัน:
+
+1. ประกาศเซตว่างชื่อ day1 = set() และ day2 = set()
+2. เพิ่มผู้ร่วมงานวันที่ 1 โดยใช้ .add() ประกอบด้วย "Alice", "Bob", "Charlie", "David"
+3. เพิ่มผู้ร่วมงานวันที่ 2 โดยใช้ .add() ประกอบด้วย "Charlie", "David", "Eve", "Frank"
+4. ใช้ตัวดำเนินการเซตเพื่อหา:
+   - รายชื่อผู้ร่วมงานสัมมนาทั้งหมด (Union)
+   - รายชื่อผู้ที่มาเข้าร่วมสัมมนาทั้งสองวัน (Intersection)
+   - รายชื่อผู้ที่มาร่วมงานเฉพาะวันแรกเท่านั้นแต่ไม่ได้มาวันที่สอง (Difference A - B)
+5. ให้นักเรียนเขียนอธิบายสรุปความแตกต่างในเชิงโครงสร้างและการจัดลำดับระหว่าง List กับ Set ลงในสคริปต์ส่งงาน
+
+ให้นักเรียนนำผลลัพธ์การรันคำสั่งและผังเวนน์-ออยเลอร์ (Venn Diagram) ที่ได้จากการประมวลผลส่งครูผู้สอนเพื่อประเมินเกรด`}
         />
+
       </main>
+
     </div>
   );
 }
