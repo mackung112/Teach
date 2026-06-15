@@ -727,7 +727,7 @@ export default function OOAD1_4() {
               accentLabel="srs backend rules"
               accentColor="text-teal-400"
               codeBlock={
-                <pre className="text-[13.5px] font-mono text-zinc-350 leading-relaxed overflow-x-auto">
+                <pre className="text-[13.5px] font-mono text-zinc-300 leading-relaxed overflow-x-auto">
                   {pythonCode}
                 </pre>
               }

@@ -272,6 +272,74 @@ export default function DSA1_4() {
           </div>
         </section>
 
+        {/* ─── Section: Summary of Basic Dictionary Methods ─── */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-indigo-600 tracking-wider uppercase">
+              คู่มือวิทยาการคำนวณ
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              สรุปคำสั่งและฟังก์ชันพื้นฐานในการจัดการพจนานุกรม (Dictionary Summary)
+            </h3>
+          </div>
+
+          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+            การดำเนินการกับตัวแปรประเภท Dictionary ในภาษา Python มีเมธอดหลักมาตรฐานในการค้นหาและจัดการข้อมูลอย่างรวดเร็วดังนี้:
+          </p>
+
+          <div className="flex flex-col gap-3.5">
+            {[
+              {
+                method: "len(dict)",
+                desc: "ฟังก์ชันตรวจสอบจำนวนคู่ข้อมูล (Key-Value) ทั้งหมดที่บันทึกอยู่ใน Dictionary",
+                complexity: "O(1) constant time",
+                theme: "border-l-indigo-500 bg-indigo-50/40 text-indigo-950",
+                badge: "text-indigo-700 bg-indigo-100"
+              },
+              {
+                method: "dict.get(key, default)",
+                desc: "ดึงค่าข้อมูลของ Key ที่ต้องการอย่างปลอดภัย หากไม่พบจะคืนค่า default แทนการค้างระบบ",
+                complexity: "O(1) average time",
+                theme: "border-l-cyan-500 bg-cyan-50/40 text-cyan-950",
+                badge: "text-cyan-700 bg-cyan-100"
+              },
+              {
+                method: "dict.keys()",
+                desc: "ดึงรายชื่อคีย์ทั้งหมดที่มีอยู่ใน Dictionary ออกมาเพื่อใช้ในการตรวจสอบหรือลูปข้อมูล",
+                complexity: "O(1) constant time",
+                theme: "border-l-violet-500 bg-violet-50/40 text-violet-950",
+                badge: "text-violet-700 bg-violet-100"
+              },
+              {
+                method: "dict.values()",
+                desc: "ดึงรายการของค่าข้อมูลดิบ (Values) ทั้งหมดที่มีอยู่ใน Dictionary ออกมา",
+                complexity: "O(1) constant time",
+                theme: "border-l-rose-500 bg-rose-50/40 text-rose-950",
+                badge: "text-rose-700 bg-rose-100"
+              },
+              {
+                method: "dict.pop(key)",
+                desc: "ลบคู่ข้อมูลและคืนค่า Value ของ Key นั้นออกจาก Dictionary",
+                complexity: "O(1) average time",
+                theme: "border-l-emerald-500 bg-emerald-50/40 text-emerald-950",
+                badge: "text-emerald-700 bg-emerald-100"
+              }
+            ].map((m, idx) => (
+              <div key={idx} className={`p-4 md:p-5 rounded-2xl border border-slate-200 border-l-[4px] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 ${m.theme}`}>
+                <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 grow">
+                  <span className={`inline-block font-mono text-[14px] font-bold px-3 py-1 rounded-lg ${m.badge} shrink-0 w-fit`}>
+                    {m.method}
+                  </span>
+                  <p className="text-[15px] leading-relaxed opacity-95">{m.desc}</p>
+                </div>
+                <div className="text-[11px] font-mono opacity-70 uppercase font-bold tracking-wider pt-2 md:pt-0 border-t md:border-t-0 border-slate-200/60 md:pl-5 md:border-l border-slate-200/60 shrink-0">
+                  Time Complexity: <span className="font-semibold text-slate-800">{m.complexity}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* ─── Section 3: Interactive Hash Lab Simulator ─── */}
         <section className="space-y-6">
           <div className="border-b border-zinc-200/80 pb-4">

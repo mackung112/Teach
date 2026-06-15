@@ -535,7 +535,7 @@ export default function DSA1_2() {
             การทำงานกับตัวแปรประเภทลิสต์ในภาษา Python มีเมธอดหลักมาตรฐานในการควบคุมปริมาณข้อมูลภายในที่คุณต้องจดจำไปใช้งานดังนี้:
           </p>
 
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+          <div className="flex flex-col gap-3.5">
             {[
               {
                 method: ".append(x)",
@@ -573,15 +573,15 @@ export default function DSA1_2() {
                 badge: "text-emerald-700 bg-emerald-100"
               }
             ].map((m, idx) => (
-              <div key={idx} className={`p-4 rounded-2xl border border-slate-200 border-l-[3.5px] flex flex-col justify-between min-h-[160px] shadow-sm hover:shadow-md transition-all duration-200 ${m.theme}`}>
-                <div>
-                  <span className={`inline-block font-mono text-[13.5px] font-bold px-2 py-0.5 rounded ${m.badge} mb-2`}>
+              <div key={idx} className={`p-4 md:p-5 rounded-2xl border border-slate-200 border-l-[4px] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 ${m.theme}`}>
+                <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 grow">
+                  <span className={`inline-block font-mono text-[14px] font-bold px-3 py-1 rounded-lg ${m.badge} shrink-0 w-fit`}>
                     {m.method}
                   </span>
-                  <p className="text-[13px] leading-relaxed opacity-90">{m.desc}</p>
+                  <p className="text-[15px] leading-relaxed opacity-95">{m.desc}</p>
                 </div>
-                <div className="text-[10px] font-mono opacity-60 uppercase font-bold tracking-wider pt-2 border-t border-slate-200/50 mt-2">
-                  Time Complexity: {m.complexity}
+                <div className="text-[11px] font-mono opacity-70 uppercase font-bold tracking-wider pt-2 md:pt-0 border-t md:border-t-0 border-slate-200/60 md:pl-5 md:border-l border-slate-200/60 shrink-0">
+                  Time Complexity: <span className="font-semibold text-slate-800">{m.complexity}</span>
                 </div>
               </div>
             ))}

@@ -428,6 +428,74 @@ export default function DSA1_6() {
           </div>
         </section>
 
+        {/* ─── Section: Summary of Basic ADT Operations ─── */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-teal-600 tracking-wider uppercase">
+              คู่มือวิทยาการคอมพิวเตอร์
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              สรุปคำสั่งและฟังก์ชันพื้นฐานในโครงสร้างข้อมูลนามธรรม (ADT Methods Summary)
+            </h3>
+          </div>
+
+          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+            ประเภทข้อมูลนามธรรมที่เป็นมาตรฐานสองประเภทคือ **Stack (สแตก)** และ **Queue (คิว)** มีการกำหนดคำสั่งและกฎเกณฑ์พฤติกรรมการจัดการข้อมูลดังนี้:
+          </p>
+
+          <div className="flex flex-col gap-3.5">
+            {[
+              {
+                method: "stack.push(item)",
+                desc: "เพิ่มข้อมูลเข้าไปไว้ที่ตำแหน่งบนสุดของ Stack (LIFO - เข้าหลังออกก่อน)",
+                complexity: "O(1) constant time",
+                theme: "border-l-indigo-500 bg-indigo-50/40 text-indigo-950",
+                badge: "text-indigo-700 bg-indigo-100"
+              },
+              {
+                method: "stack.pop()",
+                desc: "ลบและส่งคืนข้อมูลตัวบนสุดของ Stack ออกจากโครงสร้าง",
+                complexity: "O(1) constant time",
+                theme: "border-l-cyan-500 bg-cyan-50/40 text-cyan-950",
+                badge: "text-cyan-700 bg-cyan-100"
+              },
+              {
+                method: "queue.enqueue(item)",
+                desc: "เพิ่มข้อมูลเข้าสู่ท้ายแถวของ Queue (FIFO - เข้าก่อนออกก่อน)",
+                complexity: "O(1) constant time",
+                theme: "border-l-teal-500 bg-teal-50/40 text-teal-950",
+                badge: "text-teal-700 bg-teal-100"
+              },
+              {
+                method: "queue.dequeue()",
+                desc: "ลบและส่งคืนข้อมูลจากหัวแถวสุดของ Queue ออกไปใช้งาน",
+                complexity: "O(1) (O(n) หากใช้ Array)",
+                theme: "border-l-rose-500 bg-rose-50/40 text-rose-950",
+                badge: "text-rose-700 bg-rose-100"
+              },
+              {
+                method: "adt.peek() / front()",
+                desc: "เรียกดูข้อมูลตัวหัวแถวหรือตัวบนสุดของโครงสร้างโดยไม่มีการลบข้อมูลจริงออกไป",
+                complexity: "O(1) constant time",
+                theme: "border-l-emerald-500 bg-emerald-50/40 text-emerald-950",
+                badge: "text-emerald-700 bg-emerald-100"
+              }
+            ].map((m, idx) => (
+              <div key={idx} className={`p-4 md:p-5 rounded-2xl border border-slate-200 border-l-[4px] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 ${m.theme}`}>
+                <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 grow">
+                  <span className={`inline-block font-mono text-[14px] font-bold px-3 py-1 rounded-lg ${m.badge} shrink-0 w-fit`}>
+                    {m.method}
+                  </span>
+                  <p className="text-[15px] leading-relaxed opacity-95">{m.desc}</p>
+                </div>
+                <div className="text-[11px] font-mono opacity-70 uppercase font-bold tracking-wider pt-2 md:pt-0 border-t md:border-t-0 border-slate-200/60 md:pl-5 md:border-l border-slate-200/60 shrink-0">
+                  Time Complexity: <span className="font-semibold text-slate-800">{m.complexity}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* Section 3: Interactive ADT Simulator */}
         <section className="space-y-6">
           <div className="border-b border-zinc-200/80 pb-4">
@@ -802,7 +870,7 @@ export default function DSA1_6() {
               accentLabel="adt class interface"
               accentColor="text-teal-400"
               codeBlock={
-                <pre className="text-[13.5px] font-mono text-zinc-350 leading-relaxed overflow-x-auto">
+                <pre className="text-[13.5px] font-mono text-zinc-300 leading-relaxed overflow-x-auto">
                   {pythonCode}
                 </pre>
               }

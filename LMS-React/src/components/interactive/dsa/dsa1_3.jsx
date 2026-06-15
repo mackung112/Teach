@@ -407,6 +407,67 @@ except TypeError as error:
           </div>
         </section>
 
+        {/* ─── Section: Summary of Basic Tuple Methods ─── */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-indigo-600 tracking-wider uppercase">
+              คู่มือวิทยาการคำนวณ
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              สรุปคำสั่งและฟังก์ชันพื้นฐานในการจัดการทิวเพิล (Tuple Methods Summary)
+            </h3>
+          </div>
+
+          <p className="text-[16px] md:text-[17px] text-zinc-650 leading-relaxed font-normal">
+            เนื่องจากทิวเพิลเป็นประเภทข้อมูลแบบคงที่ (Immutable) เมธอดพื้นฐานในการจัดการข้อมูลจึงมีอย่างจำกัด โดยมีคำสั่งหลักที่ใช้สืบค้นและดำเนินงานดังนี้:
+          </p>
+
+          <div className="flex flex-col gap-3.5">
+            {[
+              {
+                method: "len(tuple)",
+                desc: "ฟังก์ชันตรวจสอบจำนวนสมาชิกทั้งหมดที่มีอยู่ใน Tuple",
+                complexity: "O(1) constant time",
+                theme: "border-l-indigo-500 bg-indigo-50/40 text-indigo-950",
+                badge: "text-indigo-700 bg-indigo-100"
+              },
+              {
+                method: "tuple.count(x)",
+                desc: "นับจำนวนข้อมูล x ทั้งหมดที่มีอยู่ใน Tuple",
+                complexity: "O(n) linear time",
+                theme: "border-l-sky-500 bg-sky-50/40 text-sky-950",
+                badge: "text-sky-700 bg-sky-100"
+              },
+              {
+                method: "tuple.index(x)",
+                desc: "ค้นหาและคืนค่าตำแหน่งดัชนีตัวแรกที่ตรวจพบข้อมูล x (หากไม่พบจะเกิด ValueError)",
+                complexity: "O(n) linear time",
+                theme: "border-l-violet-500 bg-violet-50/40 text-violet-950",
+                badge: "text-violet-700 bg-violet-100"
+              },
+              {
+                method: "tuple1 + tuple2",
+                desc: "สั่งรวมข้อมูลทิวเพิลสองตัวเข้าด้วยกัน เพื่อสถาปนาวัตถุ Tuple ใหม่แยกออกมา",
+                complexity: "O(n1 + n2) linear time",
+                theme: "border-l-emerald-500 bg-emerald-50/40 text-emerald-950",
+                badge: "text-emerald-700 bg-emerald-100"
+              }
+            ].map((m, idx) => (
+              <div key={idx} className={`p-4 md:p-5 rounded-2xl border border-slate-200 border-l-[4px] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 ${m.theme}`}>
+                <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 grow">
+                  <span className={`inline-block font-mono text-[14px] font-bold px-3 py-1 rounded-lg ${m.badge} shrink-0 w-fit`}>
+                    {m.method}
+                  </span>
+                  <p className="text-[15px] leading-relaxed opacity-95">{m.desc}</p>
+                </div>
+                <div className="text-[11px] font-mono opacity-70 uppercase font-bold tracking-wider pt-2 md:pt-0 border-t md:border-t-0 border-slate-200/60 md:pl-5 md:border-l border-slate-200/60 shrink-0">
+                  Time Complexity: <span className="font-semibold text-slate-800">{m.complexity}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* Section 3: Dynamic Mutability & Memory Allocation Simulator */}
         <section className="space-y-6" aria-labelledby="section-simulator-title">
           <div className="border-b border-zinc-200/80 pb-4">

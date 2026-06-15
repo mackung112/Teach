@@ -207,6 +207,67 @@ export default function DSA1_5() {
           </div>
         </section>
 
+        {/* ─── Section: Summary of Basic Development & Sorting Operations ─── */}
+        <section className="space-y-6">
+          <div className="border-b border-zinc-200/80 pb-4">
+            <span className="text-sm font-bold text-emerald-600 tracking-wider uppercase">
+              คู่มือวิศวกรรมซอฟต์แวร์
+            </span>
+            <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
+              สรุปคำสั่งและกลไกพื้นฐานในวงจรพัฒนาขั้นตอนวิธี (Algorithm Methods Summary)
+            </h3>
+          </div>
+
+          <p className="text-[16px] md:text-[17px] text-zinc-655 leading-relaxed font-normal">
+            การพัฒนาและปรับปรุงขั้นตอนวิธีในวิทยาการคอมพิวเตอร์ มีกลไกสำคัญและโครงสร้างการจัดการตัวแปรที่คุณควรทราบดังนี้:
+          </p>
+
+          <div className="flex flex-col gap-3.5">
+            {[
+              {
+                method: "temp = a; a = b; b = temp",
+                desc: "การสลับค่าตัวแปร (Variable Swapping) โดยจองตัวแปรชั่วคราว temp เพื่อป้องกันข้อมูลเดิมโดนเขียนทับสูญหาย",
+                complexity: "O(1) auxiliary space",
+                theme: "border-l-emerald-500 bg-emerald-50/40 text-emerald-950",
+                badge: "text-emerald-700 bg-emerald-100"
+              },
+              {
+                method: "bubble_sort(arr)",
+                desc: "การเรียงลำดับแบบเปรียบเทียบทีละคู่ติดกันและสลับค่าไปท้ายแถว เหมาะสำหรับข้อมูลขนาดเล็ก",
+                complexity: "O(n²) worst time",
+                theme: "border-l-cyan-500 bg-cyan-50/40 text-cyan-950",
+                badge: "text-cyan-700 bg-cyan-100"
+              },
+              {
+                method: "quick_sort(arr)",
+                desc: "การเรียงลำดับแบบแบ่งพาร์ทิชันซ้ายขวาตามค่า Pivot (Divide & Conquer) เพื่อความรวดเร็วระดับสูง",
+                complexity: "O(n log n) average time",
+                theme: "border-l-violet-500 bg-violet-50/40 text-violet-950",
+                badge: "text-violet-700 bg-violet-100"
+              },
+              {
+                method: "run_test_cases()",
+                desc: "การรันชุดข้อมูลตรวจสอบ ครอบคลุมทั้งกรณีปกติ (Normal), ข้อมูลเรียงอยู่แล้ว (Edge), และข้อมูลว่างเปล่า (Boundary)",
+                complexity: "Quality assurance",
+                theme: "border-l-amber-500 bg-amber-50/40 text-amber-950",
+                badge: "text-amber-700 bg-amber-100"
+              }
+            ].map((m, idx) => (
+              <div key={idx} className={`p-4 md:p-5 rounded-2xl border border-slate-200 border-l-[4px] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 ${m.theme}`}>
+                <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 grow">
+                  <span className={`inline-block font-mono text-[14px] font-bold px-3 py-1 rounded-lg ${m.badge} shrink-0 w-fit`}>
+                    {m.method}
+                  </span>
+                  <p className="text-[15px] leading-relaxed opacity-95">{m.desc}</p>
+                </div>
+                <div className="text-[11px] font-mono opacity-70 uppercase font-bold tracking-wider pt-2 md:pt-0 border-t md:border-t-0 border-slate-200/60 md:pl-5 md:border-l border-slate-200/60 shrink-0">
+                  Time/Space: <span className="font-semibold text-slate-800">{m.complexity}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* ─── Section 2: Interactive Simulator (AlgoCycle-Playground) ─── */}
         <section className="space-y-6">
           <div className="border-b border-zinc-200/80 pb-4">
