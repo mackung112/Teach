@@ -12,25 +12,19 @@
 
 ## 📋 บันทึกส่งมอบ (เก็บ 3 รายการล่าสุด)
 
-- **จัดทำเนื้อหา Unit 2: UML Overview จำนวน 6 หัวข้อย่อย** [16/06/2026]
-  - สร้างไฟล์บทเรียน `ooad2_1.jsx` ถึง `ooad2_6.jsx` ครอบคลุม UML พื้นฐาน, Activity, Class, Sequence, และ Use Case Diagram
-  - พัฒนาระบบ Simulator แบบ Interactive 5 ตัว (Diagram Showcase, Flow Tracer, Code Generator, Message Tracer, Boundary Matcher)
-  - อัปเดต `ooadCourse.js` ให้แสดงผลเป็น 6 หัวข้อย่อย และจัดกลุ่มตามแผนใหม่
-  - ผ่านการตรวจสอบ Impeccable scan (0 warnings)
+- **สร้างเนื้อหา 31901-2001/lesson/1.3 (การใช้งาน google Stitch ร่วมกับ design.md)** [16/06/2026]
+  - สร้างไฟล์ `uiux1_3.jsx` ที่มี Interactive Simulator อธิบายหลักการทำงานของ Google Stitch และ `DESIGN.md`
+  - เพิ่มหัวข้อ 1.3 และคำอธิบายลงในโครงสร้างหลักสูตร (`uiuxCourse.js`)
+  - ตรวจสอบคุณภาพโค้ดและดีไซน์ด้วย Impeccable สำเร็จ (0 warnings)
 
-- **จัดทำเนื้อหา Unit 2: Activity Diagram (UML) แบบ 4 หัวข้อย่อย** [16/06/2026]
-  - สร้างไฟล์บทเรียน 4 ไฟล์: `ooad2_1.jsx`, `ooad2_2.jsx`, `ooad2_3.jsx`, `ooad2_4.jsx` พร้อมใช้ `<main className="max-w-7xl...">` ให้ความกว้างเท่ากับหน้าอื่น
-  - พัฒนาระบบ Simulator จำลองกระบวนการสั่งซื้อสินค้าในหัวข้อ 2.3 และแผนภาพแปลงเป็น Code ใน 2.4
-  - อัปเดต `ooadCourse.js` ให้รองรับโครงสร้าง Unit 2 แบบใหม่ 4 หัวข้อ
-  - ผ่านการตรวจสอบ Impeccable scan (0 warnings)
+- **สร้างเนื้อหา 31901-2001/lesson/1.2 (โครงสร้างหน้าตาแอปพลิเคชัน)** [16/06/2026]
+  - สร้างไฟล์ `uiux1_2.jsx` ที่มี Interactive UI Anatomy Simulator สำหรับอธิบาย Header, Navigation, Body, CTA
+  - ปรับปรุงแยกมุมมองเป็น Mobile App และ Web Application ตามคำแนะนำ
+  - ปรับปรุงโครงสร้างรายวิชาใน `uiuxCourse.js` ให้ตรงกับ `uiux_curriculum.md`
+  - ตรวจสอบคุณภาพโค้ดด้วย Impeccable สำเร็จ (0 warnings)
 
-- **สร้างบทเรียน 2.2 โครงสร้างข้อมูลคิว (dsa2_2.jsx) และรวมโครงสร้างบทเรียน Unit 2** [16/06/2026]
-  - รวมเนื้อหา Unit 2 (Stack) และ Unit 3 (Queue) เข้าด้วยกันและลบส่วนที่ซ้ำซ้อนใน `dsa_curriculum.md`
-  - อัปเดตข้อมูลโครงสร้างใน `src/data/dsaCourse.js` ให้ถูกต้อง (เลื่อน Unit 4-6 ขึ้นมาเป็น 3-5)
-  - สร้างเนื้อหา `dsa2_2.jsx` พร้อมชุดจำลอง Simulator 3 โหมด (FIFO Visualizer, Print Spooler, BFS Queue Application)
-  - ผ่านการตรวจสอบ Impeccable scan (0 warnings) และทดสอบ Build สำเร็จ 100%
-
-- **พัฒนาบทเรียนหมวด OOP บทที่ 1 (1.3 ถึง 1.7) และอัปเดต oopCourse** [16/06/2026]
-  - สร้างบทเรียนเกี่ยวกับการตั้งค่า Python Environment ใน VS Code และการใช้งาน Terminal เบื้องต้น
-  - สร้างเอกสารการใช้งาน `pip` และการจัดการโฟลเดอร์โปรเจกต์
-  - อัปเดตไฟล์ `oopCourse.js` ให้สอดคล้องกับเนื้อหาใหม่
+- **ปรับปรุงหลักสูตร Unit 1 ใน uiux_curriculum.md** [16/06/2026]
+  - ปรับชื่อ Unit 1 จาก "พื้นฐาน UX/UI และการเริ่มต้นออกแบบด้วย AI" เป็น "พื้นฐาน UX/UI"
+  - เปลี่ยนรายละเอียด 1.3 เป็น "การใช้งาน google Stitch ร่วมกับ design.md"
+  - เปลี่ยนรายละเอียด 1.4 เป็น "การเขียน design.md"
+  - ปรับปรุงใบงานปฏิบัติ 1 ให้ตรงกับเนื้อหาที่ปรับปรุงใหม่
