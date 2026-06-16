@@ -1,289 +1,417 @@
-import React, { useState, useEffect } from 'react';
-import { Play, Square, Navigation } from 'lucide-react';
+import React from 'react';
+import { 
+  Frown, 
+  Smile, 
+  HelpCircle, 
+  GitCommit, 
+  Layers, 
+  Target,
+  Circle,
+  ArrowUpRight,
+  ArrowDownRight,
+  GitMerge,
+  User,
+  Link,
+  Box,
+  MessageSquare,
+  Users
+} from 'lucide-react';
 
-export default function Ooad2_3() {
-  const [activeNode, setActiveNode] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState('credit');
-  const [history, setHistory] = useState([]);
-
-  // Node definitions for sequence execution
-  const flowSequence = [
-    { id: 'start', next: 'select' },
-    { id: 'select', next: 'checkout' },
-    { id: 'checkout', next: 'decision' },
-    { id: 'decision', next: () => paymentMethod === 'credit' ? 'pay_credit' : 'pay_transfer' },
-    { id: 'pay_credit', next: 'merge' },
-    { id: 'pay_transfer', next: 'merge' },
-    { id: 'merge', next: 'prepare' },
-    { id: 'prepare', next: 'ship' },
-    { id: 'ship', next: 'end' },
-    { id: 'end', next: null },
-  ];
-
-  useEffect(() => {
-    let timer;
-    if (isPlaying) {
-      if (activeNode === null) {
-        setActiveNode('start');
-        setHistory(['start']);
-      } else {
-        const currentNode = flowSequence.find(n => n.id === activeNode);
-        if (currentNode && currentNode.next) {
-          const nextId = typeof currentNode.next === 'function' ? currentNode.next() : currentNode.next;
-          timer = setTimeout(() => {
-            setActiveNode(nextId);
-            setHistory(prev => [...prev, nextId]);
-          }, 1000);
-        } else {
-          timer = setTimeout(() => {
-            setIsPlaying(false);
-          }, 1000);
-        }
-      }
-    }
-    return () => clearTimeout(timer);
-  }, [isPlaying, activeNode, paymentMethod]);
-
-  const resetFlow = () => {
-    setActiveNode(null);
-    setHistory([]);
-    setIsPlaying(false);
-  };
-
-  const isPassed = (toId) => history.includes(toId);
-  const isActive = (id) => activeNode === id;
-
-  const renderArrowMarker = (id, color) => (
-    <marker id={id} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
-      <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill={color} />
-    </marker>
-  );
-
-  const getPathProps = (toId) => {
-    return isPassed(toId) 
-      ? { stroke: '#4F46E5', filter: 'drop-shadow(0 0 4px rgba(79,70,229,0.5))' } 
-      : { stroke: '#94A3B8' };
-  };
-
+export default function OOAD2_3() {
   return (
-    <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-6 space-y-12 md:space-y-16">
+    <div className="font-sans text-slate-800 pb-24 selection:bg-blue-200 selection:text-blue-900 relative min-h-screen bg-slate-50/50">
       
-      <section className="space-y-6">
-        <div className="border-b border-zinc-200/80 pb-4">
-          <span className="text-sm font-bold text-orange-500 tracking-wider uppercase">
-            Drawing Techniques
-          </span>
-          <h3 className="text-[26px] font-semibold text-zinc-900 leading-tight mt-1">
-            2.3 เทคนิคการวาด Activity Diagram
-          </h3>
-        </div>
+      {/* Layer 1: Ambient Background Glow Layers */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[5%] left-[-5%] w-[500px] h-[500px] rounded-full bg-blue-100/60 blur-[130px] animate-pulse"></div>
+        <div className="absolute bottom-[10%] right-[-5%] w-[600px] h-[600px] rounded-full bg-cyan-100/60 blur-[140px]"></div>
+        <div className="absolute top-[40%] left-[20%] w-[300px] h-[300px] rounded-full bg-sky-50/50 blur-[100px]"></div>
+      </div>
 
-        <div className="bg-orange-50/60 backdrop-blur-md border border-orange-200/60 rounded-2xl p-6 border-l-[3px] border-l-orange-500 leading-relaxed">
-          <h4 className="font-bold text-orange-800 mb-2 text-[18px]">เทคนิคสำคัญในการวาด:</h4>
-          <ul className="space-y-2 text-orange-800/80 text-[16px]">
-            <li className="flex items-center gap-2"><Navigation className="w-4 h-4" /> <strong>ไหลจากบนลงล่าง หรือซ้ายไปขวา</strong> เพื่อให้อ่านง่ายเป็นธรรมชาติ</li>
-            <li className="flex items-center gap-2"><Navigation className="w-4 h-4" /> <strong>ตั้งชื่อ Activity เป็นคำกริยา</strong> เสมอ เช่น "บันทึกข้อมูล" ไม่ใช่แค่ "ข้อมูล"</li>
-            <li className="flex items-center gap-2"><Navigation className="w-4 h-4" /> <strong>ทุก Decision ต้องมี Merge เสมอ</strong> ถ้ามีทางแยก ต้องมีทางรวมกลับเข้าเส้นหลัก เพื่อไม่ให้เส้นทางสูญหาย (Dead End)</li>
-            <li className="flex items-center gap-2"><Navigation className="w-4 h-4" /> <strong>ทุก Fork ต้องมี Join เสมอ</strong> เพื่อซิงค์การทำงานแบบคู่ขนานให้เสร็จพร้อมกันก่อนไปต่อ</li>
-          </ul>
-        </div>
-      </section>
-
-      <section className="bg-slate-900/95 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl relative">
-        <div className="absolute top-4 right-6 text-[9px] font-mono text-slate-500 tracking-widest font-bold">
-          INTERACTIVE ACTIVITY DIAGRAM SIMULATOR
-        </div>
-
-        <div className="mb-8 mt-2">
-          <h4 className="text-[24px] font-semibold text-white mb-2">จำลองกระบวนการสั่งซื้อสินค้า</h4>
-          <p className="text-slate-400 text-[16px]">ลองเปลี่ยนเงื่อนไขวิธีการชำระเงินเพื่อดูทิศทางการไหล (Control Flow) ของ Diagram</p>
-        </div>
-
-        <div className="flex flex-col md:flex-row gap-10">
-          {/* Controls */}
-          <div className="w-full md:w-1/3 space-y-6">
-            <div className="bg-slate-950/90 rounded-2xl p-6 border border-white/5 shadow-inner">
-              <h5 className="text-slate-300 font-semibold mb-4 text-[16px]">ตั้งค่าเงื่อนไข (Decision)</h5>
-              
-              <div className="space-y-3">
-                <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all duration-200 hover:scale-[1.02]
-                  ${paymentMethod === 'credit' ? 'border-indigo-500 bg-indigo-500/10 shadow-[0_0_15px_rgba(79,70,229,0.15)]' : 'border-slate-700/50 bg-slate-800/30 hover:border-slate-600'}`}>
-                  <input type="radio" name="payment" value="credit" 
-                    checked={paymentMethod === 'credit'} 
-                    onChange={(e) => { setPaymentMethod(e.target.value); resetFlow(); }}
-                    className="hidden" />
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center
-                    ${paymentMethod === 'credit' ? 'border-indigo-500' : 'border-slate-500'}`}>
-                    {paymentMethod === 'credit' && <div className="w-2.5 h-2.5 rounded-full bg-indigo-500"></div>}
-                  </div>
-                  <span className="text-slate-200 text-[16px]">บัตรเครดิต</span>
-                </label>
-
-                <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all duration-200 hover:scale-[1.02]
-                  ${paymentMethod === 'transfer' ? 'border-indigo-500 bg-indigo-500/10 shadow-[0_0_15px_rgba(79,70,229,0.15)]' : 'border-slate-700/50 bg-slate-800/30 hover:border-slate-600'}`}>
-                  <input type="radio" name="payment" value="transfer" 
-                    checked={paymentMethod === 'transfer'} 
-                    onChange={(e) => { setPaymentMethod(e.target.value); resetFlow(); }}
-                    className="hidden" />
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center
-                    ${paymentMethod === 'transfer' ? 'border-indigo-500' : 'border-slate-500'}`}>
-                    {paymentMethod === 'transfer' && <div className="w-2.5 h-2.5 rounded-full bg-indigo-500"></div>}
-                  </div>
-                  <span className="text-slate-200 text-[16px]">โอนเงิน/สลิป</span>
-                </label>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <button 
-                onClick={() => { setIsPlaying(true); if(activeNode === 'end') setActiveNode(null); }}
-                disabled={isPlaying}
-                className={`flex-1 flex items-center justify-center gap-2 h-[46px] rounded-xl font-semibold transition-all duration-200
-                  ${isPlaying ? 'bg-slate-800 text-slate-400 cursor-not-allowed' : ''}
-                  ${!isPlaying ? 'bg-indigo-600 text-white hover:bg-indigo-500 hover:scale-[1.02] active:scale-98 cursor-pointer shadow-[0_0_15px_rgba(79,70,229,0.3)]' : ''}`}>
-                <Play className="w-5 h-5 fill-current" />
-                เริ่ม Run Diagram
-              </button>
-              
-              <button 
-                onClick={resetFlow}
-                className="px-4 h-[46px] rounded-xl font-semibold border-2 border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-white hover:scale-[1.02] active:scale-98 cursor-pointer transition-all duration-200">
-                <Square className="w-5 h-5 fill-current" />
-              </button>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 relative z-10 pt-8 sm:pt-12 space-y-10 sm:space-y-12">
+        
+        {/* =========================================================================
+            ปัญหา และ วิธีแก้ปัญหา
+        ========================================================================= */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          {/* ปัญหา */}
+          <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm relative overflow-hidden transition-all hover:shadow-md group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-rose-50 rounded-bl-full z-0 pointer-events-none transition-transform duration-700 group-hover:scale-110"></div>
+            <div className="relative z-10">
+              <h4 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center">
+                  <Frown className="w-5 h-5 text-rose-600" />
+                </div>
+                ปัญหา
+              </h4>
+              <p className="text-slate-600 text-[15px] leading-relaxed">
+                เวลาที่เริ่มอธิบายตัวโปรเจคว่ามันทำอะไรได้บ้าง? แต่ละส่วนสัมพันธ์กันยังไง? ใครมีสิทธิ์ทำอะไรแค่ไหน? ให้กับเพื่อนๆในทีมฟัง บ่อยครั้งเราก็จะพบว่าคนในทีมเริ่มหาวนอน ฟังไม่รู้เรื่อง จำต้นชนปลายไม่ถูก หรือเล่าให้ฟังแล้วก็ลืมนั่นเอง แล้วเราจะแก้ปัญหาพวกนี้ได้ยังไงเพื่อไม่ให้คนในทีมลืม หรือเอาไว้อธิบายคนใหม่ที่เข้ามาในทีมเข้าใจเรื่องพวกนี้ได้เร็วๆได้อย่างไร ?
+              </p>
             </div>
           </div>
 
-          {/* Diagram Canvas */}
-          <div className="flex-1 bg-slate-50 rounded-2xl p-6 relative flex justify-center border-[4px] border-slate-200 overflow-x-auto shadow-inner" style={{ minHeight: '800px' }}>
-            <div className="absolute top-3 left-4 text-[10px] font-mono text-slate-400 tracking-widest font-bold">
-              UML CANVAS
+          {/* วิธีแก้ปัญหา */}
+          <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm relative overflow-hidden transition-all hover:shadow-md group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full z-0 pointer-events-none transition-transform duration-700 group-hover:scale-110"></div>
+            <div className="relative z-10">
+              <h4 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
+                  <Smile className="w-5 h-5 text-emerald-600" />
+                </div>
+                วิธีแก้ปัญหา
+              </h4>
+              <p className="text-slate-600 text-[15px] leading-relaxed">
+                ปัญหามันเกิดขึ้นเพราะคนฟังจินตนาการตามสิ่งที่อธิบายได้ยาก ดังนั้นเราก็จะวาดรูปประกอบการอธิบายแทน เพราะคนเราเห็นภาพแล้วเข้าใจได้ง่ายกว่าเห็นตัวหนังสือ ดังนั้นเราจะใช้แผนภาพที่เรียกว่า <strong className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">Use case Diagram</strong> มาช่วยแก้ปัญหาโลกแตกนี้กัน โดยเจ้า use case diagram นั้นจะแปลงเรื่องราวทั้งหมดที่เกิดขึ้นให้กลายเป็นรูปที่เข้าใจง่ายๆนั่นเอง
+              </p>
+            </div>
+          </div>
+          
+        </div>
+
+        {/* =========================================================================
+            Use case Diagram ใช้ยังไง?
+        ========================================================================= */}
+        <div className="bg-white rounded-[2rem] p-8 md:p-10 border border-slate-200 shadow-sm relative overflow-hidden transition-all hover:shadow-md">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50/60 rounded-bl-full z-0 pointer-events-none"></div>
+          
+          <div className="relative z-10">
+            <h4 className="text-2xl font-bold text-slate-800 flex items-center gap-3 mb-4">
+              <div className="p-3 rounded-2xl bg-blue-100 text-blue-600">
+                <HelpCircle className="w-6 h-6" />
+              </div>
+              Use case Diagram ใช้ยังไง?
+            </h4>
+            <p className="text-slate-600 text-[16px] leading-relaxed">
+              โดยปรกติเวลาที่เราใช้ UML เราจะไม่เขียนโค้ดหรือเขียนเอกสารกัน แต่เราจะวาดรูปเล่นกันต่างหาก โดยในตัวอย่างรอบนี้เราจะใช้ตัวอย่างของ <strong>ระบบโหวต</strong> มาเขียนเป็น diagram แบบ step-by-step ดูละกัน ซึ่งผมจะให้ ดช.แมวน้ำ 🧔 เป็นคนไล่ลำดับการเขียน diagram ให้ดูละกันนะ
+            </p>
+          </div>
+        </div>
+
+        {/* =========================================================================
+            ลองเขียน Use case Diagram กัน (TIMELINE LAYOUT)
+        ========================================================================= */}
+        <div className="space-y-8">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="p-3 rounded-full bg-indigo-100 text-indigo-600">
+              <GitCommit className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold text-slate-800">ลองเขียน Use case Diagram กัน</h3>
+              <p className="text-slate-500 text-sm mt-1">
+                มาไล่ตามสิ่งที่ ดช.แมวน้ำ จะวาดเพื่ออธิบายระบบโหวตกันทีละขั้นตอน
+              </p>
+            </div>
+          </div>
+
+          <div className="relative border-l-4 border-indigo-100 ml-4 md:ml-8 pl-8 md:pl-12 space-y-12 py-4">
+            
+            {/* Step 1: Use case */}
+            <div className="relative">
+              <div className="absolute -left-[3.1rem] md:-left-[4.1rem] top-8 w-10 h-10 md:w-12 md:h-12 bg-white border-4 border-indigo-200 rounded-full flex items-center justify-center text-indigo-600 font-bold text-lg shadow-sm z-10">1</div>
+              <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group flex flex-col items-start gap-6">
+                <div className="w-full space-y-4">
+                  <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
+                      <Circle className="w-5 h-5" />
+                    </div>
+                    <h5 className="font-bold text-xl text-slate-800">Use case</h5>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">🧔</span>
+                    <p className="text-slate-600 text-[15px] leading-relaxed pt-1">
+                      ในการเขียน use case diagram นั้นเราจะต้องเริ่มวาดจากของที่ระบบทำได้ก่อน ซึ่งในระบบโหวตนั้น สิ่งแรกที่มันต้องทำได้ก็คือ <strong>ยืนยันตัวตน</strong> นั่นเอง ดังนั้นเราก็จะวาดรูป <strong>วงรี</strong> แล้วเขียนลงไปว่ามันคือการยืนยันตัวตนไปครับ
+                    </p>
+                  </div>
+                </div>
+                <div className="w-full flex justify-center p-6 bg-slate-50 rounded-3xl border border-slate-100 shadow-inner">
+                  <img 
+                    src="https://www.saladpuk.com/~gitbook/image?url=https%3A%2F%2F479516123-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-Lm0_idNbY6k1lwp6hm4%252F-M1lfqlFTvI3gmheTI_q%252F-LnIPOAqg11YMSBb1Wgf%252Fimage.png%3Fgeneration%3D1583529117258327%26alt%3Dmedia&width=768&dpr=3&quality=100&sign=d1d89de7&sv=2" 
+                    alt="Use case" 
+                    className="w-full max-w-[140px] object-contain drop-shadow-sm group-hover:scale-[1.01] transition-transform duration-500" 
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Step 2: Extend */}
+            <div className="relative">
+              <div className="absolute -left-[3.1rem] md:-left-[4.1rem] top-8 w-10 h-10 md:w-12 md:h-12 bg-white border-4 border-indigo-200 rounded-full flex items-center justify-center text-indigo-600 font-bold text-lg shadow-sm z-10">2</div>
+              <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group flex flex-col items-start gap-6">
+                <div className="w-full space-y-4">
+                  <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
+                      <ArrowUpRight className="w-5 h-5" />
+                    </div>
+                    <h5 className="font-bold text-xl text-slate-800">Extend (ความสัมพันธ์แบบต่อยอด)</h5>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">🧔</span>
+                    <p className="text-slate-600 text-[15px] leading-relaxed pt-1">
+                      ในการยืนยันตัวตนนั้นปรกติเราก็ให้ใส่แค่ชื่อผู้ใช้กับรหัสผ่านอย่างเดียวก็พอ แต่ก็มีบางกรณีเราจะต้องให้ทำการยืนยัน PIN ด้วย ซึ่งการยืนยัน PIN นี้เป็นการทำงานเสริมของการยืนยันตัวตนตามแบบเดิม
+                    </p>
+                  </div>
+                </div>
+                <div className="w-full flex justify-center p-6 bg-slate-50 rounded-3xl border border-slate-100 shadow-inner">
+                  <img 
+                    src="https://www.saladpuk.com/~gitbook/image?url=https%3A%2F%2F479516123-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-Lm0_idNbY6k1lwp6hm4%252F-M1lfqlFTvI3gmheTI_q%252F-LmyVUbNkFPFo-JkVWE-%252Fimage.png%3Fgeneration%3D1583529153197365%26alt%3Dmedia&width=768&dpr=3&quality=100&sign=2c659f0e&sv=2" 
+                    alt="Extend" 
+                    className="w-full max-w-[200px] object-contain drop-shadow-sm group-hover:scale-[1.01] transition-transform duration-500" 
+                  />
+                </div>
+                <div className="w-full bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-xl shadow-sm mt-2">
+                  <p className="text-amber-800 text-[14px] leading-relaxed">
+                    <strong>Extend</strong> คือการอธิบายว่า ความสามารถนี้ถูกเพิ่มเติมจากความสามารถอะไร ซึ่งหัวลูกศรจะชี้ไปยังความสามารถพื้นฐาน และส่วนหางคือความสามารถที่ต่อยอดขึ้นมา โดยปรกติความสามารถที่ extend ออกมาจะไม่ได้มีประโยชน์อะไรถ้าเอามาทำงานเดี่ยวๆ
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 3: Include */}
+            <div className="relative">
+              <div className="absolute -left-[3.1rem] md:-left-[4.1rem] top-8 w-10 h-10 md:w-12 md:h-12 bg-white border-4 border-indigo-200 rounded-full flex items-center justify-center text-indigo-600 font-bold text-lg shadow-sm z-10">3</div>
+              <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group flex flex-col items-start gap-6">
+                <div className="w-full space-y-4">
+                  <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <div className="p-2 rounded-xl bg-teal-50 text-teal-600">
+                      <ArrowDownRight className="w-5 h-5" />
+                    </div>
+                    <h5 className="font-bold text-xl text-slate-800">Include (ความสัมพันธ์แบบพึ่งพา)</h5>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">🧔</span>
+                    <p className="text-slate-600 text-[15px] leading-relaxed pt-1">
+                      สิ่งถัดมาที่ระบบโหวตทำได้คือการตั้งหัวข้อในการโหวต ซึ่งคนที่จะตั้งหัวข้อในการโหวตได้จะต้องผ่านการยืนยันตัวตนเสียก่อน
+                    </p>
+                  </div>
+                </div>
+                <div className="w-full flex justify-center p-6 bg-slate-50 rounded-3xl border border-slate-100 shadow-inner">
+                  <img 
+                    src="https://www.saladpuk.com/~gitbook/image?url=https%3A%2F%2F479516123-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-Lm0_idNbY6k1lwp6hm4%252F-M1lfqlFTvI3gmheTI_q%252F-LtrqP5fas-2tWlinw2r%252Fimage.png%3Fgeneration%3D1583529147494135%26alt%3Dmedia&width=768&dpr=3&quality=100&sign=f496a216&sv=2" 
+                    alt="Include" 
+                    className="w-full max-w-[200px] object-contain drop-shadow-sm group-hover:scale-[1.01] transition-transform duration-500" 
+                  />
+                </div>
+                <div className="w-full bg-teal-50 border-l-4 border-teal-400 p-4 rounded-r-xl shadow-sm mt-2">
+                  <p className="text-teal-800 text-[14px] leading-relaxed">
+                    <strong>Include</strong> คือการบอกว่า ถ้าจะให้ความสามารถนั้นทำงานได้สมบูรณ์จะต้องใช้ความสามารถอื่นด้วย โดยเราจะใช้หัวลูกศรชี้ไปยังความสามารถที่เราต้องการเอาเข้าใช้ เช่น การตั้งโหวตจะต้องใช้การยืนยันตัวตนด้วยถึงจะตั้งโหวตได้
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 4: Generalization */}
+            <div className="relative">
+              <div className="absolute -left-[3.1rem] md:-left-[4.1rem] top-8 w-10 h-10 md:w-12 md:h-12 bg-white border-4 border-indigo-200 rounded-full flex items-center justify-center text-indigo-600 font-bold text-lg shadow-sm z-10">4</div>
+              <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group flex flex-col items-start gap-6">
+                <div className="w-full space-y-4">
+                  <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <div className="p-2 rounded-xl bg-fuchsia-50 text-fuchsia-600">
+                      <GitMerge className="w-5 h-5" />
+                    </div>
+                    <h5 className="font-bold text-xl text-slate-800">Generalization (ความสัมพันธ์แบบสืบทอด)</h5>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">🧔</span>
+                    <p className="text-slate-600 text-[15px] leading-relaxed pt-1">
+                      ในการตั้งหัวข้อโหวตนั้นจริงๆเราก็มีการตั้งหัวข้อโหวตสำหรับกลุ่มลับ ซึ่งทำงานเหมือนกับการตั้งหัวข้อโหวตธรรมดาเลยเพียงแค่ให้เฉพาะคนที่ถูกเชิญเท่านั้นถึงจะโหวตได้
+                    </p>
+                  </div>
+                </div>
+                <div className="w-full flex justify-center p-6 bg-slate-50 rounded-3xl border border-slate-100 shadow-inner">
+                  <img 
+                    src="https://www.saladpuk.com/~gitbook/image?url=https%3A%2F%2F479516123-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-Lm0_idNbY6k1lwp6hm4%252F-M1lfqlFTvI3gmheTI_q%252F-LqvuEeBHFGY78RnHPPh%252Fimage.png%3Fgeneration%3D1583529177728188%26alt%3Dmedia&width=768&dpr=3&quality=100&sign=8c9032d2&sv=2" 
+                    alt="Generalization" 
+                    className="w-full max-w-[200px] object-contain drop-shadow-sm group-hover:scale-[1.01] transition-transform duration-500" 
+                  />
+                </div>
+                <div className="w-full bg-fuchsia-50 border-l-4 border-fuchsia-400 p-4 rounded-r-xl shadow-sm mt-2">
+                  <p className="text-fuchsia-800 text-[14px] leading-relaxed">
+                    <strong>Generalization</strong> เป็นการต่อยอดความสามารถเดิมที่มีอยู่ให้ทำเรื่องใหม่ๆเข้าไปได้ ซึ่งจะต่างกับ extend เพราะมันแยกออกมาทำงานด้วยตัวมันเองแล้วเกิดประโยชน์ นั่นคือเราสามารถตั้งกลุ่มที่เป็นส่วนตัวได้นั่นเอง
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 5: Actor */}
+            <div className="relative">
+              <div className="absolute -left-[3.1rem] md:-left-[4.1rem] top-8 w-10 h-10 md:w-12 md:h-12 bg-white border-4 border-indigo-200 rounded-full flex items-center justify-center text-indigo-600 font-bold text-lg shadow-sm z-10">5</div>
+              <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group flex flex-col items-start gap-6">
+                <div className="w-full space-y-4">
+                  <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <div className="p-2 rounded-xl bg-violet-50 text-violet-600">
+                      <User className="w-5 h-5" />
+                    </div>
+                    <h5 className="font-bold text-xl text-slate-800">Actor (ผู้ใช้งานระบบ)</h5>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">🧔</span>
+                    <p className="text-slate-600 text-[15px] leading-relaxed pt-1">
+                      ถัดมาเราก็จะเริ่มวาดของที่จะเข้ามาใช้งานระบบของเราละ ซึ่งเจ้าตัวแรกก็คือ <strong>ผู้ใช้</strong> นั่นเอง
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="w-full flex justify-center p-6 bg-slate-50 rounded-3xl border border-slate-100 shadow-inner">
+                  <img 
+                    src="https://www.saladpuk.com/~gitbook/image?url=https%3A%2F%2F479516123-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-Lm0_idNbY6k1lwp6hm4%252F-M1lfqlFTvI3gmheTI_q%252F-M-VL2nv5GpY4gEJSu08%252Fimage.png%3Fgeneration%3D1583529166356119%26alt%3Dmedia&width=768&dpr=3&quality=100&sign=389f5e05&sv=2" 
+                    alt="Actor User" 
+                    className="max-w-[100px] object-contain drop-shadow-sm group-hover:scale-[1.01] transition-transform duration-500" 
+                  />
+                </div>
+
+                <div className="w-full space-y-4 mt-2">
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">🧔</span>
+                    <p className="text-slate-600 text-[15px] leading-relaxed pt-1">
+                      และนอกจากผู้ใช้เองบางทีระบบก็จะทำการเรียกใช้งานกันเองอีกด้วย เช่น เมื่อถึงเวลาที่กำหนด ระบบก็จะทำการปิดโหวต ซึ่ง <strong>เจ้าตัวปิดโหวตอัตโนมัติ</strong> นี้เราก็ถือว่าเป็น Actor แบบนึงเหมือนกัน วาดๆๆ
+                    </p>
+                  </div>
+                </div>
+
+                <div className="w-full flex justify-center p-6 bg-slate-50 rounded-3xl border border-slate-100 shadow-inner">
+                  <img 
+                    src="https://www.saladpuk.com/~gitbook/image?url=https%3A%2F%2F479516123-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-Lm0_idNbY6k1lwp6hm4%252F-M1lfqlFTvI3gmheTI_q%252F-LtpPWOv1NU48CcP7dNf%252Fimage.png%3Fgeneration%3D1583529113268843%26alt%3Dmedia&width=768&dpr=3&quality=100&sign=6a33a553&sv=2" 
+                    alt="Actor System" 
+                    className="max-w-[180px] object-contain drop-shadow-sm group-hover:scale-[1.01] transition-transform duration-500" 
+                  />
+                </div>
+                
+                <div className="w-full bg-violet-50 border-l-4 border-violet-400 p-4 rounded-r-xl shadow-sm mt-2">
+                  <p className="text-violet-800 text-[14px] leading-relaxed">
+                    <strong>Actor</strong> คือสิ่งที่จะเข้ามากระทำกับระบบของเรา ซึ่งถ้าเป็นคนเราจะวาดเป็นรูปคน แต่ถ้าสิ่งที่เข้ามากระทำกับระบบไม่ใช่คนเราก็จะวาดเป็นวงรีเหมือน Use case ปรกติเลย เช่น API ภายนอกเรียกเข้ามา, ระบบตั้งเวลาอัตโนมัติ บลาๆ
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 6: Association */}
+            <div className="relative">
+              <div className="absolute -left-[3.1rem] md:-left-[4.1rem] top-8 w-10 h-10 md:w-12 md:h-12 bg-white border-4 border-indigo-200 rounded-full flex items-center justify-center text-indigo-600 font-bold text-lg shadow-sm z-10">6</div>
+              <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group flex flex-col items-start gap-6">
+                <div className="w-full space-y-4">
+                  <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <div className="p-2 rounded-xl bg-orange-50 text-orange-600">
+                      <Link className="w-5 h-5" />
+                    </div>
+                    <h5 className="font-bold text-xl text-slate-800">Association (ความสัมพันธ์ระหว่าง Actor กับ Use case)</h5>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">🧔</span>
+                    <p className="text-slate-600 text-[15px] leading-relaxed pt-1">
+                      คราวนี้เราก็จะลากเส้นเชื่อมโยงเจ้า Actor ต่างๆว่ามันจะมาใช้งานความสามารถอะไรของระบบของเราบ้าง วาดๆๆ (ผมแอบเติม การปิดโหวต ลงไปนะเพราะระบบก็ควรจะต้องทำได้เช่นกัน)
+                    </p>
+                  </div>
+                </div>
+                <div className="w-full flex justify-center p-6 bg-slate-50 rounded-3xl border border-slate-100 shadow-inner">
+                  <img 
+                    src="https://www.saladpuk.com/~gitbook/image?url=https%3A%2F%2F479516123-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-Lm0_idNbY6k1lwp6hm4%252F-M1lfqlFTvI3gmheTI_q%252F-LtpXRL7RHn3yRkxozot%252Fimage.png%3Fgeneration%3D1583529157113774%26alt%3Dmedia&width=768&dpr=3&quality=100&sign=d4c15132&sv=2" 
+                    alt="Association" 
+                    className="w-full max-w-[500px] object-contain drop-shadow-sm group-hover:scale-[1.01] transition-transform duration-500" 
+                  />
+                </div>
+                <div className="w-full space-y-4 mt-2">
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">🧔</span>
+                    <p className="text-slate-600 text-[15px] leading-relaxed pt-1">
+                      จากรูปด้านบนเราจะเห็นแล้วว่า ผู้ใช้ สามารถเรียกใช้ของในระบบได้ 4 เรื่อง ส่วนเจ้าระบบจับเวลาจะสามารถสั่งปิดการโหวตได้อย่างเดียวเท่านั้น
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 7: Boundary of system */}
+            <div className="relative">
+              <div className="absolute -left-[3.1rem] md:-left-[4.1rem] top-8 w-10 h-10 md:w-12 md:h-12 bg-white border-4 border-indigo-200 rounded-full flex items-center justify-center text-indigo-600 font-bold text-lg shadow-sm z-10">7</div>
+              <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group flex flex-col items-start gap-6">
+                <div className="w-full space-y-4">
+                  <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <div className="p-2 rounded-xl bg-rose-50 text-rose-600">
+                      <Box className="w-5 h-5" />
+                    </div>
+                    <h5 className="font-bold text-xl text-slate-800">Boundary of system (ขอบเขตของระบบ)</h5>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">🧔</span>
+                    <p className="text-slate-600 text-[15px] leading-relaxed pt-1">
+                      สุดท้ายเราก็จะทำการคลุมของที่อยู่ในระบบของเราทั้งหมดไว้ภายใน <strong>กรอบสี่เหลี่ยม</strong> เพื่อเป็นการบอกว่าอะไรบ้างในระบบที่เราต้องดูแลนั่นเอง ตามรูปเบย
+                    </p>
+                  </div>
+                </div>
+                <div className="w-full flex justify-center p-6 bg-slate-50 rounded-3xl border border-slate-100 shadow-inner">
+                  <img 
+                    src="https://www.saladpuk.com/~gitbook/image?url=https%3A%2F%2F479516123-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-Lm0_idNbY6k1lwp6hm4%252F-M1lfqlFTvI3gmheTI_q%252F-LpD7i08PtSzBTa6UhTX%252Fimage.png%3Fgeneration%3D1583529172215900%26alt%3Dmedia&width=768&dpr=3&quality=100&sign=cba0b372&sv=2" 
+                    alt="Boundary of system" 
+                    className="w-full max-w-[600px] object-contain drop-shadow-sm group-hover:scale-[1.01] transition-transform duration-500" 
+                  />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* =========================================================================
+            Use case Diagram มีแค่นี้เหรอ ?
+        ========================================================================= */}
+        <div className="space-y-6 pt-6">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-3 rounded-full bg-violet-100 text-violet-600">
+              <Layers className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold text-slate-800">Use case Diagram มีแค่นี้เหรอ ?</h3>
+              <p className="text-slate-500 text-sm mt-1">
+                จริงๆมันก็เพียงพอต่อการใช้งาน 80% แล้วล่ะ
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all">
+            <p className="text-slate-600 text-[15px] leading-relaxed">
+              ของที่ยกตัวอย่างให้ดูด้านบนทั้งหมดจริงๆมันก็เพียงพอต่อการใช้งาน 80% แล้วล่ะ ส่วนที่เหลือมันเป็นตัวเสริมให้เราสามารถลงรายละเอียดของแผนภาพได้ชัดขึ้นกว่าเดิมเฉยๆ แต่ดูเหมือนว่าตอนเขียนบทความนี้ผมจะเริ่มไม่ค่อยสบายแล้ว เลยขอเขียนไว้เท่านี้ก่อนละกันนะ 🤒
+            </p>
+          </div>
+        </div>
+
+        {/* =========================================================================
+            บทสรุป
+        ========================================================================= */}
+        <div className="bg-white rounded-[2rem] p-8 md:p-10 border border-slate-200 shadow-sm relative overflow-hidden transition-all hover:shadow-md">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full z-0 pointer-events-none"></div>
+          <div className="relative z-10">
+            <h4 className="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
+                <Target className="w-5 h-5 text-emerald-600" />
+              </div>
+              บทสรุป
+            </h4>
+            <p className="text-slate-600 leading-relaxed text-[16px] mb-6">
+              จากตัวอย่างทั้งหมดเราก็น่าจะพอเห็นภาพแล้วว่า <strong>อย่าเสียเวลาเขียนว่าระบบต้องทำอะไรได้บ้างเลย เขียนเป็นแผนภาพแบบนี้เข้าใจได้ง่ายกว่าเยอะเลย</strong> แถมมันแบ่งเป็นสัดเป็นส่วนให้คนทำงานเข้าใจได้ง่ายขึ้นจมเลยว่า อะไรบ้างที่เราต้องเขียน อะไรบ้างที่ไม่เกี่ยวกับระบบ เผลอๆเอาไปสร้างเป็น features แล้ว map เข้าทำงานในแต่ละ iteration ได้เลยนะเนี่ย
+            </p>
+            
+            <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl mb-6">
+              <h5 className="font-bold text-slate-800 mb-2">💡 Tips: Iteration</h5>
+              <p className="text-slate-600 text-[14px] leading-relaxed">
+                Iteration เป็นวิธีการวางแผนการทำงานเป็นช่วงๆ ซึ่งเมื่อแต่ละช่วงจบลงเราจะมีงานออกมาส่งมอบให้ลูกค้า แล้วเราก็จะวางแผนกันต่อว่าช่วงถัดไปเราจะส่งมอบ features อะไรให้กับลูกค้าบ้าง โดยทั้งหมดนี่เป็นหนึ่งในการทำงานในรูปแบบของ Agile
+              </p>
+            </div>
+
+            <div className="bg-amber-50 border-l-4 border-amber-400 p-5 rounded-xl shadow-sm mb-6">
+              <p className="text-amber-800 text-[15px] leading-relaxed font-bold mb-1">คำเตือน ⚠️</p>
+              <p className="text-amber-700 text-[14px] leading-relaxed">
+                เวลาที่เราเขียน Diagram ต่างๆ ห้ามเอาทุกกระบวนการทำงานมาเขียนยำกันไว้ในภายใน diagram เดียวกัน เพราะไม่อย่างนั้นมันจะกลายเป็นแผนภาพพาทัวร์นรกเลย เพราะเส้นมันจะยุ่งเหยิงไม่รู้จุดเริ่มต้นแต่ละเรื่องคืออะไร
+              </p>
             </div>
             
-            <div className="relative shrink-0 w-[400px]" style={{ height: '760px' }}>
-              {/* SVG Lines Overlay */}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
-                <defs>
-                  {renderArrowMarker('arrow-slate', '#94A3B8')}
-                  {renderArrowMarker('arrow-indigo', '#4F46E5')}
-                </defs>
-
-                <path d="M 200 68 L 200 95" {...getPathProps('select')} strokeWidth="2.5" fill="none" markerEnd={`url(#arrow-${isPassed('select') ? 'indigo' : 'slate'})`} />
-                <path d="M 200 148 L 200 175" {...getPathProps('checkout')} strokeWidth="2.5" fill="none" markerEnd={`url(#arrow-${isPassed('checkout') ? 'indigo' : 'slate'})`} />
-                <path d="M 200 228 L 200 255" {...getPathProps('decision')} strokeWidth="2.5" fill="none" markerEnd={`url(#arrow-${isPassed('decision') ? 'indigo' : 'slate'})`} />
-                
-                {/* Decision to Credit */}
-                <path d="M 168 292 L 100 292 L 100 355" {...getPathProps('pay_credit')} strokeWidth="2.5" fill="none" markerEnd={`url(#arrow-${isPassed('pay_credit') ? 'indigo' : 'slate'})`} />
-                
-                {/* Decision to Transfer */}
-                <path d="M 232 292 L 300 292 L 300 355" {...getPathProps('pay_transfer')} strokeWidth="2.5" fill="none" markerEnd={`url(#arrow-${isPassed('pay_transfer') ? 'indigo' : 'slate'})`} />
-
-                {/* Credit to Merge */}
-                <path d="M 100 408 L 100 482 L 163 482" {...(isPassed('merge') && isPassed('pay_credit') ? { stroke: '#4F46E5', filter: 'drop-shadow(0 0 4px rgba(79,70,229,0.5))' } : { stroke: '#94A3B8' })} strokeWidth="2.5" fill="none" markerEnd={`url(#arrow-${isPassed('merge') && isPassed('pay_credit') ? 'indigo' : 'slate'})`} />
-
-                {/* Transfer to Merge */}
-                <path d="M 300 408 L 300 482 L 237 482" {...(isPassed('merge') && isPassed('pay_transfer') ? { stroke: '#4F46E5', filter: 'drop-shadow(0 0 4px rgba(79,70,229,0.5))' } : { stroke: '#94A3B8' })} strokeWidth="2.5" fill="none" markerEnd={`url(#arrow-${isPassed('merge') && isPassed('pay_transfer') ? 'indigo' : 'slate'})`} />
-
-                <path d="M 200 514 L 200 545" {...getPathProps('prepare')} strokeWidth="2.5" fill="none" markerEnd={`url(#arrow-${isPassed('prepare') ? 'indigo' : 'slate'})`} />
-                <path d="M 200 598 L 200 625" {...getPathProps('ship')} strokeWidth="2.5" fill="none" markerEnd={`url(#arrow-${isPassed('ship') ? 'indigo' : 'slate'})`} />
-                <path d="M 200 678 L 200 705" {...getPathProps('end')} strokeWidth="2.5" fill="none" markerEnd={`url(#arrow-${isPassed('end') ? 'indigo' : 'slate'})`} />
-              </svg>
-
-              {/* HTML Nodes Overlay */}
-              <div className="absolute inset-0 z-10">
-                
-                {/* Start Node */}
-                <div className={`absolute w-12 h-12 rounded-full shadow-md flex items-center justify-center transition-all duration-300
-                  ${isActive('start') ? 'bg-indigo-600 ring-4 ring-indigo-200 scale-110' : (isPassed('start') ? 'bg-emerald-600' : 'bg-slate-800')}`}
-                  style={{ top: 20, left: 176 }}>
-                </div>
-                <div className="absolute text-center w-32 text-xs font-bold text-slate-500" style={{ top: 76, left: 136 }}>Initial Node</div>
-
-                {/* Select Action */}
-                <div className={`absolute w-[180px] h-[48px] rounded-[24px] border-[2px] flex items-center justify-center shadow-sm transition-all duration-300
-                  ${isActive('select') ? 'bg-indigo-50 border-indigo-600 text-indigo-700 ring-4 ring-indigo-100 scale-105 font-bold' : ''}
-                  ${isPassed('select') && !isActive('select') ? 'bg-emerald-50 border-emerald-500 text-emerald-700 font-semibold' : ''}
-                  ${!isActive('select') && !isPassed('select') ? 'bg-white border-slate-300 text-slate-700 font-semibold' : ''}`}
-                  style={{ top: 100, left: 110 }}>
-                  เลือกสินค้าลงตะกร้า
-                </div>
-
-                {/* Checkout Action */}
-                <div className={`absolute w-[180px] h-[48px] rounded-[24px] border-[2px] flex items-center justify-center shadow-sm transition-all duration-300
-                  ${isActive('checkout') ? 'bg-indigo-50 border-indigo-600 text-indigo-700 ring-4 ring-indigo-100 scale-105 font-bold' : ''}
-                  ${isPassed('checkout') && !isActive('checkout') ? 'bg-emerald-50 border-emerald-500 text-emerald-700 font-semibold' : ''}
-                  ${!isActive('checkout') && !isPassed('checkout') ? 'bg-white border-slate-300 text-slate-700 font-semibold' : ''}`}
-                  style={{ top: 180, left: 110 }}>
-                  ยืนยันการสั่งซื้อ
-                </div>
-
-                {/* Decision Node */}
-                <div className="absolute flex items-center justify-center transition-all duration-300" style={{ top: 260, left: 168, width: 64, height: 64 }}>
-                  <div className={`w-[44px] h-[44px] border-[3px] bg-white rotate-45 shadow-sm transition-colors duration-300
-                    ${isActive('decision') ? 'border-indigo-600 ring-[6px] ring-indigo-100 scale-110' : (isPassed('decision') ? 'border-emerald-500' : 'border-slate-300')}`}></div>
-                </div>
-                <div className="absolute text-center w-32 text-[11px] font-bold text-slate-500" style={{ top: 326, left: 136 }}>[Decision]</div>
-
-                {/* Path Labels for Decision */}
-                <div className="absolute text-[12px] font-bold text-indigo-600 bg-white px-1" style={{ top: 278, left: 110 }}>[บัตรเครดิต]</div>
-                <div className="absolute text-[12px] font-bold text-teal-600 bg-white px-1" style={{ top: 278, left: 236 }}>[โอนเงิน]</div>
-
-                {/* Pay Credit Action */}
-                <div className={`absolute w-[160px] h-[48px] rounded-[24px] border-[2px] flex items-center justify-center shadow-sm transition-all duration-300
-                  ${isActive('pay_credit') ? 'bg-indigo-50 border-indigo-600 text-indigo-700 ring-4 ring-indigo-100 scale-105 font-bold' : ''}
-                  ${isPassed('pay_credit') && !isActive('pay_credit') ? 'bg-emerald-50 border-emerald-500 text-emerald-700 font-semibold' : ''}
-                  ${!isActive('pay_credit') && !isPassed('pay_credit') ? 'bg-white border-slate-300 text-slate-700 font-semibold' : ''}`}
-                  style={{ top: 360, left: 20 }}>
-                  ตัดบัตรเครดิต
-                </div>
-
-                {/* Pay Transfer Action */}
-                <div className={`absolute w-[160px] h-[48px] rounded-[24px] border-[2px] flex items-center justify-center shadow-sm transition-all duration-300
-                  ${isActive('pay_transfer') ? 'bg-indigo-50 border-indigo-600 text-indigo-700 ring-4 ring-indigo-100 scale-105 font-bold' : ''}
-                  ${isPassed('pay_transfer') && !isActive('pay_transfer') ? 'bg-emerald-50 border-emerald-500 text-emerald-700 font-semibold' : ''}
-                  ${!isActive('pay_transfer') && !isPassed('pay_transfer') ? 'bg-white border-slate-300 text-slate-700 font-semibold' : ''}`}
-                  style={{ top: 360, left: 220 }}>
-                  ตรวจสอบสลิปโอนเงิน
-                </div>
-
-                {/* Merge Node */}
-                <div className="absolute flex items-center justify-center transition-all duration-300" style={{ top: 450, left: 168, width: 64, height: 64 }}>
-                  <div className={`w-[44px] h-[44px] border-[3px] bg-white rotate-45 shadow-sm transition-colors duration-300
-                    ${isActive('merge') ? 'border-indigo-600 ring-[6px] ring-indigo-100 scale-110' : (isPassed('merge') ? 'border-emerald-500' : 'border-slate-300')}`}></div>
-                </div>
-                <div className="absolute text-center w-32 text-[11px] font-bold text-slate-500" style={{ top: 516, left: 136 }}>[Merge]</div>
-
-                {/* Prepare Action */}
-                <div className={`absolute w-[180px] h-[48px] rounded-[24px] border-[2px] flex items-center justify-center shadow-sm transition-all duration-300
-                  ${isActive('prepare') ? 'bg-indigo-50 border-indigo-600 text-indigo-700 ring-4 ring-indigo-100 scale-105 font-bold' : ''}
-                  ${isPassed('prepare') && !isActive('prepare') ? 'bg-emerald-50 border-emerald-500 text-emerald-700 font-semibold' : ''}
-                  ${!isActive('prepare') && !isPassed('prepare') ? 'bg-white border-slate-300 text-slate-700 font-semibold' : ''}`}
-                  style={{ top: 550, left: 110 }}>
-                  จัดเตรียมสินค้า
-                </div>
-
-                {/* Ship Action */}
-                <div className={`absolute w-[180px] h-[48px] rounded-[24px] border-[2px] flex items-center justify-center shadow-sm transition-all duration-300
-                  ${isActive('ship') ? 'bg-indigo-50 border-indigo-600 text-indigo-700 ring-4 ring-indigo-100 scale-105 font-bold' : ''}
-                  ${isPassed('ship') && !isActive('ship') ? 'bg-emerald-50 border-emerald-500 text-emerald-700 font-semibold' : ''}
-                  ${!isActive('ship') && !isPassed('ship') ? 'bg-white border-slate-300 text-slate-700 font-semibold' : ''}`}
-                  style={{ top: 630, left: 110 }}>
-                  จัดส่งสินค้า
-                </div>
-
-                {/* Final Node */}
-                <div className={`absolute w-12 h-12 rounded-full border-[4px] bg-white flex items-center justify-center transition-all duration-300 shadow-md
-                  ${isActive('end') ? 'border-indigo-600 ring-4 ring-indigo-200 scale-110' : (isPassed('end') ? 'border-emerald-600' : 'border-slate-800')}`}
-                  style={{ top: 710, left: 176 }}>
-                  <div className={`w-6 h-6 rounded-full transition-colors duration-300 ${isActive('end') || isPassed('end') ? 'bg-emerald-600' : 'bg-slate-800'}`}></div>
-                </div>
-                <div className="absolute text-center w-32 text-xs font-bold text-slate-500" style={{ top: 766, left: 136 }}>Final Node</div>
-
-              </div>
-            </div>
+            <p className="text-slate-600 leading-relaxed text-[15px]">
+              สิ่งที่ควรทำคือ <strong className="text-emerald-700 bg-emerald-50 px-2 py-1 rounded border border-emerald-100">เขียน 1 กระบวนการทำงานต่อ 1 diagram เท่านั้น</strong> ดังนั้นถ้างานเราใหญ่เราก็จะมีหลาย diagram ก็จริงแต่มันจะช่วยทำให้เรา focus กับแต่ละกระบวนการทำงานได้ชัดเจนขึ้นนั่นเอง
+            </p>
           </div>
         </div>
-      </section>
-    </main>
+
+      </main>
+    </div>
   );
 }

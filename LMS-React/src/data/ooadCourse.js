@@ -17,12 +17,14 @@ const ooadCourse = {
         },
         {
             id: 2,
-            title: "Unit 2: Activity Diagram (UML)",
+            title: "Unit 2: ภาพรวมและแผนภาพ UML (UML Overview)",
             lessons: [
-                { id: "2.1", title: "2.1 ทำความรู้จักกับ Activity Diagram", mainTitle: "ทำความรู้จักกับ Activity Diagram", subTitle: "(Introduction to Activity Diagram)", description: "ทำความเข้าใจนิยาม บทบาท และความสำคัญของ Activity Diagram ในการอธิบาย Workflow และกระบวนการทำงาน", content: "[ooad2_1]" },
-                { id: "2.2", title: "2.2 องค์ประกอบของ Activity Diagram", mainTitle: "องค์ประกอบของ Activity Diagram", subTitle: "(Elements of Activity Diagram)", description: "เจาะลึกสัญลักษณ์และองค์ประกอบ 8 ส่วนที่สำคัญ: Start, End, Activity, Transition, Decision, Merge, Fork, และ Join", content: "[ooad2_2]" },
-                { id: "2.3", title: "2.3 เทคนิคการวาด Activity Diagram", mainTitle: "เทคนิคการวาด Activity Diagram", subTitle: "(Drawing Techniques & Simulator)", description: "ฝึกปฏิบัติต่อท่อกระบวนการและจำลองการไหลของข้อมูล (Workflow) แบบโต้ตอบด้วยเครื่องมือวาดแผนภาพ", content: "[ooad2_3]" },
-                { id: "2.4", title: "2.4 การแปลง Activity Diagram เป็นโค้ด", mainTitle: "การแปลง Activity Diagram เป็นโค้ด", subTitle: "(From Diagram to Code)", description: "เรียนรู้วิธีการเปลี่ยนแผนภาพกิจกรรมให้กลายเป็นตรรกะโปรแกรมทางธุรกิจ (Business Logic Code)", content: "[ooad2_4]" }
+                { id: "2.1", title: "2.1 ทำความรู้จักกับ UML", mainTitle: "ทำความรู้จักกับ UML", subTitle: "(UML Basics)", description: "ประวัติความเป็นมาและการแบ่งประเภทของแผนภาพ UML (Structural และ Behavioral Diagrams)", content: "[ooad2_1]" },
+                { id: "2.2", title: "2.2 แผนภาพกิจกรรม (Activity Diagram)", mainTitle: "แผนภาพกิจกรรม", subTitle: "(Activity Diagram)", description: "การอธิบายขั้นตอนการทำงานหรือ Workflow ของระบบคล้ายกับ Flowchart", content: "[ooad2_2]" },
+                { id: "2.3", title: "2.3 แผนภาพคลาส (Class Diagram)", mainTitle: "แผนภาพคลาส", subTitle: "(Class Diagram)", description: "การแสดงโครงสร้างของระบบ ประกอบด้วยคลาส แอตทริบิวต์ เมธอด และความสัมพันธ์", content: "[ooad2_3]" },
+                { id: "2.4", title: "2.4 แผนภาพลำดับเวลา (Sequence Diagram)", mainTitle: "แผนภาพลำดับเวลา", subTitle: "(Sequence Diagram)", description: "การแสดงการสื่อสารและการส่งข้อความระหว่างอ็อบเจกต์ตามลำดับเวลา", content: "[ooad2_4]" },
+                { id: "2.5", title: "2.5 แผนภาพยูสเคส (Use Case Diagram)", mainTitle: "แผนภาพยูสเคส", subTitle: "(Use Case Diagram)", description: "การแสดงความสัมพันธ์ระหว่างผู้ใช้งาน (Actor) กับระบบ (System) ว่าทำอะไรได้บ้าง", content: "[ooad2_5]" },
+                { id: "2.6", title: "2.6 สรุปการเลือกใช้ UML Diagram", mainTitle: "สรุปการเลือกใช้ UML Diagram", subTitle: "(Summary & Quiz)", description: "สรุปภาพรวมแผนภาพ UML และทดสอบความเข้าใจในการเลือกใช้แผนภาพให้เหมาะสมกับสถานการณ์", content: "[ooad2_6]" }
             ]
         },
         {

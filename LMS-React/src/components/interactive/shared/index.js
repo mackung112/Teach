@@ -26,5 +26,6 @@ export {
   SQL1_BLOBS,
 } from './AmbientBackdrop';
 export { default as ConceptCard }          from './ConceptCard';
+export { default as ContentCard }          from './ContentCard';
 export { default as SectionBlock }         from './SectionBlock';
 export { default as LogicGateSimulator, computeResult } from './LogicGateSimulator';

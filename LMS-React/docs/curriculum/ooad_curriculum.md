@@ -15,52 +15,19 @@
 - 1.4 ตัวอย่าง SRS งานระบบจัดการข้อมูลสินค้าคงคลัง (Project 2)
 - 1.5 ตัวอย่าง SRS งานระบบจัดการข้อมูลการจอง (Project 3)
 
-## Unit 2: Activity Diagram (UML)
+## Unit 2: UML Overview
+https://www.saladpuk.com/basic/uml
+  - 2.1 Activity (UML)
+https://www.saladpuk.com/basic/uml/activity-diagram
+  - 2.2 Class Diagram (UML)
+https://www.saladpuk.com/basic/uml/class-diagram
+  - 2.3 Sequence Diagram (UML)
+https://www.saladpuk.com/basic/uml/sequence-diagram
+  - 2.4 Use Case Diagram (UML)
+https://www.saladpuk.com/basic/uml/use-case-diagram
+  - 2.5 UML Summary
+https://www.saladpuk.com/basic/uml/summary
 
-- 2.1 ทำความรู้จักกับ Activity Diagram
-- 2.2 องค์ประกอบของ Activity Diagram
-  - 2.2.1 จุดเริ่มต้น (Start)
-  - 2.2.2 จุดสิ้นสุด (End)
-  - 2.2.3 กิจกรรม (Activity)
-  - 2.2.4 เส้นเชื่อม (Transition)
-  - 2.2.5 การตัดสินใจ (Decision)
-  - 2.2.6 การรวมกลุ่ม (Merge)
-  - 2.2.7 การแยกกลุ่ม (Fork)
-  - 2.2.8 การรวมกลุ่ม (Join)
-- 2.3 เทคนิคการวาด Activity Diagram
-- 2.4 การแปลง Activity Diagram เป็นโค้ด
-
-## Unit 3: การจัดทำเอกสารข้อกำหนดความต้องการ (SRS Document)
-
-- 3.1 บทบาทและความสำคัญของเอกสาร SRS (Software Requirements Specification)
-- 3.2 มาตรฐานของเอกสาร SRS (เช่น IEEE 830 หรือมาตรฐาน ISO ที่เกี่ยวข้อง)
-- 3.3 โครงสร้างหลักของเอกสาร SRS
-  - 3.3.1 บทนำ (Introduction: Purpose, Scope, Definitions)
-  - 3.3.2 คำอธิบายทั่วไป (Overall Description: Product Perspective, User Characteristics, Constraints)
-  - 3.3.3 ข้อกำหนดเฉพาะ (Specific Requirements: External Interfaces, Functions, Performance)
-- 3.4 เทคนิคการเขียนเนื้อหาและลักษณะของ SRS ที่ดี (Correct, Unambiguous, Complete, Consistent)
-- 3.5 การสอบทานและการอนุมัติเอกสาร (Requirements Validation & Sign-off)
-
-## Unit 4: แผนภาพยูสเคส (Use Case Diagram และ Use Case Specification)
-
-- 4.1 ทำความรู้จักกับ UML (Unified Modeling Language)
-  - 4.1.1 ประวัติและวิวัฒนาการของ UML
-- 4.2 ประเภทของแผนภาพ UML
-  - 4.2.1 Structural Diagram (แผนภาพโครงสร้าง)
-  - 4.2.2 Behavioral Diagram (แผนภาพพฤติกรรม)
-- 4.3 องค์ประกอบของ Use Case Diagram
-  - 4.3.1 ระบบและขอบเขตของระบบ (System & System Boundary)
-  - 4.3.2 ผู้กระทำ (Actor - Primary และ Secondary)
-  - 4.3.3 กรณีการใช้งาน (Use Case)
-- 4.4 ความสัมพันธ์ใน Use Case Diagram
-  - 4.4.1 ความสัมพันธ์แบบ Association
-  - 4.4.2 ความสัมพันธ์แบบ Include (<<include>>)
-  - 4.4.3 ความสัมพันธ์แบบ Extend (<<extend>>)
-  - 4.4.4 ความสัมพันธ์แบบ Generalization ของ Actor และ Use Case
-- 4.5 การเขียนคำอธิบายยูสเคส (Use Case Specification / Use Case Description)
-  - 4.5.1 Pre-conditions และ Post-conditions
-  - 4.5.2 Normal Flow (Basic Course of Events)
-  - 4.5.3 Alternate Flow และ Exception Flow
 
 ## Unit 5: พื้นฐานการคิดเชิงวัตถุ (Object-Oriented Concepts)
 
@@ -137,3 +104,6 @@
 - 9.4 การนำเสนอโครงการ (Project Pitching)
   - 9.4.1 การเตรียมเอกสารระบบ (System Documentation)
   - 9.4.2 บทบาทสมมติ (Role-Play Presentation) ในฐานะ System Analyst
+
+
+

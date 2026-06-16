@@ -12,6 +12,12 @@
 
 ## 📋 บันทึกส่งมอบ (เก็บ 3 รายการล่าสุด)
 
+- **จัดทำเนื้อหา Unit 2: UML Overview จำนวน 6 หัวข้อย่อย** [16/06/2026]
+  - สร้างไฟล์บทเรียน `ooad2_1.jsx` ถึง `ooad2_6.jsx` ครอบคลุม UML พื้นฐาน, Activity, Class, Sequence, และ Use Case Diagram
+  - พัฒนาระบบ Simulator แบบ Interactive 5 ตัว (Diagram Showcase, Flow Tracer, Code Generator, Message Tracer, Boundary Matcher)
+  - อัปเดต `ooadCourse.js` ให้แสดงผลเป็น 6 หัวข้อย่อย และจัดกลุ่มตามแผนใหม่
+  - ผ่านการตรวจสอบ Impeccable scan (0 warnings)
+
 - **จัดทำเนื้อหา Unit 2: Activity Diagram (UML) แบบ 4 หัวข้อย่อย** [16/06/2026]
   - สร้างไฟล์บทเรียน 4 ไฟล์: `ooad2_1.jsx`, `ooad2_2.jsx`, `ooad2_3.jsx`, `ooad2_4.jsx` พร้อมใช้ `<main className="max-w-7xl...">` ให้ความกว้างเท่ากับหน้าอื่น
   - พัฒนาระบบ Simulator จำลองกระบวนการสั่งซื้อสินค้าในหัวข้อ 2.3 และแผนภาพแปลงเป็น Code ใน 2.4
