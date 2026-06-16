@@ -1,4 +1,5 @@
 import React from 'react';
+import ActivityDiagramSimulator from './ActivityDiagramSimulator';
 import { 
   Frown, 
   Smile, 
@@ -436,6 +437,11 @@ export default function OOAD2_2() {
 
           </div>
         </div>
+
+        {/* =========================================================================
+            Simulator
+        ========================================================================= */}
+        <ActivityDiagramSimulator />
 
         {/* =========================================================================
             บทสรุป
