@@ -18,54 +18,42 @@ const dsaCourse = {
         },
         {
             id: 2,
-            title: "Unit 2: Stack (สแตก)",
+            title: "Unit 2: โครงสร้างข้อมูลสแตกและคิว (Stack & Queue)",
             lessons: [
-                { id: "2.1", title: "2.1 ความรู้เบื้องต้นเกี่ยวกับโครงสร้างข้อมูลแบบสแตก", mainTitle: "ความรู้เบื้องต้นเกี่ยวกับ Stack", subTitle: "(Introduction to Stack)", description: "สแตกคืออะไร และหลักการทำงานแบบเข้าหลังออกก่อน (LIFO)", content: "[dsa2_1]" },
-                { id: "2.2", title: "2.2 คุณสมบัติและการทำงานพื้นฐานของสแตก (Stack Operations)", mainTitle: "การทำงานพื้นฐานของ Stack", subTitle: "(Stack Operations)", description: "ปฏิบัติการเพิ่มข้อมูล (Push), นำข้อมูลออก (Pop), การดูตัวบนสุด (Peek), ตรวจสอบค่า isEmpty และ isFull", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
-                { id: "2.3", title: "2.3 วิธีการสร้างและการใช้งานสแตกใน Python", mainTitle: "การใช้งาน Stack ใน Python", subTitle: "(Stack in Python)", description: "การสร้าง Stack โดยประยุกต์ใช้ List, collections.deque และ LifoQueue", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
-                { id: "2.4", title: "2.4 ข้อดีและข้อเสียของโครงสร้างข้อมูลแบบสแตก", mainTitle: "ข้อดีและข้อเสียของ Stack", subTitle: "(Stack Pros & Cons)", description: "การประเมินประสิทธิภาพการจัดการหน่วยความจำและปัญหา Stack Overflow", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" }
+                { id: "2.1", title: "2.1 โครงสร้างข้อมูลแบบสแตก (Stack)", mainTitle: "โครงสร้างข้อมูลแบบสแตก", subTitle: "(Stack Data Structure)", description: "หลักการทำงานแบบ LIFO, การใช้งานใน Python และการประยุกต์ใช้", content: "[dsa2_1]" },
+                { id: "2.2", title: "2.2 โครงสร้างข้อมูลแบบคิว (Queue)", mainTitle: "โครงสร้างข้อมูลแบบคิว", subTitle: "(Queue Data Structure)", description: "หลักการทำงานแบบ FIFO, การใช้งาน collections.deque และการประยุกต์ใช้", content: "[dsa2_2]" }
             ]
         },
         {
             id: 3,
-            title: "Unit 3: คิว (Queue)",
+            title: "Unit 3: Tree (ต้นไม้)",
             lessons: [
-                { id: "3.1", title: "3.1 ความรู้เบื้องต้นเกี่ยวกับโครงสร้างข้อมูลแบบคิว", mainTitle: "ความรู้เบื้องต้นเกี่ยวกับ Queue", subTitle: "(Introduction to Queue)", description: "คิวคืออะไร และหลักการทำงานแบบเข้าก่อนออกก่อน (FIFO)", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
-                { id: "3.2", title: "3.2 คุณสมบัติและการทำงานพื้นฐานของคิว (Queue Operations)", mainTitle: "การทำงานพื้นฐานของ Queue", subTitle: "(Queue Operations)", description: "ปฏิบัติการเพิ่มข้อมูลท้ายคิว (Enqueue), นำออกหน้าคิว (Dequeue), การดูหน้าสุด (Front/Peek)", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
-                { id: "3.3", title: "3.3 วิธีการสร้างและการใช้งานคิวใน Python", mainTitle: "การใช้งาน Queue ใน Python", subTitle: "(Queue in Python)", description: "การสร้าง Queue โดยประยุกต์ใช้ List, collections.deque และ Queue Module", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
-                { id: "3.4", title: "3.4 ข้อดีและข้อเสียของโครงสร้างข้อมูลแบบคิว", mainTitle: "ข้อดีและข้อเสียของ Queue", subTitle: "(Queue Pros & Cons)", description: "การประเมินประสิทธิภาพคิว และปัญหาการขยับตำแหน่งหน่วยความจำเมื่อใช้ List (Array Position Shifting)", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" }
+                { id: "3.1", title: "3.1 ความรู้เบื้องต้นเกี่ยวกับโครงสร้างข้อมูลแบบต้นไม้", mainTitle: "ความรู้เบื้องต้นเกี่ยวกับ Tree", subTitle: "(Introduction to Trees)", description: "ต้นไม้คืออะไร ทำไมจึงเป็น Non-Linear และส่วนประกอบสำคัญ Node, Root, Leaf, Edge", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
+                { id: "3.2", title: "3.2 โครงสร้างต้นไม้แบบไบนารี (Binary Tree)", mainTitle: "ต้นไม้ทวิภาค (Binary Tree)", subTitle: "(Binary Tree & BST)", description: "คุณสมบัติ Binary Tree และ Binary Search Tree (BST) ตลอดจนการหาความกว้างความลึก", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
+                { id: "3.3", title: "3.3 วิธีการท่องเข้าไปในต้นไม้ (Tree Traversal)", mainTitle: "การท่องเข้าไปในต้นไม้", subTitle: "(Tree Traversal)", description: "ศึกษาการท่องต้นไม้แบบลึกก่อน (DFS) ทั้งแบบ In-order, Pre-order และ Post-order", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
+                { id: "3.4", title: "3.4 วิธีการสร้างและการใช้งานโครงสร้างต้นไม้ใน Python", mainTitle: "การเขียนโค้ด Tree ใน Python", subTitle: "(Tree Implementation)", description: "การสร้างโครงสร้าง Node และ Tree ด้วย Class และเขียนฟังก์ชัน Search, Insert", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" }
             ]
         },
         {
             id: 4,
-            title: "Unit 4: Tree (ต้นไม้)",
+            title: "Unit 4: Graph (กราฟ)",
             lessons: [
-                { id: "4.1", title: "4.1 ความรู้เบื้องต้นเกี่ยวกับโครงสร้างข้อมูลแบบต้นไม้", mainTitle: "ความรู้เบื้องต้นเกี่ยวกับ Tree", subTitle: "(Introduction to Trees)", description: "ต้นไม้คืออะไร ทำไมจึงเป็น Non-Linear และส่วนประกอบสำคัญ Node, Root, Leaf, Edge", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
-                { id: "4.2", title: "4.2 โครงสร้างต้นไม้แบบไบนารี (Binary Tree)", mainTitle: "ต้นไม้ทวิภาค (Binary Tree)", subTitle: "(Binary Tree & BST)", description: "คุณสมบัติ Binary Tree และ Binary Search Tree (BST) ตลอดจนการหาความกว้างความลึก", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
-                { id: "4.3", title: "4.3 วิธีการท่องเข้าไปในต้นไม้ (Tree Traversal)", mainTitle: "การท่องเข้าไปในต้นไม้", subTitle: "(Tree Traversal)", description: "ศึกษาการท่องต้นไม้แบบลึกก่อน (DFS) ทั้งแบบ In-order, Pre-order และ Post-order", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
-                { id: "4.4", title: "4.4 วิธีการสร้างและการใช้งานโครงสร้างต้นไม้ใน Python", mainTitle: "การเขียนโค้ด Tree ใน Python", subTitle: "(Tree Implementation)", description: "การสร้างโครงสร้าง Node และ Tree ด้วย Class และเขียนฟังก์ชัน Search, Insert", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" }
+                { id: "4.1", title: "4.1 ความรู้เบื้องต้นเกี่ยวกับโครงสร้างข้อมูลแบบกราฟ", mainTitle: "ความรู้เบื้องต้นเกี่ยวกับ Graph", subTitle: "(Introduction to Graph)", description: "กราฟคืออะไร คำศัพท์และส่วนประกอบสำคัญ Vertex, Edge, Directed, Undirected, Weighted", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
+                { id: "4.2", title: "4.2 โครงสร้างกราฟแบบระบุทิศทาง (Directed Graph) และกราฟแบบไม่ระบุทิศทาง (Undirected Graph)", mainTitle: "กราฟระบุทิศทางและไม่ระบุทิศทาง", subTitle: "(Directed & Undirected Graph)", description: "ความต่างและการนำไปประยุกต์ใช้งาน ตลอดจนข้อดีข้อจำกัดของกราฟแต่ละประเภท", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
+                { id: "4.3", title: "4.3 การแทนที่กราฟในหน่วยความจำ (Graph Representation)", mainTitle: "การแทนค่ากราฟในหน่วยความจำ", subTitle: "(Graph Representation)", description: "การเก็บกราฟในแรมผ่าน Adjacency Matrix และ Adjacency List", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
+                { id: "4.4", title: "4.4 วิธีการท่องเข้าไปในกราฟ (Graph Traversal)", mainTitle: "การท่องเที่ยวค้นหาในกราฟ", subTitle: "(Graph Traversal)", description: "ศึกษาขั้นตอนการเดินค้นหาโหนดแบบกว้างก่อน (BFS) และเชิงลึกก่อน (DFS)", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
+                { id: "4.5", title: "4.5 การประยุกต์ใช้กราฟในการแก้ปัญหา", mainTitle: "การนำกราฟไปแก้โจทย์ปัญหา", subTitle: "(Graph Applications)", description: "การคำนวณ Shortest Path ด้วย Dijkstra และ Maze Solving", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" }
             ]
         },
         {
             id: 5,
-            title: "Unit 5: Graph (กราฟ)",
+            title: "Unit 5: อัลกอริทึมการจัดเรียงข้อมูล (Sorting Algorithms)",
             lessons: [
-                { id: "5.1", title: "5.1 ความรู้เบื้องต้นเกี่ยวกับโครงสร้างข้อมูลแบบกราฟ", mainTitle: "ความรู้เบื้องต้นเกี่ยวกับ Graph", subTitle: "(Introduction to Graph)", description: "กราฟคืออะไร คำศัพท์และส่วนประกอบสำคัญ Vertex, Edge, Directed, Undirected, Weighted", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
-                { id: "5.2", title: "5.2 โครงสร้างกราฟแบบระบุทิศทาง (Directed Graph) และกราฟแบบไม่ระบุทิศทาง (Undirected Graph)", mainTitle: "กราฟระบุทิศทางและไม่ระบุทิศทาง", subTitle: "(Directed & Undirected Graph)", description: "ความต่างและการนำไปประยุกต์ใช้งาน ตลอดจนข้อดีข้อจำกัดของกราฟแต่ละประเภท", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
-                { id: "5.3", title: "5.3 การแทนที่กราฟในหน่วยความจำ (Graph Representation)", mainTitle: "การแทนค่ากราฟในหน่วยความจำ", subTitle: "(Graph Representation)", description: "การเก็บกราฟในแรมผ่าน Adjacency Matrix และ Adjacency List", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
-                { id: "5.4", title: "5.4 วิธีการท่องเข้าไปในกราฟ (Graph Traversal)", mainTitle: "การท่องเที่ยวค้นหาในกราฟ", subTitle: "(Graph Traversal)", description: "ศึกษาขั้นตอนการเดินค้นหาโหนดแบบกว้างก่อน (BFS) และเชิงลึกก่อน (DFS)", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
-                { id: "5.5", title: "5.5 การประยุกต์ใช้กราฟในการแก้ปัญหา", mainTitle: "การนำกราฟไปแก้โจทย์ปัญหา", subTitle: "(Graph Applications)", description: "การคำนวณ Shortest Path ด้วย Dijkstra และ Maze Solving", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" }
-            ]
-        },
-        {
-            id: 6,
-            title: "Unit 6: อัลกอริทึมการจัดเรียงข้อมูล (Sorting Algorithms)",
-            lessons: [
-                { id: "6.1", title: "6.1 ความรู้เบื้องต้นเกี่ยวกับอัลกอริทึมการจัดเรียงข้อมูล", mainTitle: "ความรู้เบื้องต้นเกี่ยวกับการเรียงลำดับ", subTitle: "(Introduction to Sorting)", description: "ความสำคัญการจัดเรียงข้อมูล และการวัดประสิทธิภาพเชิงวิเคราะห์ด้วย Big O", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
-                { id: "6.2", title: "6.2 อัลกอริทึมการจัดเรียงข้อมูลแบบง่าย (Simple Sorting Algorithms)", mainTitle: "การเรียงลำดับแบบเรียบง่าย", subTitle: "(Simple Sorting)", description: "หลักการทำงานและวิเคราะห์ความเร็วของ Bubble Sort, Selection Sort และ Insertion Sort", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
-                { id: "6.3", title: "6.3 อัลกอริทึมการจัดเรียงข้อมูลแบบประสิทธิภาพสูง (Efficient Sorting Algorithms)", mainTitle: "การเรียงลำดับความเร็วสูง", subTitle: "(Efficient Sorting)", description: "การเรียงข้อมูลด้วยแนวคิด Divide & Conquer ผ่าน Merge Sort, Quick Sort และ Heap Sort", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
-                { id: "6.4", title: "6.4 อัลกอริทึมการจัดเรียงข้อมูลแบบพิเศษ (Special Sorting Algorithms)", mainTitle: "การจัดเรียงข้อมูลแบบพิเศษ", subTitle: "(Special Sorting)", description: "การจัดเรียงข้อมูลแบบนับสะสมและเลขฐานด้วย Counting Sort และ Radix Sort", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
-                { id: "6.5", title: "6.5 การประยุกต์ใช้และเปรียบเทียบประสิทธิภาพของอัลกอริทึมการจัดเรียงข้อมูล", mainTitle: "การวิเคราะห์เปรียบเทียบผลลัพธ์", subTitle: "(Sorting Applications & Comparison)", description: "การเปรียบเทียบ Big O ในทุกสภาวะ และเกณฑ์การตัดสินใจเลือกใช้งานให้คุ้มค่าฮาร์ดแวร์ที่สุด", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" }
+                { id: "5.1", title: "5.1 ความรู้เบื้องต้นเกี่ยวกับอัลกอริทึมการจัดเรียงข้อมูล", mainTitle: "ความรู้เบื้องต้นเกี่ยวกับการเรียงลำดับ", subTitle: "(Introduction to Sorting)", description: "ความสำคัญการจัดเรียงข้อมูล และการวัดประสิทธิภาพเชิงวิเคราะห์ด้วย Big O", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
+                { id: "5.2", title: "5.2 อัลกอริทึมการจัดเรียงข้อมูลแบบง่าย (Simple Sorting Algorithms)", mainTitle: "การเรียงลำดับแบบเรียบง่าย", subTitle: "(Simple Sorting)", description: "หลักการทำงานและวิเคราะห์ความเร็วของ Bubble Sort, Selection Sort และ Insertion Sort", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
+                { id: "5.3", title: "5.3 อัลกอริทึมการจัดเรียงข้อมูลแบบประสิทธิภาพสูง (Efficient Sorting Algorithms)", mainTitle: "การเรียงลำดับความเร็วสูง", subTitle: "(Efficient Sorting)", description: "การเรียงข้อมูลด้วยแนวคิด Divide & Conquer ผ่าน Merge Sort, Quick Sort และ Heap Sort", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
+                { id: "5.4", title: "5.4 อัลกอริทึมการจัดเรียงข้อมูลแบบพิเศษ (Special Sorting Algorithms)", mainTitle: "การจัดเรียงข้อมูลแบบพิเศษ", subTitle: "(Special Sorting)", description: "การจัดเรียงข้อมูลแบบนับสะสมและเลขฐานด้วย Counting Sort และ Radix Sort", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" },
+                { id: "5.5", title: "5.5 การประยุกต์ใช้และเปรียบเทียบประสิทธิภาพของอัลกอริทึมการจัดเรียงข้อมูล", mainTitle: "การวิเคราะห์เปรียบเทียบผลลัพธ์", subTitle: "(Sorting Applications & Comparison)", description: "การเปรียบเทียบ Big O ในทุกสภาวะ และเกณฑ์การตัดสินใจเลือกใช้งานให้คุ้มค่าฮาร์ดแวร์ที่สุด", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาหัวข้อนี้อยู่ระหว่างการจัดทำโครงสร้างระบบจำลอง</p>" }
             ]
         }
     ]

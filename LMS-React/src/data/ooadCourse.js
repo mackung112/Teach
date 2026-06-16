@@ -17,13 +17,12 @@ const ooadCourse = {
         },
         {
             id: 2,
-            title: "Unit 2: บรรยายสารสนเทศและกระบวนการธุรกิจ (Business Process Modeling)",
+            title: "Unit 2: Activity Diagram (UML)",
             lessons: [
-                { id: "2.1", title: "2.1 ตรรกะธุรกิจ (Business Logic)", mainTitle: "การสกัดตรรกะและโดเมนธุรกิจ", subTitle: "(Business Logic & Domains)", description: "การทำความเข้าใจขอบเขตพื้นที่ปัญหาและวิถีการทำงานของสถานประกอบการจำลอง", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาระบบจำลองการเรียนรู้ของหัวข้อนี้อยู่ระหว่างการเตรียมการจัดทำ</p>" },
-                { id: "2.2", title: "2.2 แนวคิดกระบวนการทำงานแบบ BPR (Business Process Reengineering)", mainTitle: "การวิเคราะห์และยกเครื่องกระบวนการธุรกิจ", subTitle: "(Business Process Reengineering)", description: "การเขียนแผนภูมิแสดงสถานะ As-Is วิเคราะห์คอขวดปัญหาสู่การร่างหน้าตา To-Be กระบวนการแบบใหม่", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาระบบจำลองการเรียนรู้ของหัวข้อนี้อยู่ระหว่างการเตรียมการจัดทำ</p>" },
-                { id: "2.3", title: "2.3 เครื่องมือวาดแผนภาพกระบวนการธุรกิจ", mainTitle: "แผนภาพกระบวนการธุรกิจ", subTitle: "(Process Modeling Tools & BPMN)", description: "การนำสัญกรณ์ระบบสากล BPMN เข้ามาใช้ระบุบทบาท Swimlane, Event, Activity, Gateway", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาระบบจำลองการเรียนรู้ของหัวข้อนี้อยู่ระหว่างการเตรียมการจัดทำ</p>" },
-                { id: "2.4", title: "2.4 การระบุผู้ใช้งานระบบ (Actors Identification) และบทบาท", mainTitle: "การจำแนกประเภทตัวละครผู้ใช้", subTitle: "(Actors Identification)", description: "ขั้นตอนการสกัดระบุผู้เล่นหรือกลุ่มผู้ใช้ที่จะมีปฏิสัมพันธ์สัมผัสตรงกับระบบคอมพิวเตอร์", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาระบบจำลองการเรียนรู้ของหัวข้อนี้อยู่ระหว่างการเตรียมการจัดทำ</p>" },
-                { id: "2.5", title: "2.5 การกำหนดขอบเขตของระบบ (System Boundary และ Scope)", mainTitle: "การตีกรอบขอบเขตระบบงาน", subTitle: "(System Boundary & Scope)", description: "การลากเส้นจำกัดความสามารถที่ระบบต้องทำและสิ่งที่อยู่นอกระบบคอมพิวเตอร์", content: "<h3>อยู่ระหว่างการจัดเตรียมเนื้อหา</h3><p>เนื้อหาระบบจำลองการเรียนรู้ของหัวข้อนี้อยู่ระหว่างการเตรียมการจัดทำ</p>" }
+                { id: "2.1", title: "2.1 ทำความรู้จักกับ Activity Diagram", mainTitle: "ทำความรู้จักกับ Activity Diagram", subTitle: "(Introduction to Activity Diagram)", description: "ทำความเข้าใจนิยาม บทบาท และความสำคัญของ Activity Diagram ในการอธิบาย Workflow และกระบวนการทำงาน", content: "[ooad2_1]" },
+                { id: "2.2", title: "2.2 องค์ประกอบของ Activity Diagram", mainTitle: "องค์ประกอบของ Activity Diagram", subTitle: "(Elements of Activity Diagram)", description: "เจาะลึกสัญลักษณ์และองค์ประกอบ 8 ส่วนที่สำคัญ: Start, End, Activity, Transition, Decision, Merge, Fork, และ Join", content: "[ooad2_2]" },
+                { id: "2.3", title: "2.3 เทคนิคการวาด Activity Diagram", mainTitle: "เทคนิคการวาด Activity Diagram", subTitle: "(Drawing Techniques & Simulator)", description: "ฝึกปฏิบัติต่อท่อกระบวนการและจำลองการไหลของข้อมูล (Workflow) แบบโต้ตอบด้วยเครื่องมือวาดแผนภาพ", content: "[ooad2_3]" },
+                { id: "2.4", title: "2.4 การแปลง Activity Diagram เป็นโค้ด", mainTitle: "การแปลง Activity Diagram เป็นโค้ด", subTitle: "(From Diagram to Code)", description: "เรียนรู้วิธีการเปลี่ยนแผนภาพกิจกรรมให้กลายเป็นตรรกะโปรแกรมทางธุรกิจ (Business Logic Code)", content: "[ooad2_4]" }
             ]
         },
         {

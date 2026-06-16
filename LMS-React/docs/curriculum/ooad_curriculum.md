@@ -15,20 +15,20 @@
 - 1.4 ตัวอย่าง SRS งานระบบจัดการข้อมูลสินค้าคงคลัง (Project 2)
 - 1.5 ตัวอย่าง SRS งานระบบจัดการข้อมูลการจอง (Project 3)
 
-## Unit 2: บรรยายสารสนเทศและกระบวนการธุรกิจ (Business Process Modeling)
+## Unit 2: Activity Diagram (UML)
 
-- 2.1 ตรรกะธุรกิจ (Business Logic)
-  - 2.1.1 การทำความเข้าใจโดเมนของปัญหา (Problem Domain)
-- 2.2 แนวคิดกระบวนการทำงานแบบ BPR (Business Process Reengineering)
-  - 2.2.1 As-Is Process (กระบวนการปัจจุบัน)
-  - 2.2.2 การวิเคราะห์ปัญหาและจุดคอขวด (Bottleneck)
-  - 2.2.3 To-Be Process (กระบวนการในอนาคต/กระบวนการใหม่)
-- 2.3 เครื่องมือวาดแผนภาพกระบวนการธุรกิจ
-  - 2.3.1 การใช้ Flowchart พื้นฐาน
-  - 2.3.2 การใช้ BPMN (Business Process Model and Notation) เบื้องต้น
-  - 2.3.3 สัญลักษณ์ BPMN: Event, Activity, Gateway, Swimlane
-- 2.4 การระบุผู้ใช้งานระบบ (Actors Identification) และบทบาท
-- 2.5 การกำหนดขอบเขตของระบบ (System Boundary และ Scope)
+- 2.1 ทำความรู้จักกับ Activity Diagram
+- 2.2 องค์ประกอบของ Activity Diagram
+  - 2.2.1 จุดเริ่มต้น (Start)
+  - 2.2.2 จุดสิ้นสุด (End)
+  - 2.2.3 กิจกรรม (Activity)
+  - 2.2.4 เส้นเชื่อม (Transition)
+  - 2.2.5 การตัดสินใจ (Decision)
+  - 2.2.6 การรวมกลุ่ม (Merge)
+  - 2.2.7 การแยกกลุ่ม (Fork)
+  - 2.2.8 การรวมกลุ่ม (Join)
+- 2.3 เทคนิคการวาด Activity Diagram
+- 2.4 การแปลง Activity Diagram เป็นโค้ด
 
 ## Unit 3: การจัดทำเอกสารข้อกำหนดความต้องการ (SRS Document)
 
