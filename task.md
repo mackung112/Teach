@@ -12,6 +12,12 @@
 
 ## 📋 บันทึกส่งมอบ (เก็บ 3 รายการล่าสุด)
 
+- **สร้างเนื้อหา 21910-1013/lesson/2.1 (OOP Simulator)** [19/06/2026]
+  - สร้างไฟล์ `public/lessons/oop/2.1.html` เก็บเนื้อหา HTML และ Simulator แบบไม่ต้องแก้ไข (Raw HTML)
+  - สร้างไฟล์ `src/components/interactive/oop/oop2_1.jsx` ซึ่งทำการครอบ HTML ไว้ใน iframe เต็มจอ
+  - ปรับปรุง `LessonViewer.jsx` ให้รองรับการซ่อนส่วนหัว (StandardHeader) ผ่าน `hideHeader: true`
+  - ปรับปรุงข้อมูลใน `oopCourse.js` ให้แสดงเนื้อหาผ่าน component ใหม่และซ่อนส่วนหัว
+
 - **สร้างเนื้อหา 31901-2001/lesson/1.3 (การใช้งาน google Stitch ร่วมกับ design.md)** [16/06/2026]
   - สร้างไฟล์ `uiux1_3.jsx` ที่มี Interactive Simulator อธิบายหลักการทำงานของ Google Stitch และ `DESIGN.md`
   - เพิ่มหัวข้อ 1.3 และคำอธิบายลงในโครงสร้างหลักสูตร (`uiuxCourse.js`)

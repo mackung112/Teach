@@ -64,14 +64,16 @@ export default function LessonViewer({ lesson, chapter, onComplete, onNext, onPr
       const ImmersiveComponent = COMPONENT_MAP[immersivePart];
       return (
         <section className="w-full immersive-page-wrapper bg-[#FAFAFA] min-h-screen" aria-label="Immersive Lesson" id="immersive-lesson-wrapper">
-          <StandardHeader 
-            chapterTitle={chapter?.title}
-            mainTitle={mainTitle}
-            subTitle={subTitle}
-            description={description}
-            isCard={false}
-            transparent={true}
-          />
+          {lesson.hideHeader !== true && (
+            <StandardHeader 
+              chapterTitle={chapter?.title}
+              mainTitle={mainTitle}
+              subTitle={subTitle}
+              description={description}
+              isCard={false}
+              transparent={true}
+            />
+          )}
           <div className="immersive-content-block">
             <ImmersiveComponent />
           </div>
