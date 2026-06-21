@@ -625,23 +625,118 @@ const PRINT_QUIZ_LEVELS = [
 // ============================================================================
 
 export default function pyUnit4_1_PrintFunction() {
+  const [passcode, setPasscode] = useState('');
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [passError, setPassError] = useState(false);
+
+  const handleUnlock = (e) => {
+    e.preventDefault();
+    if (passcode === '1122') {
+      setIsUnlocked(true);
+      setPassError(false);
+    } else {
+      setPassError(true);
+    }
+  };
+
   const teacherTaskContent = `ใบงานกิจกรรม: ปฏิบัติการฟังก์ชันการแสดงผลคอมพิวเตอร์
-ให้นักเรียนเปิดเครื่องมือเขียนโปรแกรมคอมพิวเตอร์และเขียนคำสั่งเพื่อตอบโจทย์ดังต่อไปนี้:
+ให้นักเรียนเปิดเครื่องมือพัฒนาโปรแกรม Python และเขียนคำสั่งเพื่อตอบโจทย์ทั้ง 20 ข้อดังต่อไปนี้:
 
-1. เขียนคำสั่งเพื่อพิมพ์ข้อความโดยใช้ f-string และตัวแปร 2 ตัว:
-   - employee_name = "สมชาย"
-   - salary = 18500.825
-   ให้แสดงผลลัพธ์ปัดทศนิยมเป็น 2 ตำแหน่งให้ตรงตามค่าจริง:
-   "พนักงาน สมชาย ได้รับเงินเดือน 18,500.83 บาท"
+1. โปรแกรมทักทายง่ายๆ (Simple Greeting)
+   เขียนคำสั่งแสดงข้อความ "สวัสดีคอมพิวเตอร์ ยินดีที่ได้รู้จัก" ออกทางหน้าจอ
+   - ตัวอย่างผลลัพธ์: สวัสดีคอมพิวเตอร์ ยินดีที่ได้รู้จัก
 
-2. แสดงผลข้อความประโยคย่อยโดยไม่ให้ตัดข้อความขึ้นบรรทัดใหม่ ด้วยคำสั่ง:
-   print("การเรียน", end=" ")
-   print("ภาษาคอมพิวเตอร์", end=" ")
-   print("Python สนุกมาก!")
+2. โปรแกรมแสดงประวัติส่วนตัว (Profile Printer)
+   เขียนคำสั่งเพื่อพิมพ์ชื่อเล่น และอายุของคุณ โดยแบ่งเป็น 2 บรรทัดคนละคำสั่ง
+   - ตัวอย่างผลลัพธ์:
+     ชื่อเล่น: แม็ค
+     อายุ: 18 ปี
 
-3. เขียนคำสั่งเพื่อจัดหน้าข้อมูลด้วย Escape characters และ separator ดังนี้:
-   print("A", "B", "C", sep="\\t")
-   และสังเกตระยะห่างที่เกิดขึ้น อธิบายผลลัพธ์ลงในสมุดบันทึก`;
+3. โปรแกรมพิมพ์รูปทรงกล่อง (Box Shape Printer)
+   ใช้สัญลักษณ์สี่เหลี่ยมหรือดวงดาว * ในการพิมพ์ออกมาเรียงกันเป็นกรอบสี่เหลี่ยมจัตุรัสขนาด 3x3
+   - ตัวอย่างผลลัพธ์:
+     ***
+     * *
+     ***
+
+4. โปรแกรมที่อยู่ยาวชุดเดียว (Multiline Address String)
+   พิมพ์ข้อมูลที่อยู่อาศัยของคุณแยกบรรทัดเป็น 3 บรรทัด โดยใช้ฟังก์ชัน print() เพียงคำสั่งเดียวเท่านั้น (ใช้ Escape Character \\n)
+   - ตัวอย่างผลลัพธ์:
+     บ้านเลขที่ 99/9
+     ตำบลในเมือง อำเภอเมือง
+     จังหวัดกรุงเทพฯ
+
+5. โปรแกรมจัดคอลัมน์ข้อมูลประจำตัว (Column Tab Alignment)
+   พิมพ์ข้อมูล ชื่อจริง, นามสกุล และรหัสประจำตัวของคุณ โดยแยกคอลัมน์ให้อยู่แนวเดียวกันด้วยแท็บอักขระ (\\t)
+   - ตัวอย่างผลลัพธ์: ชื่อ: แม็ค   นามสกุล: ดีใจ   รหัส: 6999
+
+6. โปรแกรมแสดงผลการคำนวณสด (Arithmetic Math Equation)
+   เขียนคำสั่งเพื่อแสดงผลโจทย์สมการและคำตอบคณิตศาสตร์อย่างเป็นระเบียบ เช่น "100 + 200 = 300"
+   - ตัวอย่างผลลัพธ์: 100 + 200 = 300
+
+7. โปรแกรมพิมพ์ข้อความมีอัญประกาศ (Quotes Escaping)
+   พิมพ์ข้อความภาษาไทยที่ต้องมีสัญลักษณ์เครื่องหมายคำพูดคู่ครอบคำพูด เช่น ครูแม็คพูดว่า "การเขียนโค้ดต้องหมั่นฝึกฝน" โดยไม่ทำให้ตัวแปรภาษาประมวลผลผิดพลาด
+   - ตัวอย่างผลลัพธ์: ครูแม็คพูดว่า "การเขียนโค้ดต้องหมั่นฝึกฝน"
+
+8. โปรแกรมแสดง Path โฟลเดอร์ Windows (Windows File Path Raw)
+   พิมพ์ตำแหน่งไฟล์ของระบบ Windows เช่น C:\\python\\project\\main.py โดยป้องกันไม่ให้เครื่องหมาย \\ รวมตัวเป็น Escape Code (แนะนำใช้ \\\\ หรือ Raw String r"...")
+   - ตัวอย่างผลลัพธ์: C:\\python\\project\\main.py
+
+9. โปรแกรมประมวลผลทางคณิตศาสตร์ทันที (Direct Computation)
+   ใช้ฟังก์ชัน print() พิมพ์ผลลัพธ์คำตอบทางคณิตศาสตร์สดจากนิพจน์ 150 * 4 ออกทางหน้าจอ (ห้ามส่งค่าเป็นสตริงตรงๆ)
+   - ตัวอย่างผลลัพธ์: 600
+
+10. โปรแกรมพิมพ์ตัวแปรด้วย f-string (Basic f-string)
+    ประกาศตัวแปร subject = "Python" และ unit = 4 แล้วใช้ f-string พิมพ์ข้อความแสดงความยินดี
+    - ตัวอย่างผลลัพธ์: กำลังเรียนวิชา Python หน่วยที่ 4
+
+11. โปรแกรมปัดเศษทศนิยมค่าราคาสินค้า (Floating Price Precision)
+    กำหนดตัวแปร price = 49.9753 แล้วใช้ f-string แสดงผลราคาสินค้าโดยทำการปัดเศษทศนิยมเหลือ 2 ตำแหน่ง
+    - ตัวอย่างผลลัพธ์: ราคาสินค้าคือ 49.98 บาท
+
+12. โปรแกรมจัดรูปแบบร้อยละเปอร์เซ็นต์ (Interest Rate Formatting)
+    กำหนดตัวแปร rate = 0.0175 จากนั้นนำค่านี้คูณ 100 แล้วใช้ f-string ปัดทศนิยมให้พิมพ์ออกมาเป็น 1.8% ในประโยค
+    - ตัวอย่างผลลัพธ์: อัตราดอกเบี้ยเฉลี่ย: 1.8%
+
+13. โปรแกรมแสดงค่าตัวแปรหลายประเภทรวมกัน (Multi-Argument Output)
+    กำหนดตัวแปร item_name = "สมุดบันทึก" และ quantity = 12 แล้วพิมพ์ประโยคต่อเนื่องโดยส่งอาร์กิวเมนต์คั่นจุลภาค , หลายตัวลงในวงเล็บ
+    - ตัวอย่างผลลัพธ์: ฉันซื้อ สมุดบันทึก จำนวน 12 เล่ม
+
+14. โปรแกรมสร้างรหัสสินค้าเชื่อมขีดกลาง (Separator Joined Code)
+    ประกาศค่าข้อความ 3 ส่วน ได้แก่ "TH", "2026" และ "99" จากนั้นพิมพ์โดยใช้พารามิเตอร์ sep="-" เชื่อมคั่นกลาง
+    - ตัวอย่างผลลัพธ์: TH-2026-99
+
+15. โปรแกรมพิมพ์ข้อมูลแยกคนละแถว (Newline Separated Arguments)
+    ส่งค่าผลไม้ 3 อาร์กิวเมนต์ ได้แก่ "ส้ม", "กล้วย", "มะพร้าว" และใช้คีย์เวิร์ด sep="\\n" ในการแยกบรรทัดแสดงผล
+    - ตัวอย่างผลลัพธ์:
+      ส้ม
+      กล้วย
+      มะพร้าว
+
+16. โปรแกรมพิมพ์ท้ายประโยคแถวเดิม (Continuous Print Line)
+    เขียนคำสั่ง print("ยอดรวมสุทธิ:") และคำสั่ง print("250 บาท") คนละแถวในโค้ด แต่กำหนดพารามิเตอร์ end=" " เพื่อให้พิมพ์ต่อเนื่องในบรรทัดเดียวกัน
+    - ตัวอย่างผลลัพธ์: ยอดรวมสุทธิ: 250 บาท
+
+17. โปรแกรมขยายเส้นขีดสำหรับแยกข้อมูล (Multiplier Separator Line)
+    ใช้หลักการคูณสายอักขระ (String Multiplication) ในการสั่งพิมพ์สัญลักษณ์เครื่องหมายลบ - จำนวน 30 ตัวติดต่อกันเพื่อทำเส้นใต้คั่นหน้าจอ
+    - ตัวอย่างผลลัพธ์: ------------------------------
+
+18. โปรแกรมรายงานผลสอบและระดับคะแนน (Report Card Printer)
+    ใช้ f-string ร่วมกับตัวแปร name = "สุรชัย" และ score = 92 เพื่อพิมพ์บันทึกแจ้งคะแนนสอบของนักเรียน
+    - ตัวอย่างผลลัพธ์: นักเรียน สุรชัย สอบวิชาคอมพิวเตอร์ได้คะแนนเต็ม 92/100 คะแนน
+
+19. โปรแกรมคำนวณสมการคูณแม่สอง (Multiplication Table Generator)
+    พิมพ์สมการแม่สูตรคูณตั้งแต่ 2 x 1 = 2 ไปจนถึง 2 x 5 = 10 รวม 5 บรรทัด โดยในวงเล็บ f-string ให้ใส่สูตรนิพจน์คำนวณคณิตศาสตร์สด
+    - ตัวอย่างผลลัพธ์:
+      2 x 1 = 2
+      2 x 2 = 4
+      2 x 3 = 6
+      2 x 4 = 8
+      2 x 5 = 10
+
+20. โปรแกรมสร้างรหัสลงท้ายมีสัญลักษณ์ความสำเร็จ (Custom Terminating Character)
+    พิมพ์คำสั่ง print("ขั้นตอนสำเร็จ") โดยปรับปรุงค่าพารามิเตอร์ end="...🚀\\n" เพื่อแสดงผลสัญลักษณ์แบบมีระดับชั้นยอด
+    - ตัวอย่างผลลัพธ์: ขั้นตอนสำเร็จ...🚀`;
 
   return (
     <div className="font-sans text-slate-800 pb-24 selection:bg-indigo-200 selection:text-indigo-900 relative">
@@ -675,7 +770,52 @@ export default function pyUnit4_1_PrintFunction() {
         />
 
         {/* Teacher Task footer */}
-        <TeacherTask title="ใบงานบทเรียน 4.1" taskText={teacherTaskContent} />
+        {isUnlocked ? (
+          <TeacherTask title="ใบงานบทเรียน 4.1" taskText={teacherTaskContent} />
+        ) : (
+          <div className="relative mt-24 rounded-3xl p-[1px] overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 opacity-40 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative bg-white/90 backdrop-blur-xl p-8 md:p-10 rounded-3xl h-full flex flex-col items-center justify-center text-center shadow-xl">
+              <div className="p-4 bg-blue-100 rounded-2xl text-blue-600 border border-blue-200 shadow-[0_0_15px_rgba(59,130,246,0.3)] mb-6 animate-pulse">
+                <span className="text-3xl">🔐</span>
+              </div>
+              <h3 className="text-2xl font-bold text-slate-800 mb-2">เข้าถึงภารกิจสำหรับนักเรียน (Instructor Task)</h3>
+              <p className="text-slate-500 text-sm max-w-md mb-6 leading-relaxed">
+                กิจกรรมปฏิบัติการนี้ถูกจำกัดสิทธิ์เฉพาะในชั้นเรียน กรุณากรอกรหัสผ่าน 4 หลักที่ได้รับจากอาจารย์ผู้สอนเพื่อเข้าสู่แบบฝึกหัด
+              </p>
+              
+              <form onSubmit={handleUnlock} className="flex flex-col sm:flex-row gap-3 w-full max-w-sm justify-center items-center">
+                <input 
+                  type="password"
+                  maxLength={4}
+                  value={passcode}
+                  onChange={(e) => {
+                    setPasscode(e.target.value);
+                    setPassError(false);
+                  }}
+                  placeholder="ป้อนรหัสผ่าน 4 หลัก"
+                  className={`h-[42px] w-full sm:w-48 text-center border rounded-xl font-mono text-lg tracking-widest focus:outline-none transition-all ${
+                    passError 
+                      ? 'border-red-500 focus:border-red-500 focus:ring-3 focus:ring-red-500/12 bg-red-50' 
+                      : 'border-slate-300 focus:border-blue-500 focus:ring-3 focus:ring-blue-500/12 bg-white'
+                  }`}
+                />
+                <button
+                  type="submit"
+                  className="h-[42px] w-full sm:w-auto px-6 bg-blue-600 text-white hover:bg-blue-500 active:scale-95 rounded-xl font-semibold cursor-pointer transition-all flex items-center justify-center gap-2"
+                >
+                  ถอดรหัสผ่าน
+                </button>
+              </form>
+              
+              {passError && (
+                <p className="text-red-500 font-bold text-xs mt-3 animate-pulse">
+                  ⚠️ รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง
+                </p>
+              )}
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
