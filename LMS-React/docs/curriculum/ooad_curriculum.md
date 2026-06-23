@@ -16,18 +16,19 @@
 - 1.5 ตัวอย่าง SRS งานระบบจัดการข้อมูลการจอง (Project 3)
 
 ## Unit 2: UML Overview
-https://www.saladpuk.com/basic/uml
-  - 2.1 Activity (UML)
-https://www.saladpuk.com/basic/uml/activity-diagram
-  - 2.2 Class Diagram (UML)
-https://www.saladpuk.com/basic/uml/class-diagram
-  - 2.3 Sequence Diagram (UML)
-https://www.saladpuk.com/basic/uml/sequence-diagram
-  - 2.4 Use Case Diagram (UML)
-https://www.saladpuk.com/basic/uml/use-case-diagram
-  - 2.5 UML Summary
-https://www.saladpuk.com/basic/uml/summary
 
+https://www.saladpuk.com/basic/uml
+
+- 2.1 Activity Diagram (UML)
+  https://www.saladpuk.com/basic/uml/activity-diagram
+- 2.2 Use Case Diagram (UML)
+  https://www.saladpuk.com/basic/uml/use-case-diagram
+- 2.3 Sequence Diagram (UML)
+  https://www.saladpuk.com/basic/uml/sequence-diagram
+- 2.4 Class Diagram (UML)
+  https://www.saladpuk.com/basic/uml/class-diagram
+- 2.5 UML Summary
+  https://www.saladpuk.com/basic/uml/summary
 
 ## Unit 5: พื้นฐานการคิดเชิงวัตถุ (Object-Oriented Concepts)
 
@@ -104,6 +105,3 @@ https://www.saladpuk.com/basic/uml/summary
 - 9.4 การนำเสนอโครงการ (Project Pitching)
   - 9.4.1 การเตรียมเอกสารระบบ (System Documentation)
   - 9.4.2 บทบาทสมมติ (Role-Play Presentation) ในฐานะ System Analyst
-
-
-
