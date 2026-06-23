@@ -23,7 +23,7 @@ const ooadCourse = {
                 { id: "2.2", title: "2.2 แผนภาพกิจกรรม (Activity Diagram)", mainTitle: "แผนภาพกิจกรรม", subTitle: "(Activity Diagram)", description: "การอธิบายขั้นตอนการทำงานหรือ Workflow ของระบบคล้ายกับ Flowchart", content: "[ooad2_2]" },
                 { id: "2.3", title: "2.3 แผนภาพยูสเคส (Use Case Diagram)", mainTitle: "แผนภาพยูสเคส", subTitle: "(Use Case Diagram)", description: "เรียนรู้การระบุองค์ประกอบและวาดแผนภาพยูสเคส (ระบบโหวต) ทีละขั้นตอนผ่านเครื่องมือจำลอง", content: "[ooad2_3]" },
                 { id: "2.4", title: "2.4 แผนภาพลำดับเวลา (Sequence Diagram)", mainTitle: "แผนภาพลำดับเวลา", subTitle: "(Sequence Diagram)", description: "การแสดงการสื่อสารและการส่งข้อความระหว่างอ็อบเจกต์ตามลำดับเวลา", content: "[ooad2_4]" },
-                { id: "2.5", title: "2.5 แผนภาพยูสเคส (Use Case Diagram)", mainTitle: "แผนภาพยูสเคส", subTitle: "(Use Case Diagram)", description: "การแสดงความสัมพันธ์ระหว่างผู้ใช้งาน (Actor) กับระบบ (System) ว่าทำอะไรได้บ้าง", content: "[ooad2_5]" },
+                { id: "2.5", title: "2.5 แผนภาพคลาส (Class Diagram)", mainTitle: "แผนภาพคลาส", subTitle: "(Class Diagram)", description: "เรียนรู้โครงสร้างของคลาส การประกาศข้อมูลและเมธอด การกำหนดสิทธิ์เข้าถึง และความสัมพันธ์รูปแบบต่างๆ ในระบบเข้าสู่ระบบ (Login Flow)", content: "[ooad2_5]" },
                 { id: "2.6", title: "2.6 สรุปการเลือกใช้ UML Diagram", mainTitle: "สรุปการเลือกใช้ UML Diagram", subTitle: "(Summary & Quiz)", description: "สรุปภาพรวมแผนภาพ UML และทดสอบความเข้าใจในการเลือกใช้แผนภาพให้เหมาะสมกับสถานการณ์", content: "[ooad2_6]" }
             ]
         },
