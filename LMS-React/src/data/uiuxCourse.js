@@ -10,7 +10,8 @@ const uiuxCourse = {
             lessons: [
                 { id: "1.1", title: "1.1 นิยามและความแตกต่างของ UX และ UI", mainTitle: "นิยามและความแตกต่างของ UX และ UI", subTitle: "(Introduction to UX/UI)", description: "คำจำกัดความของ User Experience และ User Interface การสกัดส่วนแตกต่างและจุดประสานในการพัฒนาเทคโนโลยี", content: "[uiux1_1]" },
                 { id: "1.2", title: "1.2 โครงสร้างหน้าตาแอปพลิเคชันและหน้าเว็บเบื้องต้น", mainTitle: "ส่วนประกอบอินเตอร์เฟสพื้นฐาน", subTitle: "(Basic UI & App Structure)", description: "การแยกแยะและทำความเข้าใจส่วนประกอบหลักบนอินเตอร์เฟส เช่น Header, Body, Navigation และ CTA Buttons จากแอปพลิเคชันในชีวิตประจำวัน", content: "[uiux1_2]" },
-                { id: "1.3", title: "1.3 การใช้งาน google Stitch ร่วมกับ design.md", mainTitle: "การใช้งาน google Stitch ร่วมกับ design.md", subTitle: "(Using Google Stitch with design.md)", description: "แนะนำเครื่องมือ google Stitch และกระบวนการทำงานร่วมกับเอกสารออกแบบ และการนำเข้าและประยุกต์ใช้ดีไซน์ซิสเต็มผ่าน google Stitch ตามข้อกำหนดใน design.md", content: "[uiux1_3]" }
+                { id: "1.3", title: "1.3 การใช้งาน google Stitch ร่วมกับ design.md", mainTitle: "การใช้งาน google Stitch ร่วมกับ design.md", subTitle: "(Using Google Stitch with design.md)", description: "แนะนำเครื่องมือ google Stitch และกระบวนการทำงานร่วมกับเอกสารออกแบบ และการนำเข้าและประยุกต์ใช้ดีไซน์ซิสเต็มผ่าน google Stitch ตามข้อกำหนดใน design.md", content: "[uiux1_3]" },
+                { id: "1.4", title: "1.4 ทฤษฎีการออกแบบ UX/UI (Interactive Hub)", mainTitle: "ทฤษฎีการออกแบบ UX/UI", subTitle: "(UX/UI Theory Interactive Hub)", description: "เรียนรู้ทฤษฎีการออกแบบผ่านการลงมือทำจริง", content: "[uiux1_4]" }
             ]
         },
         {
