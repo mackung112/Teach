@@ -1,8 +1,0 @@
-{
-  "content": [
-    {
-      "type": "text",
-      "text": "# มีอะไรใหม่บ้าง\n\n## ✏️ ประวัติการอัพเดท\n\n{% hint style=\"success\" %}\nสำหรับใครที่ไม่อยากพลาดอัพเดทบทความใหม่ๆ สามารถเข้าไปกด Like เพื่อรับข่าวสารใหม่ๆจาก [**Facebook Mr.Saladpuk**](https://www.facebook.com/mr.saladpuk) ได้นะครับ 😍\n{% endhint %}\n\n### 10/06/2021\n\n* เพิ่มบทความ [**Hash functions**](https://www.saladpuk.com/basic/security101/security-in-actions/hash-function) - ลองเปลี่ยนของธรรมดาให้เป็นฟามลับกันมุ้ย 😘\n\n### 09/06/2021\n\n* เพิ่มบทความ [**Security in actions**](https://www.saladpuk.com/basic/security101/security-in-actions) - ลองเอา security มาเขียนใช้งานจริงกัน\n"
-    }
-  ]
-}
