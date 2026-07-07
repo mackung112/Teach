@@ -803,9 +803,22 @@ export default function DSA2_2() {
 
         {/* ─── Section 5: Teacher Task ─── */}
         <section className="pt-8">
-          <TeacherTask 
-            title="กิจกรรมปฏิบัติงาน (Queue)" 
-            taskText="ให้นักเรียนจำลองการเขียนโค้ดระบบต่อคิวธนาคารง่ายๆ ด้วย collections.deque โดยมีเมนู: 1.รับบัตรคิว 2.เรียกคิวถัดไป 3.แอบดูว่าใครคิวถัดไป และทดสอบรันผลลัพธ์ผ่าน Terminal" 
+          <TeacherTask
+            title="ภารกิจท้ายบทเรียน: ปฏิบัติการจัดการ Queue ใน Python"
+            pin="1122"
+            taskText={`[โจทย์ปฏิบัติการหลักสูตรรายวิชาโครงสร้างข้อมูล 21900-1002]
+โจทย์ปฏิบัติการจัดการ Queue ใน Python ด้วย collections.deque ให้นักเรียนเขียนคำสั่งต่อไปนี้:
+
+1. นำเข้าโมดูล deque และสร้างคิวว่างชื่อ queue = deque() จากนั้นเพิ่ม "User1" เข้าไป
+2. กำหนดให้ queue = deque(["Alice", "Bob"]) จงเขียนคำสั่งเพื่อ Enqueue "Charlie" เข้าไปต่อท้าย
+3. กำหนดให้ customers = deque(["C1", "C2", "C3"]) จงเขียนคำสั่งเพื่อ Dequeue ลูกค้าคิวแรกออก
+4. กำหนดให้ jobs = deque(["JobA", "JobB", "JobC"]) จงดึงงานคิวแรกออกมาเก็บไว้ในตัวแปร current_job
+5. กำหนดให้ messages = deque(["Msg1", "Msg2", "Msg3"]) จงเขียนคำสั่งเพื่อแสดงข้อมูลคิวแรกสุด (Front) โดยไม่ดึงข้อมูลออก
+6. กำหนดให้ tickets = deque(["T1", "T2"]) จงเพิ่ม "T3" เข้าคิว แล้วหาจำนวนข้อมูลทั้งหมดใน Queue
+7. กำหนดให้ orders = deque(["Order1", "Order2", "Order3"]) จงเขียนคำสั่งเพื่อตรวจสอบว่า Queue นี้มีความยาวเท่าใด
+8. กำหนดให้ players = deque(["P1", "P2"]) จง Enqueue "P3" เข้าไป แล้ว Dequeue ออกมา 1 ครั้ง
+9. กำหนดให้ playlist = deque(["Song1", "Song2", "Song3"]) จงเขียนคำสั่งเพื่อ Dequeue ข้อมูลออก 2 ครั้ง
+10. สร้างคิวว่างชื่อ my_queue ทำการ Enqueue ข้อมูล "A", "B", "C" ตามลำดับ แล้วดึงข้อมูลคิวแรกสุดออกมาแสดงผล`}
           />
         </section>
 
